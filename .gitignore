@@ -7,8 +7,8 @@
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
-/.idea
-!.idea/codeStyles
+/.idea/*
+!/.idea/codeStyles
 .DS_Store
 /build
 /captures
