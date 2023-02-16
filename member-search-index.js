@@ -1,0 +1,1 @@
+memberSearchIndex = [{"p":"com.cmput301w23t09.qrhunter","c":"MainActivity","l":"MainActivity()","url":"%3Cinit%3E()"},{"p":"com.cmput301w23t09.qrhunter","c":"MainActivity","l":"onCreate(Bundle)","url":"onCreate(android.os.Bundle)"}]
