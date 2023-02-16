@@ -24,14 +24,7 @@ jobs:
         run: ./gradlew build
       - name: Create Javadoc
         run: ./gradlew generateReleaseJavadoc
-      - name: Commit and Push Javadocs to master
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add ./doc
-          git commit -m "Autoupdated Docs"
-          git push
-      - name: Deploy to Github Pages
+     - name: Deploy to Github Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: doc
