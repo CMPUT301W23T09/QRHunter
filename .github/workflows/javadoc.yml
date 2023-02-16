@@ -1,0 +1,38 @@
+name: Deploy Javadoc
+
+on:
+  push:
+    branches:
+      - master
+      - main
+
+jobs:
+  publish_javadoc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout Repository
+      - uses: actions/setup-java@v3
+        with:
+          distribution: "adopt"
+          java-version: "11"
+          cache: "gradle"
+        name: Setup Java JDK 11
+      - name: Give gradlew Execute Permission
+        run: chmod +x gradlew
+      - name: Build App (fixes some dependency errors with Javadoc)
+        run: ./gradlew build
+      - name: Create Javadoc
+        run: ./gradlew generateReleaseJavadoc
+      - name: Commit and Push Javadocs to master
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add ./doc
+          git commit -m "Autoupdated Docs"
+          git push
+      - name: Deploy to Github Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: doc
+
