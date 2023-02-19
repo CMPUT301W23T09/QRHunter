@@ -2,6 +2,8 @@ package com.cmput301w23t09.qrhunter;
 
 import android.media.Image;
 
+import androidx.annotation.Nullable;
+
 import java.util.ArrayList;
 
 /**
@@ -16,6 +18,24 @@ public class QRCode {
     private Photo locPhoto;
     private ArrayList<Comment> comments;
     private ArrayList<Player> players;
+
+    public QRCode(String hash, String name, Image visualRepresentation, Integer score, Location loc, Photo locPhoto, ArrayList<Comment> comments, ArrayList<Player> players) {
+        this.hash = hash;
+        this.name = name;
+        this.visualRepresentation = visualRepresentation;
+        this.score = score;
+        this.loc = loc;
+        this.locPhoto = locPhoto;
+        this.comments = comments;
+        this.players = players;
+    }
+
+    public QRCode(String hash, String name, Image visualRepresentation, Integer score) {
+        this.hash = hash;
+        this.name = name;
+        this.visualRepresentation = visualRepresentation;
+        this.score = score;
+    }
 
     public Integer getScore() {
         return this.score;

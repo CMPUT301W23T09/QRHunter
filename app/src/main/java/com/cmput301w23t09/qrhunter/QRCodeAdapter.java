@@ -1,6 +1,7 @@
 package com.cmput301w23t09.qrhunter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,7 @@ public class QRCodeAdapter extends ArrayAdapter<QRCode>  {
         QRCode qrCode = qrCodes.get(position);
 
         TextView score = view.findViewById(R.id.score);
-        score.setText(qrCode.getScore());
+        score.setText(String.valueOf(qrCode.getScore()));
         return view;
     }
 }
