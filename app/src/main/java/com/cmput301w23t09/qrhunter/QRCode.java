@@ -16,4 +16,8 @@ public class QRCode {
     private Photo locPhoto;
     private ArrayList<Comment> comments;
     private ArrayList<Player> players;
+
+    public Integer getScore() {
+        return this.score;
+    }
 }

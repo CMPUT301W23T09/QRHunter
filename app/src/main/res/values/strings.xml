@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">QRHunter</string>
+    <string name="settings_btn_desc">Settings Button</string>
+    <string name="username_txt">Username</string>
+    <string name="score_txt">Score</string>
+    <string name="sort_spinner_desc">QR Code Sort Spinner</string>
+    <string name="order_spinner_desc">QR Code Order Spinner</string>
 </resources>
