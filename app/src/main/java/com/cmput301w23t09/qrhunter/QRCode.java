@@ -2,8 +2,6 @@ package com.cmput301w23t09.qrhunter;
 
 import android.media.Image;
 
-import androidx.annotation.Nullable;
-
 import java.util.ArrayList;
 
 /**
