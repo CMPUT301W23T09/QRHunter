@@ -23,14 +23,7 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.profile_activity);
 
         implementSpinners();
-
-        // implement view of the user's qr codes
-        qrCodeList = findViewById(R.id.code_list);
-        qrCodes = new ArrayList<>();
-        qrCodes.add(new QRCode("10bx", "b", null, 10));
-        qrCodes.add(new QRCode("000x", "a", null, 12));
-        qrCodeAdapter = new QRCodeAdapter(this, qrCodes);
-        qrCodeList.setAdapter(qrCodeAdapter);
+        implementQRCodeList();
     }
 
     private void implementSpinners() {
@@ -79,5 +72,19 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
+    }
+
+    private void implementQRCodeList() {
+        // get QR code list view
+        qrCodeList = findViewById(R.id.code_list);
+
+        // get data
+        qrCodes = new ArrayList<>();
+        qrCodes.add(new QRCode("10bx", "b", null, 10, null, null, null, null));
+        qrCodes.add(new QRCode("000x", "a", null, 12, null, null, null, null));
+
+        // set QR code list view adapter
+        qrCodeAdapter = new QRCodeAdapter(this, qrCodes);
+        qrCodeList.setAdapter(qrCodeAdapter);
     }
 }
