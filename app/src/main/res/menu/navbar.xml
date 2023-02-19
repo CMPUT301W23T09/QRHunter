@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- TODO: Add images for each item -->
+    <item
+        android:id="@+id/navigation_scan_qr"
+        android:title="@string/navigation_item_scan_qr" />
+
+    <item
+        android:id="@+id/navigation_my_profile"
+        android:title="@string/navigation_item_my_profile" />
+
+    <item
+        android:id="@+id/navigation_qr_finder"
+        android:title="@string/navigation_item_qr_finder" />
+
+    <item
+        android:id="@+id/navigation_social"
+        android:title="@string/navigation_item_social" />
+
+</menu>
