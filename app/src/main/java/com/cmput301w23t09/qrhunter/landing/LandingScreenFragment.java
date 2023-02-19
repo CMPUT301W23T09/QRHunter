@@ -12,17 +12,17 @@ import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.MainController;
 import com.cmput301w23t09.qrhunter.R;
 
-public class LandingFragment extends BaseFragment {
+public class LandingScreenFragment extends BaseFragment {
 
-    private LandingController controller;
+    private LandingScreenController controller;
 
-    public LandingFragment(MainController mainController) {
+    public LandingScreenFragment(MainController mainController) {
         super(mainController);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        controller = new LandingController();
+        controller = new LandingScreenController();
 
         return inflater.inflate(R.layout.fragment_landing, container, false);
     }
