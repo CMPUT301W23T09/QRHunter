@@ -12,7 +12,7 @@ public class PlayerDatabase {
 
     private final CollectionReference collection;
 
-    public PlayerDatabase() {
+    private PlayerDatabase() {
         collection = FirebaseFirestore.getInstance().collection(DATABASE_COLLECTION_NAME);
     }
 
@@ -25,6 +25,10 @@ public class PlayerDatabase {
     }
 
     public Player getPlayerByDeviceId(UUID deviceUUID) {
+        return null;
+    }
+
+    public Player getPlayerByUsername(String username) {
         return null;
     }
 

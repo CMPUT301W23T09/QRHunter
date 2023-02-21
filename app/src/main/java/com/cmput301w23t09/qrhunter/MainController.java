@@ -105,7 +105,11 @@ public class MainController {
         }
     }
 
-    private UUID getDeviceUUID() {
+    /**
+     * Retrieve the UUID associated with this device.
+     * @return device UUID
+     */
+    public UUID getDeviceUUID() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(DEVICE_UUID_FILE, 0);
         String savedDeviceId = sharedPreferences.getString(DEVICE_UUID_FILE_FIELD, null);
 

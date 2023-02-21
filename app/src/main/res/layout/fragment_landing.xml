@@ -33,7 +33,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/usernameTextFieldContainer"
+        android:id="@+id/landing_screen_usernameTextFieldContainer"
         style="@style/QRHunter.TextInputLayout.OutlinedBox"
         android:layout_width="357dp"
         android:layout_height="70dp"
@@ -44,17 +44,18 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/usernameTextField"
+            android:id="@+id/landing_screen_usernameTextField"
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:inputType="textPersonName"
+            android:maxLength="20"
             android:singleLine="true"
             android:textColor="@color/white"
             android:textCursorDrawable="@null" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/phoneNoTextFieldContainer"
+        android:id="@+id/landing_screen_phoneNoTextFieldContainer"
         style="@style/QRHunter.TextInputLayout.OutlinedBox"
         android:layout_width="357dp"
         android:layout_height="70dp"
@@ -62,10 +63,10 @@
         android:hint="@string/landing_screen_phone_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usernameTextFieldContainer">
+        app:layout_constraintTop_toBottomOf="@+id/landing_screen_usernameTextFieldContainer">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/phoneNoTextField"
+            android:id="@+id/landing_screen_phoneNoTextField"
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:inputType="phone"
@@ -75,7 +76,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/emailTextFieldContainer"
+        android:id="@+id/landing_screen_emailTextFieldContainer"
         style="@style/QRHunter.TextInputLayout.OutlinedBox"
         android:layout_width="357dp"
         android:layout_height="70dp"
@@ -83,10 +84,10 @@
         android:hint="@string/landing_screen_email_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phoneNoTextFieldContainer">
+        app:layout_constraintTop_toBottomOf="@+id/landing_screen_phoneNoTextFieldContainer">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/emailTextField"
+            android:id="@+id/landing_screen_emailTextField"
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:inputType="textEmailAddress"
@@ -110,6 +111,6 @@
         app:iconTint="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailTextFieldContainer" />
+        app:layout_constraintTop_toBottomOf="@+id/landing_screen_emailTextFieldContainer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
