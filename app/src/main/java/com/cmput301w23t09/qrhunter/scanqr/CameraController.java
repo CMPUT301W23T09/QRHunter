@@ -2,6 +2,7 @@ package com.cmput301w23t09.qrhunter.scanqr;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.Build;
 
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
@@ -36,7 +37,7 @@ public class CameraController {
     private static final String FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS";
     public static final int REQUEST_CODE_PERMISSIONS = 10;
     public static final String[] REQUIRED_PERMISSIONS = new String[]{
-            Manifest.permission.CAMERA
+            Manifest.permission.CAMERA,
     };
 
     public CameraController(ScannerFragment scannerFragment, PreviewView previewView) {
