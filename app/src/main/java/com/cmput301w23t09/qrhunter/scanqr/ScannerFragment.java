@@ -27,9 +27,9 @@ public class ScannerFragment extends BaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        scannerController = new ScannerController();
-        cameraController = new CameraController(this);
         binding = FragmentScanqrBinding.inflate(inflater, container, false);
+        scannerController = new ScannerController();
+        cameraController = new CameraController(this, binding.viewFinder);
         return binding.getRoot();
     }
 
@@ -38,7 +38,7 @@ public class ScannerFragment extends BaseFragment {
                                            @NonNull int[] grantResults) {
         if (requestCode == CameraController.REQUEST_CODE_PERMISSIONS) {
             if (cameraController.allPermissionsGranted()) {
-                cameraController.startCamera(binding.viewFinder);
+                cameraController.startCamera();
             } else {
                 Toast.makeText(getContext(), "Permissions not granted by the user.",
                         Toast.LENGTH_SHORT).show();

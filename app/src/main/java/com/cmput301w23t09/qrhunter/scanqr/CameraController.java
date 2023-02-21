@@ -30,6 +30,7 @@ public class CameraController {
     private ImageCapture imageCapture;
     private ExecutorService cameraExecutor;
     private ScannerFragment scannerFragment;
+    private PreviewView previewView;
 
     private static final String TAG = "QRHunterCamera";
     private static final String FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS";
@@ -38,9 +39,12 @@ public class CameraController {
             Manifest.permission.CAMERA
     };
 
-    public CameraController(ScannerFragment scannerFragment) {
+    public CameraController(ScannerFragment scannerFragment, PreviewView previewView) {
         this.scannerFragment = scannerFragment;
-        if (!allPermissionsGranted())
+        this.previewView = previewView;
+        if (allPermissionsGranted())
+            startCamera();
+        else
             scannerFragment.requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
         cameraExecutor = Executors.newSingleThreadExecutor();
     }
@@ -50,7 +54,7 @@ public class CameraController {
      *
      * @param previewView The PreviewView UI element to show the camera preview on.
      */
-    public void startCamera(PreviewView previewView) {
+    public void startCamera() {
         ListenableFuture<ProcessCameraProvider> cameraProviderFuture
                 = ProcessCameraProvider.getInstance(scannerFragment.getContext());
         cameraProviderFuture.addListener(() -> {
