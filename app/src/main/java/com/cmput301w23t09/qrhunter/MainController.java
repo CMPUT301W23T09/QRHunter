@@ -1,14 +1,22 @@
 package com.cmput301w23t09.qrhunter;
 
+import android.content.SharedPreferences;
+
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.cmput301w23t09.qrhunter.landing.LandingScreenFragment;
+import com.cmput301w23t09.qrhunter.player.Player;
+import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
+
+import java.util.UUID;
 
 /**
  * The MainController handles controlling the content to be shown onscreen.
  */
 public class MainController {
+    private static final String DEVICE_UUID_FILE = "device_uuid.dat";
+    private static final String DEVICE_UUID_FILE_FIELD = "uuid";
 
     private final MainActivity activity;
 
@@ -20,8 +28,12 @@ public class MainController {
     public MainController(MainActivity activity) {
         this.activity = activity;
 
-        // TODO: Check if user is logged in or not, and then set initial data.
-        this.setBody(new LandingScreenFragment(activity.getController()));
+        Player clientPlayer = PlayerDatabase.getInstance().getPlayerByDeviceId(getDeviceUUID());
+        if (clientPlayer != null) {
+            // TODO: Show ScanQR screen
+        } else {
+            this.setBody(new LandingScreenFragment(this));
+        }
     }
 
     /**
@@ -91,6 +103,18 @@ public class MainController {
             popup = dialog;
             getActivity().onControllerPopupUpdate(dialog);
         }
+    }
+
+    private UUID getDeviceUUID() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(DEVICE_UUID_FILE, 0);
+        String savedDeviceId = sharedPreferences.getString(DEVICE_UUID_FILE_FIELD, null);
+
+        if (savedDeviceId == null) {
+            savedDeviceId = UUID.randomUUID().toString();
+            sharedPreferences.edit().putString(DEVICE_UUID_FILE_FIELD, savedDeviceId).apply();
+        }
+
+        return UUID.fromString(savedDeviceId);
     }
 
 }

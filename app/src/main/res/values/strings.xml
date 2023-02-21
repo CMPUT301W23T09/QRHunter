@@ -5,4 +5,10 @@
     <string name="navigation_item_qr_finder">QR Finder</string>
     <string name="navigation_item_social">Social</string>
     <string name="navigation_item_scan_qr">Scan QR</string>
+    <string name="landing_screen_title">Welcome To QRHunter!</string>
+    <string name="qrhunter_logo_content_desc">QRHunter Logo</string>
+    <string name="landing_screen_username_hint">Username</string>
+    <string name="landing_screen_phone_hint">Phone</string>
+    <string name="landing_screen_email_hint">Email</string>
+    <string name="landing_screen_register_text">Start Hunting</string>
 </resources>

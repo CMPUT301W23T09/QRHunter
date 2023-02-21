@@ -22,9 +22,15 @@ public class LandingScreenFragment extends BaseFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        controller = new LandingScreenController();
+        controller = new LandingScreenController(this);
 
+        getMainController().setNavbarEnabled(false);
         return inflater.inflate(R.layout.fragment_landing, container, false);
     }
 
+    @Override
+    public void onDestroyView() {
+        getMainController().setNavbarEnabled(true);
+        super.onDestroyView();
+    }
 }

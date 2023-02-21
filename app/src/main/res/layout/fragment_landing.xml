@@ -1,20 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:text="Pretend this is the landing page"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="180dp"
+        android:layout_height="175dp"
+        android:layout_marginTop="24dp"
+        android:contentDescription="@string/qrhunter_logo_content_desc"
+        android:src="@drawable/landing_qr_logo"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_screen_title" />
+
+    <TextView
+        android:id="@+id/landing_screen_title"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="64dp"
+        android:text="@string/landing_screen_title"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/usernameTextFieldContainer"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="357dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="36dp"
+        android:hint="@string/landing_screen_username_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/usernameTextField"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:inputType="textPersonName"
+            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/phoneNoTextFieldContainer"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="357dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="28dp"
+        android:hint="@string/landing_screen_phone_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/usernameTextFieldContainer">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/phoneNoTextField"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:inputType="phone"
+            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/emailTextFieldContainer"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="357dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="28dp"
+        android:hint="@string/landing_screen_email_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/phoneNoTextFieldContainer">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/emailTextField"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:inputType="textEmailAddress"
+            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/landing_screen_register_button"
+        android:layout_width="357dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="32dp"
+        app:icon="@drawable/baseline_play_arrow_24"
+        app:iconGravity="textStart"
+        android:text="@string/landing_screen_register_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emailTextFieldContainer" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
