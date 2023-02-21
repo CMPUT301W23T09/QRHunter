@@ -28,7 +28,6 @@ import java.util.concurrent.Executors;
  */
 public class CameraController {
 
-    private ImageCapture imageCapture;
     private ExecutorService cameraExecutor;
     private ScannerFragment scannerFragment;
     private PreviewView previewView;
@@ -52,8 +51,6 @@ public class CameraController {
 
     /**
      * Starts the camera and binds it's preview to the PreviewView UI element.
-     *
-     * @param previewView The PreviewView UI element to show the camera preview on.
      */
     public void startCamera() {
         ListenableFuture<ProcessCameraProvider> cameraProviderFuture

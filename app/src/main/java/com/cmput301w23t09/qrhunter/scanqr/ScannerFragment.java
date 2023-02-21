@@ -45,4 +45,10 @@ public class ScannerFragment extends BaseFragment {
             }
         }
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        cameraController.onDestroy();
+    }
 }
