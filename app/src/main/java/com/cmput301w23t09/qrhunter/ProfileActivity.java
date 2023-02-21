@@ -1,39 +1,43 @@
 package com.cmput301w23t09.qrhunter;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.Spinner;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends Fragment {
     private GridView qrCodeList;
     private QRCodeAdapter qrCodeAdapter;
     private ArrayList<QRCode> qrCodes;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.profile_activity);
-
-        implementSpinners();
-        implementQRCodeList();
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.profile_activity, container, false);
+        implementSpinners(view);
+        implementQRCodeList(view);
+        return view;
     }
 
-    private void implementSpinners() {
+    private void implementSpinners(View view) {
         // get spinners
-        Spinner sortSpinner = findViewById(R.id.sort_spinner);
-        Spinner orderSpinner = findViewById(R.id.order_spinner);
+        Spinner sortSpinner = view.findViewById(R.id.sort_spinner);
+        Spinner orderSpinner = view.findViewById(R.id.order_spinner);
 
         // set array adapter for spinners
-        ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(this, R.array.sort_options, android.R.layout.simple_spinner_item);
-        ArrayAdapter<CharSequence> orderAdapter = ArrayAdapter.createFromResource(this, R.array.order_options, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(getContext(), R.array.sort_options, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> orderAdapter = ArrayAdapter.createFromResource(getContext(), R.array.order_options, android.R.layout.simple_spinner_item);
 
         sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         orderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -74,9 +78,9 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void implementQRCodeList() {
+    private void implementQRCodeList(View view) {
         // get QR code list view
-        qrCodeList = findViewById(R.id.code_list);
+        qrCodeList = view.findViewById(R.id.code_list);
 
         // get data
         qrCodes = new ArrayList<>();
@@ -84,7 +88,7 @@ public class ProfileActivity extends AppCompatActivity {
         qrCodes.add(new QRCode("000x", "a", null, 12, null, null, null, null));
 
         // set QR code list view adapter
-        qrCodeAdapter = new QRCodeAdapter(this, qrCodes);
+        qrCodeAdapter = new QRCodeAdapter(getContext(), qrCodes);
         qrCodeList.setAdapter(qrCodeAdapter);
     }
 }
