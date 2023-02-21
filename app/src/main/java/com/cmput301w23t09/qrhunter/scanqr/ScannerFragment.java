@@ -13,6 +13,12 @@ import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.MainController;
 import com.cmput301w23t09.qrhunter.databinding.FragmentScanqrBinding;
 
+/**
+ * The 'Scan QR' page where users can use their rear camera to scan QR codes
+ *
+ * @author John Mabanta
+ * @version 1.0
+ */
 public class ScannerFragment extends BaseFragment {
 
     private ScannerController scannerController;
