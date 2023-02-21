@@ -1,6 +1,7 @@
 package com.cmput301w23t09.qrhunter;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,14 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -21,6 +28,8 @@ public class ProfileActivity extends Fragment {
     private GridView qrCodeList;
     private QRCodeAdapter qrCodeAdapter;
     private ArrayList<QRCode> qrCodes;
+
+    private FirebaseFirestore db;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -82,13 +91,28 @@ public class ProfileActivity extends Fragment {
         // get QR code list view
         qrCodeList = view.findViewById(R.id.code_list);
 
-        // get data
+        // set QR code data and list view adapter
         qrCodes = new ArrayList<>();
-        qrCodes.add(new QRCode("10bx", "b", null, 10, null, null, null, null));
-        qrCodes.add(new QRCode("000x", "a", null, 12, null, null, null, null));
-
-        // set QR code list view adapter
         qrCodeAdapter = new QRCodeAdapter(getContext(), qrCodes);
         qrCodeList.setAdapter(qrCodeAdapter);
+
+        // access database
+        db = FirebaseFirestore.getInstance();
+        final CollectionReference collectionReference = db.collection("QR Codes");
+        // update data
+        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
+            FirebaseFirestoreException error) {
+                qrCodes.clear();
+                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
+                {
+                    String hash = doc.getId();
+                    Integer score = (Integer) doc.getData().get("Score");
+                    qrCodes.add(new QRCode(hash, null, null, score, null, null, null, null));
+                }
+                qrCodeAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }
