@@ -29,16 +29,20 @@ public class QRCodeAdapter extends ArrayAdapter<QRCode>  {
 
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        // get view of QR code
         View view = convertView;
 
         if(view == null){
             view = LayoutInflater.from(context).inflate(R.layout.qrcode_view, parent, false);
         }
 
+        // get QRCode data
         QRCode qrCode = qrCodes.get(position);
 
+        // set fields of view
         TextView score = view.findViewById(R.id.score);
         score.setText(String.valueOf(qrCode.getScore()));
+
         return view;
     }
 }

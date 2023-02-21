@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">QRHunter</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="navigation_item_my_profile">My Profile</string>
+    <string name="navigation_item_qr_finder">QR Finder</string>
+    <string name="navigation_item_social">Social</string>
+    <string name="navigation_item_scan_qr">Scan QR</string>
     <string name="settings_btn_desc">Settings Button</string>
     <string name="username_txt">Username</string>
     <string name="score_txt">Score</string>
