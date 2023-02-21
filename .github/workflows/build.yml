@@ -1,4 +1,4 @@
-name: Deploy Javadoc
+name: Build App
 
 on:
   pull_request:
