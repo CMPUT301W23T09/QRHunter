@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/screen_background">
 
     <ImageView
         android:id="@+id/imageView"
@@ -24,6 +25,7 @@
         android:layout_marginTop="64dp"
         android:text="@string/landing_screen_title"
         android:textAlignment="center"
+        android:textColor="@color/white"
         android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
@@ -32,7 +34,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/usernameTextFieldContainer"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/QRHunter.TextInputLayout.OutlinedBox"
         android:layout_width="357dp"
         android:layout_height="70dp"
         android:layout_marginTop="36dp"
@@ -46,12 +48,14 @@
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:inputType="textPersonName"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textCursorDrawable="@null" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/phoneNoTextFieldContainer"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/QRHunter.TextInputLayout.OutlinedBox"
         android:layout_width="357dp"
         android:layout_height="70dp"
         android:layout_marginTop="28dp"
@@ -65,12 +69,14 @@
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:inputType="phone"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textCursorDrawable="@null" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/emailTextFieldContainer"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/QRHunter.TextInputLayout.OutlinedBox"
         android:layout_width="357dp"
         android:layout_height="70dp"
         android:layout_marginTop="28dp"
@@ -84,7 +90,9 @@
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:inputType="textEmailAddress"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textCursorDrawable="@null" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -92,9 +100,14 @@
         android:layout_width="357dp"
         android:layout_height="70dp"
         android:layout_marginTop="32dp"
+        android:backgroundTint="@color/button_color"
+        android:text="@string/landing_screen_register_text"
+        android:textColor="@color/black"
+        android:textAllCaps="false"
+        android:textSize="18sp"
         app:icon="@drawable/baseline_play_arrow_24"
         app:iconGravity="textStart"
-        android:text="@string/landing_screen_register_text"
+        app:iconTint="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailTextFieldContainer" />
