@@ -169,7 +169,7 @@ public class PlayerDatabase {
      * @param callback callback to call once the operation has finished
      */
     public void getPlayerByUsername(String username, DatabaseConsumer<Player> callback) {
-        collection.whereEqualTo("username", username).get()
+        collection.whereEqualTo("username_lower", username.toLowerCase()).get()
                 .addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
                         callback.accept(new DatabaseQueryResults<>(null, task.getException()));
@@ -212,6 +212,7 @@ public class PlayerDatabase {
         Map<String, Object> values = new HashMap<>();
         values.put("deviceUUID", player.getDeviceId().toString());
         values.put("username", player.getUsername());
+        values.put("username_lower", player.getUsername().toLowerCase());
         values.put("phoneNo", player.getPhoneNo());
         values.put("email", player.getEmail());
 
