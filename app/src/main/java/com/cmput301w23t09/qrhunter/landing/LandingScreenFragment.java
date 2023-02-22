@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,7 @@ public class LandingScreenFragment extends BaseFragment {
     private TextInputEditText usernameInput;
     private TextInputEditText phoneInput;
     private TextInputEditText emailInput;
+    private Button registrationButton;
 
     public LandingScreenFragment(MainController mainController) {
         super(mainController);
@@ -36,7 +38,8 @@ public class LandingScreenFragment extends BaseFragment {
         usernameInput = view.findViewById(R.id.landing_screen_usernameTextField);
         phoneInput = view.findViewById(R.id.landing_screen_phoneNoTextField);
         emailInput = view.findViewById(R.id.landing_screen_emailTextField);
-        view.findViewById(R.id.landing_screen_register_button).setOnClickListener(this::onRegistrationClick);
+        registrationButton = view.findViewById(R.id.landing_screen_register_button);
+        registrationButton.setOnClickListener(this::onRegistrationClick);
 
         return view;
     }
@@ -47,15 +50,25 @@ public class LandingScreenFragment extends BaseFragment {
         super.onDestroyView();
     }
 
-    public void displayErrorMessage(String message) {
+    /**
+     * Called when an error related to registration should be displayed to the user.
+     * @param message error message
+     */
+    public void displayRegistrationError(String message) {
         Toast.makeText(this.getActivity(), message, Toast.LENGTH_SHORT).show();
+        registrationButton.setEnabled(true);
     }
 
+    /**
+     * Called when the registration button is clicked.
+     * @param view
+     */
     private void onRegistrationClick(View view) {
         String username = usernameInput.getText().toString();
-        String phoneNo = phoneInput.getText().toString();
+        String phoneNo = phoneInput.getText().toString().replaceAll("\\s+", "");
         String email = emailInput.getText().toString();
 
+        registrationButton.setEnabled(false);
         controller.onRegistration(username, phoneNo, email);
     }
 

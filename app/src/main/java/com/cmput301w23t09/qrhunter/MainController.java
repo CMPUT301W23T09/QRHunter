@@ -27,13 +27,22 @@ public class MainController {
 
     public MainController(MainActivity activity) {
         this.activity = activity;
+        this.setNavbarEnabled(false);
 
-        Player clientPlayer = PlayerDatabase.getInstance().getPlayerByDeviceId(getDeviceUUID());
-        if (clientPlayer != null) {
-            // TODO: Show ScanQR screen
-        } else {
-            this.setBody(new LandingScreenFragment(this));
-        }
+        // Check if player is registered to determine which screen to show on launch.
+        PlayerDatabase.getInstance().getPlayerByDeviceId(getDeviceUUID(), results -> {
+            if (!results.isSuccessful()) {
+                activity.displayInitError("An error occurred while loading in your player data.");
+                return;
+            }
+
+            if (results.getData() != null) {
+                this.setNavbarEnabled(true);
+                // TODO: Show ScanQR screen
+            } else {
+                this.setBody(new LandingScreenFragment(this));
+            }
+        });
     }
 
     /**

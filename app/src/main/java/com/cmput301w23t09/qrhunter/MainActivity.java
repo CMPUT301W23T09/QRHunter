@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.cmput301w23t09.qrhunter.navigation.NavigationControllerAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -85,6 +86,14 @@ public class MainActivity extends AppCompatActivity {
             }
             ((DialogFragment) existingFragment).dismiss();
         }
+    }
+
+    /**
+     * Called when an initialization error occurs with the activity.
+     * @param message error message
+     */
+    void displayInitError(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
 }

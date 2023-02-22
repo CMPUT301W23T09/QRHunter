@@ -1,10 +1,10 @@
 package com.cmput301w23t09.qrhunter.landing;
 
 import android.telephony.PhoneNumberUtils;
-import android.widget.Toast;
 
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
+import com.cmput301w23t09.qrhunter.util.ValidationUtils;
 
 import java.util.UUID;
 
@@ -24,56 +24,41 @@ public class LandingScreenController {
      */
     public void onRegistration(String username, String phoneNo, String email) {
         // Validate user information first.
-        if (!isValidUsername(username)) {
-            landingScreenFragment.displayErrorMessage("Username must be between 1 and 20 characters.");
+        if (!ValidationUtils.isValidUsername(username)) {
+            landingScreenFragment.displayRegistrationError("Username must be between 1 and 20 characters.");
             return;
-        } else if (!isValidPhoneNo(phoneNo)) {
-            landingScreenFragment.displayErrorMessage("Invalid phone number.");
+        } else if (!ValidationUtils.isValidPhoneNo(phoneNo)) {
+            landingScreenFragment.displayRegistrationError("Invalid phone number.");
             return;
-        } else if (!isValidEmail(email)) {
-            landingScreenFragment.displayErrorMessage("Invalid email.");
+        } else if (!ValidationUtils.isValidEmail(email)) {
+            landingScreenFragment.displayRegistrationError("Invalid email.");
             return;
         }
 
         // Does an existing player already have this username?
-        Player existingPlayerByUsername = PlayerDatabase.getInstance().getPlayerByUsername(username);
-        if (existingPlayerByUsername != null) {
-            landingScreenFragment.displayErrorMessage("The username is already in use.");
-            return;
-        }
+        PlayerDatabase.getInstance().getPlayerByUsername(username, results -> {
+            if (!results.isSuccessful()) {
+                landingScreenFragment.displayRegistrationError("An exception occurred while fetching player data from the database.");
+                return;
+            }
 
-        // Register player into database.
-        UUID deviceUUID = landingScreenFragment.getMainController().getDeviceUUID();
-        Player player = new Player();
+            if (results.getData() != null) {
+                landingScreenFragment.displayRegistrationError("The username is already in use.");
+                return;
+            }
 
-        // TODO: Change screen to ScanQR page when complete as user is now logged in.
-    }
+            // Register player into database.
+            UUID deviceUUID = landingScreenFragment.getMainController().getDeviceUUID();
+            Player player = new Player(deviceUUID, username, phoneNo, email);
+            PlayerDatabase.getInstance().add(player, addResults -> {
+                if (!addResults.isSuccessful()) {
+                    landingScreenFragment.displayRegistrationError("An exception occurred while registering your user credentials.");
+                    return;
+                }
 
-    /**
-     * Checks if the provided username is a valid username that is between lengths 1-20 inclusive.
-     * @param username username to check
-     * @return if the username is valid
-     */
-    private boolean isValidUsername(String username) {
-        return username.length() > 0 && username.length() <= 20;
-    }
-
-    /**
-     * Checks if the provided phone number is a valid phone number.
-     * @param phoneNo phone number to check
-     * @return if the phone number is valid
-     */
-    private boolean isValidPhoneNo(String phoneNo) {
-        return PhoneNumberUtils.isGlobalPhoneNumber(phoneNo);
-    }
-
-    /**
-     * Checks if the provided email is as valid email.
-     * @param email email to check
-     * @return if the email is valid
-     */
-    private boolean isValidEmail(String email) {
-        return email.matches("^[\\w\\d.]+@[\\w\\d.]+\\.[\\w\\d.]+\\w$");
+                // TODO: Change screen to ScanQR screen as user is now FULLY registered.
+            });
+        });
     }
 
 }
