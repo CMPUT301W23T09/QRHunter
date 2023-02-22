@@ -13,52 +13,113 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+/**
+ * Manages all Player database operations.
+ */
 public class PlayerDatabase {
+    /**
+     * Name to associate with any logged messages.
+     */
     private static final String LOGGER_TAG = "PlayerDatabase";
+    /**
+     * Firebase collection name to store/retrieve data from.
+     */
     private static final String DATABASE_COLLECTION_NAME = "players";
 
+    /**
+     * Singleton instance of PlayerDatabase to ensure only one copy is created.
+     */
     private static PlayerDatabase INSTANCE;
 
+    /**
+     * Reference to firebase player collection.
+     */
     private final CollectionReference collection;
 
     private PlayerDatabase() {
         collection = FirebaseFirestore.getInstance().collection(DATABASE_COLLECTION_NAME);
     }
 
+    /**
+     * Adds a player that does not currently exist in the database to the database.
+     * @param player player to add without a database reference id
+     * @param callback callback to call once the operation has finished
+     */
     public void add(Player player, DatabaseConsumer<Player> callback) {
         if (player.getDocumentId() != null) {
             throw new IllegalArgumentException("The provided player already has a document reference.");
         }
 
-        collection.add(playerToDBValues(player)).addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) {
-                callback.accept(new DatabaseQueryResults<>(null, task.getException()));
+        // Ensure that player name to add does not already exist.
+        getPlayerByUsername(player.getUsername(), existingUserResults -> {
+            if (!existingUserResults.isSuccessful()) {
+                callback.accept(new DatabaseQueryResults<>(null, existingUserResults.getException()));
+                return;
+            }
+            if (existingUserResults.getData() != null) {
+                callback.accept(new DatabaseQueryResults<>(null, new IllegalArgumentException("The provided username is already in use.")));
                 return;
             }
 
-            String documentId = task.getResult().getId();
-            player.setDocumentId(documentId);
+            // The username is not in use, add the player.
+            collection.add(playerToDBValues(player)).addOnCompleteListener(task -> {
+                if (!task.isSuccessful()) {
+                    callback.accept(new DatabaseQueryResults<>(null, task.getException()));
+                    return;
+                }
 
-            callback.accept(new DatabaseQueryResults<>(player));
+                String documentId = task.getResult().getId();
+                player.setDocumentId(documentId);
+
+                callback.accept(new DatabaseQueryResults<>(player));
+            });
         });
     }
 
+    /**
+     * Update a player that already exists in the database.
+     * @param player player to add with a database reference id
+     * @param callback callback to call once the operation has finished
+     */
     public void update(Player player, DatabaseConsumer<Void> callback) {
         if (player.getDocumentId() == null) {
             throw new IllegalArgumentException("The provided player does not have a document reference.");
         }
 
-        collection.document(player.getDocumentId()).update(playerToDBValues(player)).addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) {
-                callback.accept(new DatabaseQueryResults<>(null, task.getException()));
+        // Ensure that player name to update does not already exist.
+        getPlayerByUsername(player.getUsername(), existingUserResults -> {
+            if (!existingUserResults.isSuccessful()) {
+                callback.accept(new DatabaseQueryResults<>(null, existingUserResults.getException()));
                 return;
             }
 
-            // Update was successful
-            callback.accept(new DatabaseQueryResults<>(null));
+            if (existingUserResults.getData() != null) {
+                // Only throw a username conflict error if the found user is DIFFERENT from the user we're updating.
+                boolean isDifferentDocument = !existingUserResults.getData().getDocumentId().equals(player.getDocumentId());
+                if (isDifferentDocument) {
+                    callback.accept(new DatabaseQueryResults<>(null, new IllegalArgumentException("The provided username is already in use.")));
+                    return;
+                }
+            }
+
+            // It is safe to update the player.
+            collection.document(player.getDocumentId()).update(playerToDBValues(player)).addOnCompleteListener(task -> {
+                if (!task.isSuccessful()) {
+                    callback.accept(new DatabaseQueryResults<>(null, task.getException()));
+                    return;
+                }
+
+                // Update was successful
+                callback.accept(new DatabaseQueryResults<>(null));
+            });
         });
     }
 
+    /**
+     * Delete a player from the database
+     * @param player player with a database reference id to delete
+     * @param callback callback to call once the operation has finished
+     */
     public void delete(Player player, DatabaseConsumer<Void> callback) {
         if (player.getDocumentId() == null) {
             throw new IllegalArgumentException("The provided player does not have a document reference.");
@@ -75,6 +136,11 @@ public class PlayerDatabase {
         });
     }
 
+    /**
+     * Retrieve a player by their device UUID from the database
+     * @param deviceUUID device UUID to lookup
+     * @param callback callback to call once the operation has finished
+     */
     public void getPlayerByDeviceId(UUID deviceUUID, DatabaseConsumer<Player> callback) {
         collection.whereEqualTo("deviceUUID", deviceUUID.toString()).get()
                 .addOnCompleteListener(task -> {
@@ -94,6 +160,11 @@ public class PlayerDatabase {
                 });
     }
 
+    /**
+     * Retrieve a player by their username from the database
+     * @param username username to lookup
+     * @param callback callback to call once the operation has finished
+     */
     public void getPlayerByUsername(String username, DatabaseConsumer<Player> callback) {
         collection.whereEqualTo("username", username).get()
                 .addOnCompleteListener(task -> {
@@ -114,6 +185,11 @@ public class PlayerDatabase {
                 });
     }
 
+    /**
+     * Converts a database snapshot to its Player object equivalent.
+     * @param snapshot database snapshot
+     * @return Player object
+     */
     private Player snapshotToPlayer(QueryDocumentSnapshot snapshot) {
         String documentId = snapshot.getId();
         UUID deviceUUID = UUID.fromString(snapshot.getString("deviceUUID"));
@@ -124,6 +200,11 @@ public class PlayerDatabase {
         return new Player(documentId, deviceUUID, username, phoneNo, email);
     }
 
+    /**
+     * Converts a Player object to database insertable values.
+     * @param player player object
+     * @return a map of database insertable values
+     */
     private Map<String, Object> playerToDBValues(Player player) {
         Map<String, Object> values = new HashMap<>();
         values.put("deviceUUID", player.getDeviceId().toString());
@@ -135,6 +216,10 @@ public class PlayerDatabase {
     }
 
 
+    /**
+     * Retrieves the PlayerDatabase
+     * @return PlayerDatabase
+     */
     public static PlayerDatabase getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new PlayerDatabase();
