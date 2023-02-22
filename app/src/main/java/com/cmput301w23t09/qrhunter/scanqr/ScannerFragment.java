@@ -34,8 +34,9 @@ public class ScannerFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentScanqrBinding.inflate(inflater, container, false);
-        scannerController = new ScannerController();
-        cameraController = new CameraController(this, binding.viewFinder);
+        scannerController = new ScannerController(this);
+        cameraController = new CameraController(this,
+                binding.viewFinder, scannerController);
         return binding.getRoot();
     }
 

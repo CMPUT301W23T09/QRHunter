@@ -2,16 +2,16 @@ package com.cmput301w23t09.qrhunter.scanqr;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.os.Build;
 
 import androidx.camera.core.CameraSelector;
-import androidx.camera.core.ImageCapture;
+import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.concurrent.ExecutionException;
@@ -22,6 +22,8 @@ import java.util.concurrent.Executors;
  * Manages Camera preview and capture using Google's CameraX library
  * https://developer.android.com/training/camerax
  * (Used ChatGPT to convert Kotlin to Java)
+ * <p>
+ * Used to scan qr codes and to let user take location pictures
  *
  * @author John Mabanta
  * @version 1.0
@@ -29,8 +31,9 @@ import java.util.concurrent.Executors;
 public class CameraController {
 
     private ExecutorService cameraExecutor;
-    private ScannerFragment scannerFragment;
+    private BaseFragment fragment;
     private PreviewView previewView;
+    private ScannerController scannerController;
 
     private static final String TAG = "QRHunterCamera";
     private static final String FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS";
@@ -39,14 +42,35 @@ public class CameraController {
             Manifest.permission.CAMERA,
     };
 
-    public CameraController(ScannerFragment scannerFragment, PreviewView previewView) {
-        this.scannerFragment = scannerFragment;
+    /**
+     * Creates a CameraController only for previewing anc capturing location photos.
+     *
+     * @param fragment    The fragment that uses the camera.
+     * @param previewView The UI element in fragment to show camera preview on.
+     */
+    public CameraController(BaseFragment fragment, PreviewView previewView) {
+        this.fragment = fragment;
         this.previewView = previewView;
+        this.scannerController = null;
         if (allPermissionsGranted())
             startCamera();
         else
-            scannerFragment.requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
+            fragment.requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
         cameraExecutor = Executors.newSingleThreadExecutor();
+    }
+
+    /**
+     * Creates a CameraController for previewing and scanning QR codes.
+     *
+     * @param fragment          The fragment that uses the camera.
+     * @param previewView       The UI element in fragment to show camera preview on.
+     * @param scannerController Manages QR Code scanning.
+     * @see ScannerController
+     */
+    public CameraController(BaseFragment fragment, PreviewView previewView,
+                            ScannerController scannerController) {
+        this(fragment, previewView);
+        this.scannerController = scannerController;
     }
 
     /**
@@ -54,7 +78,7 @@ public class CameraController {
      */
     public void startCamera() {
         ListenableFuture<ProcessCameraProvider> cameraProviderFuture
-                = ProcessCameraProvider.getInstance(scannerFragment.getContext());
+                = ProcessCameraProvider.getInstance(fragment.getContext());
         cameraProviderFuture.addListener(() -> {
             try {
                 ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
@@ -68,13 +92,24 @@ public class CameraController {
 
                 // Bind camera
                 cameraProvider.unbindAll();
-                cameraProvider.bindToLifecycle((LifecycleOwner) scannerFragment, cameraSelector, preview);
+                if (scannerController == null)
+                    cameraProvider.bindToLifecycle((LifecycleOwner) fragment, cameraSelector, preview);
+                else {
+                    // Create ImageAnalysis use case if camera is being used to scan QR codes
+                    ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
+                            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                            .build();
+                    imageAnalysis.setAnalyzer(cameraExecutor,
+                            image -> scannerController.scanCode(image));
+                    cameraProvider.bindToLifecycle((LifecycleOwner) fragment, cameraSelector,
+                            preview, imageAnalysis);
+                }
 
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);
             }
-        }, ContextCompat.getMainExecutor(scannerFragment.getContext()));
+        }, ContextCompat.getMainExecutor(fragment.getContext()));
     }
 
     public void onDestroy() {
@@ -88,7 +123,7 @@ public class CameraController {
      */
     public boolean allPermissionsGranted() {
         for (String permission : REQUIRED_PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(scannerFragment.getContext(), permission)
+            if (ContextCompat.checkSelfPermission(fragment.getContext(), permission)
                     == PackageManager.PERMISSION_DENIED)
                 return false;
         }

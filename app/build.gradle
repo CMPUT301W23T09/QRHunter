@@ -72,4 +72,7 @@ dependencies {
     implementation "androidx.camera:camera-video:${camerax_version}"
     implementation "androidx.camera:camera-view:${camerax_version}"
     implementation "androidx.camera:camera-extensions:${camerax_version}"
+
+    // Google's MLKit Library for QR Scanning
+    implementation 'com.google.mlkit:barcode-scanning:17.0.3'
 }
