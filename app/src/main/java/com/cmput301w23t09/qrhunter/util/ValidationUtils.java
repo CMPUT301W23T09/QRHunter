@@ -2,6 +2,9 @@ package com.cmput301w23t09.qrhunter.util;
 
 import android.telephony.PhoneNumberUtils;
 
+/**
+ * Utility class to validate various inputs.
+ */
 public class ValidationUtils {
 
     private ValidationUtils() {}

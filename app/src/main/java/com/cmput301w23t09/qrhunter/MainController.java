@@ -6,7 +6,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.cmput301w23t09.qrhunter.landing.LandingScreenFragment;
-import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 
 import java.util.UUID;
@@ -32,14 +31,16 @@ public class MainController {
         // Check if player is registered to determine which screen to show on launch.
         PlayerDatabase.getInstance().getPlayerByDeviceId(getDeviceUUID(), results -> {
             if (!results.isSuccessful()) {
-                activity.displayInitError("An error occurred while loading in your player data.");
+                activity.displayToast("An error occurred while loading in your player data.");
                 return;
             }
 
             if (results.getData() != null) {
+                // Player has existing data
                 this.setNavbarEnabled(true);
                 // TODO: Show ScanQR screen
             } else {
+                // Player has no data
                 this.setBody(new LandingScreenFragment(this));
             }
         });

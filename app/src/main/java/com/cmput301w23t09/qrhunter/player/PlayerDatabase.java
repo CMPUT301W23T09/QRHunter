@@ -44,6 +44,7 @@ public class PlayerDatabase {
      * Adds a player that does not currently exist in the database to the database.
      * @param player player to add without a database reference id
      * @param callback callback to call once the operation has finished
+     * @throws IllegalArgumentException if the player has a document id
      */
     public void add(Player player, DatabaseConsumer<Player> callback) {
         if (player.getDocumentId() != null) {
@@ -80,6 +81,7 @@ public class PlayerDatabase {
      * Update a player that already exists in the database.
      * @param player player to add with a database reference id
      * @param callback callback to call once the operation has finished
+     * @throws IllegalArgumentException if the player does not have a document id
      */
     public void update(Player player, DatabaseConsumer<Void> callback) {
         if (player.getDocumentId() == null) {
@@ -119,6 +121,7 @@ public class PlayerDatabase {
      * Delete a player from the database
      * @param player player with a database reference id to delete
      * @param callback callback to call once the operation has finished
+     * @throws IllegalArgumentException if the player does not have a document id
      */
     public void delete(Player player, DatabaseConsumer<Void> callback) {
         if (player.getDocumentId() == null) {

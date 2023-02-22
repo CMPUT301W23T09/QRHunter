@@ -89,10 +89,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Called when an initialization error occurs with the activity.
-     * @param message error message
+     * Called when a toast should be displayed by the main activity.
+     * @param message message to display
      */
-    void displayInitError(String message) {
+    public void displayToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
