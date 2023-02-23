@@ -104,13 +104,16 @@ public class ProfileActivity extends Fragment {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
             FirebaseFirestoreException error) {
+                // clear QR code data
                 qrCodes.clear();
-                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
-                {
+                // add data from database
+                assert queryDocumentSnapshots != null;
+                for(QueryDocumentSnapshot doc: queryDocumentSnapshots) {
                     String hash = doc.getId();
                     Integer score = (Integer) doc.getData().get("Score");
                     qrCodes.add(new QRCode(hash, null, null, score, null, null, null, null));
                 }
+                // update view
                 qrCodeAdapter.notifyDataSetChanged();
             }
         });

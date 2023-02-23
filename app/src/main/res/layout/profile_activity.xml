@@ -8,18 +8,16 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/material_dynamic_neutral20">
+        android:layout_height="wrap_content">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/settings_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/material_dynamic_neutral20"
             android:clickable="true"
             android:contentDescription="@string/settings_btn_desc"
             android:focusable="true"
-            app:backgroundTint="@color/material_dynamic_neutral20"
+            app:backgroundTint="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -31,7 +29,6 @@
         android:id="@+id/username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/material_dynamic_neutral20"
         android:text="@string/username_txt"
         android:textAlignment="center"
         android:textColor="@android:color/white"
@@ -41,13 +38,12 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="2sp"
-        android:background="@color/cardview_dark_background"
+        android:background="@color/material_dynamic_neutral40"
         tools:ignore="SmallSp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/material_dynamic_neutral20">
+        android:layout_height="wrap_content">
 
         <Spinner
             android:id="@+id/sort_spinner"
@@ -76,7 +72,6 @@
         android:id="@+id/code_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/material_dynamic_neutral20"
         android:numColumns="4"
         android:verticalSpacing="10dp" />
 
