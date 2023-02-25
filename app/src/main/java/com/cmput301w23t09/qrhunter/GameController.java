@@ -13,7 +13,7 @@ import java.util.UUID;
 /**
  * The MainController handles controlling the content to be shown onscreen.
  */
-public class MainController {
+public class GameController {
     private static final String DEVICE_UUID_FILE = "device_uuid.dat";
     private static final String DEVICE_UUID_FILE_FIELD = "uuid";
 
@@ -24,7 +24,7 @@ public class MainController {
     private DialogFragment popup;
 
 
-    public MainController(MainActivity activity) {
+    public GameController(MainActivity activity) {
         this.activity = activity;
         this.setNavbarEnabled(false);
 

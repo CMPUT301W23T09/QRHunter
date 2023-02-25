@@ -18,9 +18,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private MainController controller;
+    private GameController controller;
 
-    public MainController getController() {
+    public GameController getController() {
         return controller;
     }
 
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        controller = new MainController(this);
+        controller = new GameController(this);
 
         // Set navigation controller adapter
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation_bar);

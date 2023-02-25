@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.cmput301w23t09.qrhunter.BaseFragment;
-import com.cmput301w23t09.qrhunter.MainController;
+import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -24,8 +24,8 @@ public class LandingScreenFragment extends BaseFragment {
     private TextInputEditText emailInput;
     private Button registrationButton;
 
-    public LandingScreenFragment(MainController mainController) {
-        super(mainController);
+    public LandingScreenFragment(GameController gameController) {
+        super(gameController);
     }
 
     @Override
