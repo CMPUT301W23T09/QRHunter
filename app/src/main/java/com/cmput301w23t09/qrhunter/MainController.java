@@ -9,6 +9,9 @@ import com.cmput301w23t09.qrhunter.util.ValidationUtils;
 
 import java.util.UUID;
 
+/**
+ * The MainController handles controlling whether or not to log the player in and also registration.
+ */
 public class MainController {
     private final MainActivity activity;
 
@@ -29,7 +32,7 @@ public class MainController {
             }
 
             // Otherwise show the registration screen.
-            activity.showRegistrationElements();
+            activity.showLandingPage();
         });
     }
 
@@ -107,6 +110,9 @@ public class MainController {
         return true;
     }
 
+    /**
+     * Switches the current activity to the game activity.
+     */
     private void switchToGameActivity() {
         Intent switchToGameActivityIntent = new Intent(activity, GameActivity.class);
         switchToGameActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

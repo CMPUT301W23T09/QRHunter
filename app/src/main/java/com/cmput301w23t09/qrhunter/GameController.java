@@ -4,7 +4,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 /**
- * The MainController handles controlling the content to be shown onscreen.
+ * The GameController handles controlling the content to be shown onscreen when viewing the GameActivity.
  */
 public class GameController {
     private final GameActivity activity;

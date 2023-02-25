@@ -10,6 +10,9 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+/**
+ * The MainActivity handles displaying the landing and initial loading page.
+ */
 public class MainActivity extends AppCompatActivity {
     private MainController controller;
 
@@ -26,7 +29,10 @@ public class MainActivity extends AppCompatActivity {
         controller = new MainController(this);
     }
 
-    public void showRegistrationElements() {
+    /**
+     * Switch the current view contents to the landing page.
+     */
+    public void showLandingPage() {
         setContentView(R.layout.activity_main_landing);
 
         usernameInput = findViewById(R.id.landing_screen_usernameTextField);
@@ -51,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void onRegistrationClick(View view) {
         String username = usernameInput.getText().toString();
-        String phoneNo = phoneInput.getText().toString().replaceAll("\\s+", "");
+        String phoneNo = phoneInput.getText().toString().replaceAll("\\s+", "");    // get rid of spaces
         String email = emailInput.getText().toString();
 
         registrationButton.setEnabled(false);
