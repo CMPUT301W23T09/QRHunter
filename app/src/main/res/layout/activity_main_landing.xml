@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/screen_background">
+    android:background="@color/screen_background"
+    tools:visibility="visible">
 
     <ImageView
         android:id="@+id/imageView"
@@ -103,8 +104,8 @@
         android:layout_marginTop="32dp"
         android:backgroundTint="@color/button_color"
         android:text="@string/landing_screen_register_text"
-        android:textColor="@color/black"
         android:textAllCaps="false"
+        android:textColor="@color/black"
         android:textSize="18sp"
         app:icon="@drawable/baseline_play_arrow_24"
         app:iconGravity="textStart"

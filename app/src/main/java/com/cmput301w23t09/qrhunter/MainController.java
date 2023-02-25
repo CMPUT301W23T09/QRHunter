@@ -1,19 +1,36 @@
-package com.cmput301w23t09.qrhunter.landing;
+package com.cmput301w23t09.qrhunter;
 
-import android.telephony.PhoneNumberUtils;
+import android.content.Intent;
 
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
+import com.cmput301w23t09.qrhunter.util.DeviceUtils;
 import com.cmput301w23t09.qrhunter.util.ValidationUtils;
 
 import java.util.UUID;
 
-public class LandingScreenController {
+public class MainController {
+    private final MainActivity activity;
 
-    private final LandingScreenFragment landingScreenFragment;
+    public MainController(MainActivity activity) {
+        this.activity = activity;
 
-    public LandingScreenController(LandingScreenFragment fragment) {
-        landingScreenFragment = fragment;
+        // Check if player is registered to determine which screen to show on launch.
+        PlayerDatabase.getInstance().getPlayerByDeviceId(DeviceUtils.getDeviceUUID(activity), results -> {
+            if (!results.isSuccessful()) {
+                activity.displayToast("An error occurred while loading in your player data.");
+                return;
+            }
+
+            if (results.getData() != null) {
+                // Player has existing data, switch to GameActivity.
+                switchToGameActivity();
+                return;
+            }
+
+            // Otherwise show the registration screen.
+            activity.showRegistrationElements();
+        });
     }
 
     /**
@@ -31,12 +48,12 @@ public class LandingScreenController {
         // Does an existing player already have this username?
         PlayerDatabase.getInstance().getPlayerByUsername(username, results -> {
             if (!results.isSuccessful()) {
-                landingScreenFragment.displayRegistrationError("An exception occurred while fetching player data from the database.");
+                activity.displayRegistrationError("An exception occurred while fetching player data from the database.");
                 return;
             }
 
             if (results.getData() != null) {
-                landingScreenFragment.displayRegistrationError("The username is already in use.");
+                activity.displayRegistrationError("The username is already in use.");
                 return;
             }
 
@@ -53,16 +70,17 @@ public class LandingScreenController {
      * @param email email to add
      */
     private void onSuccessfulRegistrationDetails(String username, String phoneNo, String email) {
-        UUID deviceUUID = landingScreenFragment.getMainController().getDeviceUUID();
+        UUID deviceUUID = DeviceUtils.getDeviceUUID(activity);
         Player player = new Player(deviceUUID, username, phoneNo, email);
 
         PlayerDatabase.getInstance().add(player, addResults -> {
             if (!addResults.isSuccessful()) {
-                landingScreenFragment.displayRegistrationError("An exception occurred while registering your user credentials.");
+                activity.displayRegistrationError("An exception occurred while registering your user credentials.");
                 return;
             }
 
-            // TODO: Change screen to ScanQR screen as user is now FULLY registered.
+            // Successfully registered.
+            switchToGameActivity();
         });
     }
 
@@ -76,17 +94,23 @@ public class LandingScreenController {
      */
     private boolean checkIfInputIsValid(String username, String phoneNo, String email) {
         if (!ValidationUtils.isValidUsername(username)) {
-            landingScreenFragment.displayRegistrationError("Username must be between 1 and 20 characters.");
+            activity.displayRegistrationError("Username must be between 1 and 20 characters.");
             return false;
         } else if (!ValidationUtils.isValidPhoneNo(phoneNo)) {
-            landingScreenFragment.displayRegistrationError("Invalid phone number.");
+            activity.displayRegistrationError("Invalid phone number.");
             return false;
         } else if (!ValidationUtils.isValidEmail(email)) {
-            landingScreenFragment.displayRegistrationError("Invalid email.");
+            activity.displayRegistrationError("Invalid email.");
             return false;
         }
 
         return true;
+    }
+
+    private void switchToGameActivity() {
+        Intent switchToGameActivityIntent = new Intent(activity, GameActivity.class);
+        switchToGameActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        activity.startActivity(switchToGameActivityIntent);
     }
 
 }
