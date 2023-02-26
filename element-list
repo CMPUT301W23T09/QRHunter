@@ -1,3 +1,5 @@
 com.cmput301w23t09.qrhunter
-com.cmput301w23t09.qrhunter.landing
+com.cmput301w23t09.qrhunter.database
 com.cmput301w23t09.qrhunter.navigation
+com.cmput301w23t09.qrhunter.player
+com.cmput301w23t09.qrhunter.util

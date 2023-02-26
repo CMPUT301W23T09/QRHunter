@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
+var data = {"i0":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -133,7 +133,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <hr>
 <pre>public class <span class="typeNameLabel">MainController</span>
 extends java.lang.Object</pre>
-<div class="block">The MainController handles controlling the content to be shown onscreen.</div>
+<div class="block">The MainController handles controlling whether or not to log the player in and also registration.</div>
 </li>
 </ul>
 </div>
@@ -176,52 +176,12 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="MainActivity.html" title="class in com.cmput301w23t09.qrhunter">MainActivity</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getActivity()">getActivity</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Retrieve the MainActivity this controller controls.</div>
-</td>
-</tr>
-<tr id="i1" class="rowColor">
-<td class="colFirst"><code>androidx.fragment.app.Fragment</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getBody()">getBody</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Retrieve the current body fragment.</div>
-</td>
-</tr>
-<tr id="i2" class="altColor">
-<td class="colFirst"><code>androidx.fragment.app.DialogFragment</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPopup()">getPopup</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Retrieve the current popup dialog.</div>
-</td>
-</tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isNavbarEnabled()">isNavbarEnabled</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Retrieve if the navbar is currently enabled.</div>
-</td>
-</tr>
-<tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setBody(androidx.fragment.app.Fragment)">setBody</a></span>&#8203;(androidx.fragment.app.Fragment&nbsp;fragment)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onRegistration(java.lang.String,java.lang.String,java.lang.String)">onRegistration</a></span>&#8203;(java.lang.String&nbsp;username,
+              java.lang.String&nbsp;phoneNo,
+              java.lang.String&nbsp;email)</code></th>
 <td class="colLast">
-<div class="block">Set the current body fragment to another fragment or null to show no fragment.</div>
-</td>
-</tr>
-<tr id="i5" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setNavbarEnabled(boolean)">setNavbarEnabled</a></span>&#8203;(boolean&nbsp;enabled)</code></th>
-<td class="colLast">
-<div class="block">Modify whether or not the navbar should be enabled.</div>
-</td>
-</tr>
-<tr id="i6" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setPopup(androidx.fragment.app.DialogFragment)">setPopup</a></span>&#8203;(androidx.fragment.app.DialogFragment&nbsp;dialog)</code></th>
-<td class="colLast">
-<div class="block">Change the current popup fragment.</div>
+<div class="block">Attempts to register player given the credentials</div>
 </td>
 </tr>
 </table>
@@ -267,101 +227,21 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="getActivity()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getActivity</h4>
-<pre class="methodSignature">public&nbsp;<a href="MainActivity.html" title="class in com.cmput301w23t09.qrhunter">MainActivity</a>&nbsp;getActivity()</pre>
-<div class="block">Retrieve the MainActivity this controller controls.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>MainActivity</dd>
-</dl>
-</li>
-</ul>
-<a id="isNavbarEnabled()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>isNavbarEnabled</h4>
-<pre class="methodSignature">public&nbsp;boolean&nbsp;isNavbarEnabled()</pre>
-<div class="block">Retrieve if the navbar is currently enabled.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>if the navbar is enabled</dd>
-</dl>
-</li>
-</ul>
-<a id="setNavbarEnabled(boolean)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setNavbarEnabled</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;setNavbarEnabled&#8203;(boolean&nbsp;enabled)</pre>
-<div class="block">Modify whether or not the navbar should be enabled.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>enabled</code> - if the navbar should be enabled.</dd>
-</dl>
-</li>
-</ul>
-<a id="getBody()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getBody</h4>
-<pre class="methodSignature">public&nbsp;androidx.fragment.app.Fragment&nbsp;getBody()</pre>
-<div class="block">Retrieve the current body fragment.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>body fragment or null if none is set.</dd>
-</dl>
-</li>
-</ul>
-<a id="setBody(androidx.fragment.app.Fragment)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setBody</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;setBody&#8203;(androidx.fragment.app.Fragment&nbsp;fragment)</pre>
-<div class="block">Set the current body fragment to another fragment or null to show no fragment.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>fragment</code> - fragment to display as the body of the screen.</dd>
-</dl>
-</li>
-</ul>
-<a id="getPopup()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getPopup</h4>
-<pre class="methodSignature">public&nbsp;androidx.fragment.app.DialogFragment&nbsp;getPopup()</pre>
-<div class="block">Retrieve the current popup dialog.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>current popup dialog.</dd>
-</dl>
-</li>
-</ul>
-<a id="setPopup(androidx.fragment.app.DialogFragment)">
+<a id="onRegistration(java.lang.String,java.lang.String,java.lang.String)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>setPopup</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;setPopup&#8203;(androidx.fragment.app.DialogFragment&nbsp;dialog)</pre>
-<div class="block">Change the current popup fragment.</div>
+<h4>onRegistration</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;onRegistration&#8203;(java.lang.String&nbsp;username,
+                           java.lang.String&nbsp;phoneNo,
+                           java.lang.String&nbsp;email)</pre>
+<div class="block">Attempts to register player given the credentials</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>dialog</code> - popup dialog to display on screen.</dd>
+<dd><code>username</code> - username to register account with</dd>
+<dd><code>phoneNo</code> - phone number to register account with</dd>
+<dd><code>email</code> - email to register account with</dd>
 </dl>
 </li>
 </ul>

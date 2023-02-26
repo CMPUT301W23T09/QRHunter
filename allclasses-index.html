@@ -27,6 +27,12 @@
     catch(err) {
     }
 //-->
+var data = {"i0":2,"i1":1,"i2":2,"i3":2,"i4":2,"i5":2,"i6":2,"i7":2,"i8":2,"i9":2,"i10":2,"i11":2};
+var tabs = {65535:["t0","All Classes"],1:["t1","Interface Summary"],2:["t2","Class Summary"]};
+var altColor = "altColor";
+var rowColor = "rowColor";
+var tableTab = "tableTab";
+var activeTableTab = "activeTableTab";
 var pathtoroot = "./";
 var useModuleDirectories = true;
 loadScripts(document, 'script');</script>
@@ -99,7 +105,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <table class="typeSummary">
-<caption><span>Class Summary</span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Classes</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Interface Summary</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Class Summary</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Class</th>
 <th class="colLast" scope="col">Description</th>
@@ -111,29 +117,66 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </th>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><a href="com/cmput301w23t09/qrhunter/landing/LandingScreenController.html" title="class in com.cmput301w23t09.qrhunter.landing">LandingScreenController</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
-</tr>
-<tr id="i2" class="altColor">
-<td class="colFirst"><a href="com/cmput301w23t09/qrhunter/landing/LandingScreenFragment.html" title="class in com.cmput301w23t09.qrhunter.landing">LandingScreenFragment</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
-</tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><a href="com/cmput301w23t09/qrhunter/MainActivity.html" title="class in com.cmput301w23t09.qrhunter">MainActivity</a></td>
+<td class="colFirst"><a href="com/cmput301w23t09/qrhunter/database/DatabaseConsumer.html" title="interface in com.cmput301w23t09.qrhunter.database">DatabaseConsumer</a>&lt;<a href="com/cmput301w23t09/qrhunter/database/DatabaseConsumer.html" title="type parameter in DatabaseConsumer">T</a>&gt;</td>
 <th class="colLast" scope="row">
-<div class="block">The Main Activity class handles displaying the fragments and navbar onscreen.</div>
+<div class="block">Utility interface as a shortcut to specifying a Consumer of a DatabaseQueryResult</div>
 </th>
 </tr>
-<tr id="i4" class="altColor">
-<td class="colFirst"><a href="com/cmput301w23t09/qrhunter/MainController.html" title="class in com.cmput301w23t09.qrhunter">MainController</a></td>
+<tr id="i2" class="altColor">
+<td class="colFirst"><a href="com/cmput301w23t09/qrhunter/database/DatabaseQueryResults.html" title="class in com.cmput301w23t09.qrhunter.database">DatabaseQueryResults</a>&lt;<a href="com/cmput301w23t09/qrhunter/database/DatabaseQueryResults.html" title="type parameter in DatabaseQueryResults">T</a>&gt;</td>
 <th class="colLast" scope="row">
-<div class="block">The MainController handles controlling the content to be shown onscreen.</div>
+<div class="block">Database query result helper class used as an intermediate between the database and application
+ in data representation.</div>
+</th>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><a href="com/cmput301w23t09/qrhunter/util/DeviceUtils.html" title="class in com.cmput301w23t09.qrhunter.util">DeviceUtils</a></td>
+<th class="colLast" scope="row">&nbsp;</th>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><a href="com/cmput301w23t09/qrhunter/GameActivity.html" title="class in com.cmput301w23t09.qrhunter">GameActivity</a></td>
+<th class="colLast" scope="row">
+<div class="block">The GameActivity class handles displaying the fragments and navbar onscreen.</div>
 </th>
 </tr>
 <tr id="i5" class="rowColor">
+<td class="colFirst"><a href="com/cmput301w23t09/qrhunter/GameController.html" title="class in com.cmput301w23t09.qrhunter">GameController</a></td>
+<th class="colLast" scope="row">
+<div class="block">The GameController handles controlling the content to be shown onscreen when viewing the GameActivity.</div>
+</th>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><a href="com/cmput301w23t09/qrhunter/MainActivity.html" title="class in com.cmput301w23t09.qrhunter">MainActivity</a></td>
+<th class="colLast" scope="row">
+<div class="block">The MainActivity handles displaying the landing and initial loading page.</div>
+</th>
+</tr>
+<tr id="i7" class="rowColor">
+<td class="colFirst"><a href="com/cmput301w23t09/qrhunter/MainController.html" title="class in com.cmput301w23t09.qrhunter">MainController</a></td>
+<th class="colLast" scope="row">
+<div class="block">The MainController handles controlling whether or not to log the player in and also registration.</div>
+</th>
+</tr>
+<tr id="i8" class="altColor">
 <td class="colFirst"><a href="com/cmput301w23t09/qrhunter/navigation/NavigationControllerAdapter.html" title="class in com.cmput301w23t09.qrhunter.navigation">NavigationControllerAdapter</a></td>
 <th class="colLast" scope="row">
 <div class="block">The NavigationController handles controlling the content to display.</div>
+</th>
+</tr>
+<tr id="i9" class="rowColor">
+<td class="colFirst"><a href="com/cmput301w23t09/qrhunter/player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a></td>
+<th class="colLast" scope="row">&nbsp;</th>
+</tr>
+<tr id="i10" class="altColor">
+<td class="colFirst"><a href="com/cmput301w23t09/qrhunter/player/PlayerDatabase.html" title="class in com.cmput301w23t09.qrhunter.player">PlayerDatabase</a></td>
+<th class="colLast" scope="row">
+<div class="block">Manages all Player database operations.</div>
+</th>
+</tr>
+<tr id="i11" class="rowColor">
+<td class="colFirst"><a href="com/cmput301w23t09/qrhunter/util/ValidationUtils.html" title="class in com.cmput301w23t09.qrhunter.util">ValidationUtils</a></td>
+<th class="colLast" scope="row">
+<div class="block">Utility class to validate various inputs.</div>
 </th>
 </tr>
 </table>

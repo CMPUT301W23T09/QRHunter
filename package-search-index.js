@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"com.cmput301w23t09.qrhunter"},{"l":"com.cmput301w23t09.qrhunter.landing"},{"l":"com.cmput301w23t09.qrhunter.navigation"}]
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"com.cmput301w23t09.qrhunter"},{"l":"com.cmput301w23t09.qrhunter.database"},{"l":"com.cmput301w23t09.qrhunter.navigation"},{"l":"com.cmput301w23t09.qrhunter.player"},{"l":"com.cmput301w23t09.qrhunter.util"}]
