@@ -28,7 +28,7 @@ public class NavigationControllerAdapter implements NavigationBarView.OnItemSele
 
         // We avoid a switch statement here as it is not recommended to have ids as case statements.
         if (selectedItemId == R.id.navigation_scan_qr) {
-            mainController.setBody(new ScannerFragment(mainController));
+            gameController.setBody(new ScannerFragment(gameController));
             // mainController.setBody(new ScanQRFragment());
         } else if (selectedItemId == R.id.navigation_my_profile) {
             // mainController.setBody(new ProfileFragment());

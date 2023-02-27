@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.cmput301w23t09.qrhunter.BaseFragment;
+import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.MainController;
 import com.cmput301w23t09.qrhunter.databinding.FragmentScanqrBinding;
 
@@ -25,8 +26,8 @@ public class ScannerFragment extends BaseFragment {
     private CameraController cameraController;
     private FragmentScanqrBinding binding;
 
-    public ScannerFragment(MainController mainController) {
-        super(mainController);
+    public ScannerFragment(GameController gameController) {
+        super(gameController);
     }
 
     @Nullable
