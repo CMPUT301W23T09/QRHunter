@@ -13,4 +13,11 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="QRHunter.TextInputLayout.OutlinedBox" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/text_input_outline</item>
+        <item name="hintTextColor">@color/text_input_outline</item>
+        <item name="android:textColorHint">@color/text_input_outline</item>
+        <item name="placeholderTextColor">@color/text_input_outline</item>
+    </style>
 </resources>

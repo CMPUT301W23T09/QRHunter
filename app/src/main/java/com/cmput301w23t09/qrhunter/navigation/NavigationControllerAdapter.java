@@ -4,7 +4,7 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 
-import com.cmput301w23t09.qrhunter.MainController;
+import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.scanqr.ScannerFragment;
 import com.google.android.material.navigation.NavigationBarView;
@@ -16,10 +16,10 @@ import java.util.Scanner;
  */
 public class NavigationControllerAdapter implements NavigationBarView.OnItemSelectedListener {
 
-    private final MainController mainController;
+    private final GameController gameController;
 
-    public NavigationControllerAdapter(MainController mainController) {
-        this.mainController = mainController;
+    public NavigationControllerAdapter(GameController gameController) {
+        this.gameController = gameController;
     }
 
     @Override
