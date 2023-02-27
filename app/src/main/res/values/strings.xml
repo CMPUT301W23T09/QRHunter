@@ -11,4 +11,8 @@
     <string name="landing_screen_phone_hint">Phone</string>
     <string name="landing_screen_email_hint">Email</string>
     <string name="landing_screen_register_text">Start Hunting</string>
+    <string name="leaderboard_navigation_total_points">Total Points</string>
+    <string name="leaderboard_navigation_scanned">Scanned</string>
+    <string name="leaderboard_navigation_top_codes">Top Codes</string>
+    <string name="leaderboard_navigation_top_codes_by_region">Top Codes (By Region)</string>
 </resources>
