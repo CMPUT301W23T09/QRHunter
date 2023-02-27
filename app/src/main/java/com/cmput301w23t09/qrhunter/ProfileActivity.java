@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +30,12 @@ public class ProfileActivity extends Fragment {
     private GridView qrCodeList;
     private QRCodeAdapter qrCodeAdapter;
     private ArrayList<QRCode> qrCodes;
+
+    private TextView username;
+
+    private TextView totalPoints;
+    private TextView totalCodes;
+    private TextView topCode;
 
     private FirebaseFirestore db;
 
@@ -92,6 +99,11 @@ public class ProfileActivity extends Fragment {
         // get QR code list view
         qrCodeList = view.findViewById(R.id.code_list);
 
+        // get QR code statistics
+        totalPoints = view.findViewById(R.id.total_points);
+        totalCodes = view.findViewById(R.id.total_codes);
+        topCode = view.findViewById(R.id.top_code_score);
+
         // set QR code data and list view adapter
         qrCodes = new ArrayList<>();
         qrCodeAdapter = new QRCodeAdapter(getContext(), qrCodes);
@@ -114,9 +126,28 @@ public class ProfileActivity extends Fragment {
                     Integer score = (Integer) doc.getData().get("Score");
                     qrCodes.add(new QRCode(hash, null, null, score, null, null, null, null));
                 }
-                // update view
+                // update qr code view
                 qrCodeAdapter.notifyDataSetChanged();
+                // update qr code statistics
+                totalPoints.setText(getString(R.string.total_points_txt, getTotalScore()));
+                totalCodes.setText(getString(R.string.total_codes_txt, getNumCodes()));
             }
         });
+    }
+
+    private int getTotalScore() {
+        int total = 0;
+        for (QRCode qrCode: qrCodes) {
+            total += qrCode.getScore();
+        }
+        return total;
+    }
+
+    private int getNumCodes() {
+        return qrCodes.size();
+    }
+
+    private int getTopCode() {
+        return 0;  // placeholder
     }
 }
