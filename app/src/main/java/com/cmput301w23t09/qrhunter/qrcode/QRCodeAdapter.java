@@ -1,4 +1,4 @@
-package com.cmput301w23t09.qrhunter;
+package com.cmput301w23t09.qrhunter.qrcode;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 
 import java.util.ArrayList;
 

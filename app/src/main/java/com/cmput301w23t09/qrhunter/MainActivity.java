@@ -1,91 +1,75 @@
 package com.cmput301w23t09.qrhunter;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainerView;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
-import android.view.ViewGroup;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
-import com.cmput301w23t09.qrhunter.navigation.NavigationControllerAdapter;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.textfield.TextInputEditText;
 
 /**
- * The Main Activity class handles displaying the fragments and navbar onscreen.
+ * The MainActivity handles displaying the landing and initial loading page.
  */
 public class MainActivity extends AppCompatActivity {
-
     private MainController controller;
 
-    public MainController getController() {
-        return controller;
-    }
+    private TextInputEditText usernameInput;
+    private TextInputEditText phoneInput;
+    private TextInputEditText emailInput;
+    private Button registrationButton;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_loading);
 
         controller = new MainController(this);
-
-        // Set navigation controller adapter
-        BottomNavigationView bottomNavigationView = findViewById(R.id.navigation_bar);
-        bottomNavigationView.setOnItemSelectedListener(new NavigationControllerAdapter(controller));
     }
 
     /**
-     * Called when the fragment of the body should be updated.
-     * @param fragment fragment to insert into the body.
+     * Switch the current view contents to the landing page.
      */
-    void onControllerBodyUpdate(Fragment fragment) {
-        FragmentContainerView fragmentContainerView = findViewById(R.id.main_activity_fragment_body_host);
-        Fragment currentActiveFragment = fragmentContainerView.getFragment();
+    public void showLandingPage() {
+        setContentView(R.layout.activity_main_landing);
 
-        FragmentTransaction bodyTransaction = getSupportFragmentManager().beginTransaction();
-        if (fragment != null) {
-            bodyTransaction.replace(R.id.main_activity_fragment_body_host, fragment);
-        } else {
-            bodyTransaction.remove(currentActiveFragment);
-        }
-        bodyTransaction.commit();
+        usernameInput = findViewById(R.id.landing_screen_usernameTextField);
+        phoneInput = findViewById(R.id.landing_screen_phoneNoTextField);
+        emailInput = findViewById(R.id.landing_screen_emailTextField);
+        registrationButton = findViewById(R.id.landing_screen_register_button);
+        registrationButton.setOnClickListener(this::onRegistrationClick);
     }
 
     /**
-     * Called when the visibility of the navbar should be updated.
-     * @param isEnabled if the navbar should be visible.
+     * Called when an error related to registration should be displayed to the user.
+     * @param message error message
      */
-    void onControllerNavbarVisibilityUpdate(boolean isEnabled) {
-        BottomNavigationView menu = findViewById(R.id.navigation_bar);
-        ViewGroup.LayoutParams params = menu.getLayoutParams();
-
-        if (isEnabled) {
-            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        } else {
-            params.height = 0;
-        }
-
-        menu.setLayoutParams(params);
+    public void displayRegistrationError(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        registrationButton.setEnabled(true);
     }
 
     /**
-     * Called when the activity should display a popup.
-     * @param dialog popup to display on screen.
-     * @throws IllegalArgumentException if setting the dialog to null while no dialog is on screen.
+     * Called when the registration button is clicked.
+     * @param view
      */
-    void onControllerPopupUpdate(DialogFragment dialog) {
-        if (dialog != null) {
-            dialog.show(getSupportFragmentManager(), "popup");
-        } else {
-            Fragment existingFragment = getSupportFragmentManager().findFragmentByTag("popup");
+    private void onRegistrationClick(View view) {
+        String username = usernameInput.getText().toString();
+        String phoneNo = phoneInput.getText().toString().replaceAll("\\s+", "");    // get rid of spaces
+        String email = emailInput.getText().toString();
 
-            if (!(existingFragment instanceof DialogFragment)) {
-                throw new IllegalArgumentException("Attempted to dismiss dialog popup when none exists.");
-            }
-            ((DialogFragment) existingFragment).dismiss();
-        }
+        registrationButton.setEnabled(false);
+        controller.onRegistration(username, phoneNo, email);
+    }
+
+    /**
+     * Called when a toast should be displayed by the main activity.
+     * @param message message to display
+     */
+    public void displayToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
 }

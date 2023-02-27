@@ -1,96 +1,122 @@
 package com.cmput301w23t09.qrhunter;
 
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
+import android.content.Intent;
 
-import com.cmput301w23t09.qrhunter.landing.LandingScreenFragment;
+import com.cmput301w23t09.qrhunter.player.Player;
+import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
+import com.cmput301w23t09.qrhunter.util.DeviceUtils;
+import com.cmput301w23t09.qrhunter.util.ValidationUtils;
+
+import java.util.UUID;
 
 /**
- * The MainController handles controlling the content to be shown onscreen.
+ * The MainController handles controlling whether or not to log the player in and also registration.
  */
 public class MainController {
-
     private final MainActivity activity;
-
-    private boolean navbarEnabled = true;
-    private Fragment body;
-    private DialogFragment popup;
-
 
     public MainController(MainActivity activity) {
         this.activity = activity;
 
-        // TODO: Check if user is logged in or not, and then set initial data.
-        this.setBody(new LandingScreenFragment(activity.getController()));
+        // Check if player is registered to determine which screen to show on launch.
+        PlayerDatabase.getInstance().getPlayerByDeviceId(DeviceUtils.getDeviceUUID(activity), results -> {
+            if (!results.isSuccessful()) {
+                activity.displayToast("An error occurred while loading in your player data.");
+                return;
+            }
+
+            if (results.getData() != null) {
+                // Player has existing data, switch to GameActivity.
+                switchToGameActivity();
+                return;
+            }
+
+            // Otherwise show the registration screen.
+            activity.showLandingPage();
+        });
     }
 
     /**
-     * Retrieve the MainActivity this controller controls.
-     * @return MainActivity
+     * Attempts to register player given the credentials
+     * @param username username to register account with
+     * @param phoneNo phone number to register account with
+     * @param email email to register account with
      */
-    public MainActivity getActivity() {
-        return activity;
-    }
-
-    /**
-     * Retrieve if the navbar is currently enabled.
-     * @return if the navbar is enabled
-     */
-    public boolean isNavbarEnabled() {
-        return this.navbarEnabled;
-    }
-
-    /**
-     * Modify whether or not the navbar should be enabled.
-     * @param enabled if the navbar should be enabled.
-     */
-    public void setNavbarEnabled(boolean enabled) {
-        if (this.navbarEnabled != enabled) {
-            this.navbarEnabled = enabled;
-            getActivity().onControllerNavbarVisibilityUpdate(enabled);
-        }
-    }
-
-    /**
-     * Retrieve the current body fragment.
-     * @return body fragment or null if none is set.
-     */
-    public Fragment getBody() {
-        return body;
-    }
-
-    /**
-     * Set the current body fragment to another fragment or null to show no fragment.
-     * @param fragment fragment to display as the body of the screen.
-     */
-    public void setBody(Fragment fragment) {
-        if (fragment != body) {
-            body = fragment;
-            getActivity().onControllerBodyUpdate(fragment);
-        }
-    }
-
-    /**
-     * Retrieve the current popup dialog.
-     * @return current popup dialog.
-     */
-    public DialogFragment getPopup() {
-        if (popup == null || !popup.isVisible()) {
-            return null;
+    public void onRegistration(String username, String phoneNo, String email) {
+        // Validate user information first.
+        if (!checkIfInputIsValid(username, phoneNo, email)) {
+            return;
         }
 
-        return popup;
+        // Does an existing player already have this username?
+        PlayerDatabase.getInstance().getPlayerByUsername(username, results -> {
+            if (!results.isSuccessful()) {
+                activity.displayRegistrationError("An exception occurred while fetching player data from the database.");
+                return;
+            }
+
+            if (results.getData() != null) {
+                activity.displayRegistrationError("The username is already in use.");
+                return;
+            }
+
+            // Register the player with the details provided
+            onSuccessfulRegistrationDetails(username, phoneNo, email);
+        });
     }
 
     /**
-     * Change the current popup fragment.
-     * @param dialog popup dialog to display on screen.
+     * Called after verifying that user credentials are valid and that no other user owns the requested username.
+     * Adds the player to the database and logs the player in.
+     * @param username username to add
+     * @param phoneNo phone number to add
+     * @param email email to add
      */
-    public void setPopup(DialogFragment dialog) {
-        if (getPopup() != dialog) {
-            popup = dialog;
-            getActivity().onControllerPopupUpdate(dialog);
+    private void onSuccessfulRegistrationDetails(String username, String phoneNo, String email) {
+        UUID deviceUUID = DeviceUtils.getDeviceUUID(activity);
+        Player player = new Player(deviceUUID, username, phoneNo, email);
+
+        PlayerDatabase.getInstance().add(player, addResults -> {
+            if (!addResults.isSuccessful()) {
+                activity.displayRegistrationError("An exception occurred while registering your user credentials.");
+                return;
+            }
+
+            // Successfully registered.
+            switchToGameActivity();
+        });
+    }
+
+    /**
+     * Checks if the user details provided meet the validation rules.
+     * Failure to meet any requirement sends an error message to the view.
+     * @param username username to check
+     * @param phoneNo phone number to check
+     * @param email email to check.
+     * @return if validation was successful.
+     */
+    private boolean checkIfInputIsValid(String username, String phoneNo, String email) {
+        if (!ValidationUtils.isValidUsername(username)) {
+            activity.displayRegistrationError("Username must be between 1 and 20 characters.");
+            return false;
+        } else if (!ValidationUtils.isValidPhoneNo(phoneNo)) {
+            activity.displayRegistrationError("Invalid phone number.");
+            return false;
+        } else if (!ValidationUtils.isValidEmail(email)) {
+            activity.displayRegistrationError("Invalid email.");
+            return false;
         }
+
+        return true;
+    }
+
+    /**
+     * Switches the current activity to the game activity.
+     */
+    private void switchToGameActivity() {
+        Intent switchToGameActivityIntent = new Intent(activity, GameActivity.class);
+        switchToGameActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        activity.startActivity(switchToGameActivityIntent);
     }
 
 }

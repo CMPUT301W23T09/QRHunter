@@ -1,4 +1,6 @@
-package com.cmput301w23t09.qrhunter;
+package com.cmput301w23t09.qrhunter.qrcode;
+
+import com.cmput301w23t09.qrhunter.player.Player;
 
 /**
  * This is a class that stores a comment that a player made
