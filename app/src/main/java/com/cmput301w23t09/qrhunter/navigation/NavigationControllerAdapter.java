@@ -1,9 +1,8 @@
 package com.cmput301w23t09.qrhunter.navigation;
 
 import android.view.MenuItem;
-
 import androidx.annotation.NonNull;
-
+import com.cmput301w23t09.qrhunter.ProfileActivity;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.scanqr.ScannerFragment;
@@ -31,7 +30,7 @@ public class NavigationControllerAdapter implements NavigationBarView.OnItemSele
             gameController.setBody(new ScannerFragment(gameController));
             // mainController.setBody(new ScanQRFragment());
         } else if (selectedItemId == R.id.navigation_my_profile) {
-            // mainController.setBody(new ProfileFragment());
+            gameController.setBody(new ProfileActivity());
         } else if (selectedItemId == R.id.navigation_qr_finder) {
             // mainController.setBody(new QRFinderFragment());
         } else if (selectedItemId == R.id.navigation_social) {
