@@ -1,7 +1,9 @@
 package com.cmput301w23t09.qrhunter.navigation;
 
 import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
+
 import com.cmput301w23t09.qrhunter.ProfileActivity;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
@@ -19,6 +21,7 @@ public class NavigationControllerAdapter implements NavigationBarView.OnItemSele
 
     public NavigationControllerAdapter(GameController gameController) {
         this.gameController = gameController;
+        gameController.setBody(new ScannerFragment(gameController));
     }
 
     @Override

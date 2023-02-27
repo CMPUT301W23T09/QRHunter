@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.camera.core.ImageProxy;
 
 import com.cmput301w23t09.qrhunter.BaseFragment;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,14 +36,11 @@ public class ScannerController {
     private BarcodeScannerOptions options;
     private BarcodeScanner scanner;
     private BaseFragment fragment;
-
-    // TODO: Make this an overlay on the preview instead
-    private Toast qrCodeInfo;
-    private String pastHash;
+    private QRCodeFragment qrCodeFragment = null;
+    private String pastHash = "";
 
     public ScannerController(BaseFragment fragment) {
         this.fragment = fragment;
-        qrCodeInfo = Toast.makeText(this.fragment.getContext(), "", Toast.LENGTH_SHORT);
         options = new BarcodeScannerOptions.Builder().setBarcodeFormats(
                 Barcode.FORMAT_QR_CODE // Only want to scan QR codes
         ).build();
@@ -75,11 +73,14 @@ public class ScannerController {
                                 String currentHash = Hashing.sha256().hashString(
                                         qrCode.getRawValue(), StandardCharsets.UTF_8).toString();
 
-                                if (!currentHash.equals(pastHash)) {
+                                if ((qrCodeFragment == null || !qrCodeFragment.isAdded()) &&
+                                        !pastHash.equals(currentHash)) {
                                     pastHash = currentHash;
-                                    // This is jank but its placeholder for now
-                                    qrCodeInfo.setText(pastHash);
-                                    qrCodeInfo.show();
+                                    if (qrCodeFragment != null)
+                                        qrCodeFragment.dismissNow();
+                                    qrCodeFragment = QRCodeFragment.newInstance(currentHash);
+                                    qrCodeFragment.show(fragment.getParentFragmentManager(),
+                                            "Scanned QR Code");
                                 }
                                 // TODO: Hash QR code and create QR Object from it!
                                 // TODO: Decide how to handle multiple codes on screen at once
