@@ -16,7 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
  */
 public class GameActivity extends AppCompatActivity {
 
-    private GameController controller;
+        private GameController controller;
 
     public GameController getController() {
         return controller;
