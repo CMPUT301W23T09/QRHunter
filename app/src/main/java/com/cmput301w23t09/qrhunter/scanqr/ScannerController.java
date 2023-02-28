@@ -65,6 +65,7 @@ public class ScannerController {
                         public void onSuccess(List<Barcode> barcodes) {
                             if (barcodes.size() > 0) {
                                 Barcode qrCode = barcodes.get(0);
+                                // TODO: Draw qrCode.getBoundingBox()
 
                                 // Only deal with the code's hash (US 08.01.01)
                                 // From: https://stackoverflow.com/a/18340262 (2016-02-02)
