@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.cmput301w23t09.qrhunter.R;
-import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 
 import java.util.ArrayList;
 

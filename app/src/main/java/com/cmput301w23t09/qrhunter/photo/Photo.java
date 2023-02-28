@@ -1,4 +1,4 @@
-package com.cmput301w23t09.qrhunter.qrcode;
+package com.cmput301w23t09.qrhunter.photo;
 
 import android.media.Image;
 
