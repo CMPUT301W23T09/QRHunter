@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.Spinner;
@@ -16,6 +15,8 @@ import androidx.fragment.app.Fragment;
 
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeAdapter;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeArray;
+import com.cmput301w23t09.qrhunter.qrcode.ScoreComparator;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,13 +24,14 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.Collections;
 
 public class ProfileActivity extends Fragment {
+    private ProfileController controller;
+
     private GridView qrCodeList;
     private QRCodeAdapter qrCodeAdapter;
-    private ArrayList<QRCode> qrCodes;
+    private QRCodeArray qrCodes;
 
     private TextView username;
 
@@ -37,17 +39,17 @@ public class ProfileActivity extends Fragment {
     private TextView totalCodes;
     private TextView topCode;
 
-    private FirebaseFirestore db;
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.profile_activity, container, false);
-        implementSpinners(view);
-        implementQRCodeList(view);
+        controller = new ProfileController(this);
+        createSpinners(view);
+        createProfileInfo(view);
+        createQRCodeList(view);
         return view;
     }
 
-    private void implementSpinners(View view) {
+    private void createSpinners(View view) {
         // get spinners
         Spinner sortSpinner = view.findViewById(R.id.sort_spinner);
         Spinner orderSpinner = view.findViewById(R.id.order_spinner);
@@ -63,57 +65,36 @@ public class ProfileActivity extends Fragment {
         orderSpinner.setAdapter(orderAdapter);
 
         // handle item selection for sort type spinner
-        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                String selected = (String) parent.getItemAtPosition(pos);
-                if (Objects.equals(selected, "Points")) {
-
-                } else if (Objects.equals(selected, "Date Taken")) {
-
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
+        sortSpinner.setOnItemSelectedListener(controller.handleSortSpinnerEvent());
 
         // handle item selection for sort order spinner
-        orderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                String selected = (String) parent.getItemAtPosition(pos);
-                if (Objects.equals(selected, "Descending")) {
-
-                } else if (Objects.equals(selected, "Ascending")) {
-
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
+        orderSpinner.setOnItemSelectedListener(controller.handleOrderSpinnerEvent());
     }
 
-    private void implementQRCodeList(View view) {
-        // get QR code list view
-        qrCodeList = view.findViewById(R.id.code_list);
-
-        // get QR code statistics
+    private void createProfileInfo(View view) {
+        // get profile info views
+        username = view.findViewById(R.id.username);
         totalPoints = view.findViewById(R.id.total_points);
         totalCodes = view.findViewById(R.id.total_codes);
         topCode = view.findViewById(R.id.top_code_score);
+    }
+
+    private void createQRCodeList(View view) {
+        // get QR code list view
+        qrCodeList = view.findViewById(R.id.code_list);
 
         // set QR code data and list view adapter
-        qrCodes = new ArrayList<>();
+        qrCodes = new QRCodeArray();
         qrCodeAdapter = new QRCodeAdapter(getContext(), qrCodes);
         qrCodeList.setAdapter(qrCodeAdapter);
 
-        // access database
-        db = FirebaseFirestore.getInstance();
-        final CollectionReference collectionReference = db.collection("QR Codes");
-        // update data
-        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        // add data from database to qrCodes
+        controller.handleDataUpdate();
+    }
+
+    // This part hasn't been properly refactored to follow the MVC model
+    public EventListener<QuerySnapshot> handleQRDataUpdate() {
+        return new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
             FirebaseFirestoreException error) {
@@ -123,31 +104,17 @@ public class ProfileActivity extends Fragment {
                 assert queryDocumentSnapshots != null;
                 for(QueryDocumentSnapshot doc: queryDocumentSnapshots) {
                     String hash = doc.getId();
-                    Integer score = (Integer) doc.getData().get("Score");
+                    Integer score = (int) (long) doc.getData().get("score");
                     qrCodes.add(new QRCode(hash, null, null, score, null, null, null, null));
                 }
-                // update qr code view
-                qrCodeAdapter.notifyDataSetChanged();
                 // update qr code statistics
-                totalPoints.setText(getString(R.string.total_points_txt, getTotalScore()));
-                totalCodes.setText(getString(R.string.total_codes_txt, getNumCodes()));
+                totalPoints.setText(getString(R.string.total_points_txt, qrCodes.getTotalScore()));
+                totalCodes.setText(getString(R.string.total_codes_txt, qrCodes.size()));
+                topCode.setText(getString(R.string.top_code_txt, qrCodes.getTopScore()));
+                // sort codes and update qr code list view
+                Collections.sort(qrCodes, new ScoreComparator().reversed());
+                qrCodeAdapter.notifyDataSetChanged();
             }
-        });
-    }
-
-    private int getTotalScore() {
-        int total = 0;
-        for (QRCode qrCode: qrCodes) {
-            total += qrCode.getScore();
-        }
-        return total;
-    }
-
-    private int getNumCodes() {
-        return qrCodes.size();
-    }
-
-    private int getTopCode() {
-        return 0;  // placeholder
+        };
     }
 }

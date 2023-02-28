@@ -2,7 +2,9 @@ package com.cmput301w23t09.qrhunter.qrcode;
 
 import android.media.Image;
 
+import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.map.Location;
+import com.cmput301w23t09.qrhunter.photo.Photo;
 import com.cmput301w23t09.qrhunter.player.Player;
 
 import java.util.ArrayList;
