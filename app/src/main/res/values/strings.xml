@@ -11,4 +11,21 @@
     <string name="landing_screen_phone_hint">Phone</string>
     <string name="landing_screen_email_hint">Email</string>
     <string name="landing_screen_register_text">Start Hunting</string>
+    <string name="settings_btn_desc">Settings Button</string>
+    <string name="username_txt">Username</string>
+    <string name="score_txt">Score</string>
+    <string name="sort_spinner_desc">QR Code Sort Spinner</string>
+    <string name="order_spinner_desc">QR Code Order Spinner</string>
+    <string name="visual_representation_desc">Visual Representation of QR code</string>
+    <string name="total_points_txt">%d\nTotalPoints</string>
+    <string name="total_codes_txt">%d\nCodes Scanned</string>
+    <string name="top_code_txt">%d\nTop Code</string>
+    <string-array name="sort_options">
+        <item>Points</item>
+        <item>Date Taken</item>
+    </string-array>
+    <string-array name="order_options">
+        <item>Descending</item>
+        <item>Ascending</item>
+    </string-array>
 </resources>
