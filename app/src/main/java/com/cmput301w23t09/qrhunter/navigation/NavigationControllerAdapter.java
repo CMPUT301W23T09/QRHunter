@@ -7,9 +7,7 @@ import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
 import com.google.android.material.navigation.NavigationBarView;
 
-/**
- * The NavigationController handles controlling the content to display.
- */
+/** The NavigationController handles controlling the content to display. */
 public class NavigationControllerAdapter implements NavigationBarView.OnItemSelectedListener {
 
     private final GameController gameController;
