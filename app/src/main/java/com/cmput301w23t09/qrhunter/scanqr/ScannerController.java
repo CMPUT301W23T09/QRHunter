@@ -35,6 +35,10 @@ public class ScannerController {
   private QRCodeFragment qrCodeFragment = null;
   private String pastHash = "";
 
+  /**
+   * Creates a ScannerController
+   * @param fragment The fragment that the ScannerController is attached to
+   */
   public ScannerController(BaseFragment fragment) {
     this.fragment = fragment;
     options =
