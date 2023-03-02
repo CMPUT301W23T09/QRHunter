@@ -19,7 +19,7 @@ public class QRCodeFragment extends DialogFragment {
   /**
    * Creates a new QRCodeFragment to display a specific QR Code
    *
-   * TODO: Replase hash with QRCode object
+   * <p>TODO: Replase hash with QRCode object
    *
    * @param hash Hash of the QR code to view
    * @return
@@ -41,6 +41,7 @@ public class QRCodeFragment extends DialogFragment {
 
   /**
    * Binds the UI components with the attributes of the QRCode
+   *
    * @param view The view that displays fragment_qrcode.xml
    */
   private void setupViews(View view) {
@@ -50,6 +51,7 @@ public class QRCodeFragment extends DialogFragment {
 
   /**
    * Creates a dialog box to display QRCode information in
+   *
    * @param view The view that displays fragment_qrcode.xml
    * @return An AlertDialog that displays QRCode information
    */

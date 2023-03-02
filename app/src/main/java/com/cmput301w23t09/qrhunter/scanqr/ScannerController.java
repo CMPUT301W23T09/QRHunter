@@ -37,6 +37,7 @@ public class ScannerController {
 
   /**
    * Creates a ScannerController
+   *
    * @param fragment The fragment that the ScannerController is attached to
    */
   public ScannerController(BaseFragment fragment) {
