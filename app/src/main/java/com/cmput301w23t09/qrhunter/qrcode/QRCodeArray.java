@@ -19,7 +19,11 @@ public class QRCodeArray extends ArrayList<QRCode> {
 
   public int getTopScore() {
     this.sort(new ScoreComparator().reversed());
-    QRCode topQR = this.get(0);
-    return topQR.getScore();
+    if (this.size() > 0) {
+      QRCode topQR = this.get(0);
+      return topQR.getScore();
+    } else {
+      return 0;
+    }
   }
 }
