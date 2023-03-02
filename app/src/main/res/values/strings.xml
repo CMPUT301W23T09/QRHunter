@@ -15,4 +15,21 @@
     <string name="leaderboard_navigation_scanned">Scanned</string>
     <string name="leaderboard_navigation_top_codes">Top Codes</string>
     <string name="leaderboard_navigation_top_codes_by_region">Top Codes (By Region)</string>
+    <string name="settings_btn_desc">Settings Button</string>
+    <string name="username_txt">Username</string>
+    <string name="score_txt">Score</string>
+    <string name="sort_spinner_desc">QR Code Sort Spinner</string>
+    <string name="order_spinner_desc">QR Code Order Spinner</string>
+    <string name="visual_representation_desc">Visual Representation of QR code</string>
+    <string name="total_points_txt">%d\nTotalPoints</string>
+    <string name="total_codes_txt">%d\nCodes Scanned</string>
+    <string name="top_code_txt">%d\nTop Code</string>
+    <string-array name="sort_options">
+        <item>Points</item>
+        <item>Date Taken</item>
+    </string-array>
+    <string-array name="order_options">
+        <item>Descending</item>
+        <item>Ascending</item>
+    </string-array>
 </resources>
