@@ -1,4 +1,3 @@
 package com.cmput301w23t09.qrhunter.social.leaderboard;
 
-public class PlayerLeaderboard extends Leaderboard {
-}
+public class PlayerLeaderboard extends Leaderboard {}

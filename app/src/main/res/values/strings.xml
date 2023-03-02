@@ -24,6 +24,7 @@
     <string name="total_points_txt">%d\nTotalPoints</string>
     <string name="total_codes_txt">%d\nCodes Scanned</string>
     <string name="top_code_txt">%d\nTop Code</string>
+    <string name="search_for_player">Search For Player</string>
     <string-array name="sort_options">
         <item>Points</item>
         <item>Date Taken</item>
@@ -31,5 +32,11 @@
     <string-array name="order_options">
         <item>Descending</item>
         <item>Ascending</item>
+    </string-array>
+    <string-array name="leaderboard_options">
+        <item>Total Points</item>
+        <item>Scanned</item>
+        <item>Top Codes</item>
+        <item>Top Codes (By Region)</item>
     </string-array>
 </resources>

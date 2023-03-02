@@ -1,4 +1,3 @@
 package com.cmput301w23t09.qrhunter.social.leaderboard;
 
-public class QRLeaderboard extends Leaderboard {
-}
+public class QRLeaderboard extends Leaderboard {}
