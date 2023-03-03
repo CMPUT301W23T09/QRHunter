@@ -1,6 +1,8 @@
 package com.cmput301w23t09.qrhunter.player;
 
+import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.util.ValidationUtils;
+import java.util.Set;
 import java.util.UUID;
 
 public class Player {
@@ -14,6 +16,8 @@ public class Player {
   private String phoneNo;
   /** Email of the player */
   private String email;
+  /** QRCodes the player has scanned */
+  private Set<QRCode> qrCodes;
 
   /**
    * This initializes a Player with the deviceId, username, phoneNo, and email.
@@ -22,12 +26,14 @@ public class Player {
    * @param username username
    * @param phoneNo phone no
    * @param email email
+   * @param qrCodes QRCodes the player has scanned
    */
-  public Player(UUID deviceId, String username, String phoneNo, String email) {
+  public Player(UUID deviceId, String username, String phoneNo, String email, Set<QRCode> qrCodes) {
     this.deviceId = deviceId;
     this.username = username;
     this.phoneNo = phoneNo;
     this.email = email;
+    this.qrCodes = qrCodes;
   }
 
   /**
@@ -39,8 +45,15 @@ public class Player {
    * @param username username of the player
    * @param phoneNo phone number of the player
    * @param email email of the player
+   * @param qrCodes QRCodes the player has scanned
    */
-  public Player(String documentId, UUID deviceId, String username, String phoneNo, String email) {
+  public Player(
+      String documentId,
+      UUID deviceId,
+      String username,
+      String phoneNo,
+      String email,
+      Set<QRCode> qrCodes) {
     this.documentId = documentId;
     this.deviceId = deviceId;
     this.username = username;

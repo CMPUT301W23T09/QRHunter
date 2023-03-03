@@ -7,7 +7,9 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /** Manages all Player database operations. */
@@ -153,6 +155,30 @@ public class PlayerDatabase {
   }
 
   /**
+   * Retrieve all players from the database
+   *
+   * @param callback callback to call once the operation has finished
+   */
+  public void getAllPlayers(DatabaseConsumer<Set<Player>> callback) {
+    collection
+        .get()
+        .addOnCompleteListener(
+            task -> {
+              if (!task.isSuccessful()) {
+                callback.accept(new DatabaseQueryResults<>(null, task.getException()));
+                return;
+              }
+
+              Set<Player> players = new HashSet<>();
+              for (QueryDocumentSnapshot snapshot : task.getResult()) {
+                players.add(snapshotToPlayer(snapshot));
+              }
+
+              callback.accept(new DatabaseQueryResults<>(players));
+            });
+  }
+
+  /**
    * Retrieve a player by their device UUID from the database
    *
    * @param deviceUUID device UUID to lookup
@@ -222,7 +248,7 @@ public class PlayerDatabase {
     String phoneNo = snapshot.getString("phoneNo");
     String email = snapshot.getString("email");
 
-    return new Player(documentId, deviceUUID, username, phoneNo, email);
+    return new Player(documentId, deviceUUID, username, phoneNo, email, new HashSet<>());
   }
 
   /**
