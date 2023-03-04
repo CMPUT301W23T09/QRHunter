@@ -2,7 +2,6 @@ package com.cmput301w23t09.qrhunter;
 
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -26,44 +25,47 @@ import java.util.Comparator;
 import java.util.Objects;
 
 public class ProfileController {
-  private final ProfileFragment view;
+  private final ProfileFragment fragment;
   private QRCodeArray qrCodes;
   private QRCodeAdapter qrCodeAdapter;
   private FirebaseFirestore db;
+  private final CollectionReference playerCollection;
+  private final CollectionReference qrcodeCollection;
 
   public ProfileController(ProfileFragment fragment) {
-    view = fragment;
+    this.fragment = fragment;
+
+    // access database
+    db = FirebaseFirestore.getInstance();
+    playerCollection = db.collection("player");
+    qrcodeCollection = db.collection("qrcode");
   }
 
   public void setUpUsername(TextView usernameView) {
-    // access database
-    db = FirebaseFirestore.getInstance();
-    final CollectionReference collectionReference = db.collection("player");
-    // add snapshot listener for updating data
-    collectionReference.addSnapshotListener(
+    // add snapshot listener for keeping username updated
+    playerCollection.addSnapshotListener(
         new EventListener<QuerySnapshot>() {
           @Override
           public void onEvent(
               @Nullable QuerySnapshot queryDocumentSnapshots,
               @Nullable FirebaseFirestoreException error) {
-            PlayerDatabase.getInstance()
-                .getPlayerByDeviceId(
-                    DeviceUtils.getDeviceUUID(view.getActivity()),
-                    results -> {
-                      // check if database query was successful
-                      if (!results.isSuccessful()) {
-                        Toast.makeText(
-                                view.getActivity(),
-                                "An error occurred while loading in your player data.",
-                                Toast.LENGTH_SHORT)
-                            .show();
-                        return;
-                      }
-                      // otherwise get username
-                      usernameView.setText(results.getData().getUsername());
-                    });
+            updateUsername(usernameView);
           }
         });
+  }
+
+  private void updateUsername(TextView usernameView) {
+    PlayerDatabase.getInstance()
+        .getPlayerByDeviceId(
+            DeviceUtils.getDeviceUUID(fragment.getActivity()),
+            results -> {
+              // check if database query was successful
+              if (!results.isSuccessful()) {
+                showMsg("An error occurred while loading in your player data.");
+              }
+              // otherwise get username
+              usernameView.setText(results.getData().getUsername());
+            });
   }
 
   public void setUpQRList(
@@ -75,31 +77,23 @@ public class ProfileController {
       Spinner orderSpinner) {
     // set QR code data and list view adapter
     qrCodes = new QRCodeArray();
-    qrCodeAdapter = new QRCodeAdapter(view.getContext(), qrCodes);
+    qrCodeAdapter = new QRCodeAdapter(fragment.getContext(), qrCodes);
     qrCodeList.setAdapter(qrCodeAdapter);
-
-    // access database
-    db = FirebaseFirestore.getInstance();
-    final CollectionReference collectionReference = db.collection("qrcodes");
 
     // get current player
     PlayerDatabase.getInstance()
         .getPlayerByDeviceId(
-            DeviceUtils.getDeviceUUID(view.getActivity()),
+            DeviceUtils.getDeviceUUID(fragment.getActivity()),
             results -> {
               // check if database query was successful
               if (!results.isSuccessful()) {
-                Toast.makeText(
-                        view.getActivity(),
-                        "An error occurred while loading in your player data.",
-                        Toast.LENGTH_SHORT)
-                    .show();
+                showMsg("An error occurred while loading in your player data.");
                 return;
               }
               // otherwise get the qr codes for the current player
               String playerID = results.getData().getDocumentId();
               // add snapshot listener for updating data
-              collectionReference.addSnapshotListener(
+              qrcodeCollection.addSnapshotListener(
                   new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(
@@ -122,10 +116,11 @@ public class ProfileController {
                       }
                       // update qr code statistics
                       totalPoints.setText(
-                          view.getString(R.string.total_points_txt, qrCodes.getTotalScore()));
-                      totalCodes.setText(view.getString(R.string.total_codes_txt, qrCodes.size()));
+                          fragment.getString(R.string.total_points_txt, qrCodes.getTotalScore()));
+                      totalCodes.setText(
+                          fragment.getString(R.string.total_codes_txt, qrCodes.size()));
                       topCodeScore.setText(
-                          view.getString(R.string.top_code_txt, qrCodes.getTopScore()));
+                          fragment.getString(R.string.top_code_txt, qrCodes.getTopScore()));
                       // sort codes and update qr code list view
                       updateQRListSort(typeSpinner, orderSpinner);
                     }
@@ -133,49 +128,20 @@ public class ProfileController {
             });
   }
 
-  private void queryPlayerID() {}
+  public AdapterView.OnItemSelectedListener handleSpinnerSelect(
+      Spinner typeSpinner, Spinner orderSpinner) {
+    return new AdapterView.OnItemSelectedListener() {
+      @Override
+      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        updateQRListSort(typeSpinner, orderSpinner);
+      }
 
-  public void setUpSortSpinners(Spinner typeSpinner, Spinner orderSpinner) {
-    // set array adapters for spinners
-    ArrayAdapter<CharSequence> typeAdapter =
-        ArrayAdapter.createFromResource(
-            view.getContext(), R.array.sort_options, android.R.layout.simple_spinner_item);
-
-    ArrayAdapter<CharSequence> orderAdapter =
-        ArrayAdapter.createFromResource(
-            view.getContext(), R.array.order_options, android.R.layout.simple_spinner_item);
-
-    typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    orderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-    typeSpinner.setAdapter(typeAdapter);
-    orderSpinner.setAdapter(orderAdapter);
-
-    // handle item selection for the spinners
-    typeSpinner.setOnItemSelectedListener(
-        new AdapterView.OnItemSelectedListener() {
-          @Override
-          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            updateQRListSort(typeSpinner, orderSpinner);
-          }
-
-          @Override
-          public void onNothingSelected(AdapterView<?> parent) {}
-        });
-
-    orderSpinner.setOnItemSelectedListener(
-        new AdapterView.OnItemSelectedListener() {
-          @Override
-          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            updateQRListSort(typeSpinner, orderSpinner);
-          }
-
-          @Override
-          public void onNothingSelected(AdapterView<?> parent) {}
-        });
+      @Override
+      public void onNothingSelected(AdapterView<?> parent) {}
+    };
   }
 
-  public void updateQRListSort(Spinner typeSpinner, Spinner orderSpinner) {
+  private void updateQRListSort(Spinner typeSpinner, Spinner orderSpinner) {
     // get selected spinner options
     String selectedType = typeSpinner.getSelectedItem().toString();
     String selectedOrder = orderSpinner.getSelectedItem().toString();
@@ -195,5 +161,9 @@ public class ProfileController {
     // sort and update qr codes
     qrCodes.sort(comparator);
     qrCodeAdapter.notifyDataSetChanged();
+  }
+
+  private void showMsg(String msg) {
+    Toast.makeText(fragment.getActivity(), msg, Toast.LENGTH_SHORT).show();
   }
 }
