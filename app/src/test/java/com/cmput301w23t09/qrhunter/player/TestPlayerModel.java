@@ -1,7 +1,6 @@
 package com.cmput301w23t09.qrhunter.player;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.UUID;
@@ -33,7 +32,6 @@ public class TestPlayerModel {
   @Test
   public void testSetDocumentId() {
     mockPlayer.setDocumentId("002");
-    assertNotEquals("001", mockPlayer.getDocumentId());
     assertEquals("002", mockPlayer.getDocumentId());
   }
 
@@ -42,15 +40,12 @@ public class TestPlayerModel {
     UUID newUUID = UUID.randomUUID();
     while (newUUID.equals(mockPlayerUUID)) newUUID = UUID.randomUUID();
     mockPlayer.setDeviceId(newUUID);
-    assertNotEquals(mockPlayerUUID, mockPlayer.getDeviceId());
     assertEquals(newUUID, mockPlayer.getDeviceId());
   }
 
   @Test
   public void testSetValidUsername() {
-    String newUsername = "janedoe115";
-    mockPlayer.setUsername(newUsername);
-    assertNotEquals("johndoe42", mockPlayer.getUsername());
+    mockPlayer.setUsername("janedoe115");
     assertEquals("janedoe115", mockPlayer.getUsername());
   }
 
@@ -71,6 +66,88 @@ public class TestPlayerModel {
         () -> {
           // Usernames can't be blank
           mockPlayer.setUsername("");
+        });
+  }
+  // TODO: TEST setPhoneNumber!
+  // Requires mocking android.telephony.PhoneNumberUtils
+
+  @Test
+  public void testSetValidEmail() {
+    mockPlayer.setEmail("smith@ualberta.ca");
+    assertEquals("smith@ualberta.ca", mockPlayer.getEmail());
+    mockPlayer.setEmail("Smith123@yahoo.com");
+    assertEquals("Smith123@yahoo.com", mockPlayer.getEmail());
+    mockPlayer.setEmail("smith_123@ualberta.ca");
+    assertEquals("smith_123@ualberta.ca", mockPlayer.getEmail());
+    mockPlayer.setEmail("smith.123@ualberta.ca");
+    assertEquals("smith.123@ualberta.ca", mockPlayer.getEmail());
+  }
+
+  @Test
+  public void testSetValidEmailPlusAddressing() {
+    mockPlayer.setEmail("smith+spambox@ualberta.ca");
+    assertEquals("smith+spambox@ualberta.ca", mockPlayer.getEmail());
+  }
+
+  @Test
+  public void testSetValidEmailHyphenated() {
+    mockPlayer.setEmail("Smith123@yah-oo.com");
+    assertEquals("Smith123@yah-oo.com", mockPlayer.getEmail());
+    mockPlayer.setEmail("smith-123@gmail.com");
+    assertEquals("smith-123@gmail.com", mockPlayer.getEmail());
+  }
+
+  @Test
+  public void testSetInvalidEmailHyphenated1() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          mockPlayer.setEmail("Smith123@-yahoo.com");
+        });
+  }
+
+  @Test
+  public void testSetInvalidEmailHyphenated2() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          mockPlayer.setEmail("Smith123@yahoo-.com");
+        });
+  }
+
+  @Test
+  public void testSetInvalidEmailNoDomain() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          mockPlayer.setEmail("smith");
+        });
+  }
+
+  @Test
+  public void testSetInvalidEmailIncompleteDomain() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          mockPlayer.setEmail("smith@gmail");
+        });
+  }
+
+  @Test
+  public void testSetInvalidEmailNoName() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          mockPlayer.setEmail("@gmail.com");
+        });
+  }
+
+  @Test
+  public void testSetBlankEmail() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          mockPlayer.setEmail("");
         });
   }
 }
