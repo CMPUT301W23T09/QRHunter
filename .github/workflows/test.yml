@@ -1,12 +1,15 @@
-name: Build App
+name: Run Tests
 
 on:
   pull_request:
     branches:
       - master
+  push:
+    branches:
+      - master
 
 jobs:
-  build:
+  unit-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -19,5 +22,7 @@ jobs:
         name: Setup Java JDK 11
       - name: Give gradlew Execute Permission
         run: chmod +x gradlew
-      - name: Build App
-        run: ./gradlew build --parallel -x test
+      - name: Run Unit Tests
+        run: ./gradlew test
+
+# TODO: Make job to run UI tests when we have them
