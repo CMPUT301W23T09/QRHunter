@@ -24,5 +24,14 @@ jobs:
         run: chmod +x gradlew
       - name: Run Unit Tests
         run: ./gradlew test
-
-# TODO: Make job to run UI tests when we have them
+  ui-tests:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout Repository
+      - name: Give gradlew Execute Permission
+        run: chmod +x gradlew
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          script: ./gradlew connectedCheck
