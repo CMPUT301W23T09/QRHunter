@@ -43,19 +43,6 @@ public class ProfileController {
   }
 
   public void setUpUsername(TextView usernameView) {
-    // add snapshot listener for keeping username updated
-    playerCollection.addSnapshotListener(
-        new EventListener<QuerySnapshot>() {
-          @Override
-          public void onEvent(
-              @Nullable QuerySnapshot queryDocumentSnapshots,
-              @Nullable FirebaseFirestoreException error) {
-            updateUsername(usernameView);
-          }
-        });
-  }
-
-  private void updateUsername(TextView usernameView) {
     PlayerDatabase.getInstance()
         .getPlayerByDeviceId(
             DeviceUtils.getDeviceUUID(fragment.getActivity()),
