@@ -2,10 +2,14 @@ package com.cmput301w23t09.qrhunter.player;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
 
+import android.telephony.PhoneNumberUtils;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 
 public class TestPlayerModel {
 
@@ -68,8 +72,42 @@ public class TestPlayerModel {
           mockPlayer.setUsername("");
         });
   }
-  // TODO: TEST setPhoneNumber!
-  // Requires mocking android.telephony.PhoneNumberUtils
+
+  // For the following phone number tests, assume that
+  // android.telephonyPhoneNumberUtils.isGlobalPhoneNumber
+  // returns the proper value.
+  @Test
+  public void testSetValidPhoneNumber() {
+    try (MockedStatic mocked = mockStatic(PhoneNumberUtils.class)) {
+      when(PhoneNumberUtils.isGlobalPhoneNumber("7804923111")).thenReturn(true);
+      mockPlayer.setPhoneNo("7804923111");
+      assertEquals("7804923111", mockPlayer.getPhoneNo());
+    }
+  }
+
+  @Test
+  public void testSetInvalidPhoneNumber() {
+    try (MockedStatic mocked = mockStatic(PhoneNumberUtils.class)) {
+      when(PhoneNumberUtils.isGlobalPhoneNumber("abc")).thenReturn(false);
+      assertThrows(
+          IllegalArgumentException.class,
+          () -> {
+            mockPlayer.setPhoneNo("abc");
+          });
+    }
+  }
+
+  @Test
+  public void testSetBlankPhoneNumber() {
+    try (MockedStatic mocked = mockStatic(PhoneNumberUtils.class)) {
+      when(PhoneNumberUtils.isGlobalPhoneNumber("")).thenReturn(false);
+      assertThrows(
+          IllegalArgumentException.class,
+          () -> {
+            mockPlayer.setPhoneNo("");
+          });
+    }
+  }
 
   @Test
   public void testSetValidEmail() {
