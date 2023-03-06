@@ -38,8 +38,8 @@ public class ProfileController {
 
     // access database
     db = FirebaseFirestore.getInstance();
-    playerCollection = db.collection("player");
-    qrcodeCollection = db.collection("qrcode");
+    playerCollection = db.collection("players");
+    qrcodeCollection = db.collection("qrcodes");
   }
 
   public void setUpUsername(TextView usernameView) {
