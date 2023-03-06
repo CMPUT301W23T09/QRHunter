@@ -8,7 +8,6 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 import com.cmput301w23t09.qrhunter.GameActivity;
 import com.cmput301w23t09.qrhunter.GameController;
-import com.cmput301w23t09.qrhunter.ProfileActivity;
 import com.cmput301w23t09.qrhunter.R;
 import com.robotium.solo.Solo;
 import org.junit.Before;
@@ -35,6 +34,6 @@ public class TestScannerFragment {
   @Test
   public void testStartScanQr() {
     GameController gc = ((GameActivity) solo.getCurrentActivity()).getController();
-    assertTrue(gc.getBody() instanceof ProfileActivity);
+    assertTrue(gc.getBody() instanceof ScannerFragment);
   }
 }
