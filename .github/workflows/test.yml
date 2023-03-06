@@ -29,6 +29,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         name: Checkout Repository
+      - uses: actions/setup-java@v3
+        with:
+          distribution: "adopt"
+          java-version: "11"
+          cache: "gradle"
+        name: Setup Java JDK 11
       - name: Give gradlew Execute Permission
         run: chmod +x gradlew
       - uses: gradle/gradle-build-action@v2
