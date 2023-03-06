@@ -1,4 +1,4 @@
-package com.cmput301w23t09.qrhunter;
+package com.cmput301w23t09.qrhunter.profile;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,6 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.cmput301w23t09.qrhunter.BaseFragment;
+import com.cmput301w23t09.qrhunter.GameController;
+import com.cmput301w23t09.qrhunter.R;
 
 public class ProfileSettingsFragment extends BaseFragment {
 
