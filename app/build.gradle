@@ -78,9 +78,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-<<<<<<< HEAD
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
-=======
 
     // CameraX Library
     def camerax_version = "1.1.0-beta01"
@@ -93,5 +91,4 @@ dependencies {
 
     // Google's MLKit Library for QR Scanning
     implementation 'com.google.mlkit:barcode-scanning:17.0.3'
->>>>>>> 74e5e19455aaa369be2e44897a1bb590e9e8be1b
 }
