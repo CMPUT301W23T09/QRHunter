@@ -1,4 +1,4 @@
-package com.cmput301w23t09.qrhunter;
+package com.cmput301w23t09.qrhunter.profile;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +12,9 @@ import androidx.annotation.ArrayRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.profile.ProfileController;
 
 public class ProfileFragment extends Fragment {
   private ProfileController controller;
