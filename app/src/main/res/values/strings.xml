@@ -7,9 +7,9 @@
     <string name="navigation_item_scan_qr">Scan QR</string>
     <string name="landing_screen_title">Welcome To QRHunter!</string>
     <string name="qrhunter_logo_content_desc">QRHunter Logo</string>
-    <string name="landing_screen_username_hint">Username</string>
-    <string name="landing_screen_phone_hint">Phone</string>
-    <string name="landing_screen_email_hint">Email</string>
+    <string name="username_hint">Username</string>
+    <string name="phone_hint">Phone</string>
+    <string name="email_hint">Email</string>
     <string name="landing_screen_register_text">Start Hunting</string>
     <string name="settings_btn_desc">Settings Button</string>
     <string name="username_txt">Username</string>
@@ -22,6 +22,9 @@
     <string name="top_code_txt">%d\nTop Code</string>
     <string name="qr_code_name">SuperUniqueGeneratedQRName</string>
     <string name="placeholder_points">999 PTS</string>
+    <string name="settings_title">Settings</string>
+    <string name="reset">Reset</string>
+    <string name="save_changes">Save Changes</string>
     <string-array name="sort_options">
         <item>Points</item>
         <item>Date Taken</item>

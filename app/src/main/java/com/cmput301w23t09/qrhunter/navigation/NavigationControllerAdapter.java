@@ -24,7 +24,7 @@ public class NavigationControllerAdapter implements NavigationBarView.OnItemSele
     if (selectedItemId == R.id.navigation_scan_qr) {
       gameController.setBody(new ScannerFragment(gameController));
     } else if (selectedItemId == R.id.navigation_my_profile) {
-      gameController.setBody(new ProfileActivity());
+      gameController.setBody(new ProfileActivity(gameController));
     } else if (selectedItemId == R.id.navigation_qr_finder) {
       // mainController.setBody(new QRFinderFragment());
     } else if (selectedItemId == R.id.navigation_social) {

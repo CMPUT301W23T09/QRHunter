@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileSettingsFragment">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/settings_back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/back_button" />
+
+    <TextView
+        android:id="@+id/settings_title"
+        android:layout_width="175dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="96dp"
+        android:gravity="center_horizontal"
+        android:text="@string/settings_title"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/settings_screen_phoneTextFieldContainer"
+        style="@style/QRHunter.TextInputLayout.OutlinedBox"
+        android:layout_width="357dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="104dp"
+        android:hint="@string/phone_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settings_title">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/settings_screen_phoneTextField"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:inputType="phone"
+            android:singleLine="true"
+            android:textCursorDrawable="@null" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/settings_screen_emailTextFieldContainer"
+        style="@style/QRHunter.TextInputLayout.OutlinedBox"
+        android:layout_width="357dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="28dp"
+        android:hint="@string/email_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settings_screen_phoneTextFieldContainer">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/settings_screen_emailTextField"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:inputType="textEmailAddress"
+            android:singleLine="true"
+            android:textCursorDrawable="@null" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/settings_reset_details_button"
+        android:layout_width="89.29dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="18dp"
+        android:text="@string/reset"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.09"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settings_screen_emailTextFieldContainer" />
+
+    <Button
+        android:id="@+id/settings_save_button"
+        android:layout_width="178dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="172dp"
+        android:text="@string/save_changes"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.884"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settings_screen_emailTextFieldContainer" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

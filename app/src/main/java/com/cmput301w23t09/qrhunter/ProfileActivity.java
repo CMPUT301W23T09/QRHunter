@@ -22,6 +22,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.Collections;
 
 public class ProfileActivity extends Fragment {
+  private final GameController gameController;
   private ProfileController controller;
 
   private GridView qrCodeList;
@@ -34,6 +35,10 @@ public class ProfileActivity extends Fragment {
   private TextView totalCodes;
   private TextView topCode;
 
+  public ProfileActivity(GameController gameController) {
+    this.gameController = gameController;
+  }
+
   @Override
   public View onCreateView(
       @NonNull LayoutInflater inflater,
@@ -44,6 +49,7 @@ public class ProfileActivity extends Fragment {
     createSpinners(view);
     createProfileInfo(view);
     createQRCodeList(view);
+    setupSettingsButton(view);
     return view;
   }
 
@@ -92,6 +98,14 @@ public class ProfileActivity extends Fragment {
 
     // add data from database to qrCodes
     controller.handleDataUpdate();
+  }
+
+  private void setupSettingsButton(View view) {
+    view.findViewById(R.id.settings_btn)
+        .setOnClickListener(
+            ignored -> {
+              gameController.setBody(new ProfileSettingsFragment(gameController));
+            });
   }
 
   // This part hasn't been properly refactored to follow the MVC model
