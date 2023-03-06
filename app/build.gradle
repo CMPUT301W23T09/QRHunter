@@ -95,4 +95,9 @@ dependencies {
 
     // Google's MLKit Library for QR Scanning
     implementation 'com.google.mlkit:barcode-scanning:17.0.3'
+
+    // Robotium for UI Testing
+    androidTestImplementation "androidx.test:runner:1.5.2"
+    androidTestImplementation "androidx.test:rules:1.5.0"
+    androidTestImplementation "com.jayway.android.robotium:robotium-solo:5.2.1"
 }
