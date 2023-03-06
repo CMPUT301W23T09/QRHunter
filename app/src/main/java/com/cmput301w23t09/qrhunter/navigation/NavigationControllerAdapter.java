@@ -3,8 +3,8 @@ package com.cmput301w23t09.qrhunter.navigation;
 import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import com.cmput301w23t09.qrhunter.GameController;
-import com.cmput301w23t09.qrhunter.profile.ProfileFragment;
 import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.profile.ProfileFragment;
 import com.cmput301w23t09.qrhunter.scanqr.ScannerFragment;
 import com.google.android.material.navigation.NavigationBarView;
 

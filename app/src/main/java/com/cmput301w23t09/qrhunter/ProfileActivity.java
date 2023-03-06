@@ -11,7 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import com.cmput301w23t09.qrhunter.profile.ProfileController;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeAdapter;
