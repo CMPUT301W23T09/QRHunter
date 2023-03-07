@@ -1,9 +1,9 @@
 package com.cmput301w23t09.qrhunter.qrcode;
 
+import android.graphics.Bitmap;
 import android.media.Image;
 import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.map.Location;
-import com.cmput301w23t09.qrhunter.photo.Photo;
 import com.cmput301w23t09.qrhunter.player.Player;
 import java.util.ArrayList;
 
@@ -20,7 +20,7 @@ public class QRCode {
   /** This is the location of the QR code */
   private Location loc;
   /** This is a list of photos that have been taken of the QR code */
-  private ArrayList<Photo> photos;
+  private ArrayList<Bitmap> photos;
   /** This is a list of comments on the QR code */
   private ArrayList<Comment> comments;
   /** This is a list of players who have scanned this QR code */
@@ -45,7 +45,7 @@ public class QRCode {
       Image visualRepresentation,
       Integer score,
       Location loc,
-      ArrayList<Photo> photos,
+      ArrayList<Bitmap> photos,
       ArrayList<Comment> comments,
       ArrayList<Player> players) {
     this.hash = hash;
@@ -108,7 +108,7 @@ public class QRCode {
    *
    * @return Return the photos taken of the QR code
    */
-  public ArrayList<Photo> getPhotos() {
+  public ArrayList<Bitmap> getPhotos() {
     return photos;
   }
 
@@ -162,7 +162,7 @@ public class QRCode {
    *
    * @param photo This is the photo to add
    */
-  public void addPhoto(Photo photo) {
+  public void addPhoto(Bitmap photo) {
     this.photos.add(photo);
   }
 
@@ -171,7 +171,7 @@ public class QRCode {
    *
    * @param photo This is the photo to delete
    */
-  public void deletePhoto(Photo photo) {
+  public void deletePhoto(Bitmap photo) {
     this.photos.remove(photo);
   }
 

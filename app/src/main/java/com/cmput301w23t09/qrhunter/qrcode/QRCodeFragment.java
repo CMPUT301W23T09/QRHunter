@@ -5,11 +5,13 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoFragment;
 
 public class QRCodeFragment extends DialogFragment {
 
@@ -45,8 +47,17 @@ public class QRCodeFragment extends DialogFragment {
    * @param view The view that displays fragment_qrcode.xml
    */
   private void setupViews(View view) {
-    qrName = view.findViewById(R.id.qrName);
+    qrName = view.findViewById(R.id.qr_name);
     qrName.setText((String) getArguments().get("hash"));
+    Button takeLocationPhotoBtn = view.findViewById(R.id.take_location_photo_btn);
+    takeLocationPhotoBtn.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            LocationPhotoFragment frag = LocationPhotoFragment.newInstance();
+            frag.show(getParentFragmentManager(), "Take Location Photo");
+          }
+        });
   }
 
   /**

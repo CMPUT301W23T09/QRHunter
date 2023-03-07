@@ -1,15 +1,12 @@
-package com.cmput301w23t09.qrhunter.scanqr;
+package com.cmput301w23t09.qrhunter.scanqr.camera;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import androidx.camera.core.CameraSelector;
-import androidx.camera.core.ImageAnalysis;
-import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LifecycleOwner;
-import com.cmput301w23t09.qrhunter.BaseFragment;
+import androidx.fragment.app.Fragment;
+import com.cmput301w23t09.qrhunter.scanqr.ScannerController;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -19,17 +16,19 @@ import java.util.concurrent.Executors;
  * Manages Camera preview and capture using Google's CameraX library
  * https://developer.android.com/training/camerax (Used ChatGPT to convert Kotlin to Java)
  *
- * <p>Used to scan qr codes and to let user take location pictures
+ * <p>Extended in subclasses to add functionality, such as QRCode scanning and photo taking
+ * (location photos)
  *
  * @author John Mabanta
  * @version 1.0
+ * @see CameraScannerController
  */
-public class CameraController {
+public abstract class CameraController {
 
-  private ExecutorService cameraExecutor;
-  private BaseFragment fragment;
-  private PreviewView previewView;
-  private ScannerController scannerController;
+  protected ExecutorService cameraExecutor;
+  protected Fragment fragment;
+  protected PreviewView previewView;
+  protected ScannerController scannerController;
 
   private static final String TAG = "QRHunterCamera";
   private static final String FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS";
@@ -40,32 +39,18 @@ public class CameraController {
       };
 
   /**
-   * Creates a CameraController only for previewing anc capturing location photos.
+   * Creates a basic CameraController that displays its preview to a view.
    *
    * @param fragment The fragment that uses the camera.
    * @param previewView The UI element in fragment to show camera preview on.
    */
-  public CameraController(BaseFragment fragment, PreviewView previewView) {
+  public CameraController(Fragment fragment, PreviewView previewView) {
     this.fragment = fragment;
     this.previewView = previewView;
     this.scannerController = null;
     if (allPermissionsGranted()) startCamera();
     else fragment.requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
     cameraExecutor = Executors.newSingleThreadExecutor();
-  }
-
-  /**
-   * Creates a CameraController for previewing and scanning QR codes.
-   *
-   * @param fragment The fragment that uses the camera.
-   * @param previewView The UI element in fragment to show camera preview on.
-   * @param scannerController Manages QR Code scanning.
-   * @see ScannerController
-   */
-  public CameraController(
-      BaseFragment fragment, PreviewView previewView, ScannerController scannerController) {
-    this(fragment, previewView);
-    this.scannerController = scannerController;
   }
 
   /** Starts the camera and binds it's preview to the PreviewView UI element. */
@@ -75,30 +60,7 @@ public class CameraController {
     cameraProviderFuture.addListener(
         () -> {
           try {
-            ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-
-            // Attach preview screen
-            Preview preview = new Preview.Builder().build();
-            preview.setSurfaceProvider(previewView.getSurfaceProvider());
-
-            // Use back camera
-            CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
-
-            // Bind camera
-            cameraProvider.unbindAll();
-            if (scannerController == null)
-              cameraProvider.bindToLifecycle((LifecycleOwner) fragment, cameraSelector, preview);
-            else {
-              // Create ImageAnalysis use case if camera is being used to scan QR codes
-              ImageAnalysis imageAnalysis =
-                  new ImageAnalysis.Builder()
-                      .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                      .build();
-              imageAnalysis.setAnalyzer(cameraExecutor, image -> scannerController.scanCode(image));
-              cameraProvider.bindToLifecycle(
-                  (LifecycleOwner) fragment, cameraSelector, preview, imageAnalysis);
-            }
-
+            setupCamera(cameraProviderFuture);
           } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -107,6 +69,15 @@ public class CameraController {
         ContextCompat.getMainExecutor(fragment.getContext()));
   }
 
+  /**
+   * Adds in the camera's functionality
+   *
+   * @param cameraProviderFuture The camera's provider object
+   */
+  protected abstract void setupCamera(ListenableFuture<ProcessCameraProvider> cameraProviderFuture)
+      throws ExecutionException, InterruptedException;
+
+  /** Shut down the camera when it's no longer needed */
   public void onDestroy() {
     cameraExecutor.shutdown();
   }

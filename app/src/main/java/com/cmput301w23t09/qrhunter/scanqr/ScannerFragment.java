@@ -10,6 +10,8 @@ import androidx.annotation.Nullable;
 import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.databinding.FragmentScanqrBinding;
+import com.cmput301w23t09.qrhunter.scanqr.camera.CameraController;
+import com.cmput301w23t09.qrhunter.scanqr.camera.CameraScannerController;
 
 /**
  * The 'Scan QR' page where users can use their rear camera to scan QR codes
@@ -20,7 +22,7 @@ import com.cmput301w23t09.qrhunter.databinding.FragmentScanqrBinding;
 public class ScannerFragment extends BaseFragment {
 
   private ScannerController scannerController;
-  private CameraController cameraController;
+  private CameraScannerController cameraController;
   private FragmentScanqrBinding binding;
 
   public ScannerFragment(GameController gameController) {
@@ -34,8 +36,14 @@ public class ScannerFragment extends BaseFragment {
       @Nullable Bundle savedInstanceState) {
     binding = FragmentScanqrBinding.inflate(inflater, container, false);
     scannerController = new ScannerController(this);
-    cameraController = new CameraController(this, binding.viewFinder, scannerController);
+    cameraController =
+        new CameraScannerController(this, binding.scanQrCameraPreview, scannerController);
     return binding.getRoot();
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
   }
 
   @Override

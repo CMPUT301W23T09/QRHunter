@@ -6,9 +6,10 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/qrName"
+        android:id="@+id/qr_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/qr_code_name"
         android:textAlignment="viewStart"
@@ -18,24 +19,34 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/qrPoints"
+        android:id="@+id/qr_points"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="@string/placeholder_points"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/qrName" />
+        app:layout_constraintTop_toBottomOf="@+id/qr_name" />
 
     <ImageView
-        android:id="@+id/qrImage"
+        android:id="@+id/qr_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
+        android:src="@drawable/test_image1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/qrPoints"
-        android:src="@drawable/test_image1"
+        app:layout_constraintTop_toBottomOf="@+id/qr_points"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+    <Button
+        android:id="@+id/take_location_photo_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/take_location_photo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/qr_image" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
