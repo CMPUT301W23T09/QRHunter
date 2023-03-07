@@ -4,6 +4,10 @@ on:
   pull_request:
     branches:
       - master
+    paths:
+      - '**.java'
+      - '**.gradle'
+      - '**.xml'
 
 jobs:
   build:

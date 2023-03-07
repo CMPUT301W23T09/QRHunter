@@ -4,9 +4,17 @@ on:
   pull_request:
     branches:
       - master
+    paths:
+      - '**.java'
+      - '**.gradle'
+      - '**.xml'
   push:
     branches:
       - master
+    paths:
+      - '**.java'
+      - '**.gradle'
+      - '**.xml'
 
 jobs:
   unit-tests:
