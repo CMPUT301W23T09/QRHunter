@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -15,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class ProfileFragment extends Fragment {
   private final GameController gameController;
@@ -25,7 +25,7 @@ public class ProfileFragment extends Fragment {
   private TextView topCodeScore;
   private Spinner sortTypeSpinner;
   private Spinner sortOrderSpinner;
-  private Button settingsButton;
+  private FloatingActionButton settingsButton;
   private GridView qrCodeList;
 
   public ProfileFragment(GameController gameController) {
@@ -38,7 +38,8 @@ public class ProfileFragment extends Fragment {
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.profile_activity, container, false);
-    controller = new ProfileController(this);
+
+    controller = new ProfileController(this, gameController);
     createProfile(view);
     return view;
   }

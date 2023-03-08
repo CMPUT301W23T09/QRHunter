@@ -11,6 +11,7 @@ import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
 
 public class ProfileSettingsFragment extends BaseFragment {
+  private ProfileSettingsController controller;
 
   public ProfileSettingsFragment(GameController gameController) {
     super(gameController);
@@ -22,6 +23,12 @@ public class ProfileSettingsFragment extends BaseFragment {
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
 
-    return inflater.inflate(R.layout.fragment_profile_settings, container, false);
+    controller = new ProfileSettingsController(getMainController());
+    View view = inflater.inflate(R.layout.fragment_profile_settings, container, false);
+
+    view.findViewById(R.id.settings_back_button)
+        .setOnClickListener(v -> controller.returnToProfile());
+
+    return view;
   }
 }

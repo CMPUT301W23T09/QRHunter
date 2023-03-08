@@ -7,6 +7,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
+import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.DateComparator;
@@ -26,6 +27,7 @@ import java.util.Comparator;
 import java.util.Objects;
 
 public class ProfileController {
+  private final GameController gameController;
   private final ProfileFragment fragment;
   private QRCodeArray qrCodes;
   private QRCodeAdapter qrCodeAdapter;
@@ -33,8 +35,9 @@ public class ProfileController {
   private final CollectionReference playerCollection;
   private final CollectionReference qrcodeCollection;
 
-  public ProfileController(ProfileFragment fragment) {
+  public ProfileController(ProfileFragment fragment, GameController gameController) {
     this.fragment = fragment;
+    this.gameController = gameController;
 
     // access database
     db = FirebaseFirestore.getInstance();
@@ -142,7 +145,10 @@ public class ProfileController {
     };
   }
 
-  public void handeSettingsClick() {}
+  public void handeSettingsClick() {
+    ProfileSettingsFragment settingsFragment = new ProfileSettingsFragment(gameController);
+    gameController.setBody(settingsFragment);
+  }
 
   private void updateQRListSort(Spinner typeSpinner, Spinner orderSpinner) {
     // get selected spinner options
