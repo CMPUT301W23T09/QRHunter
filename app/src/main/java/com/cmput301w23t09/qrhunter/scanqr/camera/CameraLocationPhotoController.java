@@ -19,8 +19,8 @@ public class CameraLocationPhotoController extends CameraController {
   /**
    * Creates a CameraLocationPhotoController that can take location photos
    *
-   * @param fragment The fragment that uses the camera.
-   * @param previewView The UI element in fragment to show camera preview on.
+   * @param fragment The fragment that uses the camera
+   * @param previewView The UI element in fragment to show camera preview on
    */
   public CameraLocationPhotoController(
       LocationPhotoFragment fragment,
@@ -30,6 +30,13 @@ public class CameraLocationPhotoController extends CameraController {
     this.locationPhotoController = locationPhotoController;
   }
 
+  /**
+   * Enables the camera to take photos using the ImageCapture use case
+   *
+   * @param cameraProviderFuture The camera's provider object
+   * @throws ExecutionException
+   * @throws InterruptedException
+   */
   @Override
   protected void setupCamera(ListenableFuture<ProcessCameraProvider> cameraProviderFuture)
       throws ExecutionException, InterruptedException {

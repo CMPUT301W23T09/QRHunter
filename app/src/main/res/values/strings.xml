@@ -20,7 +20,7 @@
     <string name="total_points_txt">%d\nTotalPoints</string>
     <string name="total_codes_txt">%d\nCodes Scanned</string>
     <string name="top_code_txt">%d\nTop Code</string>
-    <string name="qr_code_name">SuperUniqueGeneratedQRName</string>
+    <string name="qr_code_name">UniqueGeneratedQRName</string>
     <string name="placeholder_points">999 PTS</string>
     <string name="take_location_photo">Take Location Photo</string>
     <string name="remove_location_photo">Remove Location Photo</string>

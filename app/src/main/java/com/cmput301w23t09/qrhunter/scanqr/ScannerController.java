@@ -50,9 +50,9 @@ public class ScannerController {
   }
 
   /**
-   * Scans for any QR Codes in the picture.
+   * Scans for any QR Codes in the picture
    *
-   * @param imgProxy The image to scan QR codes in, most likely from the camera.
+   * @param imgProxy The image to scan QR codes in, most likely from the camera
    * @see CameraController
    */
   public void scanCode(ImageProxy imgProxy) {
@@ -87,8 +87,6 @@ public class ScannerController {
                         qrCodeFragment = QRCodeFragment.newInstance(qrCode);
                         qrCodeFragment.show(fragment.getParentFragmentManager(), "Scanned QR Code");
                       }
-                      // TODO: Hash QR code and create QR Object from it!
-                      // TODO: Decide how to handle multiple codes on screen at once
                     }
                   })
               .addOnFailureListener(e -> Log.e("ERROR", e.toString()))
