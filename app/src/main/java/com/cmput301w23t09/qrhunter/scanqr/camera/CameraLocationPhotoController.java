@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutionException;
 public class CameraLocationPhotoController extends CameraController {
 
   private LocationPhotoController locationPhotoController;
+  private ImageCapture imageCapture;
 
   /**
    * Creates a CameraLocationPhotoController that can take location photos
@@ -42,10 +43,14 @@ public class CameraLocationPhotoController extends CameraController {
     CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
 
     // Bind camera
+    // cameraProvider.unbindAll();
     // Create ImageCapture use case to allow for location photo taking
-    ImageCapture imageCapture = new ImageCapture.Builder().build();
+    imageCapture =
+        new ImageCapture.Builder()
+            .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+            .build();
+    locationPhotoController.setCameraFields(cameraExecutor, imageCapture);
     cameraProvider.bindToLifecycle(
         (LifecycleOwner) fragment, cameraSelector, preview, imageCapture);
-    locationPhotoController.setImageCapture(imageCapture);
   }
 }

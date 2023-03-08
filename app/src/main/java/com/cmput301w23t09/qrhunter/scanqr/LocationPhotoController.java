@@ -2,6 +2,8 @@ package com.cmput301w23t09.qrhunter.scanqr;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageProxy;
@@ -16,13 +18,14 @@ public class LocationPhotoController {
   private QRCode qrCode;
   private ExecutorService cameraExecutor;
 
-  public LocationPhotoController(LocationPhotoFragment fragment) {
+  public LocationPhotoController(LocationPhotoFragment fragment, QRCode qrCode) {
     this.fragment = fragment;
-    // this.qrCode = qrCode;
+    this.qrCode = qrCode;
     this.imageCapture = null;
   }
 
-  public void setImageCapture(ImageCapture imageCapture) {
+  public void setCameraFields(ExecutorService cameraExecutor, ImageCapture imageCapture) {
+    this.cameraExecutor = cameraExecutor;
     this.imageCapture = imageCapture;
   }
 
@@ -33,6 +36,7 @@ public class LocationPhotoController {
           @Override
           public void onCaptureSuccess(@NonNull ImageProxy image) {
             super.onCaptureSuccess(image);
+            Log.d("KEK", "Captured Image");
 
             // Convert ImageProxy to Bitmap
             // Source: https://stackoverflow.com/a/41776098 (2017-01-21)
@@ -43,7 +47,22 @@ public class LocationPhotoController {
             buffer.get(bytes);
             Bitmap bitmapImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, null);
 
+            // Rotate image so it's correct orientation
+            Matrix rotationMatrix = new Matrix();
+            rotationMatrix.postRotate(90);
+            bitmapImage =
+                Bitmap.createBitmap(
+                    bitmapImage,
+                    0,
+                    0,
+                    bitmapImage.getWidth(),
+                    bitmapImage.getHeight(),
+                    rotationMatrix,
+                    true);
+
             qrCode.addPhoto(bitmapImage);
+            image.close();
+            fragment.dismiss();
           }
         });
   }

@@ -6,29 +6,34 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoFragment;
+import java.io.Serializable;
 
-public class QRCodeFragment extends DialogFragment {
+public class QRCodeFragment extends DialogFragment implements Serializable {
 
   // TODO: Figure out how to know when to display Add (+) button or Delete (Trash) button
   private TextView qrName;
+  private ImageView locationPhoto;
+  private QRCode qrCode;
+  private Button takeLocationPhotoBtn;
 
   /**
    * Creates a new QRCodeFragment to display a specific QR Code
    *
    * <p>TODO: Replase hash with QRCode object
    *
-   * @param hash Hash of the QR code to view
+   * @param qrCode The QR code to view
    * @return
    */
-  public static QRCodeFragment newInstance(String hash) {
+  public static QRCodeFragment newInstance(QRCode qrCode) {
     Bundle args = new Bundle();
-    args.putString("hash", hash);
+    args.putSerializable("qrcode", qrCode);
     QRCodeFragment fragment = new QRCodeFragment();
     fragment.setArguments(args);
     return fragment;
@@ -37,7 +42,9 @@ public class QRCodeFragment extends DialogFragment {
   @NonNull @Override
   public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
     View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_qrcode, null);
+    qrCode = (QRCode) getArguments().getSerializable("qrcode");
     setupViews(view);
+    updateLocationPhoto();
     return createAlertDialog(view);
   }
 
@@ -48,16 +55,29 @@ public class QRCodeFragment extends DialogFragment {
    */
   private void setupViews(View view) {
     qrName = view.findViewById(R.id.qr_name);
-    qrName.setText((String) getArguments().get("hash"));
-    Button takeLocationPhotoBtn = view.findViewById(R.id.take_location_photo_btn);
+    locationPhoto = view.findViewById(R.id.location_photo);
+    qrName.setText(qrCode.getHash());
+    takeLocationPhotoBtn = view.findViewById(R.id.take_location_photo_btn);
     takeLocationPhotoBtn.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            LocationPhotoFragment frag = LocationPhotoFragment.newInstance();
+        v -> {
+          if (qrCode.getPhotos().size() > 0) {
+            qrCode.deletePhoto(qrCode.getPhotos().get(0));
+            updateLocationPhoto();
+          } else {
+            LocationPhotoFragment frag = LocationPhotoFragment.newInstance(qrCode, this);
             frag.show(getParentFragmentManager(), "Take Location Photo");
           }
         });
+  }
+
+  public void updateLocationPhoto() {
+    if (qrCode.getPhotos().size() > 0) {
+      takeLocationPhotoBtn.setText(R.string.remove_location_photo);
+      locationPhoto.setImageBitmap(qrCode.getPhotos().get(0));
+    } else {
+      takeLocationPhotoBtn.setText(R.string.take_location_photo);
+      locationPhoto.setImageResource(android.R.color.transparent);
+    }
   }
 
   /**
