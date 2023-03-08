@@ -1,10 +1,10 @@
 package com.cmput301w23t09.qrhunter.player;
 
 import android.util.Log;
+import com.cmput301w23t09.qrhunter.database.DatabaseConnection;
 import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
 import com.cmput301w23t09.qrhunter.database.DatabaseQueryResults;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,8 +23,8 @@ public class PlayerDatabase {
   /** Reference to firebase player collection. */
   private final CollectionReference collection;
 
-  private PlayerDatabase() {
-    collection = FirebaseFirestore.getInstance().collection(DATABASE_COLLECTION_NAME);
+  public PlayerDatabase(DatabaseConnection connection) {
+    collection = connection.getCollection(DATABASE_COLLECTION_NAME);
   }
 
   /**
@@ -249,7 +249,7 @@ public class PlayerDatabase {
    */
   public static PlayerDatabase getInstance() {
     if (INSTANCE == null) {
-      INSTANCE = new PlayerDatabase();
+      INSTANCE = new PlayerDatabase(DatabaseConnection.getInstance());
     }
 
     return INSTANCE;
