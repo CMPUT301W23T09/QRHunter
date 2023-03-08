@@ -25,6 +25,7 @@
     <string name="settings_title">Settings</string>
     <string name="reset">Reset</string>
     <string name="save_changes">Save Changes</string>
+    <string name="sort_lbl">Sort By Score:</string>
     <string-array name="sort_options">
         <item>Points</item>
         <item>Date Taken</item>

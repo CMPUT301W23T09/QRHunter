@@ -10,10 +10,8 @@ import androidx.annotation.Nullable;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
-import com.cmput301w23t09.qrhunter.qrcode.DateComparator;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeAdapter;
-import com.cmput301w23t09.qrhunter.qrcode.QRCodeArray;
 import com.cmput301w23t09.qrhunter.qrcode.ScoreComparator;
 import com.cmput301w23t09.qrhunter.util.DeviceUtils;
 import com.google.firebase.firestore.CollectionReference;
@@ -26,39 +24,41 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Objects;
 
+/** This is the controller for the profile fragment of the app */
 public class ProfileController {
   private final GameController gameController;
+  /** This is the profile fragment the controller handles */
   private final ProfileFragment fragment;
-  private QRCodeArray qrCodes;
+  /** This is the array of QRCode objects that the fragment displays */
+  private ArrayList<QRCode> qrCodes;
+  /** This is the adapter for displaying the QRCode objects */
   private QRCodeAdapter qrCodeAdapter;
+  /** This is the database the controller gets its data from */
   private FirebaseFirestore db;
-  private final CollectionReference playerCollection;
-  private final CollectionReference qrcodeCollection;
+  /** This is the collection containing the qr code data */
+  private CollectionReference qrcodeCollection;
 
+  /**
+   * This initializes the controller with its corresponding fragment
+   *
+   * @param fragment This is the fragment the controller manages
+   * @param gameController The game controller that controls the global view
+   */
   public ProfileController(ProfileFragment fragment, GameController gameController) {
     this.fragment = fragment;
     this.gameController = gameController;
 
     // access database
     db = FirebaseFirestore.getInstance();
-    playerCollection = db.collection("players");
     qrcodeCollection = db.collection("qrcodes");
   }
 
+  /**
+   * This sets up the username view of the fragment
+   *
+   * @param usernameView This is the TextView that shows the username
+   */
   public void setUpUsername(TextView usernameView) {
-    // add snapshot listener for keeping username updated
-    playerCollection.addSnapshotListener(
-        new EventListener<QuerySnapshot>() {
-          @Override
-          public void onEvent(
-              @Nullable QuerySnapshot queryDocumentSnapshots,
-              @Nullable FirebaseFirestoreException error) {
-            updateUsername(usernameView);
-          }
-        });
-  }
-
-  private void updateUsername(TextView usernameView) {
     PlayerDatabase.getInstance()
         .getPlayerByDeviceId(
             DeviceUtils.getDeviceUUID(fragment.getActivity()),
@@ -72,15 +72,23 @@ public class ProfileController {
             });
   }
 
+  /**
+   * Sets up the list view of qr codes
+   *
+   * @param qrCodeList This is the view that contains the list view of codes
+   * @param totalPoints This is the view showing the sum of code scores
+   * @param totalCodes This is the view showing the total number of codes
+   * @param topCodeScore This is the view showing the top score from the codes
+   * @param orderSpinner This is the spinner for selecting the sorting order of codes
+   */
   public void setUpQRList(
       GridView qrCodeList,
       TextView totalPoints,
       TextView totalCodes,
       TextView topCodeScore,
-      Spinner typeSpinner,
       Spinner orderSpinner) {
     // set QR code data and list view adapter
-    qrCodes = new QRCodeArray();
+    qrCodes = new ArrayList<>();
     qrCodeAdapter = new QRCodeAdapter(fragment.getContext(), qrCodes);
     qrCodeList.setAdapter(qrCodeAdapter);
 
@@ -120,24 +128,29 @@ public class ProfileController {
                       }
                       // update qr code statistics
                       totalPoints.setText(
-                          fragment.getString(R.string.total_points_txt, qrCodes.getTotalScore()));
+                          fragment.getString(R.string.total_points_txt, getTotalScore()));
                       totalCodes.setText(
                           fragment.getString(R.string.total_codes_txt, qrCodes.size()));
                       topCodeScore.setText(
-                          fragment.getString(R.string.top_code_txt, qrCodes.getTopScore()));
+                          fragment.getString(R.string.top_code_txt, getTopScore()));
                       // sort codes and update qr code list view
-                      updateQRListSort(typeSpinner, orderSpinner);
+                      updateQRListSort(orderSpinner);
                     }
                   });
             });
   }
 
-  public AdapterView.OnItemSelectedListener handleSpinnerSelect(
-      Spinner typeSpinner, Spinner orderSpinner) {
+  /**
+   * This creates a custom OnItemSelectedListener for the given spinner
+   *
+   * @param orderSpinner This is the spinner for selecting the sorting order of codes
+   * @return Return the OnItemSelectedListener for the spinner
+   */
+  public AdapterView.OnItemSelectedListener handleSpinnerSelect(Spinner orderSpinner) {
     return new AdapterView.OnItemSelectedListener() {
       @Override
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        updateQRListSort(typeSpinner, orderSpinner);
+        updateQRListSort(orderSpinner);
       }
 
       @Override
@@ -150,18 +163,18 @@ public class ProfileController {
     gameController.setBody(settingsFragment);
   }
 
-  private void updateQRListSort(Spinner typeSpinner, Spinner orderSpinner) {
+  /**
+   * This updates the order of qr codes shown
+   *
+   * @param orderSpinner This is the spinner indicating the sorting order of codes
+   */
+  private void updateQRListSort(Spinner orderSpinner) {
     // get selected spinner options
-    String selectedType = typeSpinner.getSelectedItem().toString();
     String selectedOrder = orderSpinner.getSelectedItem().toString();
 
     // get comparator
     Comparator<QRCode> comparator =
         new ScoreComparator(); // default comparator, sorts by score in ascending order
-
-    if (Objects.equals(selectedType, "Date Taken")) {
-      comparator = new DateComparator();
-    }
 
     if (Objects.equals(selectedOrder, "Descending")) {
       comparator = comparator.reversed();
@@ -172,6 +185,39 @@ public class ProfileController {
     qrCodeAdapter.notifyDataSetChanged();
   }
 
+  /**
+   * This computes the sum of code scores
+   *
+   * @return Return the sum of code scores
+   */
+  public int getTotalScore() {
+    int total = 0;
+    for (QRCode qrCode : qrCodes) {
+      total += qrCode.getScore();
+    }
+    return total;
+  }
+
+  /**
+   * This computes the top score of the qr codes
+   *
+   * @return The top score
+   */
+  public int getTopScore() {
+    qrCodes.sort(new ScoreComparator().reversed());
+    if (qrCodes.size() > 0) {
+      QRCode topQR = qrCodes.get(0);
+      return topQR.getScore();
+    } else {
+      return 0;
+    }
+  }
+
+  /**
+   * This displays a Toast message
+   *
+   * @param msg The message to display
+   */
   private void showMsg(String msg) {
     Toast.makeText(fragment.getActivity(), msg, Toast.LENGTH_SHORT).show();
   }

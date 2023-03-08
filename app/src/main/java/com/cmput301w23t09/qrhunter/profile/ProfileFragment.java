@@ -11,25 +11,37 @@ import android.widget.TextView;
 import androidx.annotation.ArrayRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class ProfileFragment extends Fragment {
-  private final GameController gameController;
+/** This is the fragment displaying the user's profile */
+public class ProfileFragment extends BaseFragment {
+  /** This is the controller that manages the fragment */
   private ProfileController controller;
+  /** This is the view displaying the user's username */
   private TextView username;
+  /** This is the view displaying the sum of points of the user's qr codes */
   private TextView totalPoints;
+  /** This is the view displaying the total number of codes the user has */
   private TextView totalCodes;
+  /** This is the view displaying the top score of the user's codes */
   private TextView topCodeScore;
-  private Spinner sortTypeSpinner;
+  /** This is the spinner that allows the user to select the order their codes are displayed */
   private Spinner sortOrderSpinner;
-  private FloatingActionButton settingsButton;
+  /** This is the view displaying the list of codes the user has */
   private GridView qrCodeList;
+  /** This is the view displaying the settings button */
+  private FloatingActionButton settingsButton;
 
+  /**
+   * Initializes the fragment with the app controller
+   *
+   * @param gameController This is the app controller
+   */
   public ProfileFragment(GameController gameController) {
-    this.gameController = gameController;
+    super(gameController);
   }
 
   @Override
@@ -39,11 +51,16 @@ public class ProfileFragment extends Fragment {
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.profile_activity, container, false);
 
-    controller = new ProfileController(this, gameController);
+    controller = new ProfileController(this, getMainController());
     createProfile(view);
     return view;
   }
 
+  /**
+   * Creates the fragment elements
+   *
+   * @param view The view of the fragment's layout
+   */
   private void createProfile(View view) {
     // get profile elements
     username = view.findViewById(R.id.username);
@@ -51,7 +68,6 @@ public class ProfileFragment extends Fragment {
     totalPoints = view.findViewById(R.id.total_points);
     totalCodes = view.findViewById(R.id.total_codes);
     topCodeScore = view.findViewById(R.id.top_code_score);
-    sortTypeSpinner = view.findViewById(R.id.sort_spinner);
     sortOrderSpinner = view.findViewById(R.id.order_spinner);
     settingsButton = view.findViewById(R.id.settings_btn);
 
@@ -60,21 +76,26 @@ public class ProfileFragment extends Fragment {
 
     // setup profile elements
     controller.setUpUsername(username);
-    controller.setUpQRList(
-        qrCodeList, totalPoints, totalCodes, topCodeScore, sortTypeSpinner, sortOrderSpinner);
+    controller.setUpQRList(qrCodeList, totalPoints, totalCodes, topCodeScore, sortOrderSpinner);
   }
 
+  /** Sets the profile elements to a blank/default state */
   private void createDefaultProfile() {
     username.setText("");
     totalPoints.setText(getString(R.string.total_points_txt, 0));
     totalCodes.setText(getString(R.string.total_codes_txt, 0));
     topCodeScore.setText(getString(R.string.top_code_txt, 0));
-    createSpinner(sortTypeSpinner, R.array.sort_options);
     createSpinner(sortOrderSpinner, R.array.order_options);
 
     settingsButton.setOnClickListener(v -> controller.handeSettingsClick());
   }
 
+  /**
+   * Creates the spinner element of the fragment
+   *
+   * @param spinner This is the spinner to create
+   * @param spinnerOptionsResource This is the resource containing the spinner's display options
+   */
   private void createSpinner(Spinner spinner, @ArrayRes int spinnerOptionsResource) {
     // set adapter for spinner
     ArrayAdapter<CharSequence> spinnerAdapter =
@@ -83,15 +104,14 @@ public class ProfileFragment extends Fragment {
     spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     spinner.setAdapter(spinnerAdapter);
     // add listeners for item selection
-    spinner.setOnItemSelectedListener(
-        controller.handleSpinnerSelect(sortTypeSpinner, sortOrderSpinner));
+    spinner.setOnItemSelectedListener(controller.handleSpinnerSelect(sortOrderSpinner));
   }
 
   private void setupSettingsButton(View view) {
     view.findViewById(R.id.settings_btn)
         .setOnClickListener(
             ignored -> {
-              gameController.setBody(new ProfileSettingsFragment(gameController));
+              getMainController().setBody(new ProfileSettingsFragment(getMainController()));
             });
   }
 }
