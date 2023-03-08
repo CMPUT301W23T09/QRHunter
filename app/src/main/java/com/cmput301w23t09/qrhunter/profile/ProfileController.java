@@ -23,35 +23,23 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Objects;
 
-/**
- * This is the controller for the profile fragment of the app
- */
+/** This is the controller for the profile fragment of the app */
 public class ProfileController {
-  /**
-   * This is the profile fragment the controller handles
-   */
+  /** This is the profile fragment the controller handles */
   private final ProfileFragment fragment;
-  /**
-   * This is the array of QRCode objects that the fragment displays
-   */
+  /** This is the array of QRCode objects that the fragment displays */
   private ArrayList<QRCode> qrCodes;
-  /**
-   * This is the adapter for displaying the QRCode objects
-   */
+  /** This is the adapter for displaying the QRCode objects */
   private QRCodeAdapter qrCodeAdapter;
-  /**
-   * This is the database the controller gets its data from
-   */
+  /** This is the database the controller gets its data from */
   private FirebaseFirestore db;
-  /**
-   * This is the collection containing the qr code data
-   */
+  /** This is the collection containing the qr code data */
   private CollectionReference qrcodeCollection;
 
   /**
    * This initializes the controller with its corresponding fragment
-   * @param fragment
-   * This is the fragment the controller manages
+   *
+   * @param fragment This is the fragment the controller manages
    */
   public ProfileController(ProfileFragment fragment) {
     this.fragment = fragment;
@@ -63,8 +51,8 @@ public class ProfileController {
 
   /**
    * This sets up the username view of the fragment
-   * @param usernameView
-   * This is the TextView that shows the username
+   *
+   * @param usernameView This is the TextView that shows the username
    */
   public void setUpUsername(TextView usernameView) {
     PlayerDatabase.getInstance()
@@ -82,16 +70,12 @@ public class ProfileController {
 
   /**
    * Sets up the list view of qr codes
-   * @param qrCodeList
-   * This is the view that contains the list view of codes
-   * @param totalPoints
-   * This is the view showing the sum of code scores
-   * @param totalCodes
-   * This is the view showing the total number of codes
-   * @param topCodeScore
-   * This is the view showing the top score from the codes
-   * @param orderSpinner
-   * This is the spinner for selecting the sorting order of codes
+   *
+   * @param qrCodeList This is the view that contains the list view of codes
+   * @param totalPoints This is the view showing the sum of code scores
+   * @param totalCodes This is the view showing the total number of codes
+   * @param topCodeScore This is the view showing the top score from the codes
+   * @param orderSpinner This is the spinner for selecting the sorting order of codes
    */
   public void setUpQRList(
       GridView qrCodeList,
@@ -154,10 +138,9 @@ public class ProfileController {
 
   /**
    * This creates a custom OnItemSelectedListener for the given spinner
-   * @param orderSpinner
-   * This is the spinner for selecting the sorting order of codes
-   * @return
-   * Return the OnItemSelectedListener for the spinner
+   *
+   * @param orderSpinner This is the spinner for selecting the sorting order of codes
+   * @return Return the OnItemSelectedListener for the spinner
    */
   public AdapterView.OnItemSelectedListener handleSpinnerSelect(Spinner orderSpinner) {
     return new AdapterView.OnItemSelectedListener() {
@@ -173,8 +156,8 @@ public class ProfileController {
 
   /**
    * This updates the order of qr codes shown
-   * @param orderSpinner
-   * This is the spinner indicating the sorting order of codes
+   *
+   * @param orderSpinner This is the spinner indicating the sorting order of codes
    */
   private void updateQRListSort(Spinner orderSpinner) {
     // get selected spinner options
@@ -195,8 +178,8 @@ public class ProfileController {
 
   /**
    * This computes the sum of code scores
-   * @return
-   * Return the sum of code scores
+   *
+   * @return Return the sum of code scores
    */
   public int getTotalScore() {
     int total = 0;
@@ -208,8 +191,8 @@ public class ProfileController {
 
   /**
    * This computes the top score of the qr codes
-   * @return
-   * The top score
+   *
+   * @return The top score
    */
   public int getTopScore() {
     qrCodes.sort(new ScoreComparator().reversed());
@@ -223,8 +206,8 @@ public class ProfileController {
 
   /**
    * This displays a Toast message
-   * @param msg
-   * The message to display
+   *
+   * @param msg The message to display
    */
   private void showMsg(String msg) {
     Toast.makeText(fragment.getActivity(), msg, Toast.LENGTH_SHORT).show();

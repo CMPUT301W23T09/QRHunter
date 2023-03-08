@@ -11,49 +11,31 @@ import android.widget.TextView;
 import androidx.annotation.ArrayRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
 
-/**
- * This is the fragment displaying the user's profile
- */
+/** This is the fragment displaying the user's profile */
 public class ProfileFragment extends BaseFragment {
-  /**
-   * This is the controller that manages the fragment
-   */
+  /** This is the controller that manages the fragment */
   private ProfileController controller;
-  /**
-   * This is the view displaying the user's username
-   */
+  /** This is the view displaying the user's username */
   private TextView username;
-  /**
-   * This is the view displaying the sum of points of the user's qr codes
-   */
+  /** This is the view displaying the sum of points of the user's qr codes */
   private TextView totalPoints;
-  /**
-   * This is the view displaying the total number of codes the user has
-   */
+  /** This is the view displaying the total number of codes the user has */
   private TextView totalCodes;
-  /**
-   * This is the view displaying the top score of the user's codes
-   */
+  /** This is the view displaying the top score of the user's codes */
   private TextView topCodeScore;
-  /**
-   * This is the spinner that allows the user to select the order their codes are displayed
-   */
+  /** This is the spinner that allows the user to select the order their codes are displayed */
   private Spinner sortOrderSpinner;
-  /**
-   * This is the view displaying the list of codes the user has
-   */
+  /** This is the view displaying the list of codes the user has */
   private GridView qrCodeList;
 
   /**
    * Initializes the fragment with the app controller
-   * @param gameController
-   * This is the app controller
+   *
+   * @param gameController This is the app controller
    */
   public ProfileFragment(GameController gameController) {
     super(gameController);
@@ -72,8 +54,8 @@ public class ProfileFragment extends BaseFragment {
 
   /**
    * Creates the fragment elements
-   * @param view
-   * The view of the fragment's layout
+   *
+   * @param view The view of the fragment's layout
    */
   private void createProfile(View view) {
     // get profile elements
@@ -89,13 +71,10 @@ public class ProfileFragment extends BaseFragment {
 
     // setup profile elements
     controller.setUpUsername(username);
-    controller.setUpQRList(
-        qrCodeList, totalPoints, totalCodes, topCodeScore, sortOrderSpinner);
+    controller.setUpQRList(qrCodeList, totalPoints, totalCodes, topCodeScore, sortOrderSpinner);
   }
 
-  /**
-   * Sets the profile elements to a blank/default state
-   */
+  /** Sets the profile elements to a blank/default state */
   private void createDefaultProfile() {
     username.setText("");
     totalPoints.setText(getString(R.string.total_points_txt, 0));
@@ -106,10 +85,9 @@ public class ProfileFragment extends BaseFragment {
 
   /**
    * Creates the spinner element of the fragment
-   * @param spinner
-   * This is the spinner to create
-   * @param spinnerOptionsResource
-   * This is the resource containing the spinner's display options
+   *
+   * @param spinner This is the spinner to create
+   * @param spinnerOptionsResource This is the resource containing the spinner's display options
    */
   private void createSpinner(Spinner spinner, @ArrayRes int spinnerOptionsResource) {
     // set adapter for spinner
@@ -119,7 +97,6 @@ public class ProfileFragment extends BaseFragment {
     spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     spinner.setAdapter(spinnerAdapter);
     // add listeners for item selection
-    spinner.setOnItemSelectedListener(
-        controller.handleSpinnerSelect(sortOrderSpinner));
+    spinner.setOnItemSelectedListener(controller.handleSpinnerSelect(sortOrderSpinner));
   }
 }

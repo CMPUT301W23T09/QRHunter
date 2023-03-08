@@ -11,25 +11,18 @@ import androidx.annotation.Nullable;
 import com.cmput301w23t09.qrhunter.R;
 import java.util.ArrayList;
 
-/**
- * This is an array adapter for QRCode objects
- */
+/** This is an array adapter for QRCode objects */
 public class QRCodeAdapter extends ArrayAdapter<QRCode> {
-  /**
-   * This is the list of QRCode objects the adapter converts into views
-   */
+  /** This is the list of QRCode objects the adapter converts into views */
   private ArrayList<QRCode> qrCodes;
-  /**
-   * This is the context of the adapter
-   */
+  /** This is the context of the adapter */
   private Context context;
 
   /**
    * This initializes the adapter with a context and list of QRCode objects
-   * @param context
-   * This is the context of the adapter
-   * @param qrCodes
-   * This is the list of QRCode objects th
+   *
+   * @param context This is the context of the adapter
+   * @param qrCodes This is the list of QRCode objects th
    */
   public QRCodeAdapter(Context context, ArrayList<QRCode> qrCodes) {
     super(context, 0, qrCodes);
