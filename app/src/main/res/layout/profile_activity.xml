@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:text="@string/username_txt"
         android:textAlignment="center"
-        android:textColor="@android:color/white"
+        android:textColor="@color/black"
         android:textSize="34sp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -80,12 +80,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <Spinner
-            android:id="@+id/sort_spinner"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/sort_lbl"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/sort_spinner_desc"
-            android:minHeight="48dp"
+            android:text="@string/sort_lbl"
+            android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -94,11 +94,11 @@
             android:id="@+id/order_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="32dp"
             android:contentDescription="@string/order_spinner_desc"
             android:minHeight="48dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/sort_spinner"
+            app:layout_constraintStart_toEndOf="@+id/sort_lbl"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

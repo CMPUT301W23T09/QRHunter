@@ -27,6 +27,7 @@
         <item>Points</item>
         <item>Date Taken</item>
     </string-array>
+    <string name="sort_lbl">Sort By Score:</string>
     <string-array name="order_options">
         <item>Descending</item>
         <item>Ascending</item>
