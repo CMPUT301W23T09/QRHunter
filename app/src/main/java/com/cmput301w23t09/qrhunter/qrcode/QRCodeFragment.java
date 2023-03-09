@@ -78,6 +78,8 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
         (buttonView, isChecked) -> {
           if (isChecked) {
             locationHandler.setQrToLastLocation(qrCode);
+          } else {
+            qrCode.setLoc(null);
           }
         });
   }
