@@ -60,6 +60,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 31
+          target: playstore
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated
           disable-animations: false
@@ -67,6 +68,7 @@ jobs:
       - uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 31
+          target: playstore
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated
           disable-animations: false
