@@ -65,7 +65,7 @@ public class TestQRCodeFragment {
 
   private void setLocation() {
     solo.clickOnView(solo.getView(R.id.location_request_box));
-    solo.sleep(1000);
+    solo.sleep(3000);
     assertNotNull(qrCode.getLoc());
   }
 
@@ -79,7 +79,7 @@ public class TestQRCodeFragment {
   public void testQRRemoveLocation() {
     setLocation();
     solo.clickOnView(solo.getView(R.id.location_request_box));
-    solo.sleep(1000);
+    solo.sleep(3000);
     assertNull(qrCode.getLoc());
   }
 
