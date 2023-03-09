@@ -19,6 +19,6 @@
         android:layout_height="wrap_content"
         android:text="@string/score_txt"
         android:textColor="@color/black"
-        android:layout_gravity="bottom|end" />
+        android:layout_gravity="bottom|center" />
 
 </FrameLayout>
