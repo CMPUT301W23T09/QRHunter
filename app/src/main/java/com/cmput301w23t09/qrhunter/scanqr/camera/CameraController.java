@@ -6,7 +6,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import com.cmput301w23t09.qrhunter.scanqr.ScannerController;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -28,7 +27,6 @@ public abstract class CameraController {
   protected ExecutorService cameraExecutor;
   protected Fragment fragment;
   protected PreviewView previewView;
-  protected ScannerController scannerController;
 
   public static final int REQUEST_CODE_PERMISSIONS = 10;
   public static final String[] CAMERA_PERMISSIONS =
@@ -45,7 +43,6 @@ public abstract class CameraController {
   public CameraController(Fragment fragment, PreviewView previewView) {
     this.fragment = fragment;
     this.previewView = previewView;
-    this.scannerController = null;
     if (cameraPermissionsGranted()) startCamera();
     else fragment.requestPermissions(CAMERA_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
     cameraExecutor = Executors.newSingleThreadExecutor();
