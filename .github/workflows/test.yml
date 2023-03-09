@@ -69,5 +69,5 @@ jobs:
           api-level: 29
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated
-          disable-animations: true
+          disable-animations: false
           script: ./gradlew connectedCheck
