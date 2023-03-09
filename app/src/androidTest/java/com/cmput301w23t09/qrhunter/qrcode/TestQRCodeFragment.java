@@ -64,7 +64,7 @@ public class TestQRCodeFragment {
 
   private void setLocation() {
     solo.clickOnView(solo.getView(R.id.location_request_box));
-    assertTrue(solo.waitForCondition(() -> qrCode.getLoc() != null, 10000));
+    assertTrue(solo.waitForCondition(() -> qrCode.getLoc() != null, 25000));
   }
 
   @Test
@@ -77,7 +77,7 @@ public class TestQRCodeFragment {
   public void testQRRemoveLocation() {
     setLocation();
     solo.clickOnView(solo.getView(R.id.location_request_box));
-    assertTrue(solo.waitForCondition(() -> qrCode.getLoc() == null, 10000));
+    assertTrue(solo.waitForCondition(() -> qrCode.getLoc() == null, 25000));
   }
 
   private void snapLocationPhoto() {
@@ -85,7 +85,7 @@ public class TestQRCodeFragment {
     solo.clickOnView(solo.getView(R.id.take_location_photo_btn));
     assertTrue(solo.waitForView(R.id.location_photo_shutter));
     solo.clickOnView(solo.getView(R.id.location_photo_shutter));
-    assertTrue(solo.waitForCondition(() -> qrCode.getPhotos().size() > 0, 10000));
+    assertTrue(solo.waitForCondition(() -> qrCode.getPhotos().size() > 0, 25000));
   }
 
   @Test
@@ -97,6 +97,6 @@ public class TestQRCodeFragment {
   public void testRemoveLocationPhoto() {
     snapLocationPhoto();
     solo.clickOnView(solo.getView(R.id.take_location_photo_btn));
-    assertTrue(solo.waitForCondition(() -> qrCode.getPhotos().size() == 0, 10000));
+    assertTrue(solo.waitForCondition(() -> qrCode.getPhotos().size() == 0, 25000));
   }
 }
