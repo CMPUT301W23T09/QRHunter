@@ -5,7 +5,7 @@ import com.cmput301w23t09.qrhunter.database.DatabaseConnection;
 import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
 import com.cmput301w23t09.qrhunter.database.DatabaseQueryResults;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -170,7 +170,7 @@ public class PlayerDatabase {
               }
 
               // Return found player if any.
-              for (QueryDocumentSnapshot snapshot : task.getResult()) {
+              for (DocumentSnapshot snapshot : task.getResult()) {
                 callback.accept(new DatabaseQueryResults<>(snapshotToPlayer(snapshot)));
                 return;
               }
@@ -199,7 +199,7 @@ public class PlayerDatabase {
               }
 
               // Return found player if any.
-              for (QueryDocumentSnapshot snapshot : task.getResult()) {
+              for (DocumentSnapshot snapshot : task.getResult()) {
                 callback.accept(new DatabaseQueryResults<>(snapshotToPlayer(snapshot)));
                 return;
               }
@@ -215,7 +215,7 @@ public class PlayerDatabase {
    * @param snapshot database snapshot
    * @return Player object
    */
-  private Player snapshotToPlayer(QueryDocumentSnapshot snapshot) {
+  private Player snapshotToPlayer(DocumentSnapshot snapshot) {
     String documentId = snapshot.getId();
     UUID deviceUUID = UUID.fromString(snapshot.getString("deviceUUID"));
     String username = snapshot.getString("username");

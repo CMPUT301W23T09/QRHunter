@@ -31,10 +31,9 @@ public class DatabaseConnection {
    * @return database connection
    */
   public static DatabaseConnection getInstance() {
+    if (INSTANCE == null) {
+      INSTANCE = new DatabaseConnection();
+    }
     return INSTANCE;
-  }
-
-  public static void setInstance(DatabaseConnection instance) {
-    INSTANCE = instance;
   }
 }

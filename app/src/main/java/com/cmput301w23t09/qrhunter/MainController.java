@@ -1,7 +1,6 @@
 package com.cmput301w23t09.qrhunter;
 
 import android.content.Intent;
-import com.cmput301w23t09.qrhunter.database.DatabaseConnection;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.util.DeviceUtils;
@@ -15,10 +14,6 @@ public class MainController {
   private final MainActivity activity;
 
   public MainController(MainActivity activity) {
-    if (DatabaseConnection.getInstance() == null) {
-      DatabaseConnection.setInstance(new DatabaseConnection());
-    }
-
     this.activity = activity;
 
     // Check if player is registered to determine which screen to show on launch.
