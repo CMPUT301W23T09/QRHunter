@@ -174,6 +174,10 @@ public class ProfileController {
     };
   }
 
+  /**
+   * This handles the action to take when the contact info button is clicked. Either displaying the
+   * contact information or rendering the edit details fragment.
+   */
   public void handleContactButtonClick() {
     if (deviceUUID.equals(DeviceUtils.getDeviceUUID(gameController.getActivity()))) {
       // Display edit settings fragment

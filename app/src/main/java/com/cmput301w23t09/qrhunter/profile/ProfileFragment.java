@@ -96,6 +96,7 @@ public class ProfileFragment extends BaseFragment {
     setupContactButton();
   }
 
+  /** Sets the image of the profile settings button and handler. */
   private void setupContactButton() {
     if (deviceUUID.equals(DeviceUtils.getDeviceUUID(getMainController().getActivity()))) {
       contactButton.setImageResource(R.drawable.baseline_settings_24);
@@ -106,6 +107,12 @@ public class ProfileFragment extends BaseFragment {
     contactButton.setOnClickListener(v -> controller.handleContactButtonClick());
   }
 
+  /**
+   * Display a prompt showcasing the contact information for this profile.
+   *
+   * @param email the email to display
+   * @param phoneNo the phone number to display
+   */
   public void displayContactInfo(String email, String phoneNo) {
     View view =
         getLayoutInflater()
