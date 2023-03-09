@@ -44,33 +44,23 @@ public class LeaderboardFragment extends BaseFragment {
         new TabLayout.OnTabSelectedListener() {
           @Override
           public void onTabSelected(TabLayout.Tab tab) {
-            String optionChosen = String.valueOf(tab.getText());
-
-            if (optionChosen.equals("Top Codes (By Region)")) {
-              // Render leaderboard mapped by header
-              Map<String, QRLeaderboard> codeLeaderboardByRegion =
-                  controller.getLeaderboardManager().getTopQRCodesByRegionLeaderboard();
-              renderRegionQRLeaderboard(codeLeaderboardByRegion);
-
-            } else {
-              // Render normal leaderboard
-              Leaderboard leaderboard;
-              switch (String.valueOf(tab.getText())) {
-                case "Total Points":
-                  leaderboard = controller.getLeaderboardManager().getTotalPointsLeaderboard();
-                  break;
-                case "Scanned":
-                  leaderboard = controller.getLeaderboardManager().getTopScansLeaderboard();
-                  break;
-                case "Top Codes":
-                  leaderboard = controller.getLeaderboardManager().getTopQRCodesLeaderboard();
-                  break;
-                default:
-                  throw new UnsupportedOperationException(
-                      "This tab item is not supported: " + tab.getText());
-              }
-
-              renderLeaderboard(leaderboard);
+            switch (String.valueOf(tab.getText())) {
+              case "Total Points":
+                renderLeaderboard(controller.getLeaderboardManager().getTotalPointsLeaderboard());
+                break;
+              case "Scanned":
+                renderLeaderboard(controller.getLeaderboardManager().getTopScansLeaderboard());
+                break;
+              case "Top Codes":
+                renderLeaderboard(controller.getLeaderboardManager().getTopQRCodesLeaderboard());
+                break;
+              case "Top Codes (By Region)":
+                renderLeaderboard(
+                    controller.getLeaderboardManager().getTopQRCodesByRegionLeaderboard());
+                break;
+              default:
+                throw new UnsupportedOperationException(
+                    "This tab item is not supported: " + tab.getText());
             }
           }
 
@@ -94,5 +84,5 @@ public class LeaderboardFragment extends BaseFragment {
 
   private void renderLeaderboard(Leaderboard leaderboard) {}
 
-  private void renderRegionQRLeaderboard(Map<String, QRLeaderboard> leaderboardWithHeaders) {}
+  private void renderLeaderboard(Map<String, QRLeaderboard> leaderboardWithHeaders) {}
 }
