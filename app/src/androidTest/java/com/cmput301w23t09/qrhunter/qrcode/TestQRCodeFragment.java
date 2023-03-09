@@ -13,7 +13,6 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 import com.cmput301w23t09.qrhunter.GameActivity;
 import com.cmput301w23t09.qrhunter.R;
-import com.robotium.solo.Condition;
 import com.robotium.solo.Solo;
 import org.junit.Before;
 import org.junit.Rule;
@@ -65,15 +64,7 @@ public class TestQRCodeFragment {
 
   private void setLocation() {
     solo.clickOnView(solo.getView(R.id.location_request_box));
-    assertTrue(
-        solo.waitForCondition(
-            new Condition() {
-              @Override
-              public boolean isSatisfied() {
-                return qrCode.getLoc() != null;
-              }
-            },
-            10000));
+    assertTrue(solo.waitForCondition(() -> qrCode.getLoc() != null, 10000));
   }
 
   @Test
@@ -86,15 +77,7 @@ public class TestQRCodeFragment {
   public void testQRRemoveLocation() {
     setLocation();
     solo.clickOnView(solo.getView(R.id.location_request_box));
-    assertTrue(
-        solo.waitForCondition(
-            new Condition() {
-              @Override
-              public boolean isSatisfied() {
-                return qrCode.getLoc() == null;
-              }
-            },
-            10000));
+    assertTrue(solo.waitForCondition(() -> qrCode.getLoc() == null, 10000));
   }
 
   private void snapLocationPhoto() {
@@ -102,15 +85,7 @@ public class TestQRCodeFragment {
     solo.clickOnView(solo.getView(R.id.take_location_photo_btn));
     assertTrue(solo.waitForView(R.id.location_photo_shutter));
     solo.clickOnView(solo.getView(R.id.location_photo_shutter));
-    assertTrue(
-        solo.waitForCondition(
-            new Condition() {
-              @Override
-              public boolean isSatisfied() {
-                return qrCode.getPhotos().size() > 0;
-              }
-            },
-            10000));
+    assertTrue(solo.waitForCondition(() -> qrCode.getPhotos().size() > 0, 10000));
   }
 
   @Test
@@ -122,14 +97,6 @@ public class TestQRCodeFragment {
   public void testRemoveLocationPhoto() {
     snapLocationPhoto();
     solo.clickOnView(solo.getView(R.id.take_location_photo_btn));
-    assertTrue(
-        solo.waitForCondition(
-            new Condition() {
-              @Override
-              public boolean isSatisfied() {
-                return qrCode.getPhotos().size() == 0;
-              }
-            },
-            10000));
+    assertTrue(solo.waitForCondition(() -> qrCode.getPhotos().size() == 0, 10000));
   }
 }
