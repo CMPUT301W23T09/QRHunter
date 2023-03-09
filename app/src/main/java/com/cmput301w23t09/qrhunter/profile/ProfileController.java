@@ -9,11 +9,13 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeAdapter;
 import com.cmput301w23t09.qrhunter.qrcode.ScoreComparator;
 import com.cmput301w23t09.qrhunter.util.DeviceUtils;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,9 +25,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.UUID;
 
 /** This is the controller for the profile fragment of the app */
 public class ProfileController {
+  /** This is the game controller that controls the content on screen. */
   private final GameController gameController;
   /** This is the profile fragment the controller handles */
   private final ProfileFragment fragment;
@@ -34,9 +38,11 @@ public class ProfileController {
   /** This is the adapter for displaying the QRCode objects */
   private QRCodeAdapter qrCodeAdapter;
   /** This is the database the controller gets its data from */
-  private FirebaseFirestore db;
+  private final FirebaseFirestore db;
   /** This is the collection containing the qr code data */
-  private CollectionReference qrcodeCollection;
+  private final CollectionReference qrcodeCollection;
+
+  private final UUID deviceUUID;
 
   /**
    * This initializes the controller with its corresponding fragment
@@ -44,13 +50,23 @@ public class ProfileController {
    * @param fragment This is the fragment the controller manages
    * @param gameController The game controller that controls the global view
    */
-  public ProfileController(ProfileFragment fragment, GameController gameController) {
+  public ProfileController(
+      ProfileFragment fragment, GameController gameController, UUID deviceUUID) {
     this.fragment = fragment;
     this.gameController = gameController;
+    this.deviceUUID = deviceUUID;
 
     // access database
     db = FirebaseFirestore.getInstance();
     qrcodeCollection = db.collection("qrcodes");
+  }
+
+  public void setUpContactButton(FloatingActionButton contactButton) {
+    if (deviceUUID.equals(DeviceUtils.getDeviceUUID(gameController.getActivity()))) {
+
+    } else {
+
+    }
   }
 
   /**
@@ -61,7 +77,7 @@ public class ProfileController {
   public void setUpUsername(TextView usernameView) {
     PlayerDatabase.getInstance()
         .getPlayerByDeviceId(
-            DeviceUtils.getDeviceUUID(fragment.getActivity()),
+            deviceUUID,
             results -> {
               // check if database query was successful
               if (!results.isSuccessful()) {
@@ -95,7 +111,7 @@ public class ProfileController {
     // get current player
     PlayerDatabase.getInstance()
         .getPlayerByDeviceId(
-            DeviceUtils.getDeviceUUID(fragment.getActivity()),
+            deviceUUID,
             results -> {
               // check if database query was successful
               if (!results.isSuccessful()) {
@@ -158,9 +174,28 @@ public class ProfileController {
     };
   }
 
-  public void handeSettingsClick() {
-    ProfileSettingsFragment settingsFragment = new ProfileSettingsFragment(gameController);
-    gameController.setBody(settingsFragment);
+  public void handleContactButtonClick() {
+    if (deviceUUID.equals(DeviceUtils.getDeviceUUID(gameController.getActivity()))) {
+      // Display edit settings fragment
+      ProfileSettingsFragment settingsFragment =
+          new ProfileSettingsFragment(gameController, deviceUUID);
+      gameController.setBody(settingsFragment);
+    } else {
+      // Display contact info popup
+      PlayerDatabase.getInstance()
+          .getPlayerByDeviceId(
+              deviceUUID,
+              task -> {
+                if (task.getException() != null) {
+                  showMsg(
+                      "An exception occurred while trying to load this player's contact details.");
+                  return;
+                }
+
+                Player player = task.getData();
+                fragment.displayContactInfo(player.getEmail(), player.getPhoneNo());
+              });
+    }
   }
 
   /**

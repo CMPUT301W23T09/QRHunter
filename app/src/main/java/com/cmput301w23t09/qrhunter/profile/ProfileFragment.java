@@ -1,5 +1,6 @@
 package com.cmput301w23t09.qrhunter.profile;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +15,14 @@ import androidx.annotation.Nullable;
 import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.util.DeviceUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import java.util.UUID;
 
 /** This is the fragment displaying the user's profile */
 public class ProfileFragment extends BaseFragment {
+  /** This is the UUID corresponding to the profile of this player */
+  private UUID deviceUUID;
   /** This is the controller that manages the fragment */
   private ProfileController controller;
   /** This is the view displaying the user's username */
@@ -33,15 +38,16 @@ public class ProfileFragment extends BaseFragment {
   /** This is the view displaying the list of codes the user has */
   private GridView qrCodeList;
   /** This is the view displaying the settings button */
-  private FloatingActionButton settingsButton;
+  private FloatingActionButton contactButton;
 
   /**
    * Initializes the fragment with the app controller
    *
    * @param gameController This is the app controller
    */
-  public ProfileFragment(GameController gameController) {
+  public ProfileFragment(GameController gameController, UUID playerDeviceId) {
     super(gameController);
+    deviceUUID = playerDeviceId;
   }
 
   @Override
@@ -51,7 +57,7 @@ public class ProfileFragment extends BaseFragment {
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.profile_activity, container, false);
 
-    controller = new ProfileController(this, getMainController());
+    controller = new ProfileController(this, getMainController(), deviceUUID);
     createProfile(view);
     return view;
   }
@@ -69,7 +75,7 @@ public class ProfileFragment extends BaseFragment {
     totalCodes = view.findViewById(R.id.total_codes);
     topCodeScore = view.findViewById(R.id.top_code_score);
     sortOrderSpinner = view.findViewById(R.id.order_spinner);
-    settingsButton = view.findViewById(R.id.settings_btn);
+    contactButton = view.findViewById(R.id.contact_info_button);
 
     // create a default empty profile (shown while waiting for database queries)
     createDefaultProfile();
@@ -87,7 +93,34 @@ public class ProfileFragment extends BaseFragment {
     topCodeScore.setText(getString(R.string.top_code_txt, 0));
     createSpinner(sortOrderSpinner, R.array.order_options);
 
-    settingsButton.setOnClickListener(v -> controller.handeSettingsClick());
+    setupContactButton();
+  }
+
+  private void setupContactButton() {
+    if (deviceUUID.equals(DeviceUtils.getDeviceUUID(getMainController().getActivity()))) {
+      contactButton.setImageResource(R.drawable.baseline_settings_24);
+    } else {
+      contactButton.setImageResource(R.drawable.info_button);
+    }
+
+    contactButton.setOnClickListener(v -> controller.handleContactButtonClick());
+  }
+
+  public void displayContactInfo(String email, String phoneNo) {
+    View view =
+        getLayoutInflater()
+            .inflate(R.layout.fragment_contact_info_prompt, (ViewGroup) getView(), false);
+
+    TextView phoneNoDisplay = view.findViewById(R.id.contact_phoneNo);
+    phoneNoDisplay.setText(getString(R.string.contact_info_phone_no, phoneNo));
+
+    TextView emailDisplay = view.findViewById(R.id.contact_email);
+    emailDisplay.setText(getString(R.string.contact_info_email, email));
+
+    new AlertDialog.Builder(getContext())
+        .setView(view)
+        .setPositiveButton(R.string.close, (v, i) -> {})
+        .show();
   }
 
   /**
@@ -105,13 +138,5 @@ public class ProfileFragment extends BaseFragment {
     spinner.setAdapter(spinnerAdapter);
     // add listeners for item selection
     spinner.setOnItemSelectedListener(controller.handleSpinnerSelect(sortOrderSpinner));
-  }
-
-  private void setupSettingsButton(View view) {
-    view.findViewById(R.id.settings_btn)
-        .setOnClickListener(
-            ignored -> {
-              getMainController().setBody(new ProfileSettingsFragment(getMainController()));
-            });
   }
 }

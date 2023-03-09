@@ -16,7 +16,6 @@ public class GameController {
   public GameController(GameActivity activity) {
     this.activity = activity;
 
-    // TODO: Show ScanQR screen
     setBody(new ScannerFragment(this));
   }
 

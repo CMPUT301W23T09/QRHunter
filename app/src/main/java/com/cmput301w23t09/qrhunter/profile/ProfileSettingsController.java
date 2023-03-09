@@ -3,16 +3,18 @@ package com.cmput301w23t09.qrhunter.profile;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
-import com.cmput301w23t09.qrhunter.util.DeviceUtils;
 import com.cmput301w23t09.qrhunter.util.ValidationUtils;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 public class ProfileSettingsController {
 
   private final GameController gameController;
+  private final UUID deviceUUID;
 
-  public ProfileSettingsController(GameController gameController) {
+  public ProfileSettingsController(GameController gameController, UUID deviceUUID) {
     this.gameController = gameController;
+    this.deviceUUID = deviceUUID;
   }
 
   /**
@@ -54,7 +56,7 @@ public class ProfileSettingsController {
 
   /** Returns to the profile fragment */
   public void returnToProfile() {
-    gameController.setBody(new ProfileFragment(gameController));
+    gameController.setBody(new ProfileFragment(gameController, deviceUUID));
   }
 
   /**
@@ -66,7 +68,7 @@ public class ProfileSettingsController {
   public void requestPlayerData(Consumer<Player> callback) {
     PlayerDatabase.getInstance()
         .getPlayerByDeviceId(
-            DeviceUtils.getDeviceUUID(gameController.getActivity()),
+            deviceUUID,
             task -> {
               if (task.getException() != null) {
                 callback.accept(null);

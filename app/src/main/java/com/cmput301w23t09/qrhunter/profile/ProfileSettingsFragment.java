@@ -13,6 +13,7 @@ import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.util.ValidationUtils;
 import com.google.android.material.textfield.TextInputEditText;
+import java.util.UUID;
 
 /** Fragment to display and edit contact details */
 public class ProfileSettingsFragment extends BaseFragment {
@@ -23,9 +24,11 @@ public class ProfileSettingsFragment extends BaseFragment {
 
   private String currentSavedEmail;
   private String currentSavedPhoneNo;
+  private final UUID deviceUUID;
 
-  public ProfileSettingsFragment(GameController gameController) {
+  public ProfileSettingsFragment(GameController gameController, UUID deviceUUID) {
     super(gameController);
+    this.deviceUUID = deviceUUID;
   }
 
   @Override
@@ -34,7 +37,7 @@ public class ProfileSettingsFragment extends BaseFragment {
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
 
-    controller = new ProfileSettingsController(getMainController());
+    controller = new ProfileSettingsController(getMainController(), deviceUUID);
     View view = inflater.inflate(R.layout.fragment_profile_settings, container, false);
 
     phoneField = view.findViewById(R.id.settings_screen_phoneTextField);
