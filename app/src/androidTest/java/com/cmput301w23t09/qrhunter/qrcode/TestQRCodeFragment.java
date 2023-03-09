@@ -2,7 +2,6 @@ package com.cmput301w23t09.qrhunter.qrcode;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import android.Manifest;
@@ -14,6 +13,7 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 import com.cmput301w23t09.qrhunter.GameActivity;
 import com.cmput301w23t09.qrhunter.R;
+import com.robotium.solo.Condition;
 import com.robotium.solo.Solo;
 import org.junit.Before;
 import org.junit.Rule;
@@ -65,8 +65,15 @@ public class TestQRCodeFragment {
 
   private void setLocation() {
     solo.clickOnView(solo.getView(R.id.location_request_box));
-    solo.sleep(3000);
-    assertNotNull(qrCode.getLoc());
+    assertTrue(
+        solo.waitForCondition(
+            new Condition() {
+              @Override
+              public boolean isSatisfied() {
+                return qrCode.getLoc() != null;
+              }
+            },
+            10000));
   }
 
   @Test
@@ -79,18 +86,31 @@ public class TestQRCodeFragment {
   public void testQRRemoveLocation() {
     setLocation();
     solo.clickOnView(solo.getView(R.id.location_request_box));
-    solo.sleep(3000);
-    assertNull(qrCode.getLoc());
+    assertTrue(
+        solo.waitForCondition(
+            new Condition() {
+              @Override
+              public boolean isSatisfied() {
+                return qrCode.getLoc() == null;
+              }
+            },
+            10000));
   }
 
   private void snapLocationPhoto() {
-    qrCode.setLoc(null);
     assertEquals(0, qrCode.getPhotos().size());
     solo.clickOnView(solo.getView(R.id.take_location_photo_btn));
-    solo.sleep(1000);
+    assertTrue(solo.waitForView(R.id.location_photo_shutter));
     solo.clickOnView(solo.getView(R.id.location_photo_shutter));
-    solo.sleep(1000);
-    assertTrue(qrCode.getPhotos().size() > 0);
+    assertTrue(
+        solo.waitForCondition(
+            new Condition() {
+              @Override
+              public boolean isSatisfied() {
+                return qrCode.getPhotos().size() > 0;
+              }
+            },
+            10000));
   }
 
   @Test
@@ -102,7 +122,14 @@ public class TestQRCodeFragment {
   public void testRemoveLocationPhoto() {
     snapLocationPhoto();
     solo.clickOnView(solo.getView(R.id.take_location_photo_btn));
-    solo.sleep(1000);
-    assertEquals(0, qrCode.getPhotos().size());
+    assertTrue(
+        solo.waitForCondition(
+            new Condition() {
+              @Override
+              public boolean isSatisfied() {
+                return qrCode.getPhotos().size() == 0;
+              }
+            },
+            10000));
   }
 }
