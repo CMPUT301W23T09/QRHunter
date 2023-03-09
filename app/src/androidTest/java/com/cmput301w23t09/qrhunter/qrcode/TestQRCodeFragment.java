@@ -42,7 +42,7 @@ public class TestQRCodeFragment {
     AppCompatActivity gameActivity = ((AppCompatActivity) solo.getCurrentActivity());
     qrCodeFragment = QRCodeFragment.newInstance(qrCode);
     qrCodeFragment.show(gameActivity.getSupportFragmentManager(), "QRCodeFragment");
-    solo.sleep(1000);
+    solo.sleep(5000);
   }
 
   @Test

@@ -13,20 +13,20 @@ import java.util.concurrent.ExecutionException;
 
 public class CameraScannerController extends CameraController {
 
-  private ScannerController scannerController;
+  private ScannerController controller;
 
   /**
    * Creates a CameraScannerController for previewing and scanning QR codes
    *
    * @param fragment The fragment that uses the camera.
    * @param previewView The UI element in fragment to show camera preview on.
-   * @param scannerController Manages QR Code scanning.
+   * @param controller Manages QR Code scanning.
    * @see ScannerController
    */
   public CameraScannerController(
-      ScannerFragment fragment, PreviewView previewView, ScannerController scannerController) {
+      ScannerFragment fragment, PreviewView previewView, ScannerController controller) {
     super(fragment, previewView);
-    this.scannerController = scannerController;
+    this.controller = controller;
   }
 
   /**
@@ -52,7 +52,7 @@ public class CameraScannerController extends CameraController {
         new ImageAnalysis.Builder()
             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
             .build();
-    imageAnalysis.setAnalyzer(cameraExecutor, image -> scannerController.scanCode(image));
+    imageAnalysis.setAnalyzer(cameraExecutor, image -> controller.scanCode(image));
     cameraProvider.bindToLifecycle(
         (LifecycleOwner) fragment, cameraSelector, preview, imageAnalysis);
   }

@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutionException;
 
 public class CameraLocationPhotoController extends CameraController {
 
-  private LocationPhotoController locationPhotoController;
+  private LocationPhotoController controller;
   private ImageCapture imageCapture;
 
   /**
@@ -23,11 +23,9 @@ public class CameraLocationPhotoController extends CameraController {
    * @param previewView The UI element in fragment to show camera preview on
    */
   public CameraLocationPhotoController(
-      LocationPhotoFragment fragment,
-      PreviewView previewView,
-      LocationPhotoController locationPhotoController) {
+      LocationPhotoFragment fragment, PreviewView previewView, LocationPhotoController controller) {
     super(fragment, previewView);
-    this.locationPhotoController = locationPhotoController;
+    this.controller = controller;
   }
 
   /**
@@ -56,7 +54,7 @@ public class CameraLocationPhotoController extends CameraController {
         new ImageCapture.Builder()
             .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
             .build();
-    locationPhotoController.setCameraFields(cameraExecutor, imageCapture);
+    controller.setCameraFields(cameraExecutor, imageCapture);
     cameraProvider.bindToLifecycle(
         (LifecycleOwner) fragment, cameraSelector, preview, imageCapture);
   }
