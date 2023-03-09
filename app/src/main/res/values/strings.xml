@@ -26,6 +26,7 @@
     <string name="reset">Reset</string>
     <string name="save_changes">Save Changes</string>
     <string name="sort_lbl">Sort By Score:</string>
+    <string name="leave_unsaved_changes">Are you sure you want to leave with unsaved changes?</string>
     <string-array name="sort_options">
         <item>Points</item>
         <item>Date Taken</item>
