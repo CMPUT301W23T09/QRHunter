@@ -179,4 +179,69 @@ public class PlayerDatabaseTests {
               });
         });
   }
+
+  @Test
+  public void shouldThrowIfDeletingPlayerWithoutDocumentId() {
+    Player player =
+        new Player(UUID.randomUUID(), "John Doe", "123-456-7890", "example@example.com");
+
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> database.delete(player, ignored -> {}),
+        "Attempted to delete player without a document id.");
+  }
+
+  @Test
+  public void shouldDeletePlayer() {
+    Player player =
+        new Player(UUID.randomUUID(), "John Doe", "123-456-7890", "example@example.com");
+
+    database.add(
+        player,
+        ignored -> {
+          database.delete(
+              player,
+              task -> {
+                assertNull(task.getException(), "An exception occurred while deleting the player.");
+
+                database.getPlayerByUsername(
+                    player.getUsername(),
+                    subTask -> {
+                      assertNull(subTask.getData(), "Failed to delete player.");
+                    });
+              });
+        });
+  }
+
+  @Test
+  public void shouldGetPlayerByDeviceId() {
+    Player player =
+        new Player(UUID.randomUUID(), "John Doe", "123-456-7890", "example@example.com");
+
+    database.add(
+        player,
+        ignored -> {
+          database.getPlayerByDeviceId(
+              player.getDeviceId(),
+              task -> {
+                assertNotNull(task.getData(), "Failed to get player by device id.");
+              });
+        });
+  }
+
+  @Test
+  public void shouldGetPlayerByUsername() {
+    Player player =
+        new Player(UUID.randomUUID(), "John Doe", "123-456-7890", "example@example.com");
+
+    database.add(
+        player,
+        ignored -> {
+          database.getPlayerByUsername(
+              player.getUsername(),
+              task -> {
+                assertNotNull(task.getData(), "Failed to get player by username.");
+              });
+        });
+  }
 }
