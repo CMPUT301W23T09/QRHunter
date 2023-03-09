@@ -84,6 +84,7 @@ public class TestQRCodeFragment {
   }
 
   private void snapLocationPhoto() {
+    qrCode.setLoc(null);
     assertEquals(0, qrCode.getPhotos().size());
     solo.clickOnView(solo.getView(R.id.take_location_photo_btn));
     solo.sleep(1000);
