@@ -1,5 +1,6 @@
 package com.cmput301w23t09.qrhunter.database.filters;
 
+/** firebase filter used to mock the .whereLessThanOrEqualTo on a CollectionReference */
 public class MockFirebaseLessThanOrEqualToFilter extends MockFirebaseFilter {
 
   public MockFirebaseLessThanOrEqualToFilter(String field, Object comparisonValue) {

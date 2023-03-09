@@ -1,5 +1,6 @@
 package com.cmput301w23t09.qrhunter.database.filters;
 
+/** Base firebase filter used to mock .where methods on a CollectionReference */
 public abstract class MockFirebaseFilter {
 
   protected final String field;

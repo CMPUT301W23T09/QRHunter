@@ -10,7 +10,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.util.concurrent.Executor;
 
-public class MockTask extends Task<QuerySnapshot> {
+/** A firebase task that returns a query snapshot. */
+public class QuerySnapshotTask extends Task<QuerySnapshot> {
   private QuerySnapshot querySnapshot;
 
   @NonNull @Override

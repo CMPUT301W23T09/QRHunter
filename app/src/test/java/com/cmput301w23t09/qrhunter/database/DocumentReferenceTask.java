@@ -10,7 +10,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import java.util.concurrent.Executor;
 
-public class MockDocumentTask extends Task<DocumentReference> {
+/** A firebase task that returns a document reference. */
+public class DocumentReferenceTask extends Task<DocumentReference> {
 
   private DocumentReference reference;
 

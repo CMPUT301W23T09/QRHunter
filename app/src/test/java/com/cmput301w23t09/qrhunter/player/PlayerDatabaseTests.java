@@ -23,6 +23,7 @@ public class PlayerDatabaseTests {
     database = new PlayerDatabase(connection);
   }
 
+  /** Players should not be able to be added to the database if they already have a document id. */
   @Test
   public void shouldThrowIfAddingPlayerWithDocumentId() {
     Player player =
@@ -39,6 +40,9 @@ public class PlayerDatabaseTests {
         "Existing player was added to the database.");
   }
 
+  /**
+   * Players should be able to be added to the database if no other player shares their username.
+   */
   @Test
   public void shouldAddPlayerIfNoExistingUsername() {
     Player player =
@@ -73,6 +77,7 @@ public class PlayerDatabaseTests {
         "Null document id check failed.");
   }
 
+  /** Players should not be able to share the same username. */
   @Test
   public void shouldPreventAddingPlayerIfUsernameInUse() {
     Player existingPlayer =
@@ -93,6 +98,7 @@ public class PlayerDatabaseTests {
         });
   }
 
+  /** Players should not be updatable if they do not have a document id assigned. */
   @Test
   public void shouldThrowIfUpdatingPlayerWithoutDocumentId() {
     Player player =
@@ -104,6 +110,7 @@ public class PlayerDatabaseTests {
         "Attempted to update player without a document id.");
   }
 
+  /** Players should not be able to update their username to a username someone else owns. */
   @Test
   public void shouldNotUpdateUsernameIfAnotherPlayerHasIt() {
     Player existingPlayer =
@@ -130,6 +137,7 @@ public class PlayerDatabaseTests {
         });
   }
 
+  /** Players should be able to update their username if nobody else owns it. */
   @Test
   public void shouldUpdateUserUsernameIfNoPlayerHasIt() {
     Player player =
@@ -150,6 +158,7 @@ public class PlayerDatabaseTests {
         });
   }
 
+  /** Players should be able to update their data. */
   @Test
   public void shouldUpdateUser() {
     Player player =
@@ -180,6 +189,7 @@ public class PlayerDatabaseTests {
         });
   }
 
+  /** Players should not be able to delete their player if they have no document id. */
   @Test
   public void shouldThrowIfDeletingPlayerWithoutDocumentId() {
     Player player =
@@ -191,6 +201,7 @@ public class PlayerDatabaseTests {
         "Attempted to delete player without a document id.");
   }
 
+  /** Player accounts should be deleted when requested. */
   @Test
   public void shouldDeletePlayer() {
     Player player =
@@ -213,6 +224,7 @@ public class PlayerDatabaseTests {
         });
   }
 
+  /** Player accounts should be fetchable by device id. */
   @Test
   public void shouldGetPlayerByDeviceId() {
     Player player =
@@ -229,6 +241,7 @@ public class PlayerDatabaseTests {
         });
   }
 
+  /** Player accounts should be fetchable by username. */
   @Test
   public void shouldGetPlayerByUsername() {
     Player player =

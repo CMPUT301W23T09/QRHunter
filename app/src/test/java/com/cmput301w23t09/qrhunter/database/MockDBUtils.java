@@ -2,6 +2,8 @@ package com.cmput301w23t09.qrhunter.database;
 
 import static org.mockito.Mockito.*;
 
+import com.cmput301w23t09.qrhunter.database.filters.MockFirebaseArrayContainsAnyFilter;
+import com.cmput301w23t09.qrhunter.database.filters.MockFirebaseArrayContainsFilter;
 import com.cmput301w23t09.qrhunter.database.filters.MockFirebaseArrayNotContainsFilter;
 import com.cmput301w23t09.qrhunter.database.filters.MockFirebaseEqualFilter;
 import com.cmput301w23t09.qrhunter.database.filters.MockFirebaseFilter;
@@ -33,6 +35,7 @@ public class MockDBUtils {
    * @return
    */
   public static CollectionReference makeCollection(MockDocument... documents) {
+    // Create a virtual cache of the documents to store in the firebase collection.
     Map<String, MockDocument> mockDocumentMap = new HashMap<>();
     for (MockDocument mockDocument : documents) {
       mockDocumentMap.put(mockDocument.getDocumentId(), mockDocument);
@@ -94,7 +97,7 @@ public class MockDBUtils {
         .thenAnswer(
             invocation -> {
               filters.add(
-                  new MockFirebaseLessThanFilter(
+                  new MockFirebaseArrayContainsFilter(
                       invocation.getArgument(0), invocation.getArgument(1)));
               return reference;
             });
@@ -102,7 +105,7 @@ public class MockDBUtils {
         .thenAnswer(
             invocation -> {
               filters.add(
-                  new MockFirebaseLessThanFilter(
+                  new MockFirebaseArrayContainsAnyFilter(
                       invocation.getArgument(0), invocation.getArgument(1)));
               return reference;
             });
@@ -120,7 +123,7 @@ public class MockDBUtils {
                 reference.whereArrayContains(
                     (String) invocation.getArgument(0), invocation.getArgument(1)));
 
-    // Mock retrieval method
+    // Mock retrieval methods
     when(reference.get())
         .thenAnswer(
             invocation -> {
@@ -141,7 +144,7 @@ public class MockDBUtils {
 
               filters.clear();
 
-              MockTask returnTask = new MockTask();
+              QuerySnapshotTask returnTask = new QuerySnapshotTask();
               returnTask.setResult(makeQuerySnapshot(filteredDocuments));
               return returnTask;
             });
@@ -156,7 +159,7 @@ public class MockDBUtils {
               return createReference(mockDocumentMap.get(documentId), mockDocumentMap);
             });
 
-    // Mock adding documents to collection method.
+    // Mock adding documents to the collection.
     when(reference.add(any()))
         .thenAnswer(
             invocation -> {
@@ -166,7 +169,7 @@ public class MockDBUtils {
 
               DocumentReference mockReference = createReference(document, mockDocumentMap);
 
-              MockDocumentTask documentTask = new MockDocumentTask();
+              DocumentReferenceTask documentTask = new DocumentReferenceTask();
               documentTask.setReference(mockReference);
               return documentTask;
             });
@@ -174,6 +177,14 @@ public class MockDBUtils {
     return reference;
   }
 
+  /**
+   * Creates a document reference based off of a mock document.
+   *
+   * @param mockDocument mock document
+   * @param mockDocumentMap reference to all of the mock documents stored by the collection the
+   *     document belongs to
+   * @return document reference
+   */
   private static DocumentReference createReference(
       MockDocument mockDocument, Map<String, MockDocument> mockDocumentMap) {
     DocumentReference mockReference = mock(DocumentReference.class);
@@ -182,13 +193,13 @@ public class MockDBUtils {
         .thenAnswer(
             answer -> {
               mockDocument.setData(answer.getArgument(0));
-              return new MockVoidTask();
+              return new VoidTask();
             });
     when(mockReference.delete())
         .thenAnswer(
             answer -> {
               mockDocumentMap.remove(mockDocument.getDocumentId());
-              return new MockVoidTask();
+              return new VoidTask();
             });
 
     return mockReference;

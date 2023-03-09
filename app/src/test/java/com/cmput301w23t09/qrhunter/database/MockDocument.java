@@ -8,6 +8,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.Map;
 import java.util.UUID;
 
+/** Document that the mock firebase database contains */
 public class MockDocument {
 
   private final String documentId;
@@ -30,6 +31,11 @@ public class MockDocument {
     this.data = data;
   }
 
+  /**
+   * Converts the mock document to a document snapshot
+   *
+   * @return query document snapshot
+   */
   public QueryDocumentSnapshot toSnapshot() {
     QueryDocumentSnapshot snapshot = mock(QueryDocumentSnapshot.class);
 

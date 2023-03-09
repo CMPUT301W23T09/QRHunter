@@ -9,7 +9,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import java.util.concurrent.Executor;
 
-public class MockVoidTask extends Task<Void> {
+/** A firebase task that returns no results. */
+public class VoidTask extends Task<Void> {
 
   @NonNull @Override
   public Task<Void> addOnCompleteListener(@NonNull OnCompleteListener<Void> onCompleteListener) {

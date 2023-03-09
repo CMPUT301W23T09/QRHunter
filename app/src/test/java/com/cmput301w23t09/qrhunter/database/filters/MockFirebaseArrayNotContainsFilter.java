@@ -2,6 +2,7 @@ package com.cmput301w23t09.qrhunter.database.filters;
 
 import java.util.Collection;
 
+/** firebase filter used to mock the .whereEqualTo on a CollectionReference */
 public class MockFirebaseArrayNotContainsFilter extends MockFirebaseFilter {
 
   public MockFirebaseArrayNotContainsFilter(String field, Object comparisonValue) {
