@@ -6,13 +6,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.map.LocationHandler;
+import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoController;
 import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoFragment;
+import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
 import java.io.Serializable;
 
 public class QRCodeFragment extends DialogFragment implements Serializable {
@@ -22,11 +26,11 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   private ImageView locationPhoto;
   private QRCode qrCode;
   private Button takeLocationPhotoBtn;
+  private CheckBox locationCheckbox;
+  private LocationHandler locationHandler;
 
   /**
    * Creates a new QRCodeFragment to display a specific QR Code
-   *
-   * <p>TODO: Replase hash with QRCode object
    *
    * @param qrCode The QR code to view
    * @return
@@ -43,6 +47,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
     View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_qrcode, null);
     qrCode = (QRCode) getArguments().getSerializable("qrcode");
+    locationHandler = new LocationHandler(this);
     setupViews(view);
     updateLocationPhoto();
     return createAlertDialog(view);
@@ -56,6 +61,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   private void setupViews(View view) {
     qrName = view.findViewById(R.id.qr_name);
     locationPhoto = view.findViewById(R.id.location_photo);
+    locationCheckbox = view.findViewById(R.id.location_request_box);
     qrName.setText(qrCode.getHash());
     takeLocationPhotoBtn = view.findViewById(R.id.take_location_photo_btn);
     takeLocationPhotoBtn.setOnClickListener(
@@ -68,8 +74,20 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
             frag.show(getParentFragmentManager(), "Take Location Photo");
           }
         });
+    locationCheckbox.setOnCheckedChangeListener(
+        (buttonView, isChecked) -> {
+          if (isChecked) {
+            locationHandler.setQrToLastLocation(qrCode);
+          }
+        });
   }
 
+  /**
+   * Updates the locationPhoto image view to show the newly-captured location photo
+   *
+   * @see CameraLocationPhotoController
+   * @see LocationPhotoController
+   */
   public void updateLocationPhoto() {
     if (qrCode.getPhotos().size() > 0) {
       takeLocationPhotoBtn.setText(R.string.remove_location_photo);
@@ -77,6 +95,25 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     } else {
       takeLocationPhotoBtn.setText(R.string.take_location_photo);
       locationPhoto.setImageResource(android.R.color.transparent);
+    }
+  }
+
+  /**
+   * Disables the "Record QR Location" box if the user has not granted location permissions
+   *
+   * @param requestCode The request code passed in {@link #requestPermissions(String[], int)}.
+   * @param permissions The requested permissions. Never null.
+   * @param grantResults The grant results for the corresponding permissions which is either {@link
+   *     android.content.pm.PackageManager#PERMISSION_GRANTED} or {@link
+   *     android.content.pm.PackageManager#PERMISSION_DENIED}. Never null.
+   */
+  @Override
+  public void onRequestPermissionsResult(
+      int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    if (requestCode == LocationHandler.REQUEST_CODE_PERMISSIONS) {
+      if (!locationHandler.locationPermissionsGranted()) {
+        locationCheckbox.setEnabled(false);
+      }
     }
   }
 

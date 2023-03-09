@@ -30,10 +30,8 @@ public abstract class CameraController {
   protected PreviewView previewView;
   protected ScannerController scannerController;
 
-  private static final String TAG = "QRHunterCamera";
-  private static final String FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS";
   public static final int REQUEST_CODE_PERMISSIONS = 10;
-  public static final String[] REQUIRED_PERMISSIONS =
+  public static final String[] CAMERA_PERMISSIONS =
       new String[] {
         Manifest.permission.CAMERA,
       };
@@ -48,8 +46,8 @@ public abstract class CameraController {
     this.fragment = fragment;
     this.previewView = previewView;
     this.scannerController = null;
-    if (allPermissionsGranted()) startCamera();
-    else fragment.requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
+    if (cameraPermissionsGranted()) startCamera();
+    else fragment.requestPermissions(CAMERA_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
     cameraExecutor = Executors.newSingleThreadExecutor();
   }
 
@@ -87,8 +85,8 @@ public abstract class CameraController {
    *
    * @return True if every permission under CameraController.REQUIRED_PERMISSIONS is granted
    */
-  public boolean allPermissionsGranted() {
-    for (String permission : REQUIRED_PERMISSIONS) {
+  public boolean cameraPermissionsGranted() {
+    for (String permission : CAMERA_PERMISSIONS) {
       if (ContextCompat.checkSelfPermission(fragment.getContext(), permission)
           == PackageManager.PERMISSION_DENIED) return false;
     }

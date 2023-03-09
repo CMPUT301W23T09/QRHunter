@@ -71,7 +71,7 @@ public class ScannerFragment extends BaseFragment {
   public void onRequestPermissionsResult(
       int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (requestCode == CameraController.REQUEST_CODE_PERMISSIONS) {
-      if (cameraController.allPermissionsGranted()) {
+      if (cameraController.cameraPermissionsGranted()) {
         cameraController.startCamera();
       } else {
         Toast.makeText(getContext(), "Permissions not granted by the user.", Toast.LENGTH_SHORT)
