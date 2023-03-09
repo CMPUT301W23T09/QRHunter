@@ -14,8 +14,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -33,7 +33,10 @@ public class MockDBUtils {
    * @return
    */
   public static CollectionReference makeCollection(MockDocument... documents) {
-    Set<MockDocument> storedDocuments = Arrays.stream(documents).collect(Collectors.toSet());
+    Map<String, MockDocument> mockDocumentMap = new HashMap<>();
+    for (MockDocument mockDocument : documents) {
+      mockDocumentMap.put(mockDocument.getDocumentId(), mockDocument);
+    }
 
     CollectionReference reference = mock(CollectionReference.class);
 
@@ -123,7 +126,7 @@ public class MockDBUtils {
             invocation -> {
               // Apply filters to all documents stored in the collection.
               Set<MockDocument> filteredDocuments =
-                  storedDocuments.stream()
+                  mockDocumentMap.values().stream()
                       .filter(
                           mockDocument -> {
                             for (MockFirebaseFilter filter : filters) {
@@ -142,6 +145,16 @@ public class MockDBUtils {
               returnTask.setResult(makeQuerySnapshot(filteredDocuments));
               return returnTask;
             });
+    when(reference.document(anyString()))
+        .thenAnswer(
+            answer -> {
+              String documentId = (String) answer.getArgument(0);
+              if (!mockDocumentMap.containsKey(documentId)) {
+                return null;
+              }
+
+              return createReference(mockDocumentMap.get(documentId), mockDocumentMap);
+            });
 
     // Mock adding documents to collection method.
     when(reference.add(any()))
@@ -149,22 +162,9 @@ public class MockDBUtils {
             invocation -> {
               Map<String, Object> data = invocation.getArgument(0);
               MockDocument document = new MockDocument(data);
-              storedDocuments.add(document);
+              mockDocumentMap.put(document.getDocumentId(), document);
 
-              DocumentReference mockReference = mock(DocumentReference.class);
-              when(mockReference.getId()).thenAnswer(answer -> document.getDocumentId());
-              when(mockReference.update(any()))
-                  .thenAnswer(
-                      answer -> {
-                        document.setData(answer.getArgument(0));
-                        return new MockVoidTask();
-                      });
-              when(mockReference.delete())
-                  .thenAnswer(
-                      answer -> {
-                        storedDocuments.remove(document);
-                        return new MockVoidTask();
-                      });
+              DocumentReference mockReference = createReference(document, mockDocumentMap);
 
               MockDocumentTask documentTask = new MockDocumentTask();
               documentTask.setReference(mockReference);
@@ -172,6 +172,26 @@ public class MockDBUtils {
             });
 
     return reference;
+  }
+
+  private static DocumentReference createReference(
+      MockDocument mockDocument, Map<String, MockDocument> mockDocumentMap) {
+    DocumentReference mockReference = mock(DocumentReference.class);
+    when(mockReference.getId()).thenAnswer(answer -> mockDocument.getDocumentId());
+    when(mockReference.update(any()))
+        .thenAnswer(
+            answer -> {
+              mockDocument.setData(answer.getArgument(0));
+              return new MockVoidTask();
+            });
+    when(mockReference.delete())
+        .thenAnswer(
+            answer -> {
+              mockDocumentMap.remove(mockDocument.getDocumentId());
+              return new MockVoidTask();
+            });
+
+    return mockReference;
   }
 
   /**

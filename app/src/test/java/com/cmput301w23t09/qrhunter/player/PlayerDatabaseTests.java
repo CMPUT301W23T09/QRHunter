@@ -24,6 +24,22 @@ public class PlayerDatabaseTests {
   }
 
   @Test
+  public void shouldThrowIfAddingPlayerWithDocumentId() {
+    Player player =
+        new Player(
+            "random-document-id",
+            UUID.randomUUID(),
+            "John Doe",
+            "123-456-7890",
+            "example@example.com");
+
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> database.add(player, ignored -> {}),
+        "Existing player was added to the database.");
+  }
+
+  @Test
   public void shouldAddPlayerIfNoExistingUsername() {
     Player player =
         new Player(UUID.randomUUID(), "John Doe", "123-456-7890", "example@example.com");
@@ -73,6 +89,93 @@ public class PlayerDatabaseTests {
               player,
               task -> {
                 assertNotNull(task.getException(), "Duplicate username was added to database.");
+              });
+        });
+  }
+
+  @Test
+  public void shouldThrowIfUpdatingPlayerWithoutDocumentId() {
+    Player player =
+        new Player(UUID.randomUUID(), "John Doe", "123-456-7890", "example@example.com");
+
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> database.update(player, ignored -> {}),
+        "Attempted to update player without a document id.");
+  }
+
+  @Test
+  public void shouldNotUpdateUsernameIfAnotherPlayerHasIt() {
+    Player existingPlayer =
+        new Player(UUID.randomUUID(), "John Doe", "123-456-7890", "example@example.com");
+    Player player =
+        new Player(UUID.randomUUID(), "Not John Doe", "234-567-8901", "example2@example.com");
+
+    database.add(
+        existingPlayer,
+        ignored -> {
+          database.add(
+              player,
+              ignored2 -> {
+                player.setUsername(existingPlayer.getUsername());
+
+                database.update(
+                    player,
+                    task -> {
+                      assertNotNull(
+                          task.getException(),
+                          "Successfully updated player username to the same username of another player.");
+                    });
+              });
+        });
+  }
+
+  @Test
+  public void shouldUpdateUserUsernameIfNoPlayerHasIt() {
+    Player player =
+        new Player(UUID.randomUUID(), "John Doe", "234-567-8901", "example2@example.com");
+
+    database.add(
+        player,
+        ignored -> {
+          player.setUsername("Not John Doe");
+
+          database.update(
+              player,
+              task -> {
+                assertNull(
+                    task.getException(),
+                    "Failed to update username despite no other player having the username.");
+              });
+        });
+  }
+
+  @Test
+  public void shouldUpdateUser() {
+    Player player =
+        new Player(UUID.randomUUID(), "Not John Doe", "234-567-8901", "example2@example.com");
+
+    database.add(
+        player,
+        ignored -> {
+          player.setEmail("new@example.com");
+
+          // Update player data
+          database.update(
+              player,
+              task -> {
+                assertNull(
+                    task.getException(),
+                    "An exception occurred while attempting to update the user.");
+
+                database.getPlayerByUsername(
+                    player.getUsername(),
+                    subTask -> {
+                      assertEquals(
+                          "new@example.com",
+                          subTask.getData().getEmail(),
+                          "Updating player data failed.");
+                    });
               });
         });
   }
