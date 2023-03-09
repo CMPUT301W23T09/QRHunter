@@ -15,7 +15,6 @@ import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeAdapter;
 import com.cmput301w23t09.qrhunter.qrcode.ScoreComparator;
 import com.cmput301w23t09.qrhunter.util.DeviceUtils;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -59,14 +58,6 @@ public class ProfileController {
     // access database
     db = FirebaseFirestore.getInstance();
     qrcodeCollection = db.collection("qrcodes");
-  }
-
-  public void setUpContactButton(FloatingActionButton contactButton) {
-    if (deviceUUID.equals(DeviceUtils.getDeviceUUID(gameController.getActivity()))) {
-
-    } else {
-
-    }
   }
 
   /**
