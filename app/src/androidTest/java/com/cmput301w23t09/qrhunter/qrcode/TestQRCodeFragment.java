@@ -37,6 +37,7 @@ public class TestQRCodeFragment {
   @Before
   public void setUp() throws Exception {
     solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
+    solo.assertCurrentActivity("Should be Game Activity", GameActivity.class);
     solo.clickOnView(solo.getView(R.id.navigation_scan_qr));
     qrCode = new QRCode("test-hash123");
     AppCompatActivity gameActivity = ((AppCompatActivity) solo.getCurrentActivity());
