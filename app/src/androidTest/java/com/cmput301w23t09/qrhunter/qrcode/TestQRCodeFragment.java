@@ -47,8 +47,8 @@ public class TestQRCodeFragment {
         .getScenario()
         .onActivity(
             activity -> {
-              solo = new Solo(InstrumentationRegistry.getInstrumentation(), activity);
               activity.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+              solo = new Solo(InstrumentationRegistry.getInstrumentation(), activity);
               qrCodeFragment.show(activity.getSupportFragmentManager(), "QRCodeFragment");
             });
     await().until(() -> qrCodeFragment.getDialog() != null);
