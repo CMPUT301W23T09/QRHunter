@@ -2,6 +2,7 @@ package com.cmput301w23t09.qrhunter.qrcode;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
@@ -61,20 +62,23 @@ public class TestQRCodeFragment {
   @Test
   public void testQRSetLocation() throws InterruptedException {
     Thread.sleep(2500);
+    await().until(() -> qrCodeFragment.getDialog().isShowing());
     onView(withId(R.id.location_request_box))
         .check(matches(isNotChecked()))
         .inRoot(isDialog())
-        .perform(click());
+        .perform(longClick())
+        .check(matches(isChecked()));
     await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getLoc() != null);
   }
 
   @Test
   public void testQRRemoveLocation() throws InterruptedException {
     Thread.sleep(2500);
+    await().until(() -> qrCodeFragment.getDialog().isShowing());
     onView(withId(R.id.location_request_box))
         .check(matches(isNotChecked()))
         .inRoot(isDialog())
-        .perform(click());
+        .perform(longClick());
     onView(withId(R.id.location_request_box))
         .check(matches(isChecked()))
         .inRoot(isDialog())
