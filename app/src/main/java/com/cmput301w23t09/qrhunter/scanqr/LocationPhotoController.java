@@ -3,8 +3,10 @@ package com.cmput301w23t09.qrhunter.scanqr;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.camera.core.ImageCapture;
+import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.ImageProxy;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
@@ -88,6 +90,12 @@ public class LocationPhotoController {
             qrCode.addPhoto(bitmapImage);
             image.close();
             fragment.dismiss();
+          }
+
+          @Override
+          public void onError(@NonNull ImageCaptureException exception) {
+            super.onError(exception);
+            Log.e("ERROR", exception.getMessage());
           }
         });
   }

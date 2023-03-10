@@ -42,7 +42,7 @@ public class TestQRCodeFragment {
     AppCompatActivity gameActivity = ((AppCompatActivity) solo.getCurrentActivity());
     qrCodeFragment = QRCodeFragment.newInstance(qrCode);
     qrCodeFragment.show(gameActivity.getSupportFragmentManager(), "QRCodeFragment");
-    solo.sleep(5000);
+    solo.sleep(1000);
   }
 
   @Test
@@ -84,6 +84,7 @@ public class TestQRCodeFragment {
     assertEquals(0, qrCode.getPhotos().size());
     solo.clickOnView(solo.getView(R.id.take_location_photo_btn));
     assertTrue(solo.waitForView(R.id.location_photo_shutter));
+    solo.sleep(2500);
     solo.clickOnView(solo.getView(R.id.location_photo_shutter));
     assertTrue(solo.waitForCondition(() -> qrCode.getPhotos().size() > 0, 25000));
   }
