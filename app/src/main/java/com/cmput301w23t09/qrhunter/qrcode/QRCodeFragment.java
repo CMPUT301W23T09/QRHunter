@@ -14,9 +14,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.map.LocationHandler;
-import com.cmput301w23t09.qrhunter.scanqr.CameraController;
 import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoController;
 import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoFragment;
+import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
 import java.io.Serializable;
 
 public class QRCodeFragment extends DialogFragment implements Serializable {
@@ -87,7 +87,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   /**
    * Updates the locationPhoto image view to show the newly-captured location photo
    *
-   * @see CameraController
+   * @see CameraLocationPhotoController
    * @see LocationPhotoController
    */
   public void updateLocationPhoto() {
