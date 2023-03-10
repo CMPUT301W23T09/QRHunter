@@ -54,13 +54,13 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-31
+          key: avd-24
       - name: create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 31
-          arch: x86_64
+          api-level: 24
+          arch: x86
           target: google_apis
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated
@@ -68,8 +68,8 @@ jobs:
           script: echo "Generated AVD snapshot for caching."
       - uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 31
-          arch: x86_64
+          api-level: 24
+          arch: x86
           target: google_apis
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated
@@ -79,4 +79,4 @@ jobs:
         if: failure()
         with:
           name: Failed Test Results
-          path: app/build/reports/androidTests/connected/index.html
+          path: app/build/reports/androidTests/connected/
