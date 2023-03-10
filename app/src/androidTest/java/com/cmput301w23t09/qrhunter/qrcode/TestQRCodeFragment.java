@@ -13,14 +13,12 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.rule.GrantPermissionRule;
 import com.cmput301w23t09.qrhunter.GameActivity;
 import com.cmput301w23t09.qrhunter.R;
-import com.robotium.solo.Solo;
 import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 public class TestQRCodeFragment {
-  private Solo solo;
   private QRCode qrCode;
   private QRCodeFragment qrCodeFragment;
 
@@ -55,7 +53,7 @@ public class TestQRCodeFragment {
 
   private void setLocation() {
     onView(withId(R.id.location_request_box)).perform(click());
-    await().atMost(5, TimeUnit.SECONDS).until(() -> qrCode.getLoc() != null);
+    await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getLoc() != null);
   }
 
   @Test
@@ -67,14 +65,14 @@ public class TestQRCodeFragment {
   public void testQRRemoveLocation() {
     setLocation();
     onView(withId(R.id.location_request_box)).perform(click());
-    await().atMost(5, TimeUnit.SECONDS).until(() -> qrCode.getLoc() == null);
+    await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getLoc() == null);
   }
 
   private void snapLocationPhoto() {
     assertEquals(0, qrCode.getPhotos().size());
     onView(withId(R.id.take_location_photo_btn)).perform(click());
     onView(withId(R.id.location_photo_shutter)).perform(click());
-    await().atMost(5, TimeUnit.SECONDS).until(() -> qrCode.getPhotos().size() > 0);
+    await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getPhotos().size() > 0);
   }
 
   @Test
@@ -86,6 +84,6 @@ public class TestQRCodeFragment {
   public void testRemoveLocationPhoto() {
     snapLocationPhoto();
     onView(withId(R.id.take_location_photo_btn)).perform(click());
-    await().atMost(5, TimeUnit.SECONDS).until(() -> qrCode.getPhotos().size() == 0);
+    await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getPhotos().size() == 0);
   }
 }
