@@ -7,7 +7,6 @@ import androidx.camera.core.ImageProxy;
 import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
-import com.cmput301w23t09.qrhunter.scanqr.camera.CameraController;
 import com.google.android.gms.tasks.Task;
 import com.google.common.hash.Hashing;
 import com.google.mlkit.vision.barcode.BarcodeScanner;

@@ -12,8 +12,8 @@ import androidx.fragment.app.DialogFragment;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
-import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import java.util.concurrent.ExecutionException;
 
 /**
  * The fragment that lets a user take a "location photo" to assist other users in locating the QR
@@ -27,7 +27,7 @@ public class LocationPhotoFragment extends DialogFragment {
   private LocationPhotoController controller;
   private QRCode qrCode;
   private QRCodeFragment qrCodeFragment;
-  private CameraLocationPhotoController cameraController;
+  private CameraController cameraController;
 
   /**
    * Create a LocationPhotoFragment that lets the user snap a location photo for the given QR code
@@ -60,9 +60,12 @@ public class LocationPhotoFragment extends DialogFragment {
     qrCode = (QRCode) getArguments().getSerializable("qrcode");
     qrCodeFragment = (QRCodeFragment) getArguments().getSerializable("qrcodefrag");
     controller = new LocationPhotoController(this, qrCode);
-    cameraController =
-        new CameraLocationPhotoController(
-            this, view.findViewById(R.id.locationPhotoCameraPreview), controller);
+    cameraController = CameraController.getInstance();
+    try {
+      cameraController.useLocationPhoto(view.findViewById(R.id.locationPhotoCameraPreview));
+    } catch (ExecutionException | InterruptedException e) {
+      throw new RuntimeException(e);
+    }
     FloatingActionButton shutterButton = view.findViewById(R.id.location_photo_shutter);
     shutterButton.setOnClickListener(
         v -> {
@@ -82,5 +85,10 @@ public class LocationPhotoFragment extends DialogFragment {
   public void onDismiss(@NonNull DialogInterface dialog) {
     super.onDismiss(dialog);
     qrCodeFragment.updateLocationPhoto();
+    try {
+      cameraController.useScanner();
+    } catch (ExecutionException | InterruptedException e) {
+      throw new RuntimeException(e);
+    }
   }
 }
