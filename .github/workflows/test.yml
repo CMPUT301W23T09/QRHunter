@@ -80,3 +80,4 @@ jobs:
         with:
           name: Failed Test Results
           path: app/build/reports/androidTests/connected/
+
