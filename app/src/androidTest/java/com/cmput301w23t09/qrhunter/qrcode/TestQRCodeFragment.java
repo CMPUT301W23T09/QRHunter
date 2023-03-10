@@ -4,6 +4,8 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
+import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
+import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.awaitility.Awaitility.await;
@@ -46,6 +48,7 @@ public class TestQRCodeFragment {
               activity.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
               qrCodeFragment.show(activity.getSupportFragmentManager(), "QRCodeFragment");
             });
+    await().until(() -> qrCodeFragment.getDialog() != null);
     await().until(() -> qrCodeFragment.getDialog().isShowing());
   }
 
@@ -63,8 +66,14 @@ public class TestQRCodeFragment {
 
   @Test
   public void testQRRemoveLocation() {
-    onView(withId(R.id.location_request_box)).inRoot(isDialog()).perform(click());
-    onView(withId(R.id.location_request_box)).inRoot(isDialog()).perform(click());
+    onView(withId(R.id.location_request_box))
+        .check(matches(isNotChecked()))
+        .inRoot(isDialog())
+        .perform(click());
+    onView(withId(R.id.location_request_box))
+        .check(matches(isChecked()))
+        .inRoot(isDialog())
+        .perform(click());
     await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getLoc() == null);
   }
 
