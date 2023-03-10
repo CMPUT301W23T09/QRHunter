@@ -46,7 +46,7 @@ public class TestQRCodeFragment {
               activity.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
               qrCodeFragment.show(activity.getSupportFragmentManager(), "QRCodeFragment");
             });
-    await().until(() -> qrCodeFragment.isAdded());
+    await().until(() -> qrCodeFragment.getDialog().isShowing());
   }
 
   @Test
@@ -72,14 +72,18 @@ public class TestQRCodeFragment {
   public void testSnapLocationPhoto() {
     assertEquals(0, qrCode.getPhotos().size());
     onView(withId(R.id.take_location_photo_btn)).inRoot(isDialog()).perform(click());
+    await().until(() -> qrCodeFragment.getLocationPhotoFragment().getDialog().isShowing());
     onView(withId(R.id.location_photo_shutter)).inRoot(isDialog()).perform(click());
+    await().until(() -> qrCodeFragment.getLocationPhotoFragment().getDialog() == null);
     await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getPhotos().size() > 0);
   }
 
   @Test
-  public void testRemoveLocationPhoto() {
+  public void testRemoveLocationPhoto() throws InterruptedException {
     onView(withId(R.id.take_location_photo_btn)).inRoot(isDialog()).perform(click());
+    await().until(() -> qrCodeFragment.getLocationPhotoFragment().getDialog().isShowing());
     onView(withId(R.id.location_photo_shutter)).inRoot(isDialog()).perform(click());
+    await().until(() -> qrCodeFragment.getLocationPhotoFragment().getDialog() == null);
     onView(withId(R.id.take_location_photo_btn)).check(matches(withText("Remove Location Photo")));
     onView(withId(R.id.take_location_photo_btn)).inRoot(isDialog()).perform(click());
     await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getPhotos().size() == 0);

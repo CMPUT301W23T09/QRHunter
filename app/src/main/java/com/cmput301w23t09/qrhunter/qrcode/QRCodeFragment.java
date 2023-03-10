@@ -28,6 +28,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   private Button takeLocationPhotoBtn;
   private CheckBox locationCheckbox;
   private LocationHandler locationHandler;
+  private LocationPhotoFragment locationPhotoFragment;
 
   /**
    * Creates a new QRCodeFragment to display a specific QR Code
@@ -70,8 +71,8 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
             qrCode.deletePhoto(qrCode.getPhotos().get(0));
             updateLocationPhoto();
           } else {
-            LocationPhotoFragment frag = LocationPhotoFragment.newInstance(qrCode, this);
-            frag.show(getParentFragmentManager(), "Take Location Photo");
+            locationPhotoFragment = LocationPhotoFragment.newInstance(qrCode, this);
+            locationPhotoFragment.show(getParentFragmentManager(), "Take Location Photo");
           }
         });
     locationCheckbox.setOnCheckedChangeListener(
@@ -128,5 +129,9 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   private AlertDialog createAlertDialog(View view) {
     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
     return builder.setView(view).setPositiveButton("Close", null).create();
+  }
+
+  public LocationPhotoFragment getLocationPhotoFragment() {
+    return locationPhotoFragment;
   }
 }
