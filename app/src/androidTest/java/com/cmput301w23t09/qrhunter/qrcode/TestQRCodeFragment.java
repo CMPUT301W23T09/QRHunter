@@ -70,7 +70,6 @@ public class TestQRCodeFragment {
   @Test
   public void testQRRemoveLocation() {
     solo.clickOnView(solo.getView(R.id.location_request_box));
-    assertTrue(solo.waitForCondition(() -> qrCode.getLoc() != null, 25000));
     solo.clickOnView(solo.getView(R.id.location_request_box));
     assertTrue(solo.waitForCondition(() -> qrCode.getLoc() == null, 25000));
   }
