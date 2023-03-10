@@ -54,12 +54,12 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-24
+          key: avd-31
       - name: create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 24
+          api-level: 31
           arch: x86_64
           target: playstore
           force-avd-creation: false
@@ -68,7 +68,7 @@ jobs:
           script: echo "Generated AVD snapshot for caching."
       - uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 24
+          api-level: 31
           arch: x86_64
           target: playstore
           force-avd-creation: false
