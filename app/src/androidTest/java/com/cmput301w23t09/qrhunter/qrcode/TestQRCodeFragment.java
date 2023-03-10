@@ -59,13 +59,18 @@ public class TestQRCodeFragment {
   }
 
   @Test
-  public void testQRSetLocation() {
-    onView(withId(R.id.location_request_box)).inRoot(isDialog()).perform(click());
+  public void testQRSetLocation() throws InterruptedException {
+    Thread.sleep(2500);
+    onView(withId(R.id.location_request_box))
+        .check(matches(isNotChecked()))
+        .inRoot(isDialog())
+        .perform(click());
     await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getLoc() != null);
   }
 
   @Test
-  public void testQRRemoveLocation() {
+  public void testQRRemoveLocation() throws InterruptedException {
+    Thread.sleep(2500);
     onView(withId(R.id.location_request_box))
         .check(matches(isNotChecked()))
         .inRoot(isDialog())
