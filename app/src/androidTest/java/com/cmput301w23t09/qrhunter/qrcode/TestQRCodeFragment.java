@@ -1,19 +1,20 @@
 package com.cmput301w23t09.qrhunter.qrcode;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import android.Manifest;
-import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.rule.GrantPermissionRule;
 import com.cmput301w23t09.qrhunter.GameActivity;
 import com.cmput301w23t09.qrhunter.R;
 import com.robotium.solo.Solo;
+import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,8 +25,8 @@ public class TestQRCodeFragment {
   private QRCodeFragment qrCodeFragment;
 
   @Rule
-  public ActivityTestRule<GameActivity> rule =
-      new ActivityTestRule<>(GameActivity.class, true, true);
+  public ActivityScenarioRule<GameActivity> activityScenarioRule =
+      new ActivityScenarioRule<>(GameActivity.class);
 
   @Rule
   public GrantPermissionRule permissionRule =
@@ -35,59 +36,45 @@ public class TestQRCodeFragment {
           Manifest.permission.CAMERA);
 
   @Before
-  public void setUp() throws Exception {
-    solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
-    solo.assertCurrentActivity("Should be Game Activity", GameActivity.class);
-    solo.clickOnView(solo.getView(R.id.navigation_scan_qr));
+  public void setUp() {
     qrCode = new QRCode("test-hash123");
-    AppCompatActivity gameActivity = ((AppCompatActivity) solo.getCurrentActivity());
     qrCodeFragment = QRCodeFragment.newInstance(qrCode);
-    qrCodeFragment.show(gameActivity.getSupportFragmentManager(), "QRCodeFragment");
-    solo.sleep(1000);
-  }
-
-  @Test
-  public void testStartQRFragment() {
-    Fragment frag =
-        ((AppCompatActivity) solo.getCurrentActivity())
-            .getSupportFragmentManager()
-            .findFragmentByTag("QRCodeFragment");
-    assertNotNull(frag);
+    activityScenarioRule
+        .getScenario()
+        .onActivity(
+            activity -> {
+              qrCodeFragment.show(activity.getSupportFragmentManager(), "QRCodeFragment");
+            });
   }
 
   @Test
   public void testQRNameDisplay() {
     // TODO: Currently, QRCodeFragment shows hash, CHANGE THIS TO NAME ONCE IMPLEMENTED
-    assertTrue(solo.searchText("test-hash123"));
-    TextView nameView = (TextView) solo.getView(R.id.qr_name);
-    assertEquals("test-hash123", nameView.getText().toString());
+    onView(withId(R.id.qr_name)).check(matches(withText("test-hash123")));
   }
 
   private void setLocation() {
-    solo.clickOnView(solo.getView(R.id.location_request_box));
-    assertTrue(solo.waitForCondition(() -> qrCode.getLoc() != null, 25000));
+    onView(withId(R.id.location_request_box)).perform(click());
+    await().atMost(5, TimeUnit.SECONDS).until(() -> qrCode.getLoc() != null);
   }
 
   @Test
   public void testQRSetLocation() {
-    // TODO: Figure out how to test with disabled permissions
     setLocation();
   }
 
   @Test
   public void testQRRemoveLocation() {
     setLocation();
-    solo.clickOnView(solo.getView(R.id.location_request_box));
-    assertTrue(solo.waitForCondition(() -> qrCode.getLoc() == null, 25000));
+    onView(withId(R.id.location_request_box)).perform(click());
+    await().atMost(5, TimeUnit.SECONDS).until(() -> qrCode.getLoc() == null);
   }
 
   private void snapLocationPhoto() {
     assertEquals(0, qrCode.getPhotos().size());
-    solo.clickOnView(solo.getView(R.id.take_location_photo_btn));
-    assertTrue(solo.waitForView(R.id.location_photo_shutter));
-    solo.sleep(2500);
-    solo.clickOnView(solo.getView(R.id.location_photo_shutter));
-    assertTrue(solo.waitForCondition(() -> qrCode.getPhotos().size() > 0, 25000));
+    onView(withId(R.id.take_location_photo_btn)).perform(click());
+    onView(withId(R.id.location_photo_shutter)).perform(click());
+    await().atMost(5, TimeUnit.SECONDS).until(() -> qrCode.getPhotos().size() > 0);
   }
 
   @Test
@@ -98,7 +85,7 @@ public class TestQRCodeFragment {
   @Test
   public void testRemoveLocationPhoto() {
     snapLocationPhoto();
-    solo.clickOnView(solo.getView(R.id.take_location_photo_btn));
-    assertTrue(solo.waitForCondition(() -> qrCode.getPhotos().size() == 0, 25000));
+    onView(withId(R.id.take_location_photo_btn)).perform(click());
+    await().atMost(5, TimeUnit.SECONDS).until(() -> qrCode.getPhotos().size() == 0);
   }
 }
