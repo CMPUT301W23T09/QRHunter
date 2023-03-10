@@ -43,6 +43,7 @@ public class TestQRCodeFragment {
             activity -> {
               qrCodeFragment.show(activity.getSupportFragmentManager(), "QRCodeFragment");
             });
+    await().until(() -> qrCodeFragment.isAdded());
   }
 
   @Test
@@ -51,24 +52,21 @@ public class TestQRCodeFragment {
     onView(withId(R.id.qr_name)).check(matches(withText("test-hash123")));
   }
 
-  private void setLocation() {
+  @Test
+  public void testQRSetLocation() {
     onView(withId(R.id.location_request_box)).perform(click());
     await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getLoc() != null);
   }
 
   @Test
-  public void testQRSetLocation() {
-    setLocation();
-  }
-
-  @Test
   public void testQRRemoveLocation() {
-    setLocation();
+    onView(withId(R.id.location_request_box)).perform(click());
     onView(withId(R.id.location_request_box)).perform(click());
     await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getLoc() == null);
   }
 
-  private void snapLocationPhoto() {
+  @Test
+  public void testSnapLocationPhoto() {
     assertEquals(0, qrCode.getPhotos().size());
     onView(withId(R.id.take_location_photo_btn)).perform(click());
     onView(withId(R.id.location_photo_shutter)).perform(click());
@@ -76,13 +74,9 @@ public class TestQRCodeFragment {
   }
 
   @Test
-  public void testSnapLocationPhoto() {
-    snapLocationPhoto();
-  }
-
-  @Test
   public void testRemoveLocationPhoto() {
-    snapLocationPhoto();
+    onView(withId(R.id.take_location_photo_btn)).perform(click());
+    onView(withId(R.id.location_photo_shutter)).perform(click());
     onView(withId(R.id.take_location_photo_btn)).perform(click());
     await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getPhotos().size() == 0);
   }
