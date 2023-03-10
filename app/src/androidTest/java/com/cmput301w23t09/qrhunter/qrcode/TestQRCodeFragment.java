@@ -10,6 +10,7 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
 
 import android.Manifest;
+import android.content.Intent;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.rule.GrantPermissionRule;
 import com.cmput301w23t09.qrhunter.GameActivity;
@@ -42,6 +43,7 @@ public class TestQRCodeFragment {
         .getScenario()
         .onActivity(
             activity -> {
+              activity.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
               qrCodeFragment.show(activity.getSupportFragmentManager(), "QRCodeFragment");
             });
     await().until(() -> qrCodeFragment.isAdded());
