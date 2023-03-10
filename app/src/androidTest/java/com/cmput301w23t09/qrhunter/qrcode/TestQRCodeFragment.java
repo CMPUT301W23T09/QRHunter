@@ -2,22 +2,22 @@ package com.cmput301w23t09.qrhunter.qrcode;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
-import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
-import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import android.Manifest;
 import android.content.Intent;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 import com.cmput301w23t09.qrhunter.GameActivity;
 import com.cmput301w23t09.qrhunter.R;
+import com.robotium.solo.Solo;
 import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Rule;
@@ -25,6 +25,7 @@ import org.junit.Test;
 
 public class TestQRCodeFragment {
   private QRCode qrCode;
+  private Solo solo;
   private QRCodeFragment qrCodeFragment;
 
   @Rule
@@ -46,6 +47,7 @@ public class TestQRCodeFragment {
         .getScenario()
         .onActivity(
             activity -> {
+              solo = new Solo(InstrumentationRegistry.getInstrumentation(), activity);
               activity.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
               qrCodeFragment.show(activity.getSupportFragmentManager(), "QRCodeFragment");
             });
@@ -60,30 +62,17 @@ public class TestQRCodeFragment {
   }
 
   @Test
-  public void testQRSetLocation() throws InterruptedException {
-    Thread.sleep(2500);
-    await().until(() -> qrCodeFragment.getDialog().isShowing());
-    onView(withId(R.id.location_request_box))
-        .check(matches(isNotChecked()))
-        .inRoot(isDialog())
-        .perform(longClick())
-        .check(matches(isChecked()));
-    await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getLoc() != null);
+  public void testQRSetLocation() {
+    solo.clickOnView(solo.getView(R.id.location_request_box));
+    assertTrue(solo.waitForCondition(() -> qrCode.getLoc() != null, 25000));
   }
 
   @Test
-  public void testQRRemoveLocation() throws InterruptedException {
-    Thread.sleep(2500);
-    await().until(() -> qrCodeFragment.getDialog().isShowing());
-    onView(withId(R.id.location_request_box))
-        .check(matches(isNotChecked()))
-        .inRoot(isDialog())
-        .perform(longClick());
-    onView(withId(R.id.location_request_box))
-        .check(matches(isChecked()))
-        .inRoot(isDialog())
-        .perform(click());
-    await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getLoc() == null);
+  public void testQRRemoveLocation() {
+    solo.clickOnView(solo.getView(R.id.location_request_box));
+    assertTrue(solo.waitForCondition(() -> qrCode.getLoc() != null, 25000));
+    solo.clickOnView(solo.getView(R.id.location_request_box));
+    assertTrue(solo.waitForCondition(() -> qrCode.getLoc() == null, 25000));
   }
 
   @Test
