@@ -80,6 +80,7 @@ public class TestQRCodeFragment {
   public void testRemoveLocationPhoto() {
     onView(withId(R.id.take_location_photo_btn)).inRoot(isDialog()).perform(click());
     onView(withId(R.id.location_photo_shutter)).inRoot(isDialog()).perform(click());
+    onView(withId(R.id.take_location_photo_btn)).check(matches(withText("Remove Location Photo")));
     onView(withId(R.id.take_location_photo_btn)).inRoot(isDialog()).perform(click());
     await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getPhotos().size() == 0);
   }

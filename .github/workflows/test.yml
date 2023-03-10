@@ -75,3 +75,8 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated
           disable-animations: true
           script: ./gradlew connectedCheck
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: Failed Test Results
+          path: app/build/reports/androidTests/connected/index.html
