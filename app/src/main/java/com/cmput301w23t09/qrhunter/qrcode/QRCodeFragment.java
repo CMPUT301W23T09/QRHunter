@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -76,63 +78,68 @@ public class QRCodeFragment extends DialogFragment {
     addButton = view.findViewById(R.id.addButton);
     deleteButton = view.findViewById(R.id.deleteButton);
 
-    Task<DocumentSnapshot> task = docRef.get();
-
-    if (task.isSuccessful()) {
-      DocumentSnapshot document = task.getResult();
-      if (document.exists()) {
-        addButton.setVisibility(View.GONE);
-        deleteButton.setVisibility(View.VISIBLE);
-        deleteButton.setOnClickListener(v -> {
-          // TODO: Delete the QR Code from Firestore
-          database.collection("qrcodes").document(hash)
-                  .delete()
-                  .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                      Log.d(TAG, "DocumentSnapshot successfully deleted!");
-                    }
-                  })
-                  .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                      Log.w(TAG, "Error deleting document", e);
-                    }
-                  });
-
-          dismiss();
-        });
+    docRef.get().addOnCompleteListener(task -> {
+      if (task.isSuccessful()) {
+        DocumentSnapshot document = task.getResult();
+        if (document.exists()) {
+          addButton.setVisibility(View.GONE);
+          deleteButton.setVisibility(View.VISIBLE);
+        } else {
+          addButton.setVisibility(View.VISIBLE);
+          deleteButton.setVisibility(View.GONE);
+        }
       } else {
-        addButton.setVisibility(View.VISIBLE);
-        deleteButton.setVisibility(View.GONE);
-        addButton.setOnClickListener(v -> {
-          // TODO: Add the QR Code to Firestore
-
-          Map<String, Object> data = new HashMap<>();
-          data.put("hash", hash);
-          database.collection("qrcodes").document(hash)
-                  .set(data)
-                  .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                      Log.d(TAG, "DocumentSnapshot successfully written!");
-                    }
-                  })
-                  .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                      Log.w(TAG, "Error writing document", e);
-                    }
-                  });
-
-          dismiss();
-        });
+        Log.d(TAG, "failed with ", task.getException());
       }
-    } else {
-      Log.d(TAG, "get failed with ", task.getException());
-    }
-  }
+    });
 
+
+    addButton.setOnClickListener(v -> {
+      Map<String, Object> data = new HashMap<>();
+      data.put("hash", hash);
+
+
+      // ProfileController profileController = new ProfileController();
+      // Profile currentUserProfile = profileController.getCurrentUser();
+
+      //String uid = currentUser.getUid();
+      // DocumentReference userDocRef = database.collection("users").document(uid);
+      FirebaseFirestore.getInstance()
+              //.collection("users")
+              //.document(uid)
+              .collection("qrcodes")
+              .document(hash)
+              .set(data)
+              .addOnSuccessListener(aVoid -> {
+                Log.d(TAG, "QR code added to user's account.");
+                addButton.setVisibility(View.GONE);
+                deleteButton.setVisibility(View.VISIBLE);
+              })
+              .addOnFailureListener(e -> {
+                Log.w(TAG, "Error writing document", e);
+                Toast.makeText(getContext(), "Error adding QR code to account.", Toast.LENGTH_SHORT).show();
+              });
+    });
+
+
+    deleteButton.setOnClickListener(v -> {
+      FirebaseFirestore.getInstance()
+              //.collection("users")
+
+              .collection("qrcodes")
+              .document(hash)
+              .delete()
+              .addOnSuccessListener(aVoid -> {
+                Log.d(TAG, "QR code deleted from user's account.");
+                addButton.setVisibility(View.VISIBLE);
+                deleteButton.setVisibility(View.GONE);
+              })
+              .addOnFailureListener(e -> {
+                Log.w(TAG, "Error deleting document", e);
+                Toast.makeText(getContext(), "Error deleting QR code from account.", Toast.LENGTH_SHORT).show();
+              });
+    });
+  }
 
 
   /**
