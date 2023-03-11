@@ -82,6 +82,7 @@ public class TestQRCodeFragment {
   /** Checks if we can set the QRCode's location by checking the checkbox */
   @Test
   public void testQRSetLocation() {
+    solo.sleep(5000); // This test is really flaky on Github Actions :(
     solo.clickOnText("Record QR Location");
     assertTrue(solo.waitForCondition(() -> qrCode.getLoc() != null, 25000));
   }
