@@ -23,6 +23,14 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+/**
+ * Tests the QRCodeFragment if it displays the QRCode's info correctly and if can modify the code
+ * correctly
+ *
+ * @see QRCodeFragment
+ * @author John Mabanta
+ * @version 1.0
+ */
 public class TestQRCodeFragment {
   private QRCode qrCode;
   private Solo solo;
@@ -39,6 +47,7 @@ public class TestQRCodeFragment {
           Manifest.permission.ACCESS_COARSE_LOCATION,
           Manifest.permission.CAMERA);
 
+  /** Opens the QRCodeFragment, assuming we've scanned a QR code with hash "test-hash123" */
   @Before
   public void setUp() {
     qrCode = new QRCode("test-hash123");
@@ -55,18 +64,21 @@ public class TestQRCodeFragment {
     await().until(() -> qrCodeFragment.getDialog().isShowing());
   }
 
+  /** Checks if the QRCodeFragment displays the QRCode's name correctly */
   @Test
   public void testQRNameDisplay() {
     // TODO: Currently, QRCodeFragment shows hash, CHANGE THIS TO NAME ONCE IMPLEMENTED
     onView(withId(R.id.qr_name)).inRoot(isDialog()).check(matches(withText("test-hash123")));
   }
 
+  /** Checks if we can set the QRCode's location by checking the checkbox */
   @Test
   public void testQRSetLocation() {
     solo.clickOnView(solo.getView(R.id.location_request_box));
     assertTrue(solo.waitForCondition(() -> qrCode.getLoc() != null, 25000));
   }
 
+  /** Checks if we can remove the QRCode's location by unchecking the checkbox */
   @Test
   public void testQRRemoveLocation() {
     solo.clickOnView(solo.getView(R.id.location_request_box));
@@ -74,6 +86,7 @@ public class TestQRCodeFragment {
     assertTrue(solo.waitForCondition(() -> qrCode.getLoc() == null, 25000));
   }
 
+  /** Test if we can take a location photo */
   @Test
   public void testSnapLocationPhoto() {
     assertEquals(0, qrCode.getPhotos().size());
@@ -84,8 +97,9 @@ public class TestQRCodeFragment {
     await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getPhotos().size() > 0);
   }
 
+  /** Test if after we take a location photo, we can remove it using the same button */
   @Test
-  public void testRemoveLocationPhoto() throws InterruptedException {
+  public void testRemoveLocationPhoto() {
     onView(withId(R.id.take_location_photo_btn)).inRoot(isDialog()).perform(click());
     await().until(() -> qrCodeFragment.getLocationPhotoFragment().getDialog().isShowing());
     onView(withId(R.id.location_photo_shutter)).inRoot(isDialog()).perform(click());
