@@ -1,0 +1,260 @@
+package com.cmput301w23t09.qrhunter.player;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import com.cmput301w23t09.qrhunter.database.DatabaseConnection;
+import com.cmput301w23t09.qrhunter.database.MockDBUtils;
+import com.google.firebase.firestore.CollectionReference;
+import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+public class TestPlayerDatabase {
+
+  private PlayerDatabase database;
+
+  @BeforeEach
+  public void resetDatabase() {
+    DatabaseConnection connection = mock(DatabaseConnection.class);
+    CollectionReference mockRef = MockDBUtils.makeCollection();
+    when(connection.getCollection(anyString())).thenReturn(mockRef);
+
+    database = new PlayerDatabase(connection);
+  }
+
+  /** Players should not be able to be added to the database if they already have a document id. */
+  @Test
+  public void shouldThrowIfAddingPlayerWithDocumentId() {
+    Player player =
+        new Player(
+            "random-document-id",
+            UUID.randomUUID(),
+            "John Doe",
+            "123-456-7890",
+            "example@example.com");
+
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> database.add(player, ignored -> {}),
+        "Existing player was added to the database.");
+  }
+
+  /**
+   * Players should be able to be added to the database if no other player shares their username.
+   */
+  @Test
+  public void shouldAddPlayerIfNoExistingUsername() {
+    Player player =
+        new Player(UUID.randomUUID(), "John Doe", "123-456-7890", "example@example.com");
+
+    // The player show be addable since it has no document id.
+    assertDoesNotThrow(
+        () ->
+            database.add(
+                player,
+                task -> {
+                  // There should be no problem with adding a player to the database.
+                  assertNull(
+                      task.getException(),
+                      "There was an exception when adding the player to the database");
+
+                  // Player should now have a document id.
+                  assertNotNull(
+                      player.getDocumentId(), "Document id was not assigned to player object.");
+
+                  // Ensure player exists in the database now.
+                  database.getPlayerByUsername(
+                      player.getUsername(),
+                      subTask -> {
+                        assertNotNull(subTask.getData(), "Player was not added to the database.");
+                        assertEquals(
+                            player.getUsername(),
+                            subTask.getData().getUsername(),
+                            "Wrong player was added to the database.");
+                      });
+                }),
+        "Null document id check failed.");
+  }
+
+  /** Players should not be able to share the same username. */
+  @Test
+  public void shouldPreventAddingPlayerIfUsernameInUse() {
+    Player existingPlayer =
+        new Player(UUID.randomUUID(), "John Doe", "123-456-7890", "example@example.com");
+    Player player =
+        new Player(UUID.randomUUID(), "John Doe", "234-567-8901", "example2@example.com");
+
+    // Add the existing player and try and add the second player who shares the same username.
+    // it should throw an exception.
+    database.add(
+        existingPlayer,
+        ignored -> {
+          database.add(
+              player,
+              task -> {
+                assertNotNull(task.getException(), "Duplicate username was added to database.");
+              });
+        });
+  }
+
+  /** Players should not be updatable if they do not have a document id assigned. */
+  @Test
+  public void shouldThrowIfUpdatingPlayerWithoutDocumentId() {
+    Player player =
+        new Player(UUID.randomUUID(), "John Doe", "123-456-7890", "example@example.com");
+
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> database.update(player, ignored -> {}),
+        "Attempted to update player without a document id.");
+  }
+
+  /** Players should not be able to update their username to a username someone else owns. */
+  @Test
+  public void shouldNotUpdateUsernameIfAnotherPlayerHasIt() {
+    Player existingPlayer =
+        new Player(UUID.randomUUID(), "John Doe", "123-456-7890", "example@example.com");
+    Player player =
+        new Player(UUID.randomUUID(), "Not John Doe", "234-567-8901", "example2@example.com");
+
+    database.add(
+        existingPlayer,
+        ignored -> {
+          database.add(
+              player,
+              ignored2 -> {
+                player.setUsername(existingPlayer.getUsername());
+
+                database.update(
+                    player,
+                    task -> {
+                      assertNotNull(
+                          task.getException(),
+                          "Successfully updated player username to the same username of another player.");
+                    });
+              });
+        });
+  }
+
+  /** Players should be able to update their username if nobody else owns it. */
+  @Test
+  public void shouldUpdateUserUsernameIfNoPlayerHasIt() {
+    Player player =
+        new Player(UUID.randomUUID(), "John Doe", "234-567-8901", "example2@example.com");
+
+    database.add(
+        player,
+        ignored -> {
+          player.setUsername("Not John Doe");
+
+          database.update(
+              player,
+              task -> {
+                assertNull(
+                    task.getException(),
+                    "Failed to update username despite no other player having the username.");
+              });
+        });
+  }
+
+  /** Players should be able to update their data. */
+  @Test
+  public void shouldUpdateUser() {
+    Player player =
+        new Player(UUID.randomUUID(), "Not John Doe", "234-567-8901", "example2@example.com");
+
+    database.add(
+        player,
+        ignored -> {
+          player.setEmail("new@example.com");
+
+          // Update player data
+          database.update(
+              player,
+              task -> {
+                assertNull(
+                    task.getException(),
+                    "An exception occurred while attempting to update the user.");
+
+                database.getPlayerByUsername(
+                    player.getUsername(),
+                    subTask -> {
+                      assertEquals(
+                          "new@example.com",
+                          subTask.getData().getEmail(),
+                          "Updating player data failed.");
+                    });
+              });
+        });
+  }
+
+  /** Players should not be able to delete their player if they have no document id. */
+  @Test
+  public void shouldThrowIfDeletingPlayerWithoutDocumentId() {
+    Player player =
+        new Player(UUID.randomUUID(), "John Doe", "123-456-7890", "example@example.com");
+
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> database.delete(player, ignored -> {}),
+        "Attempted to delete player without a document id.");
+  }
+
+  /** Player accounts should be deleted when requested. */
+  @Test
+  public void shouldDeletePlayer() {
+    Player player =
+        new Player(UUID.randomUUID(), "John Doe", "123-456-7890", "example@example.com");
+
+    database.add(
+        player,
+        ignored -> {
+          database.delete(
+              player,
+              task -> {
+                assertNull(task.getException(), "An exception occurred while deleting the player.");
+
+                database.getPlayerByUsername(
+                    player.getUsername(),
+                    subTask -> {
+                      assertNull(subTask.getData(), "Failed to delete player.");
+                    });
+              });
+        });
+  }
+
+  /** Player accounts should be fetchable by device id. */
+  @Test
+  public void shouldGetPlayerByDeviceId() {
+    Player player =
+        new Player(UUID.randomUUID(), "John Doe", "123-456-7890", "example@example.com");
+
+    database.add(
+        player,
+        ignored -> {
+          database.getPlayerByDeviceId(
+              player.getDeviceId(),
+              task -> {
+                assertNotNull(task.getData(), "Failed to get player by device id.");
+              });
+        });
+  }
+
+  /** Player accounts should be fetchable by username. */
+  @Test
+  public void shouldGetPlayerByUsername() {
+    Player player =
+        new Player(UUID.randomUUID(), "John Doe", "123-456-7890", "example@example.com");
+
+    database.add(
+        player,
+        ignored -> {
+          database.getPlayerByUsername(
+              player.getUsername(),
+              task -> {
+                assertNotNull(task.getData(), "Failed to get player by username.");
+              });
+        });
+  }
+}
