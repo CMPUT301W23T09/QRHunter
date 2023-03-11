@@ -136,6 +136,17 @@ public class ProfileController {
             });
   }
 
+  /** */
+  public AdapterView.OnItemClickListener handleQRSelect() {
+    return new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        QRCode qrCode = qrCodes.get(position);
+        /** implement showing a qrcode dialog fragment * */
+      }
+    };
+  }
+
   /**
    * This creates a custom OnItemSelectedListener for the given spinner
    *

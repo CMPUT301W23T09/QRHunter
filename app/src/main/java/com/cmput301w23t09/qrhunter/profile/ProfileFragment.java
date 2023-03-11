@@ -72,6 +72,7 @@ public class ProfileFragment extends BaseFragment {
     // setup profile elements
     controller.setUpUsername(username);
     controller.setUpQRList(qrCodeList, totalPoints, totalCodes, topCodeScore, sortOrderSpinner);
+    qrCodeList.setOnItemClickListener(controller.handleQRSelect());
   }
 
   /** Sets the profile elements to a blank/default state */
