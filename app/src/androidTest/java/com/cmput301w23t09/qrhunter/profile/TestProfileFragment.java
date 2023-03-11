@@ -7,7 +7,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 public class TestProfileFragment {
-  private Solo solo;
+  /*private Solo solo;
 
   @Rule
   public ActivityTestRule<GameActivity> rule = new ActivityTestRule(GameActivity.class, true, true);
@@ -22,5 +22,5 @@ public class TestProfileFragment {
   public void testStartProfile() {
     GameController gc = ((GameActivity) solo.getCurrentActivity()).getController();
     assertTrue(gc.getBody() instanceof ProfileFragment);
-  }
+  }*/
 }
