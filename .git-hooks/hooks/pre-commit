@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Adapted from: https://medium.com/@mmessell/apply-spotless-formatting-with-git-pre-commit-hook-1c484ea68c34
+# By: Michael Messell (https://medium.com/@mmessell)
+# License: CC BY-SA
+
+# Get files that we're initially staged (to prevent unintended changes from being commited)
+staged=$(git diff --staged --name-only)
+
+# Use Spotless to format according to Google's Style
+echo "Formatting .java files..."
+./gradlew spotlessApply
+
+# Stage formatted files
+for f in $staged; do
+  if test -f "$f"; then # Check if staged file is actually a file
+    git add $f
+  fi
+done
+
+exit 0
