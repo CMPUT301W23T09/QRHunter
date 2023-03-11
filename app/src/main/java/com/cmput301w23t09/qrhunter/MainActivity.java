@@ -10,12 +10,14 @@ import com.google.android.material.textfield.TextInputEditText;
 
 /** The MainActivity handles displaying the landing and initial loading page. */
 public class MainActivity extends AppCompatActivity {
+
   private MainController controller;
 
   private TextInputEditText usernameInput;
   private TextInputEditText phoneInput;
   private TextInputEditText emailInput;
   private Button registrationButton;
+
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {

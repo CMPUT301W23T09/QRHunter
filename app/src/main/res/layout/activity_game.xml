@@ -7,6 +7,8 @@
     tools:context=".MainActivity">
 
     <!-- Body Fragment Container -->
+
+    <!-- Navbar -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/main_activity_fragment_body_host"
         android:layout_width="match_parent"
@@ -18,7 +20,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
-    <!-- Navbar -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigation_bar"
         android:layout_width="0dp"

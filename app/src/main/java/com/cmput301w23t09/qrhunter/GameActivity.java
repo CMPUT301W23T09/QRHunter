@@ -28,6 +28,7 @@ public class GameActivity extends AppCompatActivity {
     // Set navigation controller adapter
     BottomNavigationView bottomNavigationView = findViewById(R.id.navigation_bar);
     bottomNavigationView.setOnItemSelectedListener(new NavigationControllerAdapter(controller));
+
   }
 
   /**
