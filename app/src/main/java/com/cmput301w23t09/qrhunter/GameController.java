@@ -19,7 +19,6 @@ public class GameController {
     this.activity = activity;
     this.activePlayer = activePlayer;
 
-    // TODO: Show ScanQR screen
     setBody(new ScannerFragment(this));
   }
 
