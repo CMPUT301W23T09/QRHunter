@@ -23,12 +23,12 @@ public class TempQRCodeClass {
     // Create and store large and small image
     private void createName() {
         String binary = getFirstSixBits();
-        String nameBitOne = (binary.charAt(0) == '0') ? "Quirky" : "Surreal";
-        String nameBitTwo = (binary.charAt(1) == '0') ? "Quirky" : "Surreal";
-        String nameBitThree = (binary.charAt(2) == '0') ? "Quirky" : "Surreal";
-        String nameBitFour = (binary.charAt(3) == '0') ? "Quirky" : "Surreal";
-        String nameBitFive = (binary.charAt(4) == '0') ? "Quirky" : "Surreal";
-        String nameBitSix = (binary.charAt(5) == '0') ? "Quirky" : "Surreal";
+        String nameBitOne = (binary.charAt(0) == '0') ? "Hot" : "Cold";
+        String nameBitTwo = (binary.charAt(1) == '0') ? "Spicy" : "Mild";
+        String nameBitThree = (binary.charAt(2) == '0') ? "Light" : "Dark";
+        String nameBitFour = (binary.charAt(3) == '0') ? "Yellow" : "Purple";
+        String nameBitFive = (binary.charAt(4) == '0') ? "Quirky" : "Cheerful";
+        String nameBitSix = (binary.charAt(5) == '0') ? "Panda" : "Aardvark";
 
         name = nameBitOne + " " + nameBitTwo + " " + " " + nameBitThree + " " + nameBitFour + " " + nameBitFive + " " + nameBitSix;
     }
