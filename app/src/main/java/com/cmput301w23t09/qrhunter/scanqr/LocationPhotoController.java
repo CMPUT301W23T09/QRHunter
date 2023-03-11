@@ -1,16 +1,14 @@
 package com.cmput301w23t09.qrhunter.scanqr;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.ImageProxy;
+import com.cmput301w23t09.qrhunter.photo.Photo;
+import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
-import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -27,6 +25,7 @@ public class LocationPhotoController {
   private ImageCapture imageCapture;
   private QRCode qrCode;
   private ExecutorService cameraExecutor;
+  private Player activePlayer;
 
   /**
    * Creates the LocationPhotoController
@@ -34,9 +33,11 @@ public class LocationPhotoController {
    * @param fragment The LocationPhotoFragment that owns this LocationPhotoController
    * @param qrCode The QRCode that the user will add the location photo to
    */
-  public LocationPhotoController(LocationPhotoFragment fragment, QRCode qrCode) {
+  public LocationPhotoController(
+      LocationPhotoFragment fragment, QRCode qrCode, Player activePlayer) {
     this.fragment = fragment;
     this.qrCode = qrCode;
+    this.activePlayer = activePlayer;
     this.imageCapture = null;
   }
 
@@ -62,32 +63,7 @@ public class LocationPhotoController {
           public void onCaptureSuccess(@NonNull ImageProxy image) {
             super.onCaptureSuccess(image);
 
-            // Convert ImageProxy to Bitmap
-            // Source: https://stackoverflow.com/a/41776098 (2017-01-21)
-            // Author: Rod_Algonquin (https://stackoverflow.com/users/3444777/rod-algonquin)
-            // License: CC BY-SA
-            ByteBuffer buffer = image.getPlanes()[0].getBuffer();
-            byte[] bytes = new byte[buffer.capacity()];
-            buffer.get(bytes);
-            Bitmap bitmapImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, null);
-
-            // Rotate image so it's correct orientation
-            // Source: https://stackoverflow.com/a/14645289 (2013-02-02)
-            // Author: Aryan (https://stackoverflow.com/users/2032325/aryan)
-            // License: CC BY-SA
-            Matrix rotationMatrix = new Matrix();
-            rotationMatrix.postRotate(90);
-            bitmapImage =
-                Bitmap.createBitmap(
-                    bitmapImage,
-                    0,
-                    0,
-                    bitmapImage.getWidth(),
-                    bitmapImage.getHeight(),
-                    rotationMatrix,
-                    true);
-
-            qrCode.addPhoto(bitmapImage);
+            qrCode.addPhoto(new Photo(image, activePlayer));
             image.close();
             fragment.dismiss();
           }

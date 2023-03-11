@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
@@ -28,6 +29,7 @@ public class LocationPhotoFragment extends DialogFragment {
   private QRCode qrCode;
   private QRCodeFragment qrCodeFragment;
   private CameraLocationPhotoController cameraController;
+  private Player activePlayer;
 
   /**
    * Create a LocationPhotoFragment that lets the user snap a location photo for the given QR code
@@ -37,11 +39,13 @@ public class LocationPhotoFragment extends DialogFragment {
    * @see QRCodeFragment
    * @return The LocationPhotoFragment to display
    */
-  public static LocationPhotoFragment newInstance(QRCode qrCode, QRCodeFragment qrCodeFragment) {
+  public static LocationPhotoFragment newInstance(
+      QRCode qrCode, QRCodeFragment qrCodeFragment, Player activePlayer) {
     // TODO: May need to bundle arguments
     Bundle args = new Bundle();
     args.putSerializable("qrcode", qrCode);
     args.putSerializable("qrcodefrag", qrCodeFragment);
+    args.putSerializable("activePlayer", activePlayer);
     LocationPhotoFragment fragment = new LocationPhotoFragment();
     fragment.setArguments(args);
     return fragment;
@@ -59,7 +63,8 @@ public class LocationPhotoFragment extends DialogFragment {
     View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_location_photo, null);
     qrCode = (QRCode) getArguments().getSerializable("qrcode");
     qrCodeFragment = (QRCodeFragment) getArguments().getSerializable("qrcodefrag");
-    controller = new LocationPhotoController(this, qrCode);
+    activePlayer = (Player) getArguments().getSerializable("activePlayer");
+    controller = new LocationPhotoController(this, qrCode, activePlayer);
     cameraController =
         new CameraLocationPhotoController(
             this, view.findViewById(R.id.locationPhotoCameraPreview), controller);

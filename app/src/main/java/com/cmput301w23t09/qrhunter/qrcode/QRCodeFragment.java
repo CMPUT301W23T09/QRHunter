@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.map.LocationHandler;
+import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoController;
 import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoFragment;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
@@ -29,6 +30,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   private CheckBox locationCheckbox;
   private LocationHandler locationHandler;
   private LocationPhotoFragment locationPhotoFragment;
+  private Player activePlayer;
 
   /**
    * Creates a new QRCodeFragment to display a specific QR Code
@@ -36,9 +38,10 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
    * @param qrCode The QR code to view
    * @return
    */
-  public static QRCodeFragment newInstance(QRCode qrCode) {
+  public static QRCodeFragment newInstance(QRCode qrCode, Player activePlayer) {
     Bundle args = new Bundle();
     args.putSerializable("qrcode", qrCode);
+    args.putSerializable("activePlayer", activePlayer);
     QRCodeFragment fragment = new QRCodeFragment();
     fragment.setArguments(args);
     return fragment;
@@ -48,6 +51,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
     View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_qrcode, null);
     qrCode = (QRCode) getArguments().getSerializable("qrcode");
+    activePlayer = (Player) getArguments().getSerializable("activePlayer");
     locationHandler = new LocationHandler(this);
     setupViews(view);
     updateLocationPhoto();
@@ -71,7 +75,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
             qrCode.deletePhoto(qrCode.getPhotos().get(0));
             updateLocationPhoto();
           } else {
-            locationPhotoFragment = LocationPhotoFragment.newInstance(qrCode, this);
+            locationPhotoFragment = LocationPhotoFragment.newInstance(qrCode, this, activePlayer);
             locationPhotoFragment.show(getParentFragmentManager(), "Take Location Photo");
           }
         });
@@ -94,7 +98,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   public void updateLocationPhoto() {
     if (qrCode.getPhotos().size() > 0) {
       takeLocationPhotoBtn.setText(R.string.remove_location_photo);
-      locationPhoto.setImageBitmap(qrCode.getPhotos().get(0));
+      locationPhoto.setImageBitmap(qrCode.getPhotos().get(0).getPhoto());
     } else {
       takeLocationPhotoBtn.setText(R.string.take_location_photo);
       locationPhoto.setImageResource(android.R.color.transparent);

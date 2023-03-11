@@ -52,7 +52,7 @@ public class ScannerFragment extends BaseFragment {
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     binding = FragmentScanqrBinding.inflate(inflater, container, false);
-    scannerController = new ScannerController(this);
+    scannerController = new ScannerController(this, getActivePlayer());
     cameraController =
         new CameraScannerController(this, binding.scanQrCameraPreview, scannerController);
     return binding.getRoot();

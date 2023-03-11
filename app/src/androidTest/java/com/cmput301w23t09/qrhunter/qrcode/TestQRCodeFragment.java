@@ -17,7 +17,9 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 import com.cmput301w23t09.qrhunter.GameActivity;
 import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.player.Player;
 import com.robotium.solo.Solo;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Rule;
@@ -36,6 +38,9 @@ public class TestQRCodeFragment {
   private Solo solo;
   private QRCodeFragment qrCodeFragment;
 
+  private UUID mockPlayerUUID;
+  private Player mockPlayer;
+
   @Rule
   public ActivityScenarioRule<GameActivity> activityScenarioRule =
       new ActivityScenarioRule<>(GameActivity.class);
@@ -50,8 +55,11 @@ public class TestQRCodeFragment {
   /** Opens the QRCodeFragment, assuming we've scanned a QR code with hash "test-hash123" */
   @Before
   public void setUp() {
+    mockPlayerUUID = UUID.randomUUID();
+    mockPlayer = new Player("001", mockPlayerUUID, "johndoe42", "7801234567", "doe@ualberta.ca");
+
     qrCode = new QRCode("test-hash123");
-    qrCodeFragment = QRCodeFragment.newInstance(qrCode);
+    qrCodeFragment = QRCodeFragment.newInstance(qrCode, mockPlayer);
     activityScenarioRule
         .getScenario()
         .onActivity(
@@ -86,7 +94,7 @@ public class TestQRCodeFragment {
     assertTrue(solo.waitForCondition(() -> qrCode.getLoc() == null, 25000));
   }
 
-  /** Test if we can take a location photo */
+  /** Test if we can take a location photo and if the player that took it is correctly logged */
   @Test
   public void testSnapLocationPhoto() {
     assertEquals(0, qrCode.getPhotos().size());
@@ -95,6 +103,10 @@ public class TestQRCodeFragment {
     onView(withId(R.id.location_photo_shutter)).inRoot(isDialog()).perform(click());
     await().until(() -> qrCodeFragment.getLocationPhotoFragment().getDialog() == null);
     await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getPhotos().size() > 0);
+    // Check if player that snapped location photo is correct
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(() -> qrCode.getPhotos().get(0).getPlayer().equals(mockPlayer));
   }
 
   /** Test if after we take a location photo, we can remove it using the same button */

@@ -5,6 +5,7 @@ import android.media.Image;
 import android.util.Log;
 import androidx.camera.core.ImageProxy;
 import com.cmput301w23t09.qrhunter.BaseFragment;
+import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraController;
@@ -32,14 +33,16 @@ public class ScannerController {
   private BaseFragment fragment;
   private QRCodeFragment qrCodeFragment = null;
   private String pastHash = "";
+  private Player activePlayer;
 
   /**
    * Creates a ScannerController
    *
    * @param fragment The fragment that the ScannerController is attached to
    */
-  public ScannerController(BaseFragment fragment) {
+  public ScannerController(BaseFragment fragment, Player activePlayer) {
     this.fragment = fragment;
+    this.activePlayer = activePlayer;
     options =
         new BarcodeScannerOptions.Builder()
             .setBarcodeFormats(
@@ -84,7 +87,7 @@ public class ScannerController {
                         pastHash = currentHash;
                         if (qrCodeFragment != null) qrCodeFragment.dismissNow();
                         QRCode qrCode = new QRCode(pastHash);
-                        qrCodeFragment = QRCodeFragment.newInstance(qrCode);
+                        qrCodeFragment = QRCodeFragment.newInstance(qrCode, activePlayer);
                         qrCodeFragment.show(fragment.getParentFragmentManager(), "Scanned QR Code");
                       }
                     }
