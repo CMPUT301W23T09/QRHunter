@@ -11,4 +11,5 @@
     <string name="landing_screen_phone_hint">Phone</string>
     <string name="landing_screen_email_hint">Email</string>
     <string name="landing_screen_register_text">Start Hunting</string>
+    <string name="nearby_qr_codes_title">Nearby QR Codes</string>
 </resources>
