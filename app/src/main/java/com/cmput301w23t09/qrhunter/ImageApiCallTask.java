@@ -4,7 +4,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ImageView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -14,17 +16,16 @@ public class ImageApiCallTask extends AsyncTask<String, Void, Bitmap> {
     int responseCode;
 
     @Override
-    protected Bitmap doInBackground(String apiUrl) {
+    protected Bitmap doInBackground(String... urls) {
         try {
             // Open a connection to the image API endpoint
-            URL url = new URL(apiUrl);
+            URL url = new URL(urls[0]);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
 
             // Set any required headers or parameters
 //            conn.setRequestProperty("Authorization", "Bearer my-auth-token");
 
-            // Get the response code and response body as an InputStream
             responseCode = conn.getResponseCode();
             InputStream inputStream;
             if (responseCode < HttpURLConnection.HTTP_BAD_REQUEST) {
@@ -44,12 +45,9 @@ public class ImageApiCallTask extends AsyncTask<String, Void, Bitmap> {
 
     @Override
     protected void onPostExecute(Bitmap result) {
-        // Update the UI with the image data
         if (result != null) {
-            // Display the image in an ImageView
-            System.out.println("Response code: " + responseCode);
+            // run the save image method on the QR code
         } else {
-            // Display an error message
             Log.d("imageApiCall", "API call for the DiceBear failed.");
         }
     }

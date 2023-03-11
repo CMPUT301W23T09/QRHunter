@@ -43,6 +43,9 @@ public class TempQRCodeClass {
     }
 
     private void createImage() {
+        ImageApiCallTask imageApiCallTask = new ImageApiCallTask();
+        String url = "https://api.dicebear.com/5.x/pixel-art/svg?seed=" + qrCodeHash
+        imageApiCallTask.execute(url);
     }
 
     private void saveImage(Bitmap bitmap) {
