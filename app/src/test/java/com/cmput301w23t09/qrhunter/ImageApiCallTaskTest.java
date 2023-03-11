@@ -6,9 +6,9 @@ import static org.junit.Assert.assertTrue;
 import android.graphics.Bitmap;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 public class ImageApiCallTaskTest {
+    @Test
     public void apiSuccessResponseTest() {
         ImageApiCallTask imageApiCallTask = new ImageApiCallTask();
         imageApiCallTask.execute("https://api.dicebear.com/5.x/pixel-art/svg?seed=Bob");

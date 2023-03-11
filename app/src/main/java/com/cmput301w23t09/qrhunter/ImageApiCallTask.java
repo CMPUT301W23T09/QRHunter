@@ -48,7 +48,7 @@ public class ImageApiCallTask extends AsyncTask<String, Void, Bitmap> {
         if (result != null) {
             // run the save image method on the QR code
         } else {
-            Log.d("imageApiCall", "API call for the DiceBear failed.");
+            Log.d("imageApiCall", "API call for DiceBear failed.");
         }
     }
 
