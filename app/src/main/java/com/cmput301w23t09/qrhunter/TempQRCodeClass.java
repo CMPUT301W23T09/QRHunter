@@ -43,7 +43,6 @@ public class TempQRCodeClass {
     }
 
     private void createImage() {
-        new ImageApiCallTask().execute();
     }
 
     private void saveImage(Bitmap bitmap) {

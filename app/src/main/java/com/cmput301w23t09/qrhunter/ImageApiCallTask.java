@@ -10,13 +10,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 // Citation: API Call information - https://www.java67.com/2019/03/7-examples-of-httpurlconnection-in-java.html
-public class ImageApiCallTask extends AsyncTask<Void, Void, Bitmap> {
+public class ImageApiCallTask extends AsyncTask<String, Void, Bitmap> {
     int responseCode;
+
     @Override
-    protected Bitmap doInBackground(Void... params) {
+    protected Bitmap doInBackground(String apiUrl) {
         try {
             // Open a connection to the image API endpoint
-            URL url = new URL("https://api.dicebear.com/5.x/pixel-art/svg?seed=Bob");
+            URL url = new URL(apiUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
 
@@ -51,5 +52,9 @@ public class ImageApiCallTask extends AsyncTask<Void, Void, Bitmap> {
             // Display an error message
             Log.d("imageApiCall", "API call for the DiceBear failed.");
         }
+    }
+
+    public int getResponseCode() {
+        return responseCode;
     }
 }
