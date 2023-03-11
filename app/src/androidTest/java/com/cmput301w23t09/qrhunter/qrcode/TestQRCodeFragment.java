@@ -74,15 +74,15 @@ public class TestQRCodeFragment {
   /** Checks if we can set the QRCode's location by checking the checkbox */
   @Test
   public void testQRSetLocation() {
-    solo.clickOnView(solo.getView(R.id.location_request_box));
+    solo.clickOnText("Record QR Location");
     assertTrue(solo.waitForCondition(() -> qrCode.getLoc() != null, 25000));
   }
 
   /** Checks if we can remove the QRCode's location by unchecking the checkbox */
   @Test
   public void testQRRemoveLocation() {
-    solo.clickOnView(solo.getView(R.id.location_request_box));
-    solo.clickOnView(solo.getView(R.id.location_request_box));
+    solo.clickOnText("Record QR Location");
+    solo.clickOnText("Record QR Location");
     assertTrue(solo.waitForCondition(() -> qrCode.getLoc() == null, 25000));
   }
 
