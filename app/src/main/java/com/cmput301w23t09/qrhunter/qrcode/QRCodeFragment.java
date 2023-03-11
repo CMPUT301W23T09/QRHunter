@@ -15,6 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.player.Player;
+import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
+import com.cmput301w23t09.qrhunter.util.DeviceUtils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -24,8 +27,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class QRCodeFragment extends DialogFragment {
 
@@ -64,82 +70,124 @@ public class QRCodeFragment extends DialogFragment {
    */
   private void setupViews(View view) {
     qrName = view.findViewById(R.id.qrName);
-
     qrName.setText((String) getArguments().get("hash"));
 
-    /**----------------------------------------------------------------**/
     String hash = getArguments().getString("hash");
-
-
-    FirebaseFirestore database = FirebaseFirestore.getInstance();
-    DocumentReference docRef = database.collection("qrcodes").document(hash);
-
 
     addButton = view.findViewById(R.id.addButton);
     deleteButton = view.findViewById(R.id.deleteButton);
 
-    docRef.get().addOnCompleteListener(task -> {
-      if (task.isSuccessful()) {
-        DocumentSnapshot document = task.getResult();
-        if (document.exists()) {
-          addButton.setVisibility(View.GONE);
-          deleteButton.setVisibility(View.VISIBLE);
-        } else {
-          addButton.setVisibility(View.VISIBLE);
-          deleteButton.setVisibility(View.GONE);
-        }
-      } else {
-        Log.d(TAG, "failed with ", task.getException());
-      }
-    });
+    addButton.setVisibility(View.VISIBLE);
+    deleteButton.setVisibility(View.GONE);
 
 
+    //implementing the add button
     addButton.setOnClickListener(v -> {
       Map<String, Object> data = new HashMap<>();
       data.put("hash", hash);
 
-
-      // ProfileController profileController = new ProfileController();
-      // Profile currentUserProfile = profileController.getCurrentUser();
-
-      //String uid = currentUser.getUid();
-      // DocumentReference userDocRef = database.collection("users").document(uid);
+      //adding QR code to the qrcode collection
       FirebaseFirestore.getInstance()
-              //.collection("users")
-              //.document(uid)
               .collection("qrcodes")
               .document(hash)
               .set(data)
               .addOnSuccessListener(aVoid -> {
-                Log.d(TAG, "QR code added to user's account.");
-                addButton.setVisibility(View.GONE);
-                deleteButton.setVisibility(View.VISIBLE);
+                Log.d(TAG, "QR code added to database.");
               })
               .addOnFailureListener(e -> {
                 Log.w(TAG, "Error writing document", e);
-                Toast.makeText(getContext(), "Error adding QR code to account.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error adding QR code to Database", Toast.LENGTH_SHORT).show();
               });
+
+      //adding QRCode to player account
+      PlayerDatabase.getInstance().getPlayerByDeviceId(
+              DeviceUtils.getDeviceUUID(getActivity()),
+              results -> {
+                // check if database query was successful
+                if (results.isSuccessful()) {
+                  Player currentPlayer = results.getData();
+
+                  // add the QR code to the player's account
+                  List<String> scannedqrCodelist = currentPlayer.getQRCodeHashes();
+                  if (scannedqrCodelist == null) {
+                    scannedqrCodelist= new ArrayList<>();
+                  }
+                  scannedqrCodelist.add(hash);
+                  currentPlayer.setQRCodeHashes(scannedqrCodelist);
+
+                  // update the player's account in the database
+                  PlayerDatabase.getInstance().update(currentPlayer, queryResult -> {
+                    if (queryResult.isSuccessful()) {
+                      Log.d(TAG, "QR code added to user's account.");
+                      // update the visibility of the buttons
+                      addButton.setVisibility(View.GONE);
+                      deleteButton.setVisibility(View.VISIBLE);
+
+                    } else {
+                      Log.w(TAG, "Error adding QR code to account.", queryResult.getException());
+                      Toast.makeText(getContext(), "Error adding QR code to account.", Toast.LENGTH_SHORT).show();
+                    }
+                  });
+                } else {
+                  Log.w(TAG, "Error getting player by device ID.", results.getException());
+                  Toast.makeText(getContext(), "Error getting player by device ID.", Toast.LENGTH_SHORT).show();
+                }
+              });
+
     });
 
-
+    //implementing the delete button
     deleteButton.setOnClickListener(v -> {
       FirebaseFirestore.getInstance()
-              //.collection("users")
-
               .collection("qrcodes")
               .document(hash)
               .delete()
               .addOnSuccessListener(aVoid -> {
-                Log.d(TAG, "QR code deleted from user's account.");
-                addButton.setVisibility(View.VISIBLE);
-                deleteButton.setVisibility(View.GONE);
+                Log.d(TAG, "QR code deleted from database.");
+
+                // remove the QR code from the player's account
+                PlayerDatabase.getInstance().getPlayerByDeviceId(
+                        DeviceUtils.getDeviceUUID(getActivity()),
+                        results -> {
+                          // check if database query was successful
+                          if (results.isSuccessful()) {
+                            Player currentPlayer = results.getData();
+
+                            // remove the QR code from the player's account
+                            List<String> scannedqrCodelist = currentPlayer.getQRCodeHashes();
+                            if (scannedqrCodelist == null) {
+                              scannedqrCodelist= new ArrayList<>();
+                            }
+                            scannedqrCodelist.remove(hash);
+                            currentPlayer.setQRCodeHashes(scannedqrCodelist);
+
+                            // update the player's account in the database
+                            PlayerDatabase.getInstance().update(currentPlayer, queryResult -> {
+                              if (queryResult.isSuccessful()) {
+                                Log.d(TAG, "QR code deleted from user's account.");
+                                addButton.setVisibility(View.VISIBLE);
+                                deleteButton.setVisibility(View.GONE);
+
+                              } else {
+                                Log.w(TAG, "Error deleting QR code from account.", queryResult.getException());
+                                Toast.makeText(getContext(), "Error deleting QR code from account.", Toast.LENGTH_SHORT).show();
+                              }
+                            });
+                          } else {
+                            Log.w(TAG, "Error getting player by device ID.", results.getException());
+                            Toast.makeText(getContext(), "Error getting player by device ID.", Toast.LENGTH_SHORT).show();
+                          }
+                        });
               })
               .addOnFailureListener(e -> {
                 Log.w(TAG, "Error deleting document", e);
-                Toast.makeText(getContext(), "Error deleting QR code from account.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error deleting QR code from database.", Toast.LENGTH_SHORT).show();
               });
     });
   }
+
+
+
 
 
   /**
