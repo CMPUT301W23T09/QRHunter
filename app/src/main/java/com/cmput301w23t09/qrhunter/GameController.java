@@ -2,6 +2,7 @@ package com.cmput301w23t09.qrhunter;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import com.cmput301w23t09.qrhunter.scanqr.ScannerFragment;
 
 /**
  * The GameController handles controlling the content to be shown onscreen when viewing the
@@ -15,7 +16,7 @@ public class GameController {
   public GameController(GameActivity activity) {
     this.activity = activity;
 
-    // TODO: Show ScanQR screen
+    setBody(new ScannerFragment(this));
   }
 
   /**

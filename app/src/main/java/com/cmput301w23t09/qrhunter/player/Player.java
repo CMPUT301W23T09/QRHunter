@@ -158,7 +158,7 @@ public class Player {
    * @param email email associated with this player
    */
   public void setEmail(String email) {
-    if (!ValidationUtils.isValidPhoneNo(email)) {
+    if (!ValidationUtils.isValidEmail(email)) {
       throw new IllegalArgumentException("The provided email is not valid.");
     }
 
