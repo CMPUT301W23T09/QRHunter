@@ -18,13 +18,8 @@ import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.util.DeviceUtils;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -72,21 +67,57 @@ public class QRCodeFragment extends DialogFragment {
     qrName = view.findViewById(R.id.qrName);
     qrName.setText((String) getArguments().get("hash"));
 
-    String hash = getArguments().getString("hash");
-
     addButton = view.findViewById(R.id.addButton);
     deleteButton = view.findViewById(R.id.deleteButton);
 
-    addButton.setVisibility(View.VISIBLE);
-    deleteButton.setVisibility(View.GONE);
+    String hash = getArguments().getString("hash");
+
+    //initial visibility of the add and delete button
+    // check if the QR code hash is already added to the player's account
+    PlayerDatabase.getInstance().getPlayerByDeviceId(
+            DeviceUtils.getDeviceUUID(getActivity()),
+            results -> {
+              if (results.isSuccessful()) {
+                Player currentPlayer = results.getData();
+                List<String> scannedQRCodeList = currentPlayer.getQRCodeHashes();
+                if (scannedQRCodeList != null && scannedQRCodeList.contains(hash)) {
+                  // QR code hash is already added to the player's account
+                  addButton.setVisibility(View.GONE);
+                  deleteButton.setVisibility(View.VISIBLE);
+                } else {
+                  // QR code hash is not yet added to the player's account
+                  addButton.setVisibility(View.VISIBLE);
+                  deleteButton.setVisibility(View.GONE);
+                }
+              } else {
+                Log.w(TAG, "Error getting player by device ID.", results.getException());
+                Toast.makeText(getContext(), "Error getting player by device ID.", Toast.LENGTH_SHORT).show();
+              }
+            });
 
 
     //implementing the add button
     addButton.setOnClickListener(v -> {
+      addQRCodeToCollection(hash);
+      addQRCodeToPlayerAccount(hash);
+    });
+
+    //implementing the delete button
+    deleteButton.setOnClickListener(v ->{
+      deleteQRCodeFromCollection(hash);
+      deleteQRCodeFromPlayerAccount(hash);
+  });
+
+  }
+
+  /**
+   * Adding scanned QR code to the database collection
+   * @param hash the Qrcode hash that is added to the the qrcode collection
+   */
+    private void addQRCodeToCollection(String hash ){
       Map<String, Object> data = new HashMap<>();
       data.put("hash", hash);
 
-      //adding QR code to the qrcode collection
       FirebaseFirestore.getInstance()
               .collection("qrcodes")
               .document(hash)
@@ -98,8 +129,13 @@ public class QRCodeFragment extends DialogFragment {
                 Log.w(TAG, "Error writing document", e);
                 Toast.makeText(getContext(), "Error adding QR code to Database", Toast.LENGTH_SHORT).show();
               });
+    }
 
-      //adding QRCode to player account
+  /**
+   * adding scanned QRcode to the player's account
+   * @param hash the qrcode hash that gets added to the player's account
+   */
+  private void addQRCodeToPlayerAccount(String hash){
       PlayerDatabase.getInstance().getPlayerByDeviceId(
               DeviceUtils.getDeviceUUID(getActivity()),
               results -> {
@@ -123,6 +159,9 @@ public class QRCodeFragment extends DialogFragment {
                       addButton.setVisibility(View.GONE);
                       deleteButton.setVisibility(View.VISIBLE);
 
+                      //updates the qrcode document with players that have scanned a particular qr code
+                      updateQRCodeDocument(hash,currentPlayer.getDocumentId());
+
                     } else {
                       Log.w(TAG, "Error adding QR code to account.", queryResult.getException());
                       Toast.makeText(getContext(), "Error adding QR code to account.", Toast.LENGTH_SHORT).show();
@@ -134,59 +173,88 @@ public class QRCodeFragment extends DialogFragment {
                 }
               });
 
-    });
+    }
 
-    //implementing the delete button
-    deleteButton.setOnClickListener(v -> {
-      FirebaseFirestore.getInstance()
-              .collection("qrcodes")
-              .document(hash)
-              .delete()
-              .addOnSuccessListener(aVoid -> {
-                Log.d(TAG, "QR code deleted from database.");
+  /**
+   * Deletes QR code from qr code collection
+   * @param hash qrcode hash that gets deleted from the QRcode collection
+   */
+  private void deleteQRCodeFromCollection( String hash) {
+    FirebaseFirestore.getInstance()
+            .collection("qrcodes")
+            .document(hash)
+            .delete()
+            .addOnSuccessListener(aVoid -> {
+              Log.d(TAG, "QR code deleted from database.");
+            })
+            .addOnFailureListener(e -> {
+              Log.w(TAG, "Error deleting QR code from collection", e);
+            });
+  }
+
+  /**
+   * Deletes scanned QRcode From the player's account
+   * @param hash qrcode hash that gets deleted from player's account
+   */
+  private void deleteQRCodeFromPlayerAccount( String hash) {
+    PlayerDatabase.getInstance().getPlayerByDeviceId(
+            DeviceUtils.getDeviceUUID(getActivity()),
+            results -> {
+              // check if database query was successful
+              if (results.isSuccessful()) {
+                Player currentPlayer = results.getData();
 
                 // remove the QR code from the player's account
-                PlayerDatabase.getInstance().getPlayerByDeviceId(
-                        DeviceUtils.getDeviceUUID(getActivity()),
-                        results -> {
-                          // check if database query was successful
-                          if (results.isSuccessful()) {
-                            Player currentPlayer = results.getData();
+                List<String> scannedqrCodelist = currentPlayer.getQRCodeHashes();
+                if (scannedqrCodelist == null) {
+                  scannedqrCodelist= new ArrayList<>();
+                }
+                scannedqrCodelist.remove(hash);
+                currentPlayer.setQRCodeHashes(scannedqrCodelist);
 
-                            // remove the QR code from the player's account
-                            List<String> scannedqrCodelist = currentPlayer.getQRCodeHashes();
-                            if (scannedqrCodelist == null) {
-                              scannedqrCodelist= new ArrayList<>();
-                            }
-                            scannedqrCodelist.remove(hash);
-                            currentPlayer.setQRCodeHashes(scannedqrCodelist);
+                // update the player's account in the database
+                PlayerDatabase.getInstance().update(currentPlayer, queryResult -> {
+                  if (queryResult.isSuccessful()) {
+                    Log.d(TAG, "QR code deleted from user's account.");
+                    addButton.setVisibility(View.VISIBLE);
+                    deleteButton.setVisibility(View.GONE);
 
-                            // update the player's account in the database
-                            PlayerDatabase.getInstance().update(currentPlayer, queryResult -> {
-                              if (queryResult.isSuccessful()) {
-                                Log.d(TAG, "QR code deleted from user's account.");
-                                addButton.setVisibility(View.VISIBLE);
-                                deleteButton.setVisibility(View.GONE);
+                    //updates the qrcode document by removing players that have deleted a particular qrcode from account
+                    updateQRCodeDocument(hash,currentPlayer.getDocumentId());
 
-                              } else {
-                                Log.w(TAG, "Error deleting QR code from account.", queryResult.getException());
-                                Toast.makeText(getContext(), "Error deleting QR code from account.", Toast.LENGTH_SHORT).show();
-                              }
-                            });
-                          } else {
-                            Log.w(TAG, "Error getting player by device ID.", results.getException());
-                            Toast.makeText(getContext(), "Error getting player by device ID.", Toast.LENGTH_SHORT).show();
-                          }
-                        });
-              })
-              .addOnFailureListener(e -> {
-                Log.w(TAG, "Error deleting document", e);
-                Toast.makeText(getContext(), "Error deleting QR code from database.", Toast.LENGTH_SHORT).show();
-              });
-    });
+                  } else {
+                    Log.w(TAG, "Error deleting QR code from account.", queryResult.getException());
+                    Toast.makeText(getContext(), "Error deleting QR code from account.", Toast.LENGTH_SHORT).show();
+                  }
+                });
+              } else {
+                Log.w(TAG, "Error getting player by device ID.", results.getException());
+                Toast.makeText(getContext(), "Error getting player by device ID.", Toast.LENGTH_SHORT).show();
+              }
+            });
   }
 
 
+  /**
+   * Updates the QR code document in database with players who have scanned or removed a particular qr code
+   * @param hash qrcode hash that has been scanned
+   * @param playerId playerID of a player that has scanned/removed a particular qr code
+   */
+  private void updateQRCodeDocument(String hash, String playerId){
+    // update the "players" field in the QR code document
+    FirebaseFirestore.getInstance()
+            .collection("qrcodes")
+            .document(hash)
+            .update("players", FieldValue.arrayUnion(playerId))
+            .addOnSuccessListener(aVoid -> {
+              Log.d(TAG, "Player updated in  QR code document.");
+            })
+            .addOnFailureListener(e -> {
+              Log.w(TAG, "Error updating QR code document", e);
+              Toast.makeText(getContext(), "Error updating QR code document", Toast.LENGTH_SHORT).show();
+            });
+
+  }
 
 
 

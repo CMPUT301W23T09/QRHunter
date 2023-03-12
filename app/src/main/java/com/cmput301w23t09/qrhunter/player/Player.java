@@ -160,17 +160,6 @@ public class Player {
     this.email = email;
   }
 
-
-  // Add a single QR code hash to the array
-  public void addQRCodeHash(String hash) {
-    qrCodeHashes.add(hash);
-  }
-
-  // Remove a single QR code hash from the array
-  public void removeQRCodeHash(String hash) {
-    qrCodeHashes.remove(hash);
-  }
-
   // Get all the QR code hashes associated with this player
   public ArrayList<String> getQRCodeHashes() {
     return qrCodeHashes;
