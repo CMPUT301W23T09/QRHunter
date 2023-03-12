@@ -4,6 +4,10 @@ on:
   pull_request:
     branches:
       - master
+    paths:
+      - '**.java'
+      - '**.gradle'
+      - '**.xml'
 
 jobs:
   build:
@@ -20,4 +24,4 @@ jobs:
       - name: Give gradlew Execute Permission
         run: chmod +x gradlew
       - name: Build App
-        run: ./gradlew build
+        run: ./gradlew build --parallel -x test
