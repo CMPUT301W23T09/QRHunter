@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10};
+var data = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -223,10 +223,15 @@ extends androidx.fragment.app.Fragment</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code><a href="player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getActivePlayer()">getActivePlayer</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="GameController.html" title="class in com.cmput301w23t09.qrhunter">GameController</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMainController()">getMainController</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getGameController()">getGameController</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Retrieve the MainController.</div>
+<div class="block">Retrieve the GameController.</div>
 </td>
 </tr>
 </table>
@@ -279,17 +284,30 @@ extends androidx.fragment.app.Fragment</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="getMainController()">
+<a id="getGameController()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getGameController</h4>
+<pre class="methodSignature">public&nbsp;<a href="GameController.html" title="class in com.cmput301w23t09.qrhunter">GameController</a>&nbsp;getGameController()</pre>
+<div class="block">Retrieve the GameController.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>GameController</dd>
+</dl>
+</li>
+</ul>
+<a id="getActivePlayer()">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>getMainController</h4>
-<pre class="methodSignature">public&nbsp;<a href="GameController.html" title="class in com.cmput301w23t09.qrhunter">GameController</a>&nbsp;getMainController()</pre>
-<div class="block">Retrieve the MainController.</div>
+<h4>getActivePlayer</h4>
+<pre class="methodSignature">public&nbsp;<a href="player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&nbsp;getActivePlayer()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>MainController</dd>
+<dd>The currently active player, the one playing the game.</dd>
 </dl>
 </li>
 </ul>

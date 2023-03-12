@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -155,7 +155,8 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.cmput301w23t09.qrhunter.GameActivity)">GameController</a></span>&#8203;(<a href="GameActivity.html" title="class in com.cmput301w23t09.qrhunter">GameActivity</a>&nbsp;activity)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.cmput301w23t09.qrhunter.GameActivity,com.cmput301w23t09.qrhunter.player.Player)">GameController</a></span>&#8203;(<a href="GameActivity.html" title="class in com.cmput301w23t09.qrhunter">GameActivity</a>&nbsp;activity,
+              <a href="player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&nbsp;activePlayer)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </table>
@@ -177,34 +178,39 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code><a href="player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getActivePlayer()">getActivePlayer</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="GameActivity.html" title="class in com.cmput301w23t09.qrhunter">GameActivity</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getActivity()">getActivity</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Retrieve the GameActivity this controller controls.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>androidx.fragment.app.Fragment</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getBody()">getBody</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Retrieve the current body fragment.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>androidx.fragment.app.DialogFragment</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPopup()">getPopup</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Retrieve the current popup dialog.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setBody(androidx.fragment.app.Fragment)">setBody</a></span>&#8203;(androidx.fragment.app.Fragment&nbsp;fragment)</code></th>
 <td class="colLast">
 <div class="block">Set the current body fragment to another fragment or null to show no fragment.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setPopup(androidx.fragment.app.DialogFragment)">setPopup</a></span>&#8203;(androidx.fragment.app.DialogFragment&nbsp;dialog)</code></th>
 <td class="colLast">
@@ -235,13 +241,14 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;(com.cmput301w23t09.qrhunter.GameActivity)">
+<a id="&lt;init&gt;(com.cmput301w23t09.qrhunter.GameActivity,com.cmput301w23t09.qrhunter.player.Player)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>GameController</h4>
-<pre>public&nbsp;GameController&#8203;(<a href="GameActivity.html" title="class in com.cmput301w23t09.qrhunter">GameActivity</a>&nbsp;activity)</pre>
+<pre>public&nbsp;GameController&#8203;(<a href="GameActivity.html" title="class in com.cmput301w23t09.qrhunter">GameActivity</a>&nbsp;activity,
+                      <a href="player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&nbsp;activePlayer)</pre>
 </li>
 </ul>
 </li>
@@ -265,6 +272,19 @@ extends java.lang.Object</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>GameActivity</dd>
+</dl>
+</li>
+</ul>
+<a id="getActivePlayer()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getActivePlayer</h4>
+<pre class="methodSignature">public&nbsp;<a href="player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&nbsp;getActivePlayer()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The currently active player, the one playing the game.</dd>
 </dl>
 </li>
 </ul>

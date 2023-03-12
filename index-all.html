@@ -119,10 +119,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">This adds a player that has scanned the QR code</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/CameraController.html#allPermissionsGranted()">allPermissionsGranted()</a></span> - Method in class com.cmput301w23t09.qrhunter.scanqr.<a href="com/cmput301w23t09/qrhunter/scanqr/CameraController.html" title="class in com.cmput301w23t09.qrhunter.scanqr">CameraController</a></dt>
-<dd>
-<div class="block">Checks if all required permissions are granted</div>
-</dd>
 </dl>
 <a id="I:B">
 <!--   -->
@@ -143,6 +139,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentContactInfoPromptBinding.html#bind(android.view.View)">bind(View)</a></span> - Static method in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentContactInfoPromptBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentContactInfoPromptBinding</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentLocationPhotoBinding.html#bind(android.view.View)">bind(View)</a></span> - Static method in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentLocationPhotoBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentLocationPhotoBinding</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentProfileSettingsBinding.html#bind(android.view.View)">bind(View)</a></span> - Static method in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentProfileSettingsBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentProfileSettingsBinding</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentQrcodeBinding.html#bind(android.view.View)">bind(View)</a></span> - Static method in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentQrcodeBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentQrcodeBinding</a></dt>
@@ -161,18 +159,34 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h2 class="title">C</h2>
 <dl>
-<dt><a href="com/cmput301w23t09/qrhunter/scanqr/CameraController.html" title="class in com.cmput301w23t09.qrhunter.scanqr"><span class="typeNameLink">CameraController</span></a> - Class in <a href="com/cmput301w23t09/qrhunter/scanqr/package-summary.html">com.cmput301w23t09.qrhunter.scanqr</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraController.html#CAMERA_PERMISSIONS">CAMERA_PERMISSIONS</a></span> - Static variable in class com.cmput301w23t09.qrhunter.scanqr.camera.<a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraController.html" title="class in com.cmput301w23t09.qrhunter.scanqr.camera">CameraController</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraController.html" title="class in com.cmput301w23t09.qrhunter.scanqr.camera"><span class="typeNameLink">CameraController</span></a> - Class in <a href="com/cmput301w23t09/qrhunter/scanqr/camera/package-summary.html">com.cmput301w23t09.qrhunter.scanqr.camera</a></dt>
 <dd>
 <div class="block">Manages Camera preview and capture using Google's CameraX library
  https://developer.android.com/training/camerax (Used ChatGPT to convert Kotlin to Java)</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/CameraController.html#%3Cinit%3E(com.cmput301w23t09.qrhunter.BaseFragment,androidx.camera.view.PreviewView)">CameraController(BaseFragment, PreviewView)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.scanqr.<a href="com/cmput301w23t09/qrhunter/scanqr/CameraController.html" title="class in com.cmput301w23t09.qrhunter.scanqr">CameraController</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraController.html#%3Cinit%3E(androidx.fragment.app.Fragment,androidx.camera.view.PreviewView)">CameraController(Fragment, PreviewView)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.scanqr.camera.<a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraController.html" title="class in com.cmput301w23t09.qrhunter.scanqr.camera">CameraController</a></dt>
 <dd>
-<div class="block">Creates a CameraController only for previewing anc capturing location photos.</div>
+<div class="block">Creates a basic CameraController that displays its preview to a view.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/CameraController.html#%3Cinit%3E(com.cmput301w23t09.qrhunter.BaseFragment,androidx.camera.view.PreviewView,com.cmput301w23t09.qrhunter.scanqr.ScannerController)">CameraController(BaseFragment, PreviewView, ScannerController)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.scanqr.<a href="com/cmput301w23t09/qrhunter/scanqr/CameraController.html" title="class in com.cmput301w23t09.qrhunter.scanqr">CameraController</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraController.html#cameraExecutor">cameraExecutor</a></span> - Variable in class com.cmput301w23t09.qrhunter.scanqr.camera.<a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraController.html" title="class in com.cmput301w23t09.qrhunter.scanqr.camera">CameraController</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraLocationPhotoController.html" title="class in com.cmput301w23t09.qrhunter.scanqr.camera"><span class="typeNameLink">CameraLocationPhotoController</span></a> - Class in <a href="com/cmput301w23t09/qrhunter/scanqr/camera/package-summary.html">com.cmput301w23t09.qrhunter.scanqr.camera</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraLocationPhotoController.html#%3Cinit%3E(com.cmput301w23t09.qrhunter.scanqr.LocationPhotoFragment,androidx.camera.view.PreviewView,com.cmput301w23t09.qrhunter.scanqr.LocationPhotoController)">CameraLocationPhotoController(LocationPhotoFragment, PreviewView, LocationPhotoController)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.scanqr.camera.<a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraLocationPhotoController.html" title="class in com.cmput301w23t09.qrhunter.scanqr.camera">CameraLocationPhotoController</a></dt>
 <dd>
-<div class="block">Creates a CameraController for previewing and scanning QR codes.</div>
+<div class="block">Creates a CameraLocationPhotoController that can take location photos</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraController.html#cameraPermissionsGranted()">cameraPermissionsGranted()</a></span> - Method in class com.cmput301w23t09.qrhunter.scanqr.camera.<a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraController.html" title="class in com.cmput301w23t09.qrhunter.scanqr.camera">CameraController</a></dt>
+<dd>
+<div class="block">Checks if all required permissions are granted</div>
+</dd>
+<dt><a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraScannerController.html" title="class in com.cmput301w23t09.qrhunter.scanqr.camera"><span class="typeNameLink">CameraScannerController</span></a> - Class in <a href="com/cmput301w23t09/qrhunter/scanqr/camera/package-summary.html">com.cmput301w23t09.qrhunter.scanqr.camera</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraScannerController.html#%3Cinit%3E(com.cmput301w23t09.qrhunter.scanqr.ScannerFragment,androidx.camera.view.PreviewView,com.cmput301w23t09.qrhunter.scanqr.ScannerController)">CameraScannerController(ScannerFragment, PreviewView, ScannerController)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.scanqr.camera.<a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraScannerController.html" title="class in com.cmput301w23t09.qrhunter.scanqr.camera">CameraScannerController</a></dt>
+<dd>
+<div class="block">Creates a CameraScannerController for previewing and scanning QR codes</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/ProfileActivityBinding.html#codeList">codeList</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/ProfileActivityBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">ProfileActivityBinding</a></dt>
 <dd>&nbsp;</dd>
@@ -197,6 +211,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><a href="com/cmput301w23t09/qrhunter/qrcode/package-summary.html">com.cmput301w23t09.qrhunter.qrcode</a> - package com.cmput301w23t09.qrhunter.qrcode</dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/cmput301w23t09/qrhunter/scanqr/package-summary.html">com.cmput301w23t09.qrhunter.scanqr</a> - package com.cmput301w23t09.qrhunter.scanqr</dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/cmput301w23t09/qrhunter/scanqr/camera/package-summary.html">com.cmput301w23t09.qrhunter.scanqr.camera</a> - package com.cmput301w23t09.qrhunter.scanqr.camera</dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/cmput301w23t09/qrhunter/util/package-summary.html">com.cmput301w23t09.qrhunter.util</a> - package com.cmput301w23t09.qrhunter.util</dt>
 <dd>&nbsp;</dd>
@@ -275,7 +291,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h2 class="title">F</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraController.html#fragment">fragment</a></span> - Variable in class com.cmput301w23t09.qrhunter.scanqr.camera.<a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraController.html" title="class in com.cmput301w23t09.qrhunter.scanqr.camera">CameraController</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/cmput301w23t09/qrhunter/databinding/FragmentContactInfoPromptBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding"><span class="typeNameLink">FragmentContactInfoPromptBinding</span></a> - Class in <a href="com/cmput301w23t09/qrhunter/databinding/package-summary.html">com.cmput301w23t09.qrhunter.databinding</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/cmput301w23t09/qrhunter/databinding/FragmentLocationPhotoBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding"><span class="typeNameLink">FragmentLocationPhotoBinding</span></a> - Class in <a href="com/cmput301w23t09/qrhunter/databinding/package-summary.html">com.cmput301w23t09.qrhunter.databinding</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/cmput301w23t09/qrhunter/databinding/FragmentProfileSettingsBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding"><span class="typeNameLink">FragmentProfileSettingsBinding</span></a> - Class in <a href="com/cmput301w23t09/qrhunter/databinding/package-summary.html">com.cmput301w23t09.qrhunter.databinding</a></dt>
 <dd>&nbsp;</dd>
@@ -302,7 +322,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">The GameController handles controlling the content to be shown onscreen when viewing the
  GameActivity.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/GameController.html#%3Cinit%3E(com.cmput301w23t09.qrhunter.GameActivity)">GameController(GameActivity)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.<a href="com/cmput301w23t09/qrhunter/GameController.html" title="class in com.cmput301w23t09.qrhunter">GameController</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/GameController.html#%3Cinit%3E(com.cmput301w23t09.qrhunter.GameActivity,com.cmput301w23t09.qrhunter.player.Player)">GameController(GameActivity, Player)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.<a href="com/cmput301w23t09/qrhunter/GameController.html" title="class in com.cmput301w23t09.qrhunter">GameController</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/BaseFragment.html#getActivePlayer()">getActivePlayer()</a></span> - Method in class com.cmput301w23t09.qrhunter.<a href="com/cmput301w23t09/qrhunter/BaseFragment.html" title="class in com.cmput301w23t09.qrhunter">BaseFragment</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/GameController.html#getActivePlayer()">getActivePlayer()</a></span> - Method in class com.cmput301w23t09.qrhunter.<a href="com/cmput301w23t09/qrhunter/GameController.html" title="class in com.cmput301w23t09.qrhunter">GameController</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/GameController.html#getActivity()">getActivity()</a></span> - Method in class com.cmput301w23t09.qrhunter.<a href="com/cmput301w23t09/qrhunter/GameController.html" title="class in com.cmput301w23t09.qrhunter">GameController</a></dt>
 <dd>
@@ -346,6 +370,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Retrieve the exception of the database query if any.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/BaseFragment.html#getGameController()">getGameController()</a></span> - Method in class com.cmput301w23t09.qrhunter.<a href="com/cmput301w23t09/qrhunter/BaseFragment.html" title="class in com.cmput301w23t09.qrhunter">BaseFragment</a></dt>
+<dd>
+<div class="block">Retrieve the GameController.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html#getHash()">getHash()</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a></dt>
 <dd>
 <div class="block">This returns the hash of the QR code</div>
@@ -354,22 +382,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Retrieves the PlayerDatabase</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/map/Location.html#getLatitude()">getLatitude()</a></span> - Method in class com.cmput301w23t09.qrhunter.map.<a href="com/cmput301w23t09/qrhunter/map/Location.html" title="class in com.cmput301w23t09.qrhunter.map">Location</a></dt>
-<dd>
-<div class="block">This returns the latitude coordinate of the location</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html#getLoc()">getLoc()</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a></dt>
 <dd>
 <div class="block">This returns the location of the QR code</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/map/Location.html#getLongitude()">getLongitude()</a></span> - Method in class com.cmput301w23t09.qrhunter.map.<a href="com/cmput301w23t09/qrhunter/map/Location.html" title="class in com.cmput301w23t09.qrhunter.map">Location</a></dt>
-<dd>
-<div class="block">This returns the longitude coordinate of the location</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/BaseFragment.html#getMainController()">getMainController()</a></span> - Method in class com.cmput301w23t09.qrhunter.<a href="com/cmput301w23t09/qrhunter/BaseFragment.html" title="class in com.cmput301w23t09.qrhunter">BaseFragment</a></dt>
-<dd>
-<div class="block">Retrieve the MainController.</div>
-</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeFragment.html#getLocationPhotoFragment()">getLocationPhotoFragment()</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeFragment.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeFragment</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html#getName()">getName()</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a></dt>
 <dd>
 <div class="block">This returns the name of the QR code</div>
@@ -380,7 +398,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/photo/Photo.html#getPhoto()">getPhoto()</a></span> - Method in class com.cmput301w23t09.qrhunter.photo.<a href="com/cmput301w23t09/qrhunter/photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a></dt>
 <dd>
-<div class="block">This returns the image of the photo</div>
+<div class="block">This returns the image as a bitmap, ready to be displayed by an ImageView</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html#getPhotos()">getPhotos()</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a></dt>
 <dd>
@@ -417,6 +435,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/ActivityMainLoadingBinding.html#getRoot()">getRoot()</a></span> - Method in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/ActivityMainLoadingBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">ActivityMainLoadingBinding</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentContactInfoPromptBinding.html#getRoot()">getRoot()</a></span> - Method in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentContactInfoPromptBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentContactInfoPromptBinding</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentLocationPhotoBinding.html#getRoot()">getRoot()</a></span> - Method in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentLocationPhotoBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentLocationPhotoBinding</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentProfileSettingsBinding.html#getRoot()">getRoot()</a></span> - Method in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentProfileSettingsBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentProfileSettingsBinding</a></dt>
 <dd>&nbsp;</dd>
@@ -482,6 +502,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentContactInfoPromptBinding.html#inflate(android.view.LayoutInflater)">inflate(LayoutInflater)</a></span> - Static method in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentContactInfoPromptBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentContactInfoPromptBinding</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentLocationPhotoBinding.html#inflate(android.view.LayoutInflater)">inflate(LayoutInflater)</a></span> - Static method in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentLocationPhotoBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentLocationPhotoBinding</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentProfileSettingsBinding.html#inflate(android.view.LayoutInflater)">inflate(LayoutInflater)</a></span> - Static method in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentProfileSettingsBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentProfileSettingsBinding</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentQrcodeBinding.html#inflate(android.view.LayoutInflater)">inflate(LayoutInflater)</a></span> - Static method in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentQrcodeBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentQrcodeBinding</a></dt>
@@ -501,6 +523,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/ActivityMainLoadingBinding.html#inflate(android.view.LayoutInflater,android.view.ViewGroup,boolean)">inflate(LayoutInflater, ViewGroup, boolean)</a></span> - Static method in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/ActivityMainLoadingBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">ActivityMainLoadingBinding</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentContactInfoPromptBinding.html#inflate(android.view.LayoutInflater,android.view.ViewGroup,boolean)">inflate(LayoutInflater, ViewGroup, boolean)</a></span> - Static method in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentContactInfoPromptBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentContactInfoPromptBinding</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentLocationPhotoBinding.html#inflate(android.view.LayoutInflater,android.view.ViewGroup,boolean)">inflate(LayoutInflater, ViewGroup, boolean)</a></span> - Static method in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentLocationPhotoBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentLocationPhotoBinding</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentProfileSettingsBinding.html#inflate(android.view.LayoutInflater,android.view.ViewGroup,boolean)">inflate(LayoutInflater, ViewGroup, boolean)</a></span> - Static method in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentProfileSettingsBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentProfileSettingsBinding</a></dt>
 <dd>&nbsp;</dd>
@@ -554,14 +578,41 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentContactInfoPromptBinding.html#linearLayout">linearLayout</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentContactInfoPromptBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentContactInfoPromptBinding</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/cmput301w23t09/qrhunter/map/Location.html" title="class in com.cmput301w23t09.qrhunter.map"><span class="typeNameLink">Location</span></a> - Class in <a href="com/cmput301w23t09/qrhunter/map/package-summary.html">com.cmput301w23t09.qrhunter.map</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/map/LocationHandler.html#LOCATION_PERMISSIONS">LOCATION_PERMISSIONS</a></span> - Static variable in class com.cmput301w23t09.qrhunter.map.<a href="com/cmput301w23t09/qrhunter/map/LocationHandler.html" title="class in com.cmput301w23t09.qrhunter.map">LocationHandler</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/cmput301w23t09/qrhunter/map/LocationHandler.html" title="class in com.cmput301w23t09.qrhunter.map"><span class="typeNameLink">LocationHandler</span></a> - Class in <a href="com/cmput301w23t09/qrhunter/map/package-summary.html">com.cmput301w23t09.qrhunter.map</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/map/LocationHandler.html#%3Cinit%3E(androidx.fragment.app.Fragment)">LocationHandler(Fragment)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.map.<a href="com/cmput301w23t09/qrhunter/map/LocationHandler.html" title="class in com.cmput301w23t09.qrhunter.map">LocationHandler</a></dt>
 <dd>
-<div class="block">This is a class that stores the location coordinates of a location</div>
+<div class="block">Creates a new LocationHandler</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/map/Location.html#%3Cinit%3E(float,float)">Location(float, float)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.map.<a href="com/cmput301w23t09/qrhunter/map/Location.html" title="class in com.cmput301w23t09.qrhunter.map">Location</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/map/LocationHandler.html#locationPermissionsGranted()">locationPermissionsGranted()</a></span> - Method in class com.cmput301w23t09.qrhunter.map.<a href="com/cmput301w23t09/qrhunter/map/LocationHandler.html" title="class in com.cmput301w23t09.qrhunter.map">LocationHandler</a></dt>
 <dd>
-<div class="block">This initializes a Location with its location coordinates</div>
+<div class="block">Checks if at least one of the location permissions was granted.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentQrcodeBinding.html#locationPhoto">locationPhoto</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentQrcodeBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentQrcodeBinding</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentLocationPhotoBinding.html#locationPhotoCameraPreview">locationPhotoCameraPreview</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentLocationPhotoBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentLocationPhotoBinding</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/cmput301w23t09/qrhunter/scanqr/LocationPhotoController.html" title="class in com.cmput301w23t09.qrhunter.scanqr"><span class="typeNameLink">LocationPhotoController</span></a> - Class in <a href="com/cmput301w23t09/qrhunter/scanqr/package-summary.html">com.cmput301w23t09.qrhunter.scanqr</a></dt>
+<dd>
+<div class="block">The LocationPhotoController manages the backend logic for letting a user take a location photo</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/LocationPhotoController.html#%3Cinit%3E(com.cmput301w23t09.qrhunter.scanqr.LocationPhotoFragment,com.cmput301w23t09.qrhunter.qrcode.QRCode,com.cmput301w23t09.qrhunter.player.Player)">LocationPhotoController(LocationPhotoFragment, QRCode, Player)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.scanqr.<a href="com/cmput301w23t09/qrhunter/scanqr/LocationPhotoController.html" title="class in com.cmput301w23t09.qrhunter.scanqr">LocationPhotoController</a></dt>
+<dd>
+<div class="block">Creates the LocationPhotoController</div>
+</dd>
+<dt><a href="com/cmput301w23t09/qrhunter/scanqr/LocationPhotoFragment.html" title="class in com.cmput301w23t09.qrhunter.scanqr"><span class="typeNameLink">LocationPhotoFragment</span></a> - Class in <a href="com/cmput301w23t09/qrhunter/scanqr/package-summary.html">com.cmput301w23t09.qrhunter.scanqr</a></dt>
+<dd>
+<div class="block">The fragment that lets a user take a "location photo" to assist other users in locating the QR
+ Code</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/LocationPhotoFragment.html#%3Cinit%3E()">LocationPhotoFragment()</a></span> - Constructor for class com.cmput301w23t09.qrhunter.scanqr.<a href="com/cmput301w23t09/qrhunter/scanqr/LocationPhotoFragment.html" title="class in com.cmput301w23t09.qrhunter.scanqr">LocationPhotoFragment</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentLocationPhotoBinding.html#locationPhotoShutter">locationPhotoShutter</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentLocationPhotoBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentLocationPhotoBinding</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentQrcodeBinding.html#locationRequestBox">locationRequestBox</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentQrcodeBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentQrcodeBinding</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <a id="I:M">
 <!--   -->
@@ -596,9 +647,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/navigation/NavigationControllerAdapter.html#%3Cinit%3E(com.cmput301w23t09.qrhunter.GameController)">NavigationControllerAdapter(GameController)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.navigation.<a href="com/cmput301w23t09/qrhunter/navigation/NavigationControllerAdapter.html" title="class in com.cmput301w23t09.qrhunter.navigation">NavigationControllerAdapter</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeFragment.html#newInstance(java.lang.String)">newInstance(String)</a></span> - Static method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeFragment.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeFragment</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeFragment.html#newInstance(com.cmput301w23t09.qrhunter.qrcode.QRCode,com.cmput301w23t09.qrhunter.player.Player)">newInstance(QRCode, Player)</a></span> - Static method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeFragment.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeFragment</a></dt>
 <dd>
 <div class="block">Creates a new QRCodeFragment to display a specific QR Code</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/LocationPhotoFragment.html#newInstance(com.cmput301w23t09.qrhunter.qrcode.QRCode,com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment,com.cmput301w23t09.qrhunter.player.Player)">newInstance(QRCode, QRCodeFragment, Player)</a></span> - Static method in class com.cmput301w23t09.qrhunter.scanqr.<a href="com/cmput301w23t09/qrhunter/scanqr/LocationPhotoFragment.html" title="class in com.cmput301w23t09.qrhunter.scanqr">LocationPhotoFragment</a></dt>
+<dd>
+<div class="block">Create a LocationPhotoFragment that lets the user snap a location photo for the given QR code</div>
 </dd>
 </dl>
 <a id="I:O">
@@ -612,24 +667,46 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeFragment.html#onCreateDialog(android.os.Bundle)">onCreateDialog(Bundle)</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeFragment.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeFragment</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/LocationPhotoFragment.html#onCreateDialog(android.os.Bundle)">onCreateDialog(Bundle)</a></span> - Method in class com.cmput301w23t09.qrhunter.scanqr.<a href="com/cmput301w23t09/qrhunter/scanqr/LocationPhotoFragment.html" title="class in com.cmput301w23t09.qrhunter.scanqr">LocationPhotoFragment</a></dt>
+<dd>
+<div class="block">Creates the Dialog that shows the camera's preview and shutter button</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/profile/ProfileFragment.html#onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle)">onCreateView(LayoutInflater, ViewGroup, Bundle)</a></span> - Method in class com.cmput301w23t09.qrhunter.profile.<a href="com/cmput301w23t09/qrhunter/profile/ProfileFragment.html" title="class in com.cmput301w23t09.qrhunter.profile">ProfileFragment</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/profile/ProfileSettingsFragment.html#onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle)">onCreateView(LayoutInflater, ViewGroup, Bundle)</a></span> - Method in class com.cmput301w23t09.qrhunter.profile.<a href="com/cmput301w23t09/qrhunter/profile/ProfileSettingsFragment.html" title="class in com.cmput301w23t09.qrhunter.profile">ProfileSettingsFragment</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/ScannerFragment.html#onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle)">onCreateView(LayoutInflater, ViewGroup, Bundle)</a></span> - Method in class com.cmput301w23t09.qrhunter.scanqr.<a href="com/cmput301w23t09/qrhunter/scanqr/ScannerFragment.html" title="class in com.cmput301w23t09.qrhunter.scanqr">ScannerFragment</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/CameraController.html#onDestroy()">onDestroy()</a></span> - Method in class com.cmput301w23t09.qrhunter.scanqr.<a href="com/cmput301w23t09/qrhunter/scanqr/CameraController.html" title="class in com.cmput301w23t09.qrhunter.scanqr">CameraController</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Sets up the camera preview and ImageAnalysis usage on the ScannerFragment</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraController.html#onDestroy()">onDestroy()</a></span> - Method in class com.cmput301w23t09.qrhunter.scanqr.camera.<a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraController.html" title="class in com.cmput301w23t09.qrhunter.scanqr.camera">CameraController</a></dt>
+<dd>
+<div class="block">Shut down the camera when it's no longer needed</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/ScannerFragment.html#onDestroy()">onDestroy()</a></span> - Method in class com.cmput301w23t09.qrhunter.scanqr.<a href="com/cmput301w23t09/qrhunter/scanqr/ScannerFragment.html" title="class in com.cmput301w23t09.qrhunter.scanqr">ScannerFragment</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Cleans up the camera when the user navigates from 'Scan QR', or when fragment is garbage
+ collected</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/LocationPhotoFragment.html#onDismiss(android.content.DialogInterface)">onDismiss(DialogInterface)</a></span> - Method in class com.cmput301w23t09.qrhunter.scanqr.<a href="com/cmput301w23t09/qrhunter/scanqr/LocationPhotoFragment.html" title="class in com.cmput301w23t09.qrhunter.scanqr">LocationPhotoFragment</a></dt>
+<dd>
+<div class="block">Once the user dismisses the LocationPhotoFragment, update the QRCodeFragment to show the
+ newly-taken location photo</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/navigation/NavigationControllerAdapter.html#onNavigationItemSelected(android.view.MenuItem)">onNavigationItemSelected(MenuItem)</a></span> - Method in class com.cmput301w23t09.qrhunter.navigation.<a href="com/cmput301w23t09/qrhunter/navigation/NavigationControllerAdapter.html" title="class in com.cmput301w23t09.qrhunter.navigation">NavigationControllerAdapter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/MainController.html#onRegistration(java.lang.String,java.lang.String,java.lang.String)">onRegistration(String, String, String)</a></span> - Method in class com.cmput301w23t09.qrhunter.<a href="com/cmput301w23t09/qrhunter/MainController.html" title="class in com.cmput301w23t09.qrhunter">MainController</a></dt>
 <dd>
 <div class="block">Attempts to register player given the credentials</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeFragment.html#onRequestPermissionsResult(int,java.lang.String%5B%5D,int%5B%5D)">onRequestPermissionsResult(int, String[], int[])</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeFragment.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeFragment</a></dt>
+<dd>
+<div class="block">Disables the "Record QR Location" box if the user has not granted location permissions</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/ScannerFragment.html#onRequestPermissionsResult(int,java.lang.String%5B%5D,int%5B%5D)">onRequestPermissionsResult(int, String[], int[])</a></span> - Method in class com.cmput301w23t09.qrhunter.scanqr.<a href="com/cmput301w23t09/qrhunter/scanqr/ScannerFragment.html" title="class in com.cmput301w23t09.qrhunter.scanqr">ScannerFragment</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Requests user to give app camera permissions</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/ProfileActivityBinding.html#orderSpinner">orderSpinner</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/ProfileActivityBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">ProfileActivityBinding</a></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -640,9 +717,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dl>
 <dt><a href="com/cmput301w23t09/qrhunter/photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo"><span class="typeNameLink">Photo</span></a> - Class in <a href="com/cmput301w23t09/qrhunter/photo/package-summary.html">com.cmput301w23t09.qrhunter.photo</a></dt>
 <dd>
-<div class="block">This is a class that stores the photo a player took of a QR code</div>
+<div class="block">Stores the location photo that a player took of a QRCode</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/photo/Photo.html#%3Cinit%3E(android.media.Image,com.cmput301w23t09.qrhunter.player.Player)">Photo(Image, Player)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.photo.<a href="com/cmput301w23t09/qrhunter/photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/photo/Photo.html#%3Cinit%3E(android.graphics.Bitmap,com.cmput301w23t09.qrhunter.player.Player)">Photo(Bitmap, Player)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.photo.<a href="com/cmput301w23t09/qrhunter/photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a></dt>
+<dd>
+<div class="block">This initializes a Photo with an image of a QRCode and the player that took it</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/photo/Photo.html#%3Cinit%3E(androidx.camera.core.ImageProxy,com.cmput301w23t09.qrhunter.player.Player)">Photo(ImageProxy, Player)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.photo.<a href="com/cmput301w23t09/qrhunter/photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a></dt>
 <dd>
 <div class="block">This initializes a Photo with an image of a QRCode and the player that took it</div>
 </dd>
@@ -661,6 +742,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Manages all Player database operations.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraController.html#previewView">previewView</a></span> - Variable in class com.cmput301w23t09.qrhunter.scanqr.camera.<a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraController.html" title="class in com.cmput301w23t09.qrhunter.scanqr.camera">CameraController</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/cmput301w23t09/qrhunter/databinding/ProfileActivityBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding"><span class="typeNameLink">ProfileActivityBinding</span></a> - Class in <a href="com/cmput301w23t09/qrhunter/databinding/package-summary.html">com.cmput301w23t09.qrhunter.databinding</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/cmput301w23t09/qrhunter/profile/ProfileController.html" title="class in com.cmput301w23t09.qrhunter.profile"><span class="typeNameLink">ProfileController</span></a> - Class in <a href="com/cmput301w23t09/qrhunter/profile/package-summary.html">com.cmput301w23t09.qrhunter.profile</a></dt>
@@ -699,7 +782,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">This class defines a QR code</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html#%3Cinit%3E(java.lang.String,java.lang.String,android.media.Image,java.lang.Integer,com.cmput301w23t09.qrhunter.map.Location,java.util.ArrayList,java.util.ArrayList,java.util.ArrayList)">QRCode(String, String, Image, Integer, Location, ArrayList&lt;Photo&gt;, ArrayList&lt;Comment&gt;, ArrayList&lt;Player&gt;)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html#%3Cinit%3E(java.lang.String)">QRCode(String)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a></dt>
+<dd>
+<div class="block">Initializes a *newly-scanned* QRCode using only its hash value</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html#%3Cinit%3E(java.lang.String,java.lang.String,android.media.Image,java.lang.Integer,android.location.Location,java.util.ArrayList,java.util.ArrayList,java.util.ArrayList)">QRCode(String, String, Image, Integer, Location, ArrayList&lt;Photo&gt;, ArrayList&lt;Comment&gt;, ArrayList&lt;Player&gt;)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a></dt>
 <dd>
 <div class="block">This initializes a QR code with its hash, name, visual representation, score, location, photo,
  comments, and players who have scanned it</div>
@@ -718,7 +805,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><a href="com/cmput301w23t09/qrhunter/databinding/QrcodeViewBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding"><span class="typeNameLink">QrcodeViewBinding</span></a> - Class in <a href="com/cmput301w23t09/qrhunter/databinding/package-summary.html">com.cmput301w23t09.qrhunter.databinding</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentQrcodeBinding.html#qrImage">qrImage</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentQrcodeBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentQrcodeBinding</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentQrcodeBinding.html#qrCodeVisual">qrCodeVisual</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentQrcodeBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentQrcodeBinding</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentQrcodeBinding.html#qrName">qrName</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentQrcodeBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentQrcodeBinding</a></dt>
 <dd>&nbsp;</dd>
@@ -730,14 +817,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h2 class="title">R</h2>
 <dl>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/CameraController.html#REQUEST_CODE_PERMISSIONS">REQUEST_CODE_PERMISSIONS</a></span> - Static variable in class com.cmput301w23t09.qrhunter.scanqr.<a href="com/cmput301w23t09/qrhunter/scanqr/CameraController.html" title="class in com.cmput301w23t09.qrhunter.scanqr">CameraController</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/map/LocationHandler.html#REQUEST_CODE_PERMISSIONS">REQUEST_CODE_PERMISSIONS</a></span> - Static variable in class com.cmput301w23t09.qrhunter.map.<a href="com/cmput301w23t09/qrhunter/map/LocationHandler.html" title="class in com.cmput301w23t09.qrhunter.map">LocationHandler</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraController.html#REQUEST_CODE_PERMISSIONS">REQUEST_CODE_PERMISSIONS</a></span> - Static variable in class com.cmput301w23t09.qrhunter.scanqr.camera.<a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraController.html" title="class in com.cmput301w23t09.qrhunter.scanqr.camera">CameraController</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/profile/ProfileSettingsController.html#requestPlayerData(java.util.function.Consumer)">requestPlayerData(Consumer&lt;Player&gt;)</a></span> - Method in class com.cmput301w23t09.qrhunter.profile.<a href="com/cmput301w23t09/qrhunter/profile/ProfileSettingsController.html" title="class in com.cmput301w23t09.qrhunter.profile">ProfileSettingsController</a></dt>
 <dd>
 <div class="block">Request the player of this settings page.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/CameraController.html#REQUIRED_PERMISSIONS">REQUIRED_PERMISSIONS</a></span> - Static variable in class com.cmput301w23t09.qrhunter.scanqr.<a href="com/cmput301w23t09/qrhunter/scanqr/CameraController.html" title="class in com.cmput301w23t09.qrhunter.scanqr">CameraController</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/profile/ProfileSettingsController.html#returnToProfile()">returnToProfile()</a></span> - Method in class com.cmput301w23t09.qrhunter.profile.<a href="com/cmput301w23t09/qrhunter/profile/ProfileSettingsController.html" title="class in com.cmput301w23t09.qrhunter.profile">ProfileSettingsController</a></dt>
 <dd>
 <div class="block">Returns to the profile fragment</div>
@@ -754,14 +841,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/ScannerController.html#scanCode(androidx.camera.core.ImageProxy)">scanCode(ImageProxy)</a></span> - Method in class com.cmput301w23t09.qrhunter.scanqr.<a href="com/cmput301w23t09/qrhunter/scanqr/ScannerController.html" title="class in com.cmput301w23t09.qrhunter.scanqr">ScannerController</a></dt>
 <dd>
-<div class="block">Scans for any QR Codes in the picture.</div>
+<div class="block">Scans for any QR Codes in the picture</div>
 </dd>
 <dt><a href="com/cmput301w23t09/qrhunter/scanqr/ScannerController.html" title="class in com.cmput301w23t09.qrhunter.scanqr"><span class="typeNameLink">ScannerController</span></a> - Class in <a href="com/cmput301w23t09/qrhunter/scanqr/package-summary.html">com.cmput301w23t09.qrhunter.scanqr</a></dt>
 <dd>
 <div class="block">Controls QR Code scanning using Google's MLKit Library
  (https://developers.google.com/ml-kit/vision/barcode-scanning/android)</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/ScannerController.html#%3Cinit%3E(com.cmput301w23t09.qrhunter.BaseFragment)">ScannerController(BaseFragment)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.scanqr.<a href="com/cmput301w23t09/qrhunter/scanqr/ScannerController.html" title="class in com.cmput301w23t09.qrhunter.scanqr">ScannerController</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/ScannerController.html#%3Cinit%3E(com.cmput301w23t09.qrhunter.BaseFragment,com.cmput301w23t09.qrhunter.player.Player)">ScannerController(BaseFragment, Player)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.scanqr.<a href="com/cmput301w23t09/qrhunter/scanqr/ScannerController.html" title="class in com.cmput301w23t09.qrhunter.scanqr">ScannerController</a></dt>
 <dd>
 <div class="block">Creates a ScannerController</div>
 </dd>
@@ -770,6 +857,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">The 'Scan QR' page where users can use their rear camera to scan QR codes</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/ScannerFragment.html#%3Cinit%3E(com.cmput301w23t09.qrhunter.GameController)">ScannerFragment(GameController)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.scanqr.<a href="com/cmput301w23t09/qrhunter/scanqr/ScannerFragment.html" title="class in com.cmput301w23t09.qrhunter.scanqr">ScannerFragment</a></dt>
+<dd>
+<div class="block">Creates the ScannerFragment where users can scan and add new QR Codes to their profile</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentScanqrBinding.html#scanQrCameraPreview">scanQrCameraPreview</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentScanqrBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentScanqrBinding</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/QrcodeViewBinding.html#score">score</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/QrcodeViewBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">QrcodeViewBinding</a></dt>
 <dd>&nbsp;</dd>
@@ -782,6 +873,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/GameController.html#setBody(androidx.fragment.app.Fragment)">setBody(Fragment)</a></span> - Method in class com.cmput301w23t09.qrhunter.<a href="com/cmput301w23t09/qrhunter/GameController.html" title="class in com.cmput301w23t09.qrhunter">GameController</a></dt>
 <dd>
 <div class="block">Set the current body fragment to another fragment or null to show no fragment.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/LocationPhotoController.html#setCameraFields(java.util.concurrent.ExecutorService,androidx.camera.core.ImageCapture)">setCameraFields(ExecutorService, ImageCapture)</a></span> - Method in class com.cmput301w23t09.qrhunter.scanqr.<a href="com/cmput301w23t09/qrhunter/scanqr/LocationPhotoController.html" title="class in com.cmput301w23t09.qrhunter.scanqr">LocationPhotoController</a></dt>
+<dd>
+<div class="block">Once the camera use case is set, the LocationPhotoController needs to know the ImageCapture use
+ case and the CameraExecutor</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/comment/Comment.html#setComment(java.lang.String)">setComment(String)</a></span> - Method in class com.cmput301w23t09.qrhunter.comment.<a href="com/cmput301w23t09/qrhunter/comment/Comment.html" title="class in com.cmput301w23t09.qrhunter.comment">Comment</a></dt>
 <dd>
@@ -799,29 +895,29 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Change the email associated with this player</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/map/Location.html#setLatitude(float)">setLatitude(float)</a></span> - Method in class com.cmput301w23t09.qrhunter.map.<a href="com/cmput301w23t09/qrhunter/map/Location.html" title="class in com.cmput301w23t09.qrhunter.map">Location</a></dt>
-<dd>
-<div class="block">This sets the latitude coordinate of the location</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html#setLoc(com.cmput301w23t09.qrhunter.map.Location)">setLoc(Location)</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html#setLoc(android.location.Location)">setLoc(Location)</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a></dt>
 <dd>
 <div class="block">This sets the location of the QR code</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/map/Location.html#setLongitude(float)">setLongitude(float)</a></span> - Method in class com.cmput301w23t09.qrhunter.map.<a href="com/cmput301w23t09/qrhunter/map/Location.html" title="class in com.cmput301w23t09.qrhunter.map">Location</a></dt>
-<dd>
-<div class="block">This sets the longitude coordinate of the location</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/player/Player.html#setPhoneNo(java.lang.String)">setPhoneNo(String)</a></span> - Method in class com.cmput301w23t09.qrhunter.player.<a href="com/cmput301w23t09/qrhunter/player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a></dt>
 <dd>
 <div class="block">Change the phone number associated with this player</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/photo/Photo.html#setPhoto(android.media.Image)">setPhoto(Image)</a></span> - Method in class com.cmput301w23t09.qrhunter.photo.<a href="com/cmput301w23t09/qrhunter/photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/photo/Photo.html#setPhoto(android.graphics.Bitmap)">setPhoto(Bitmap)</a></span> - Method in class com.cmput301w23t09.qrhunter.photo.<a href="com/cmput301w23t09/qrhunter/photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a></dt>
 <dd>
-<div class="block">This sets the image of the photo</div>
+<div class="block">This sets the image of the photo, given a Bitmap</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/photo/Photo.html#setPhoto(androidx.camera.core.ImageProxy)">setPhoto(ImageProxy)</a></span> - Method in class com.cmput301w23t09.qrhunter.photo.<a href="com/cmput301w23t09/qrhunter/photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a></dt>
+<dd>
+<div class="block">This sets the image of the photo, given an ImageProxy</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/GameController.html#setPopup(androidx.fragment.app.DialogFragment)">setPopup(DialogFragment)</a></span> - Method in class com.cmput301w23t09.qrhunter.<a href="com/cmput301w23t09/qrhunter/GameController.html" title="class in com.cmput301w23t09.qrhunter">GameController</a></dt>
 <dd>
 <div class="block">Change the current popup fragment.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/map/LocationHandler.html#setQrToLastLocation(com.cmput301w23t09.qrhunter.qrcode.QRCode)">setQrToLastLocation(QRCode)</a></span> - Method in class com.cmput301w23t09.qrhunter.map.<a href="com/cmput301w23t09/qrhunter/map/LocationHandler.html" title="class in com.cmput301w23t09.qrhunter.map">LocationHandler</a></dt>
+<dd>
+<div class="block">Sets the provided QRCode to the device's last known location</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentProfileSettingsBinding.html#settingsBackButton">settingsBackButton</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentProfileSettingsBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentProfileSettingsBinding</a></dt>
 <dd>&nbsp;</dd>
@@ -839,6 +935,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentProfileSettingsBinding.html#settingsTitle">settingsTitle</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentProfileSettingsBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentProfileSettingsBinding</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraController.html#setupCamera(com.google.common.util.concurrent.ListenableFuture)">setupCamera(ListenableFuture&lt;ProcessCameraProvider&gt;)</a></span> - Method in class com.cmput301w23t09.qrhunter.scanqr.camera.<a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraController.html" title="class in com.cmput301w23t09.qrhunter.scanqr.camera">CameraController</a></dt>
+<dd>
+<div class="block">Adds in the camera's functionality</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraLocationPhotoController.html#setupCamera(com.google.common.util.concurrent.ListenableFuture)">setupCamera(ListenableFuture&lt;ProcessCameraProvider&gt;)</a></span> - Method in class com.cmput301w23t09.qrhunter.scanqr.camera.<a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraLocationPhotoController.html" title="class in com.cmput301w23t09.qrhunter.scanqr.camera">CameraLocationPhotoController</a></dt>
+<dd>
+<div class="block">Enables the camera to take photos using the ImageCapture use case</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraScannerController.html#setupCamera(com.google.common.util.concurrent.ListenableFuture)">setupCamera(ListenableFuture&lt;ProcessCameraProvider&gt;)</a></span> - Method in class com.cmput301w23t09.qrhunter.scanqr.camera.<a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraScannerController.html" title="class in com.cmput301w23t09.qrhunter.scanqr.camera">CameraScannerController</a></dt>
+<dd>
+<div class="block">Enables the camera to scan for QR codes using the ImageAnalysis use case</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/profile/ProfileController.html#setUpQRList(android.widget.GridView,android.widget.TextView,android.widget.TextView,android.widget.TextView,android.widget.Spinner)">setUpQRList(GridView, TextView, TextView, TextView, Spinner)</a></span> - Method in class com.cmput301w23t09.qrhunter.profile.<a href="com/cmput301w23t09/qrhunter/profile/ProfileController.html" title="class in com.cmput301w23t09.qrhunter.profile">ProfileController</a></dt>
 <dd>
 <div class="block">Sets up the list view of qr codes</div>
@@ -857,7 +965,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/ProfileActivityBinding.html#sortLbl">sortLbl</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/ProfileActivityBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">ProfileActivityBinding</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/CameraController.html#startCamera()">startCamera()</a></span> - Method in class com.cmput301w23t09.qrhunter.scanqr.<a href="com/cmput301w23t09/qrhunter/scanqr/CameraController.html" title="class in com.cmput301w23t09.qrhunter.scanqr">CameraController</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraController.html#startCamera()">startCamera()</a></span> - Method in class com.cmput301w23t09.qrhunter.scanqr.camera.<a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraController.html" title="class in com.cmput301w23t09.qrhunter.scanqr.camera">CameraController</a></dt>
 <dd>
 <div class="block">Starts the camera and binds it's preview to the PreviewView UI element.</div>
 </dd>
@@ -867,6 +975,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h2 class="title">T</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentQrcodeBinding.html#takeLocationPhotoBtn">takeLocationPhotoBtn</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentQrcodeBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentQrcodeBinding</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/scanqr/LocationPhotoController.html#takePhoto()">takePhoto()</a></span> - Method in class com.cmput301w23t09.qrhunter.scanqr.<a href="com/cmput301w23t09/qrhunter/scanqr/LocationPhotoController.html" title="class in com.cmput301w23t09.qrhunter.scanqr">LocationPhotoController</a></dt>
+<dd>
+<div class="block">Takes a picture and adds it to the QRCode</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/ProfileActivityBinding.html#topCodeScore">topCodeScore</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/ProfileActivityBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">ProfileActivityBinding</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/ProfileActivityBinding.html#totalCodes">totalCodes</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/ProfileActivityBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">ProfileActivityBinding</a></dt>
@@ -883,6 +997,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Update a player that already exists in the database.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeFragment.html#updateLocationPhoto()">updateLocationPhoto()</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeFragment.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeFragment</a></dt>
+<dd>
+<div class="block">Updates the locationPhoto image view to show the newly-captured location photo</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/ProfileActivityBinding.html#username">username</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/ProfileActivityBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">ProfileActivityBinding</a></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -895,8 +1013,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Utility class to validate various inputs.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentScanqrBinding.html#viewFinder">viewFinder</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentScanqrBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentScanqrBinding</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/QrcodeViewBinding.html#visualRepresentation">visualRepresentation</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/QrcodeViewBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">QrcodeViewBinding</a></dt>
 <dd>&nbsp;</dd>
 </dl>

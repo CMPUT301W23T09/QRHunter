@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":10};
+var data = {"i0":10,"i1":9,"i2":10,"i3":10,"i4":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -142,11 +142,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><code>android.content.ComponentCallbacks</code>, <code>android.content.DialogInterface.OnCancelListener</code>, <code>android.content.DialogInterface.OnDismissListener</code>, <code>android.view.View.OnCreateContextMenuListener</code>, <code>androidx.activity.result.ActivityResultCaller</code>, <code>androidx.lifecycle.HasDefaultViewModelProviderFactory</code>, <code>androidx.lifecycle.LifecycleOwner</code>, <code>androidx.lifecycle.ViewModelStoreOwner</code>, <code>androidx.savedstate.SavedStateRegistryOwner</code></dd>
+<dd><code>android.content.ComponentCallbacks</code>, <code>android.content.DialogInterface.OnCancelListener</code>, <code>android.content.DialogInterface.OnDismissListener</code>, <code>android.view.View.OnCreateContextMenuListener</code>, <code>androidx.activity.result.ActivityResultCaller</code>, <code>androidx.lifecycle.HasDefaultViewModelProviderFactory</code>, <code>androidx.lifecycle.LifecycleOwner</code>, <code>androidx.lifecycle.ViewModelStoreOwner</code>, <code>androidx.savedstate.SavedStateRegistryOwner</code>, <code>java.io.Serializable</code></dd>
 </dl>
 <hr>
 <pre>public class <span class="typeNameLabel">QRCodeFragment</span>
-extends androidx.fragment.app.DialogFragment</pre>
+extends androidx.fragment.app.DialogFragment
+implements java.io.Serializable</pre>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../serialized-form.html#com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment">Serialized Form</a></dd>
+</dl>
 </li>
 </ul>
 </div>
@@ -230,16 +235,38 @@ extends androidx.fragment.app.DialogFragment</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code><a href="../scanqr/LocationPhotoFragment.html" title="class in com.cmput301w23t09.qrhunter.scanqr">LocationPhotoFragment</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLocationPhotoFragment()">getLocationPhotoFragment</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>static <a href="QRCodeFragment.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeFragment</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#newInstance(java.lang.String)">newInstance</a></span>&#8203;(java.lang.String&nbsp;hash)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#newInstance(com.cmput301w23t09.qrhunter.qrcode.QRCode,com.cmput301w23t09.qrhunter.player.Player)">newInstance</a></span>&#8203;(<a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&nbsp;qrCode,
+           <a href="../player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&nbsp;activePlayer)</code></th>
 <td class="colLast">
 <div class="block">Creates a new QRCodeFragment to display a specific QR Code</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>android.app.Dialog</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onCreateDialog(android.os.Bundle)">onCreateDialog</a></span>&#8203;(android.os.Bundle&nbsp;savedInstanceState)</code></th>
 <td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onRequestPermissionsResult(int,java.lang.String%5B%5D,int%5B%5D)">onRequestPermissionsResult</a></span>&#8203;(int&nbsp;requestCode,
+                          java.lang.String[]&nbsp;permissions,
+                          int[]&nbsp;grantResults)</code></th>
+<td class="colLast">
+<div class="block">Disables the "Record QR Location" box if the user has not granted location permissions</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateLocationPhoto()">updateLocationPhoto</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Updates the locationPhoto image view to show the newly-captured location photo</div>
+</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -254,7 +281,7 @@ extends androidx.fragment.app.DialogFragment</pre>
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;androidx.fragment.app.Fragment</h3>
-<code>dump, equals, getActivity, getAllowEnterTransitionOverlap, getAllowReturnTransitionOverlap, getArguments, getChildFragmentManager, getContext, getDefaultViewModelCreationExtras, getDefaultViewModelProviderFactory, getEnterTransition, getExitTransition, getFragmentManager, getHost, getId, getLayoutInflater, getLayoutInflater, getLifecycle, getLoaderManager, getParentFragment, getParentFragmentManager, getReenterTransition, getResources, getRetainInstance, getReturnTransition, getSavedStateRegistry, getSharedElementEnterTransition, getSharedElementReturnTransition, getString, getString, getTag, getTargetFragment, getTargetRequestCode, getText, getUserVisibleHint, getView, getViewLifecycleOwner, getViewLifecycleOwnerLiveData, getViewModelStore, hashCode, hasOptionsMenu, instantiate, instantiate, isAdded, isDetached, isHidden, isInLayout, isMenuVisible, isRemoving, isResumed, isStateSaved, isVisible, onActivityResult, onAttach, onAttachFragment, onConfigurationChanged, onContextItemSelected, onCreateAnimation, onCreateAnimator, onCreateContextMenu, onCreateOptionsMenu, onCreateView, onDestroy, onDestroyOptionsMenu, onHiddenChanged, onInflate, onInflate, onLowMemory, onMultiWindowModeChanged, onOptionsItemSelected, onOptionsMenuClosed, onPause, onPictureInPictureModeChanged, onPrepareOptionsMenu, onPrimaryNavigationFragmentChanged, onRequestPermissionsResult, onResume, onViewCreated, postponeEnterTransition, postponeEnterTransition, registerForActivityResult, registerForActivityResult, registerForContextMenu, requestPermissions, requireActivity, requireArguments, requireContext, requireFragmentManager, requireHost, requireParentFragment, requireView, setAllowEnterTransitionOverlap, setAllowReturnTransitionOverlap, setArguments, setEnterSharedElementCallback, setEnterTransition, setExitSharedElementCallback, setExitTransition, setHasOptionsMenu, setInitialSavedState, setMenuVisibility, setReenterTransition, setRetainInstance, setReturnTransition, setSharedElementEnterTransition, setSharedElementReturnTransition, setTargetFragment, setUserVisibleHint, shouldShowRequestPermissionRationale, startActivity, startActivity, startActivityForResult, startActivityForResult, startIntentSenderForResult, startPostponedEnterTransition, toString, unregisterForContextMenu</code></li>
+<code>dump, equals, getActivity, getAllowEnterTransitionOverlap, getAllowReturnTransitionOverlap, getArguments, getChildFragmentManager, getContext, getDefaultViewModelCreationExtras, getDefaultViewModelProviderFactory, getEnterTransition, getExitTransition, getFragmentManager, getHost, getId, getLayoutInflater, getLayoutInflater, getLifecycle, getLoaderManager, getParentFragment, getParentFragmentManager, getReenterTransition, getResources, getRetainInstance, getReturnTransition, getSavedStateRegistry, getSharedElementEnterTransition, getSharedElementReturnTransition, getString, getString, getTag, getTargetFragment, getTargetRequestCode, getText, getUserVisibleHint, getView, getViewLifecycleOwner, getViewLifecycleOwnerLiveData, getViewModelStore, hashCode, hasOptionsMenu, instantiate, instantiate, isAdded, isDetached, isHidden, isInLayout, isMenuVisible, isRemoving, isResumed, isStateSaved, isVisible, onActivityResult, onAttach, onAttachFragment, onConfigurationChanged, onContextItemSelected, onCreateAnimation, onCreateAnimator, onCreateContextMenu, onCreateOptionsMenu, onCreateView, onDestroy, onDestroyOptionsMenu, onHiddenChanged, onInflate, onInflate, onLowMemory, onMultiWindowModeChanged, onOptionsItemSelected, onOptionsMenuClosed, onPause, onPictureInPictureModeChanged, onPrepareOptionsMenu, onPrimaryNavigationFragmentChanged, onResume, onViewCreated, postponeEnterTransition, postponeEnterTransition, registerForActivityResult, registerForActivityResult, registerForContextMenu, requestPermissions, requireActivity, requireArguments, requireContext, requireFragmentManager, requireHost, requireParentFragment, requireView, setAllowEnterTransitionOverlap, setAllowReturnTransitionOverlap, setArguments, setEnterSharedElementCallback, setEnterTransition, setExitSharedElementCallback, setExitTransition, setHasOptionsMenu, setInitialSavedState, setMenuVisibility, setReenterTransition, setRetainInstance, setReturnTransition, setSharedElementEnterTransition, setSharedElementReturnTransition, setTargetFragment, setUserVisibleHint, shouldShowRequestPermissionRationale, startActivity, startActivity, startActivityForResult, startActivityForResult, startIntentSenderForResult, startPostponedEnterTransition, toString, unregisterForContextMenu</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
@@ -298,19 +325,18 @@ extends androidx.fragment.app.DialogFragment</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="newInstance(java.lang.String)">
+<a id="newInstance(com.cmput301w23t09.qrhunter.qrcode.QRCode,com.cmput301w23t09.qrhunter.player.Player)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>newInstance</h4>
-<pre class="methodSignature">public static&nbsp;<a href="QRCodeFragment.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeFragment</a>&nbsp;newInstance&#8203;(java.lang.String&nbsp;hash)</pre>
-<div class="block">Creates a new QRCodeFragment to display a specific QR Code
-
- <p>TODO: Replase hash with QRCode object</div>
+<pre class="methodSignature">public static&nbsp;<a href="QRCodeFragment.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeFragment</a>&nbsp;newInstance&#8203;(<a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&nbsp;qrCode,
+                                         <a href="../player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&nbsp;activePlayer)</pre>
+<div class="block">Creates a new QRCodeFragment to display a specific QR Code</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>hash</code> - Hash of the QR code to view</dd>
+<dd><code>qrCode</code> - The QR code to view</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 </dl>
 </li>
@@ -318,7 +344,7 @@ extends androidx.fragment.app.DialogFragment</pre>
 <a id="onCreateDialog(android.os.Bundle)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>onCreateDialog</h4>
 <pre class="methodSignature">@NonNull
@@ -328,6 +354,52 @@ public&nbsp;android.app.Dialog&nbsp;onCreateDialog&#8203;(@Nullable
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code>onCreateDialog</code>&nbsp;in class&nbsp;<code>androidx.fragment.app.DialogFragment</code></dd>
 </dl>
+</li>
+</ul>
+<a id="updateLocationPhoto()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>updateLocationPhoto</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;updateLocationPhoto()</pre>
+<div class="block">Updates the locationPhoto image view to show the newly-captured location photo</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../scanqr/camera/CameraLocationPhotoController.html" title="class in com.cmput301w23t09.qrhunter.scanqr.camera"><code>CameraLocationPhotoController</code></a>, 
+<a href="../scanqr/LocationPhotoController.html" title="class in com.cmput301w23t09.qrhunter.scanqr"><code>LocationPhotoController</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="onRequestPermissionsResult(int,java.lang.String[],int[])">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>onRequestPermissionsResult</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;onRequestPermissionsResult&#8203;(int&nbsp;requestCode,
+                                       @NonNull
+                                       java.lang.String[]&nbsp;permissions,
+                                       @NonNull
+                                       int[]&nbsp;grantResults)</pre>
+<div class="block">Disables the "Record QR Location" box if the user has not granted location permissions</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code>onRequestPermissionsResult</code>&nbsp;in class&nbsp;<code>androidx.fragment.app.Fragment</code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>requestCode</code> - The request code passed in <code>Fragment.requestPermissions(String[], int)</code>.</dd>
+<dd><code>permissions</code> - The requested permissions. Never null.</dd>
+<dd><code>grantResults</code> - The grant results for the corresponding permissions which is either <code>PackageManager.PERMISSION_GRANTED</code> or <code>PackageManager.PERMISSION_DENIED</code>. Never null.</dd>
+</dl>
+</li>
+</ul>
+<a id="getLocationPhotoFragment()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getLocationPhotoFragment</h4>
+<pre class="methodSignature">public&nbsp;<a href="../scanqr/LocationPhotoFragment.html" title="class in com.cmput301w23t09.qrhunter.scanqr">LocationPhotoFragment</a>&nbsp;getLocationPhotoFragment()</pre>
 </li>
 </ul>
 </li>

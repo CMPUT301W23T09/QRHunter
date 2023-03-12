@@ -9,4 +9,5 @@ com.cmput301w23t09.qrhunter.player
 com.cmput301w23t09.qrhunter.profile
 com.cmput301w23t09.qrhunter.qrcode
 com.cmput301w23t09.qrhunter.scanqr
+com.cmput301w23t09.qrhunter.scanqr.camera
 com.cmput301w23t09.qrhunter.util

@@ -130,10 +130,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="description">
 <ul class="blockList">
 <li class="blockList">
+<dl>
+<dt>All Implemented Interfaces:</dt>
+<dd><code>java.io.Serializable</code></dd>
+</dl>
 <hr>
 <pre>public class <span class="typeNameLabel">QRCode</span>
-extends java.lang.Object</pre>
+extends java.lang.Object
+implements java.io.Serializable</pre>
 <div class="block">This class defines a QR code</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../serialized-form.html#com.cmput301w23t09.qrhunter.qrcode.QRCode">Serialized Form</a></dd>
+</dl>
 </li>
 </ul>
 </div>
@@ -154,11 +163,17 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String,java.lang.String,android.media.Image,java.lang.Integer,com.cmput301w23t09.qrhunter.map.Location,java.util.ArrayList,java.util.ArrayList,java.util.ArrayList)">QRCode</a></span>&#8203;(java.lang.String&nbsp;hash,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String)">QRCode</a></span>&#8203;(java.lang.String&nbsp;hash)</code></th>
+<td class="colLast">
+<div class="block">Initializes a *newly-scanned* QRCode using only its hash value</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String,java.lang.String,android.media.Image,java.lang.Integer,android.location.Location,java.util.ArrayList,java.util.ArrayList,java.util.ArrayList)">QRCode</a></span>&#8203;(java.lang.String&nbsp;hash,
       java.lang.String&nbsp;name,
       android.media.Image&nbsp;visualRepresentation,
       java.lang.Integer&nbsp;score,
-      <a href="../map/Location.html" title="class in com.cmput301w23t09.qrhunter.map">Location</a>&nbsp;loc,
+      android.location.Location&nbsp;loc,
       java.util.ArrayList&lt;<a href="../photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a>&gt;&nbsp;photos,
       java.util.ArrayList&lt;<a href="../comment/Comment.html" title="class in com.cmput301w23t09.qrhunter.comment">Comment</a>&gt;&nbsp;comments,
       java.util.ArrayList&lt;<a href="../player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&gt;&nbsp;players)</code></th>
@@ -242,7 +257,7 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr id="i8" class="altColor">
-<td class="colFirst"><code><a href="../map/Location.html" title="class in com.cmput301w23t09.qrhunter.map">Location</a></code></td>
+<td class="colFirst"><code>android.location.Location</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLoc()">getLoc</a></span>()</code></th>
 <td class="colLast">
 <div class="block">This returns the location of the QR code</div>
@@ -285,7 +300,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i14" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setLoc(com.cmput301w23t09.qrhunter.map.Location)">setLoc</a></span>&#8203;(<a href="../map/Location.html" title="class in com.cmput301w23t09.qrhunter.map">Location</a>&nbsp;loc)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setLoc(android.location.Location)">setLoc</a></span>&#8203;(android.location.Location&nbsp;loc)</code></th>
 <td class="colLast">
 <div class="block">This sets the location of the QR code</div>
 </td>
@@ -314,7 +329,21 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;(java.lang.String,java.lang.String,android.media.Image,java.lang.Integer,com.cmput301w23t09.qrhunter.map.Location,java.util.ArrayList,java.util.ArrayList,java.util.ArrayList)">
+<a id="&lt;init&gt;(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>QRCode</h4>
+<pre>public&nbsp;QRCode&#8203;(java.lang.String&nbsp;hash)</pre>
+<div class="block">Initializes a *newly-scanned* QRCode using only its hash value</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>hash</code> - The hash of the newly-scanned QRCode</dd>
+</dl>
+</li>
+</ul>
+<a id="&lt;init&gt;(java.lang.String,java.lang.String,android.media.Image,java.lang.Integer,android.location.Location,java.util.ArrayList,java.util.ArrayList,java.util.ArrayList)">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -324,7 +353,7 @@ extends java.lang.Object</pre>
               java.lang.String&nbsp;name,
               android.media.Image&nbsp;visualRepresentation,
               java.lang.Integer&nbsp;score,
-              <a href="../map/Location.html" title="class in com.cmput301w23t09.qrhunter.map">Location</a>&nbsp;loc,
+              android.location.Location&nbsp;loc,
               java.util.ArrayList&lt;<a href="../photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a>&gt;&nbsp;photos,
               java.util.ArrayList&lt;<a href="../comment/Comment.html" title="class in com.cmput301w23t09.qrhunter.comment">Comment</a>&gt;&nbsp;comments,
               java.util.ArrayList&lt;<a href="../player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&gt;&nbsp;players)</pre>
@@ -415,7 +444,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getLoc</h4>
-<pre class="methodSignature">public&nbsp;<a href="../map/Location.html" title="class in com.cmput301w23t09.qrhunter.map">Location</a>&nbsp;getLoc()</pre>
+<pre class="methodSignature">public&nbsp;android.location.Location&nbsp;getLoc()</pre>
 <div class="block">This returns the location of the QR code</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -465,13 +494,13 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a id="setLoc(com.cmput301w23t09.qrhunter.map.Location)">
+<a id="setLoc(android.location.Location)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>setLoc</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;setLoc&#8203;(<a href="../map/Location.html" title="class in com.cmput301w23t09.qrhunter.map">Location</a>&nbsp;loc)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;setLoc&#8203;(android.location.Location&nbsp;loc)</pre>
 <div class="block">This sets the location of the QR code</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
