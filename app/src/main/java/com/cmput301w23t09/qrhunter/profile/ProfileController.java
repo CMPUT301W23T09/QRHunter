@@ -13,6 +13,7 @@ import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeAdapter;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.ScoreComparator;
 import com.cmput301w23t09.qrhunter.util.DeviceUtils;
 import com.google.firebase.firestore.CollectionReference;
@@ -224,7 +225,7 @@ public class ProfileController {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         QRCode qrCode = qrCodes.get(position);
-        /** implement showing a qrcode dialog fragment * */
+        QRCodeFragment.newInstance(qrCode, gameController.getActivePlayer()).show(fragment.getParentFragmentManager(), "");
       }
     };
   }
