@@ -59,6 +59,7 @@ public class ProfileFragment extends BaseFragment {
 
     controller = new ProfileController(this, getMainController(), deviceUUID);
     createProfile(view);
+    handleProfileHeaderEstimates(view);
     return view;
   }
 
@@ -146,5 +147,14 @@ public class ProfileFragment extends BaseFragment {
     spinner.setAdapter(spinnerAdapter);
     // add listeners for item selection
     spinner.setOnItemSelectedListener(controller.handleSpinnerSelect(sortOrderSpinner));
+  }
+
+  private void handleProfileHeaderEstimates(View view) {
+    topCodeScore.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        controller.calculateRankOfHighestQRScore();
+      }
+    });
   }
 }
