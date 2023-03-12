@@ -49,12 +49,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
 
   /**
    * Creates a new QRCodeFragment to display a specific QR Code
-   *
-   * <p><<<<<<< HEAD
-   *
-   * @param qrCode The QR code to view =======
-   *     <p>TODO: Replace hash with QRCode object
-   * @param hash Hash of the QR code to view >>>>>>> ec1ca500a4b724274b0f6f41a4eb66330c32aae3
+   * @param qrCode The QR code to view
    * @return
    */
   public static QRCodeFragment newInstance(QRCode qrCode, Player activePlayer) {
@@ -217,18 +212,35 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   }
 
   /**
-   * adding scanned QRcode to the player's account
-   *
-   * @param hash the qrcode hash that gets added to the player's account
+   * adding scanned QR code to the player's account
+   * @param hash qrcode hash that gets added to the player's account
    */
   private void addQRCodeToPlayerAccount(String hash) {
-    PlayerDatabase.getInstance()
-        .getPlayerByDeviceId(
-            DeviceUtils.getDeviceUUID(getActivity()),
-            results -> {
-              // check if database query was successful
-              if (results.isSuccessful()) {
-                Player currentPlayer = results.getData();
+      PlayerDatabase.getInstance().getPlayerByDeviceId(
+              DeviceUtils.getDeviceUUID(getActivity()),
+              results -> {
+                // check if database query was successful
+                if (results.isSuccessful()) {
+                  Player currentPlayer = results.getData();
+
+                  // add the QR code to the player's account
+                  List<String> scannedqrCodelist = currentPlayer.getQRCodeHashes();
+                  if (scannedqrCodelist == null) {
+                    scannedqrCodelist= new ArrayList<>();
+                  }
+                  scannedqrCodelist.add(hash);
+                  currentPlayer.setQRCodeHashes(scannedqrCodelist);
+
+                  // update the player's account in the database with scanned qr code
+                  PlayerDatabase.getInstance().update(currentPlayer, queryResult -> {
+                    if (queryResult.isSuccessful()) {
+                      Log.d(TAG, "QR code added to user's account.");
+                      // update the visibility of the buttons
+                      addButton.setVisibility(View.GONE);
+                      deleteButton.setVisibility(View.VISIBLE);
+
+                      //updates the qrcode document with players that have scanned a particular qr code
+                      updateQRCodeDocument(hash,currentPlayer.getDocumentId());
 
                 // add the QR code to the player's account
                 List<String> scannedqrCodelist = currentPlayer.getQRCodeHashes();
@@ -275,9 +287,8 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   }
 
   /**
-   * Deletes QR code from qr code collection
-   *
-   * @param hash qrcode hash that gets deleted from the QRcode collection
+   * Deletes QR code from QR code collection
+   * @param hash qrcode hash that gets deleted from the QR code collection
    */
   private void deleteQRCodeFromCollection(String hash) {
     FirebaseFirestore.getInstance()
@@ -295,8 +306,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   }
 
   /**
-   * Deletes scanned QRcode From the player's account
-   *
+   * Deletes scanned QR code From the player's account
    * @param hash qrcode hash that gets deleted from player's account
    */
   private void deleteQRCodeFromPlayerAccount(String hash) {
@@ -352,27 +362,37 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   }
 
   /**
-   * Updates the QR code document in database with players who have scanned or removed a particular
-   * qr code
-   *
+   * Updates the QR code document in database with players who have scanned or removed a particular qr code
+   * gets the qr code document if it exits and updates its players, logs a message if document doesn't exist
    * @param hash qrcode hash that has been scanned
    * @param playerId playerID of a player that has scanned/removed a particular qr code
    */
-  private void updateQRCodeDocument(String hash, String playerId) {
-    // update the "players" field in the QR code document
+  private void updateQRCodeDocument(String hash, String playerId){
     FirebaseFirestore.getInstance()
-        .collection("qrcodes")
-        .document(hash)
-        .update("players", FieldValue.arrayUnion(playerId))
-        .addOnSuccessListener(
-            aVoid -> {
-              Log.d(TAG, "Player updated in  QR code document.");
+            .collection("qrcodes")
+            .document(hash)
+            .get()
+            .addOnSuccessListener(documentSnapshot -> {
+              if (documentSnapshot.exists()) {
+                // Update the document
+                FirebaseFirestore.getInstance()
+                        .collection("qrcodes")
+                        .document(hash)
+                        .update("players", FieldValue.arrayUnion(playerId))
+                        .addOnSuccessListener(aVoid -> {
+                          Log.d(TAG, "Player updated in QR code document.");
+                        })
+                        .addOnFailureListener(e -> {
+                          Log.w(TAG, "Error updating QR code document", e);
+                          Toast.makeText(getContext(), "Error updating QR code document", Toast.LENGTH_SHORT).show();
+                        });
+              } else {
+                Log.d(TAG, "QR code document does not exist.");
+              }
             })
-        .addOnFailureListener(
-            e -> {
-              Log.w(TAG, "Error updating QR code document", e);
-              Toast.makeText(getContext(), "Error updating QR code document", Toast.LENGTH_SHORT)
-                  .show();
+            .addOnFailureListener(e -> {
+              Log.w(TAG, "Error getting QR code document", e);
+              Toast.makeText(getContext(), "Error getting QR code document", Toast.LENGTH_SHORT).show();
             });
   }
 

@@ -9,7 +9,7 @@
         android:id="@+id/qrName"
         android:layout_width="354dp"
         android:layout_height="48dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:maxLines="1"

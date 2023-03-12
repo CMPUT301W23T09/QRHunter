@@ -6,6 +6,8 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import android.telephony.PhoneNumberUtils;
+
+import java.util.ArrayList;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +22,7 @@ public class TestPlayerModel {
   private void setUp() {
     // Initial values don't matter as we'll be testing each getter/setter separately.
     mockPlayerUUID = UUID.randomUUID();
-    mockPlayer = new Player("001", mockPlayerUUID, "johndoe42", "7801234567", "doe@ualberta.ca");
+    mockPlayer = new Player("001", mockPlayerUUID, "johndoe42", "7801234567", "doe@ualberta.ca",new ArrayList<>());
   }
 
   @Test
@@ -30,6 +32,16 @@ public class TestPlayerModel {
     assertEquals("johndoe42", mockPlayer.getUsername());
     assertEquals("7801234567", mockPlayer.getPhoneNo());
     assertEquals("doe@ualberta.ca", mockPlayer.getEmail());
+    assertEquals(new ArrayList<>(), mockPlayer.getQRCodeHashes());
+  }
+
+  @Test
+  public void testGetQRCodeHashes() {
+    ArrayList<String> scannedQRHashes = new ArrayList<>();
+    scannedQRHashes.add("hash1");
+    scannedQRHashes.add("hash2");
+    mockPlayer.setQRCodeHashes(scannedQRHashes);
+    assertEquals(scannedQRHashes, mockPlayer.getQRCodeHashes());
   }
 
   /* SETTER TESTS*/
@@ -188,4 +200,23 @@ public class TestPlayerModel {
           mockPlayer.setEmail("");
         });
   }
+
+  @Test
+  public void testSetQRCodeHashes() {
+    ArrayList<String> scannedQRHashes = new ArrayList<>();
+    scannedQRHashes.add("hash1");
+    scannedQRHashes.add("hash2");
+    scannedQRHashes.add("hash3");
+    mockPlayer.setQRCodeHashes(scannedQRHashes);
+    assertEquals(scannedQRHashes, mockPlayer.getQRCodeHashes());
+  }
+
+  @Test
+  public void testSetQRCodeHashesNullList() {
+    assertThrows(NullPointerException.class, () -> {
+      mockPlayer.setQRCodeHashes(null);
+    });
+    assertEquals(new ArrayList<>(), mockPlayer.getQRCodeHashes());
+  }
+
 }
