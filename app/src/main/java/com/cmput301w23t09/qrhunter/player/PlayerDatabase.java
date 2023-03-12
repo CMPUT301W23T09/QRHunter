@@ -6,8 +6,10 @@ import com.cmput301w23t09.qrhunter.database.DatabaseQueryResults;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -169,6 +171,7 @@ public class PlayerDatabase {
                 return;
               }
 
+              // Convert all snapshots to Players
               Set<Player> players = new HashSet<>();
               for (QueryDocumentSnapshot snapshot : task.getResult()) {
                 players.add(snapshotToPlayer(snapshot));
@@ -247,8 +250,10 @@ public class PlayerDatabase {
     String username = snapshot.getString("username");
     String phoneNo = snapshot.getString("phoneNo");
     String email = snapshot.getString("email");
+    List<String> qrCodeHashes = snapshot.get("qrCodeHashes", ArrayList.class);
 
-    return new Player(documentId, deviceUUID, username, phoneNo, email, new HashSet<>());
+    return new Player(
+        documentId, deviceUUID, username, phoneNo, email, new HashSet<>(qrCodeHashes));
   }
 
   /**
@@ -264,6 +269,7 @@ public class PlayerDatabase {
     values.put("username_lower", player.getUsername().toLowerCase());
     values.put("phoneNo", player.getPhoneNo());
     values.put("email", player.getEmail());
+    values.put("qrCodeHashes", new ArrayList<>(player.getQrCodeHashes()));
 
     return values;
   }

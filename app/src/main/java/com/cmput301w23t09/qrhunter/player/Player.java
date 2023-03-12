@@ -1,7 +1,7 @@
 package com.cmput301w23t09.qrhunter.player;
 
-import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.util.ValidationUtils;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -16,8 +16,8 @@ public class Player {
   private String phoneNo;
   /** Email of the player */
   private String email;
-  /** QRCodes the player has scanned */
-  private Set<QRCode> qrCodes;
+  /** QRCode hashes the player has scanned */
+  private Set<String> qrCodeHashes;
 
   /**
    * This initializes a Player with the deviceId, username, phoneNo, and email.
@@ -26,14 +26,15 @@ public class Player {
    * @param username username
    * @param phoneNo phone no
    * @param email email
-   * @param qrCodes QRCodes the player has scanned
+   * @param qrCodeHashes QRCodes the player has scanned
    */
-  public Player(UUID deviceId, String username, String phoneNo, String email, Set<QRCode> qrCodes) {
+  public Player(
+      UUID deviceId, String username, String phoneNo, String email, Set<String> qrCodeHashes) {
     this.deviceId = deviceId;
     this.username = username;
     this.phoneNo = phoneNo;
     this.email = email;
-    this.qrCodes = qrCodes;
+    this.qrCodeHashes = qrCodeHashes;
   }
 
   /**
@@ -45,7 +46,7 @@ public class Player {
    * @param username username of the player
    * @param phoneNo phone number of the player
    * @param email email of the player
-   * @param qrCodes QRCodes the player has scanned
+   * @param qrCodeHashes QRCodes the player has scanned
    */
   public Player(
       String documentId,
@@ -53,12 +54,13 @@ public class Player {
       String username,
       String phoneNo,
       String email,
-      Set<QRCode> qrCodes) {
+      Set<String> qrCodeHashes) {
     this.documentId = documentId;
     this.deviceId = deviceId;
     this.username = username;
     this.phoneNo = phoneNo;
     this.email = email;
+    this.qrCodeHashes = qrCodeHashes;
   }
 
   /**
@@ -163,5 +165,23 @@ public class Player {
     }
 
     this.email = email;
+  }
+
+  /**
+   * Retrieve all of the QRCodes this player has scanned.
+   *
+   * @return QR codes the player has scanned
+   */
+  public Set<String> getQrCodeHashes() {
+    return new HashSet<>(qrCodeHashes);
+  }
+
+  /**
+   * Modify the QRCodes this player has scanned.
+   *
+   * @param qrCodeHashes QR code hashes the player has scanned.
+   */
+  public void setQRCodes(Set<String> qrCodeHashes) {
+    this.qrCodeHashes = new HashSet<>(qrCodeHashes);
   }
 }

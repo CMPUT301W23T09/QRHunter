@@ -1,9 +1,11 @@
 package com.cmput301w23t09.qrhunter.social.leaderboard;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.cmput301w23t09.qrhunter.BaseFragment;
@@ -44,19 +46,23 @@ public class LeaderboardFragment extends BaseFragment {
         new TabLayout.OnTabSelectedListener() {
           @Override
           public void onTabSelected(TabLayout.Tab tab) {
+            // Clear leaderboard and wait for new data
+            clearLeaderboard();
+
             switch (String.valueOf(tab.getText())) {
               case "Total Points":
-                renderLeaderboard(controller.getLeaderboardManager().getTotalPointsLeaderboard());
+                controller.getTotalPointsLeaderboard(
+                    LeaderboardFragment.this::onLeaderboardCallback);
                 break;
               case "Scanned":
-                renderLeaderboard(controller.getLeaderboardManager().getTopScansLeaderboard());
+                controller.getTopScansLeaderboard(LeaderboardFragment.this::onLeaderboardCallback);
                 break;
               case "Top Codes":
-                renderLeaderboard(controller.getLeaderboardManager().getTopQRCodesLeaderboard());
+                controller.getTopQRCodesLeaderboard(
+                    LeaderboardFragment.this::onLeaderboardCallback);
                 break;
               case "Top Codes (By Region)":
-                renderLeaderboard(
-                    controller.getLeaderboardManager().getTopQRCodesByRegionLeaderboard());
+                // TODO: Implement after location uploading is implemented.
                 break;
               default:
                 throw new UnsupportedOperationException(
@@ -82,7 +88,23 @@ public class LeaderboardFragment extends BaseFragment {
     }
   }
 
-  private void renderLeaderboard(Leaderboard leaderboard) {}
+  private void onLeaderboardCallback(Exception exception, Leaderboard<?> leaderboard) {
+    if (exception != null) {
+      Log.e(getClass().getName(), exception.getLocalizedMessage());
+      Toast.makeText(
+              getContext(),
+              "An exception occurred while fetching leaderboard data!",
+              Toast.LENGTH_SHORT)
+          .show();
+      return;
+    }
+
+    renderLeaderboard(leaderboard);
+  }
+
+  private void clearLeaderboard() {}
+
+  private void renderLeaderboard(Leaderboard<?> leaderboard) {}
 
   private void renderLeaderboard(Map<String, QRLeaderboard> leaderboardWithHeaders) {}
 }

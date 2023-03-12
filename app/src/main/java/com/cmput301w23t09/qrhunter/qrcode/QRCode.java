@@ -6,6 +6,7 @@ import com.cmput301w23t09.qrhunter.map.Location;
 import com.cmput301w23t09.qrhunter.photo.Photo;
 import com.cmput301w23t09.qrhunter.player.Player;
 import java.util.ArrayList;
+import java.util.Set;
 
 /** This class defines a QR code */
 public class QRCode {
@@ -16,7 +17,7 @@ public class QRCode {
   /** This is the visual representation of the QR code */
   private Image visualRepresentation; // type subject to change
   /** This is the score of the QR code */
-  private Integer score;
+  private Long score;
   /** This is the location of the QR code */
   private Location loc;
   /** This is a list of photos that have been taken of the QR code */
@@ -24,7 +25,7 @@ public class QRCode {
   /** This is a list of comments on the QR code */
   private ArrayList<Comment> comments;
   /** This is a list of players who have scanned this QR code */
-  private ArrayList<Player> players;
+  private Set<String> playerDocumentIds;
 
   /**
    * This initializes a QR code with its hash, name, visual representation, score, location, photo,
@@ -37,17 +38,17 @@ public class QRCode {
    * @param loc This is the location of the QR code
    * @param photos This is the list of photos of the QR code
    * @param comments This is the list of comments on the QR code
-   * @param players This is the list of players that have scanned the QR code
+   * @param playerDocumentIds This is the list of players that have scanned the QR code
    */
   public QRCode(
       String hash,
       String name,
       Image visualRepresentation,
-      Integer score,
+      Long score,
       Location loc,
       ArrayList<Photo> photos,
       ArrayList<Comment> comments,
-      ArrayList<Player> players) {
+      Set<String> playerDocumentIds) {
     this.hash = hash;
     this.name = name;
     this.visualRepresentation = visualRepresentation;
@@ -55,7 +56,7 @@ public class QRCode {
     this.loc = loc;
     this.photos = photos;
     this.comments = comments;
-    this.players = players;
+    this.playerDocumentIds = playerDocumentIds;
   }
 
   /**
@@ -90,7 +91,7 @@ public class QRCode {
    *
    * @return Return the score of the QR code
    */
-  public Integer getScore() {
+  public Long getScore() {
     return this.score;
   }
 
@@ -117,8 +118,8 @@ public class QRCode {
    *
    * @return Return the player who have scanned the QR code
    */
-  public ArrayList<Player> getPlayers() {
-    return players;
+  public Set<String> getPlayerIdsWhoScanned() {
+    return playerDocumentIds;
   }
 
   /**
@@ -181,7 +182,7 @@ public class QRCode {
    * @param player This is the player to add
    */
   public void addPlayer(Player player) {
-    this.players.add(player);
+    this.playerDocumentIds.add(player.getDocumentId());
   }
 
   /**
@@ -190,6 +191,6 @@ public class QRCode {
    * @param player This is the player to delete
    */
   public void deletePlayer(Player player) {
-    this.players.remove(player);
+    this.playerDocumentIds.remove(player.getDocumentId());
   }
 }

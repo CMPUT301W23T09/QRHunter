@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import android.telephony.PhoneNumberUtils;
+import java.util.HashSet;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,9 @@ public class TestPlayerModel {
   private void setUp() {
     // Initial values don't matter as we'll be testing each getter/setter separately.
     mockPlayerUUID = UUID.randomUUID();
-    mockPlayer = new Player("001", mockPlayerUUID, "johndoe42", "7801234567", "doe@ualberta.ca");
+    mockPlayer =
+        new Player(
+            "001", mockPlayerUUID, "johndoe42", "7801234567", "doe@ualberta.ca", new HashSet<>());
   }
 
   @Test
