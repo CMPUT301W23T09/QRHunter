@@ -20,7 +20,7 @@ jobs:
       - name: Give gradlew Execute Permission
         run: chmod +x gradlew
       - name: Build App (fixes some dependency errors with Javadoc)
-        run: ./gradlew build
+        run: ./gradlew build --parallel -x test
       - name: Create Javadoc
         run: ./gradlew generateReleaseJavadoc
       - name: Deploy to Github Pages

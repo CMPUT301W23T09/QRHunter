@@ -7,12 +7,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentTransaction;
 import com.cmput301w23t09.qrhunter.navigation.NavigationControllerAdapter;
+import com.cmput301w23t09.qrhunter.player.Player;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 /** The GameActivity class handles displaying the fragments and navbar onscreen. */
 public class GameActivity extends AppCompatActivity {
 
   private GameController controller;
+  private Player activePlayer;
 
   public GameController getController() {
     return controller;
@@ -23,7 +25,9 @@ public class GameActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_game);
 
-    controller = new GameController(this);
+    activePlayer = (Player) getIntent().getSerializableExtra("activePlayer");
+
+    controller = new GameController(this, activePlayer);
 
     // Set navigation controller adapter
     BottomNavigationView bottomNavigationView = findViewById(R.id.navigation_bar);

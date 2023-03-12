@@ -57,7 +57,7 @@ public class ProfileFragment extends BaseFragment {
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.profile_activity, container, false);
 
-    controller = new ProfileController(this, getMainController(), deviceUUID);
+    controller = new ProfileController(this, getGameController(), deviceUUID);
     createProfile(view);
     return view;
   }
@@ -98,7 +98,7 @@ public class ProfileFragment extends BaseFragment {
 
   /** Sets the image of the profile settings button and handler. */
   private void setupContactButton() {
-    if (deviceUUID.equals(DeviceUtils.getDeviceUUID(getMainController().getActivity()))) {
+    if (deviceUUID.equals(DeviceUtils.getDeviceUUID(getGameController().getActivity()))) {
       contactButton.setImageResource(R.drawable.baseline_settings_24);
     } else {
       contactButton.setImageResource(R.drawable.info_button);

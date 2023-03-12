@@ -1,14 +1,15 @@
 package com.cmput301w23t09.qrhunter.qrcode;
 
+import android.location.Location;
 import android.media.Image;
 import com.cmput301w23t09.qrhunter.comment.Comment;
-import com.cmput301w23t09.qrhunter.map.Location;
 import com.cmput301w23t09.qrhunter.photo.Photo;
 import com.cmput301w23t09.qrhunter.player.Player;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /** This class defines a QR code */
-public class QRCode {
+public class QRCode implements Serializable {
   /** This is the hash of the QR code */
   private String hash;
   /** This is the name of the QR code */
@@ -25,6 +26,25 @@ public class QRCode {
   private ArrayList<Comment> comments;
   /** This is a list of players who have scanned this QR code */
   private ArrayList<Player> players;
+
+  /**
+   * Initializes a *newly-scanned* QRCode using only its hash value
+   *
+   * @param hash The hash of the newly-scanned QRCode
+   */
+  public QRCode(String hash) {
+    this.hash = hash;
+
+    // TODO: Initialize all these fields according to hash
+    this.name = "";
+    this.visualRepresentation = null;
+    this.score = 0;
+
+    this.loc = null;
+    this.photos = new ArrayList<>();
+    this.comments = new ArrayList<>();
+    this.players = new ArrayList<>();
+  }
 
   /**
    * This initializes a QR code with its hash, name, visual representation, score, location, photo,

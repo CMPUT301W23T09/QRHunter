@@ -37,7 +37,7 @@ public class ProfileSettingsFragment extends BaseFragment {
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
 
-    controller = new ProfileSettingsController(getMainController(), deviceUUID);
+    controller = new ProfileSettingsController(getGameController(), deviceUUID);
     View view = inflater.inflate(R.layout.fragment_profile_settings, container, false);
 
     phoneField = view.findViewById(R.id.settings_screen_phoneTextField);
