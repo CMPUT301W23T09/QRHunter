@@ -104,7 +104,6 @@ public class QRCodeFragment extends DialogFragment {
 
     //implementing the delete button
     deleteButton.setOnClickListener(v ->{
-      deleteQRCodeFromCollection(hash);
       deleteQRCodeFromPlayerAccount(hash);
   });
 
@@ -160,7 +159,7 @@ public class QRCodeFragment extends DialogFragment {
                       deleteButton.setVisibility(View.VISIBLE);
 
                       //updates the qrcode document with players that have scanned a particular qr code
-                      updateQRCodeDocument(hash,currentPlayer.getDocumentId());
+                      updateQRCodeDocument(hash,currentPlayer.getDocumentId(),true);
 
                     } else {
                       Log.w(TAG, "Error adding QR code to account.", queryResult.getException());
@@ -175,22 +174,6 @@ public class QRCodeFragment extends DialogFragment {
 
     }
 
-  /**
-   * Deletes QR code from QR code collection
-   * @param hash qrcode hash that gets deleted from the QR code collection
-   */
-  private void deleteQRCodeFromCollection( String hash) {
-    FirebaseFirestore.getInstance()
-            .collection("qrcodes")
-            .document(hash)
-            .delete()
-            .addOnSuccessListener(aVoid -> {
-              Log.d(TAG, "QR code deleted from database.");
-            })
-            .addOnFailureListener(e -> {
-              Log.w(TAG, "Error deleting QR code from collection", e);
-            });
-  }
 
   /**
    * Deletes scanned QR code From the player's account
@@ -220,7 +203,7 @@ public class QRCodeFragment extends DialogFragment {
                     deleteButton.setVisibility(View.GONE);
 
                     //updates the qrcode document by removing players that have deleted a particular qrcode from account
-                    updateQRCodeDocument(hash,currentPlayer.getDocumentId());
+                    updateQRCodeDocument(hash,currentPlayer.getDocumentId(), false);
 
                   } else {
                     Log.w(TAG, "Error deleting QR code from account.", queryResult.getException());
@@ -241,7 +224,7 @@ public class QRCodeFragment extends DialogFragment {
    * @param hash qrcode hash that has been scanned
    * @param playerId playerID of a player that has scanned/removed a particular qr code
    */
-  private void updateQRCodeDocument(String hash, String playerId){
+  private void updateQRCodeDocument(String hash, String playerId, Boolean addPlayer){
     FirebaseFirestore.getInstance()
             .collection("qrcodes")
             .document(hash)
@@ -252,7 +235,7 @@ public class QRCodeFragment extends DialogFragment {
                 FirebaseFirestore.getInstance()
                         .collection("qrcodes")
                         .document(hash)
-                        .update("players", FieldValue.arrayUnion(playerId))
+                        .update("players", addPlayer ? FieldValue.arrayUnion(playerId) : FieldValue.arrayRemove(playerId))
                         .addOnSuccessListener(aVoid -> {
                           Log.d(TAG, "Player updated in QR code document.");
                         })
@@ -269,7 +252,6 @@ public class QRCodeFragment extends DialogFragment {
               Toast.makeText(getContext(), "Error getting QR code document", Toast.LENGTH_SHORT).show();
             });
   }
-
 
 
   /**
