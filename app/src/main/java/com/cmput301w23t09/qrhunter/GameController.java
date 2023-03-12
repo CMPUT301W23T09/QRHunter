@@ -2,6 +2,7 @@ package com.cmput301w23t09.qrhunter;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.scanqr.ScannerFragment;
 
 /**
@@ -12,9 +13,11 @@ public class GameController {
   private final GameActivity activity;
   private Fragment body;
   private DialogFragment popup;
+  private Player activePlayer;
 
-  public GameController(GameActivity activity) {
+  public GameController(GameActivity activity, Player activePlayer) {
     this.activity = activity;
+    this.activePlayer = activePlayer;
 
     setBody(new ScannerFragment(this));
   }
@@ -26,6 +29,13 @@ public class GameController {
    */
   public GameActivity getActivity() {
     return activity;
+  }
+
+  /**
+   * @return The currently active player, the one playing the game.
+   */
+  public Player getActivePlayer() {
+    return activePlayer;
   }
 
   /**
