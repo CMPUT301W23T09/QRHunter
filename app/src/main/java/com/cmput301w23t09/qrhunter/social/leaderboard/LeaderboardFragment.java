@@ -24,6 +24,7 @@ public class LeaderboardFragment extends BaseFragment {
   private LeaderboardEntryAdapter entryAdapter;
   private List<LeaderboardEntry<?>> leaderboardEntries;
 
+  private String currentActiveTab;
   private Map<String, Leaderboard<?>> cachedLeaderboards;
 
   public LeaderboardFragment(GameController gameController) {
@@ -61,6 +62,7 @@ public class LeaderboardFragment extends BaseFragment {
           public void onTabSelected(TabLayout.Tab tab) {
             // Clear leaderboard and wait for new data
             String tabText = String.valueOf(tab.getText());
+            currentActiveTab = tabText;
 
             // Render cached leaderboard data if any exists.
             Leaderboard<?> cachedLeaderboard = cachedLeaderboards.getOrDefault(tabText, null);
@@ -114,7 +116,7 @@ public class LeaderboardFragment extends BaseFragment {
   }
 
   private void onLeaderboardCallback(
-      String leaderboardName, Exception exception, Leaderboard<?> leaderboard) {
+      String tabName, Exception exception, Leaderboard<?> leaderboard) {
     if (exception != null) {
       Log.e(getClass().getName(), exception.getLocalizedMessage());
       Toast.makeText(
@@ -126,9 +128,11 @@ public class LeaderboardFragment extends BaseFragment {
     }
 
     // Store leaderboard in cache to "reduce" empty leaderboard page time when flipping between
-    cachedLeaderboards.put(leaderboardName, leaderboard);
+    cachedLeaderboards.put(tabName, leaderboard);
 
-    renderLeaderboard(leaderboard);
+    if (currentActiveTab.equals(tabName)) {
+      renderLeaderboard(leaderboard);
+    }
   }
 
   private void clearLeaderboard() {
