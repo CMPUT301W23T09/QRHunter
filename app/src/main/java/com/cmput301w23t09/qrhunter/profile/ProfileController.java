@@ -216,6 +216,7 @@ public class ProfileController {
 
   /**
    * This is the onclicklistener for qr codes displayed in the profile
+   *
    * @return Return the onclicklistener
    */
   public AdapterView.OnItemClickListener handleQRSelect() {
