@@ -32,6 +32,7 @@ android {
         unitTests.all {
             useJUnitPlatform()
         }
+        animationsDisabled = true
     }
     buildFeatures {
         viewBinding true
@@ -84,6 +85,10 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
+    // Awaitility
+    // Helps us wait for certain conditions to be true within a given timeframe in testing
+    androidTestImplementation 'org.awaitility:awaitility:3.1.6'
+
     // Mockito to help with mocking in tests
     testImplementation "org.mockito:mockito-inline:3.+"
 
@@ -98,6 +103,9 @@ dependencies {
 
     // Google's MLKit Library for QR Scanning
     implementation 'com.google.mlkit:barcode-scanning:17.0.3'
+
+    // For location tracking
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
 
     // Robotium for UI Testing
     androidTestImplementation "androidx.test:runner:1.5.2"
