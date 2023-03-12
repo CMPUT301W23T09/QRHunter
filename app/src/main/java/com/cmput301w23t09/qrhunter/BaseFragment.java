@@ -12,11 +12,11 @@ public abstract class BaseFragment extends Fragment {
   }
 
   /**
-   * Retrieve the MainController.
+   * Retrieve the GameController.
    *
-   * @return MainController
+   * @return GameController
    */
-  public GameController getMainController() {
+  public GameController getGameController() {
     return gameController;
   }
 
