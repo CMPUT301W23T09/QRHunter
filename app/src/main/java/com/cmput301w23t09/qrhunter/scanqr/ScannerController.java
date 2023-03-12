@@ -43,12 +43,7 @@ public class ScannerController {
   public ScannerController(BaseFragment fragment, Player activePlayer) {
     this.fragment = fragment;
     this.activePlayer = activePlayer;
-    options =
-        new BarcodeScannerOptions.Builder()
-            .setBarcodeFormats(
-                Barcode.FORMAT_QR_CODE // Only want to scan QR codes
-                )
-            .build();
+    options = new BarcodeScannerOptions.Builder().build();
     scanner = BarcodeScanning.getClient(options);
   }
 
