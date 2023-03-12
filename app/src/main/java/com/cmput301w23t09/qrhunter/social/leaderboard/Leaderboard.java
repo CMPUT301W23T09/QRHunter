@@ -4,5 +4,13 @@ import java.util.List;
 
 public abstract class Leaderboard<T> {
 
-  public Leaderboard(List<LeaderboardEntry<T>> entries) {}
+  private final List<LeaderboardEntry<T>> entries;
+
+  public Leaderboard(List<LeaderboardEntry<T>> entries) {
+    this.entries = entries;
+  }
+
+  public List<LeaderboardEntry<T>> getEntries() {
+    return entries;
+  }
 }

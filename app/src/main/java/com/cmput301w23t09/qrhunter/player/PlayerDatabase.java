@@ -250,7 +250,10 @@ public class PlayerDatabase {
     String username = snapshot.getString("username");
     String phoneNo = snapshot.getString("phoneNo");
     String email = snapshot.getString("email");
-    List<String> qrCodeHashes = snapshot.get("qrCodeHashes", ArrayList.class);
+    List<String> qrCodeHashes = (List<String>) snapshot.get("qrCodeHashes");
+    if (qrCodeHashes == null) {
+      qrCodeHashes = new ArrayList<>();
+    }
 
     return new Player(
         documentId, deviceUUID, username, phoneNo, email, new HashSet<>(qrCodeHashes));

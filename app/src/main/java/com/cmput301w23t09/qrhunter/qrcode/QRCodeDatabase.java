@@ -11,14 +11,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 public class QRCodeDatabase {
   /** Name to associate with any logged messages. */
   private static final String LOGGER_TAG = "QRCodeDatabase";
   /** Firebase collection name to store/retrieve data from. */
-  private static final String DATABASE_COLLECTION_NAME = "players";
+  private static final String DATABASE_COLLECTION_NAME = "qrcodes";
 
   /** Singleton instance of QRCodeDatabase to ensure only one copy is created. */
   private static QRCodeDatabase INSTANCE;
@@ -51,10 +50,10 @@ public class QRCodeDatabase {
               // Return found qrcode if any.
               if (task.getResult() != null) {
                 callback.accept(new DatabaseQueryResults<>(snapshotToQRCode(task.getResult())));
+              } else {
+                // No QRCode by that hash exists.
+                callback.accept(new DatabaseQueryResults<>(null));
               }
-
-              // No QRCode by that hash exists.
-              callback.accept(new DatabaseQueryResults<>(null));
             });
   }
 
@@ -65,36 +64,35 @@ public class QRCodeDatabase {
    * @param callback callback to call on query completion
    */
   public void getQRCodeHashes(Set<String> hashes, DatabaseConsumer<Set<QRCode>> callback) {
-    AtomicInteger entriesLeft = new AtomicInteger(hashes.size());
-    AtomicReference<Exception> exception = new AtomicReference<>();
-    Set<QRCode> qrCodes = new HashSet<>();
-
-    for (String hash : hashes) {
-      getQRCodeByHash(
-          hash,
-          task -> {
-            if (task.isSuccessful()) {
-              QRCode qrCode = task.getData();
-
-              if (qrCode != null) {
-                qrCodes.add(qrCode);
-              }
-            } else {
-              exception.set(task.getException());
-            }
-          });
-
-      if (entriesLeft.getAndDecrement() == 0) {
-        DatabaseQueryResults<Set<QRCode>> query;
-        if (exception.get() != null) {
-          query = new DatabaseQueryResults<>(qrCodes);
-        } else {
-          query = new DatabaseQueryResults<>(null, exception.get());
-        }
-
-        callback.accept(query);
-      }
+    if (hashes.size() == 0) {
+      callback.accept(new DatabaseQueryResults<>(new HashSet<>()));
+      return;
     }
+
+    collection
+        .whereIn("hash", new ArrayList<>(hashes))
+        .get()
+        .addOnCompleteListener(
+            task -> {
+              if (!task.isSuccessful()) {
+                callback.accept(new DatabaseQueryResults<>(null, task.getException()));
+                Log.w(LOGGER_TAG, "Failed to execute getQRCodeHashes", task.getException());
+                return;
+              }
+
+              // Return found qrcodes if any.
+              if (task.getResult() != null) {
+                Set<QRCode> qrCodes =
+                    task.getResult().getDocuments().stream()
+                        .map(this::snapshotToQRCode)
+                        .collect(Collectors.toSet());
+
+                callback.accept(new DatabaseQueryResults<>(qrCodes));
+              } else {
+                // No QRCode by that hash exists.
+                callback.accept(new DatabaseQueryResults<>(null));
+              }
+            });
   }
 
   /**
@@ -124,10 +122,18 @@ public class QRCodeDatabase {
 
   private QRCode snapshotToQRCode(DocumentSnapshot snapshot) {
     String hash = snapshot.getId();
-    Long score = snapshot.getLong("score");
-    Set<String> playerDocumentIds =
-        new HashSet<>((List<String>) snapshot.get("players", ArrayList.class));
+    Long score = (Long) snapshot.get("score");
+    if (score == null) {
+      // TODO: THIS IS DEBUGGING WHILE WE DON'T HAVE A SCORE ASSOCIATED WITH QR CODES.
+      score = Long.valueOf(0);
+    }
 
+    List<String> playerIds = (List<String>) snapshot.get("players");
+    if (playerIds == null) {
+      playerIds = new ArrayList<>();
+    }
+
+    Set<String> playerDocumentIds = new HashSet<>(playerIds);
     return new QRCode(hash, null, null, score, null, null, null, playerDocumentIds);
   }
 

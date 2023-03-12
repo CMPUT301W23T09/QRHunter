@@ -59,7 +59,7 @@ public class LeaderboardController {
                           }
 
                           // On completion of all queries, return the data.
-                          if (entriesLeft.getAndDecrement() == 0) {
+                          if (entriesLeft.decrementAndGet() == 0) {
                             // If there was an exception at any point return null.
                             if (exception.get() != null) {
                               callback.accept(exception.get(), null);

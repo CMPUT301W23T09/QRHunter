@@ -20,6 +20,6 @@ public class LeaderboardEntry<T> implements Comparable<LeaderboardEntry<T>> {
 
   @Override
   public int compareTo(LeaderboardEntry<T> otherEntry) {
-    return Long.compare(getScore(), otherEntry.getScore());
+    return Long.compare(otherEntry.getScore(), getScore());
   }
 }
