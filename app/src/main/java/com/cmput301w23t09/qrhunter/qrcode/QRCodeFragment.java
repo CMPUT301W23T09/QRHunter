@@ -132,8 +132,8 @@ public class QRCodeFragment extends DialogFragment {
     }
 
   /**
-   * adding scanned QRcode to the player's account
-   * @param hash the qrcode hash that gets added to the player's account
+   * adding scanned QR code to the player's account
+   * @param hash qrcode hash that gets added to the player's account
    */
   private void addQRCodeToPlayerAccount(String hash){
       PlayerDatabase.getInstance().getPlayerByDeviceId(
@@ -151,7 +151,7 @@ public class QRCodeFragment extends DialogFragment {
                   scannedqrCodelist.add(hash);
                   currentPlayer.setQRCodeHashes(scannedqrCodelist);
 
-                  // update the player's account in the database
+                  // update the player's account in the database with scanned qr code
                   PlayerDatabase.getInstance().update(currentPlayer, queryResult -> {
                     if (queryResult.isSuccessful()) {
                       Log.d(TAG, "QR code added to user's account.");
@@ -176,8 +176,8 @@ public class QRCodeFragment extends DialogFragment {
     }
 
   /**
-   * Deletes QR code from qr code collection
-   * @param hash qrcode hash that gets deleted from the QRcode collection
+   * Deletes QR code from QR code collection
+   * @param hash qrcode hash that gets deleted from the QR code collection
    */
   private void deleteQRCodeFromCollection( String hash) {
     FirebaseFirestore.getInstance()
@@ -193,7 +193,7 @@ public class QRCodeFragment extends DialogFragment {
   }
 
   /**
-   * Deletes scanned QRcode From the player's account
+   * Deletes scanned QR code From the player's account
    * @param hash qrcode hash that gets deleted from player's account
    */
   private void deleteQRCodeFromPlayerAccount( String hash) {
@@ -237,23 +237,37 @@ public class QRCodeFragment extends DialogFragment {
 
   /**
    * Updates the QR code document in database with players who have scanned or removed a particular qr code
+   * gets the qr code document if it exits and updates its players, logs a message if document doesn't exist
    * @param hash qrcode hash that has been scanned
    * @param playerId playerID of a player that has scanned/removed a particular qr code
    */
   private void updateQRCodeDocument(String hash, String playerId){
-    // update the "players" field in the QR code document
     FirebaseFirestore.getInstance()
             .collection("qrcodes")
             .document(hash)
-            .update("players", FieldValue.arrayUnion(playerId))
-            .addOnSuccessListener(aVoid -> {
-              Log.d(TAG, "Player updated in  QR code document.");
+            .get()
+            .addOnSuccessListener(documentSnapshot -> {
+              if (documentSnapshot.exists()) {
+                // Update the document
+                FirebaseFirestore.getInstance()
+                        .collection("qrcodes")
+                        .document(hash)
+                        .update("players", FieldValue.arrayUnion(playerId))
+                        .addOnSuccessListener(aVoid -> {
+                          Log.d(TAG, "Player updated in QR code document.");
+                        })
+                        .addOnFailureListener(e -> {
+                          Log.w(TAG, "Error updating QR code document", e);
+                          Toast.makeText(getContext(), "Error updating QR code document", Toast.LENGTH_SHORT).show();
+                        });
+              } else {
+                Log.d(TAG, "QR code document does not exist.");
+              }
             })
             .addOnFailureListener(e -> {
-              Log.w(TAG, "Error updating QR code document", e);
-              Toast.makeText(getContext(), "Error updating QR code document", Toast.LENGTH_SHORT).show();
+              Log.w(TAG, "Error getting QR code document", e);
+              Toast.makeText(getContext(), "Error getting QR code document", Toast.LENGTH_SHORT).show();
             });
-
   }
 
 
