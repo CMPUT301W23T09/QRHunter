@@ -82,7 +82,7 @@ public class ScannerController {
                         pastHash = currentHash;
                         if (qrCodeFragment != null) qrCodeFragment.dismissNow();
                         QRCode qrCode = new QRCode(pastHash);
-                        qrCodeFragment = QRCodeFragment.newInstance(qrCode, activePlayer, false);
+                        qrCodeFragment = QRCodeFragment.newInstance(qrCode, activePlayer);
                         fragment.getGameController().setPopup(qrCodeFragment);
                       }
                     }

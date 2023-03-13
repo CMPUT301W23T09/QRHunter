@@ -62,7 +62,7 @@ public class TestQRCodeFragment {
             "001", mockPlayerUUID, "johndoe42", "7801234567", "doe@ualberta.ca", new ArrayList<>());
 
     qrCode = new QRCode("test-hash123");
-    qrCodeFragment = QRCodeFragment.newInstance(qrCode, mockPlayer, true);
+    qrCodeFragment = QRCodeFragment.newInstance(qrCode, mockPlayer);
     activityScenarioRule
         .getScenario()
         .onActivity(
