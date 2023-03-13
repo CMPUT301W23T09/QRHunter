@@ -13,9 +13,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -91,9 +90,9 @@ public class QRCodeDatabase {
    * @param hashes the hashes
    * @param callback callback to call on query completion
    */
-  public void getQRCodeHashes(Set<String> hashes, DatabaseConsumer<Set<QRCode>> callback) {
+  public void getQRCodeHashes(List<String> hashes, DatabaseConsumer<List<QRCode>> callback) {
     if (hashes.size() == 0) {
-      callback.accept(new DatabaseQueryResults<>(new HashSet<>()));
+      callback.accept(new DatabaseQueryResults<>(new ArrayList<>()));
       return;
     }
 
@@ -110,10 +109,10 @@ public class QRCodeDatabase {
 
               // Return found qrcodes if any.
               if (task.getResult() != null) {
-                Set<QRCode> qrCodes =
+                List<QRCode> qrCodes =
                     task.getResult().getDocuments().stream()
                         .map(this::snapshotToQRCode)
-                        .collect(Collectors.toSet());
+                        .collect(Collectors.toList());
 
                 callback.accept(new DatabaseQueryResults<>(qrCodes));
               } else {
@@ -128,7 +127,7 @@ public class QRCodeDatabase {
    *
    * @param callback callback to call with the qr codes.
    */
-  public void getAllQRCodes(DatabaseConsumer<Set<QRCode>> callback) {
+  public void getAllQRCodes(DatabaseConsumer<List<QRCode>> callback) {
     collection
         .get()
         .addOnCompleteListener(
@@ -139,7 +138,7 @@ public class QRCodeDatabase {
               }
 
               // Convert all snapshots to QRCodes.
-              Set<QRCode> qrCodes = new HashSet<>();
+              List<QRCode> qrCodes = new ArrayList<>();
               for (QueryDocumentSnapshot snapshot : task.getResult()) {
                 qrCodes.add(snapshotToQRCode(snapshot));
               }
@@ -190,7 +189,7 @@ public class QRCodeDatabase {
             player.getDeviceId(),
             results -> {
               if (results.isSuccessful()) {
-                Set<String> scannedQRCodeList = results.getData().getQRCodeHashes();
+                List<String> scannedQRCodeList = results.getData().getQRCodeHashes();
                 if (scannedQRCodeList != null && scannedQRCodeList.contains(qrCode.getHash()))
                   callback.accept(new DatabaseQueryResults<>(true));
                 else callback.accept(new DatabaseQueryResults<>(false));
@@ -236,7 +235,7 @@ public class QRCodeDatabase {
   public void addPlayerToQR(Player player, QRCode qrCode) {
     // Adds QRCode's hash to player's collection of QRCodes
     if (player.getQRCodeHashes() == null) { // Player hasn't scanned any codes yet
-      player.setQRCodeHashes(new HashSet<>());
+      player.setQRCodeHashes(new ArrayList<>());
     }
     player.getQRCodeHashes().add(qrCode.getHash());
     PlayerDatabase.getInstance()
