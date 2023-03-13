@@ -56,7 +56,7 @@ public class TestLandingActivity {
   /** When registering, the username must match the validation rules. 1-20 characters */
   @Test
   public void testUsernameValidation() {
-    String invalidUsername = "111111111111111111111111111111111111111111111111";
+    String invalidUsername = "";
     String validPhoneNo = "123-456-7890";
     String validEmail = "example@example.com";
 
