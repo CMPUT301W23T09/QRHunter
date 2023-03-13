@@ -4,13 +4,10 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 
 import android.Manifest;
 import android.content.Intent;
-import android.widget.EditText;
-
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
@@ -22,16 +19,13 @@ import com.cmput301w23t09.qrhunter.database.DatabaseQueryResults;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
-import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.robotium.solo.Solo;
-
 import java.util.ArrayList;
 import java.util.UUID;
 import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Mock;
 
 /** Test classes for profile activity */
 public class TestProfileFragment {
@@ -58,17 +52,27 @@ public class TestProfileFragment {
     // create a mock player
     mockPlayerID = "001";
     mockUUID = UUID.randomUUID();
-    mockPlayer = new Player(mockPlayerID, mockUUID, "Irene", "5873571506", "isun@ualberta.ca", new ArrayList<String>());
+    mockPlayer =
+        new Player(
+            mockPlayerID,
+            mockUUID,
+            "Irene",
+            "5873571506",
+            "isun@ualberta.ca",
+            new ArrayList<String>());
     // create mock qr codes
     mockQRCodes = new ArrayList<>();
 
     // Mock PlayerDatabase
     PlayerDatabase mockPlayerDatabase = mock(PlayerDatabase.class);
-    doAnswer(invocation -> {
-      DatabaseConsumer<Player> callback = invocation.getArgument(1);
-      callback.accept(new DatabaseQueryResults<>(mockPlayer));
-      return null;
-    }).when(mockPlayerDatabase).getPlayerByDeviceId(any(UUID.class), any(DatabaseConsumer.class));
+    doAnswer(
+            invocation -> {
+              DatabaseConsumer<Player> callback = invocation.getArgument(1);
+              callback.accept(new DatabaseQueryResults<>(mockPlayer));
+              return null;
+            })
+        .when(mockPlayerDatabase)
+        .getPlayerByDeviceId(any(UUID.class), any(DatabaseConsumer.class));
     PlayerDatabase.mockInstance(mockPlayerDatabase);
 
     // get solo
@@ -117,9 +121,7 @@ public class TestProfileFragment {
     TestCase.assertTrue(solo.searchText(mockPlayer.getUsername()));
   }
 
-  /**
-   * Checks if the fragment is properly changed when the settings button is clicked
-   */
+  /** Checks if the fragment is properly changed when the settings button is clicked */
   @Test
   public void testSettingsButton() {
     // click the settings button
@@ -129,9 +131,7 @@ public class TestProfileFragment {
     assertTrue(gc.getBody() instanceof ProfileSettingsFragment);
   }
 
-  /**
-   * Checks if the player info is properly displayed in the settings
-   */
+  /** Checks if the player info is properly displayed in the settings */
   @Test
   public void testSettingsView() {
     // click the settings button
@@ -141,9 +141,7 @@ public class TestProfileFragment {
     assertTrue(solo.searchText(mockPlayer.getEmail()));
   }
 
-  /**
-   * Checks if the save changes button in the settings works
-   */
+  /** Checks if the save changes button in the settings works */
   @Test
   public void testSaveChangesBtn() {
     /*// click the settings button
