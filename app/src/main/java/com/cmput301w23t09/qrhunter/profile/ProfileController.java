@@ -140,11 +140,11 @@ public class ProfileController {
                       }
                       // update qr code statistics
                       totalPoints.setText(
-                          fragment.getString(R.string.total_points_txt, getTotalScore()));
+                          gameController.getActivity().getString(R.string.total_points_txt, getTotalScore()));
                       totalCodes.setText(
-                          fragment.getString(R.string.total_codes_txt, qrCodes.size()));
+                              gameController.getActivity().getString(R.string.total_codes_txt, qrCodes.size()));
                       topCodeScore.setText(
-                          fragment.getString(R.string.top_code_txt, getTopScore()));
+                              gameController.getActivity().getString(R.string.top_code_txt, getTopScore()));
                       // sort codes and update qr code list view
                       updateQRListSort(orderSpinner);
                     }
@@ -270,7 +270,7 @@ public class ProfileController {
    * @param msg The message to display
    */
   private void showMsg(String msg) {
-    Toast.makeText(fragment.getActivity(), msg, Toast.LENGTH_SHORT).show();
+    Toast.makeText(gameController.getActivity(), msg, Toast.LENGTH_SHORT).show();
   }
 
   /**
@@ -332,7 +332,7 @@ public class ProfileController {
    */
   private void displayHighestQRScoreToast(float percentile) {
     int duration = Toast.LENGTH_SHORT;
-    Context context = fragment.getActivity();
+    Context context = gameController.getActivity();
     String formattedPercentile = String.format("%.2f", 100.0 - percentile);
     String message =
         String.format(
@@ -340,20 +340,5 @@ public class ProfileController {
             formattedPercentile);
     Toast toast = Toast.makeText(context, message, duration);
     toast.show();
-  }
-
-  /** Set the qr codes of the profile, for UI testing only */
-  public void setQRCodes(
-      ArrayList<QRCode> qrCodes,
-      Spinner orderSpinner,
-      TextView totalPoints,
-      TextView totalCodes,
-      TextView topCodeScore) {
-    this.qrCodes = qrCodes;
-    // update qr code statistics
-    totalPoints.setText(fragment.getString(R.string.total_points_txt, getTotalScore()));
-    totalCodes.setText(fragment.getString(R.string.total_codes_txt, qrCodes.size()));
-    topCodeScore.setText(fragment.getString(R.string.top_code_txt, getTopScore()));
-    updateQRListSort(orderSpinner);
   }
 }
