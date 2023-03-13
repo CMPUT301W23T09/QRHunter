@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -180,34 +180,48 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#calculateRankOfHighestQRScore()">calculateRankOfHighestQRScore</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Calculates the percentile rank of the user's top QR code by score relative to all QR codes</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>long</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTopScore()">getTopScore</a></span>()</code></th>
 <td class="colLast">
 <div class="block">This computes the top score of the qr codes</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTotalScore()">getTotalScore</a></span>()</code></th>
 <td class="colLast">
 <div class="block">This computes the sum of code scores</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#handleContactButtonClick()">handleContactButtonClick</a></span>()</code></th>
 <td class="colLast">
 <div class="block">This handles the action to take when the contact info button is clicked.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>android.widget.AdapterView.OnItemClickListener</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#handleQRSelect()">handleQRSelect</a></span>()</code></th>
+<td class="colLast">
+<div class="block">This is the onclicklistener for qr codes displayed in the profile</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>android.widget.AdapterView.OnItemSelectedListener</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#handleSpinnerSelect(android.widget.Spinner)">handleSpinnerSelect</a></span>&#8203;(android.widget.Spinner&nbsp;orderSpinner)</code></th>
 <td class="colLast">
 <div class="block">This creates a custom OnItemSelectedListener for the given spinner</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setUpQRList(android.widget.GridView,android.widget.TextView,android.widget.TextView,android.widget.TextView,android.widget.Spinner)">setUpQRList</a></span>&#8203;(android.widget.GridView&nbsp;qrCodeList,
            android.widget.TextView&nbsp;totalPoints,
@@ -218,7 +232,7 @@ extends java.lang.Object</pre>
 <div class="block">Sets up the list view of qr codes</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setUpUsername(android.widget.TextView)">setUpUsername</a></span>&#8203;(android.widget.TextView&nbsp;usernameView)</code></th>
 <td class="colLast">
@@ -340,6 +354,20 @@ extends java.lang.Object</pre>
  contact information or rendering the edit details fragment.</div>
 </li>
 </ul>
+<a id="handleQRSelect()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>handleQRSelect</h4>
+<pre class="methodSignature">public&nbsp;android.widget.AdapterView.OnItemClickListener&nbsp;handleQRSelect()</pre>
+<div class="block">This is the onclicklistener for qr codes displayed in the profile</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Return the onclicklistener</dd>
+</dl>
+</li>
+</ul>
 <a id="getTotalScore()">
 <!--   -->
 </a>
@@ -357,7 +385,7 @@ extends java.lang.Object</pre>
 <a id="getTopScore()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getTopScore</h4>
 <pre class="methodSignature">public&nbsp;long&nbsp;getTopScore()</pre>
@@ -366,6 +394,16 @@ extends java.lang.Object</pre>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The top score</dd>
 </dl>
+</li>
+</ul>
+<a id="calculateRankOfHighestQRScore()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>calculateRankOfHighestQRScore</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;calculateRankOfHighestQRScore()</pre>
+<div class="block">Calculates the percentile rank of the user's top QR code by score relative to all QR codes</div>
 </li>
 </ul>
 </li>

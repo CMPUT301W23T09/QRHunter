@@ -230,9 +230,9 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mockInstance(com.cmput301w23t09.qrhunter.player.PlayerDatabase)">mockInstance</a></span>&#8203;(<a href="PlayerDatabase.html" title="class in com.cmput301w23t09.qrhunter.player">PlayerDatabase</a>&nbsp;mockInstance)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mockInstance(com.cmput301w23t09.qrhunter.player.PlayerDatabase)">mockInstance</a></span>&#8203;(<a href="PlayerDatabase.html" title="class in com.cmput301w23t09.qrhunter.player">PlayerDatabase</a>&nbsp;mockPlayerDB)</code></th>
 <td class="colLast">
-<div class="block">Manually set PlayerDatabase to some mocked instance for testing</div>
+<div class="block">Sets instance to a mocked PlayerDatabase for testing purposes.</div>
 </td>
 </tr>
 <tr id="i8" class="altColor">
@@ -395,24 +395,10 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a id="mockInstance(com.cmput301w23t09.qrhunter.player.PlayerDatabase)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>mockInstance</h4>
-<pre class="methodSignature">public static&nbsp;void&nbsp;mockInstance&#8203;(<a href="PlayerDatabase.html" title="class in com.cmput301w23t09.qrhunter.player">PlayerDatabase</a>&nbsp;mockInstance)</pre>
-<div class="block">Manually set PlayerDatabase to some mocked instance for testing</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>mockInstance</code> - The mocked PlayerDatabase</dd>
-</dl>
-</li>
-</ul>
 <a id="getInstance()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getInstance</h4>
 <pre class="methodSignature">public static&nbsp;<a href="PlayerDatabase.html" title="class in com.cmput301w23t09.qrhunter.player">PlayerDatabase</a>&nbsp;getInstance()</pre>
@@ -420,6 +406,20 @@ extends java.lang.Object</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>PlayerDatabase</dd>
+</dl>
+</li>
+</ul>
+<a id="mockInstance(com.cmput301w23t09.qrhunter.player.PlayerDatabase)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>mockInstance</h4>
+<pre class="methodSignature">public static&nbsp;void&nbsp;mockInstance&#8203;(<a href="PlayerDatabase.html" title="class in com.cmput301w23t09.qrhunter.player">PlayerDatabase</a>&nbsp;mockPlayerDB)</pre>
+<div class="block">Sets instance to a mocked PlayerDatabase for testing purposes.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>mockPlayerDB</code> - The mocked PlayerDatabase to use.</dd>
 </dl>
 </li>
 </ul>
