@@ -4,7 +4,6 @@ import android.location.Location;
 import android.media.Image;
 import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.photo.Photo;
-import com.cmput301w23t09.qrhunter.player.Player;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -24,8 +23,8 @@ public class QRCode implements Serializable {
   private ArrayList<Photo> photos;
   /** This is a list of comments on the QR code */
   private ArrayList<Comment> comments;
-  /** This is a list of players who have scanned this QR code */
-  private ArrayList<Player> players;
+  /** This is a list of players (UUID) who have scanned this QR code */
+  private ArrayList<String> players;
 
   /**
    * Initializes a *newly-scanned* QRCode using only its hash value
@@ -57,7 +56,7 @@ public class QRCode implements Serializable {
    * @param loc This is the location of the QR code
    * @param photos This is the list of photos of the QR code
    * @param comments This is the list of comments on the QR code
-   * @param players This is the list of players that have scanned the QR code
+   * @param players This is the list of players (documentIDs) that have scanned the QR code
    */
   public QRCode(
       String hash,
@@ -67,7 +66,7 @@ public class QRCode implements Serializable {
       Location loc,
       ArrayList<Photo> photos,
       ArrayList<Comment> comments,
-      ArrayList<Player> players) {
+      ArrayList<String> players) {
     this.hash = hash;
     this.name = name;
     this.visualRepresentation = visualRepresentation;
@@ -137,8 +136,12 @@ public class QRCode implements Serializable {
    *
    * @return Return the player who have scanned the QR code
    */
-  public ArrayList<Player> getPlayers() {
+  public ArrayList<String> getPlayers() {
     return players;
+  }
+
+  public void setPlayers(ArrayList<String> players) {
+    this.players = players;
   }
 
   /**
@@ -200,7 +203,7 @@ public class QRCode implements Serializable {
    *
    * @param player This is the player to add
    */
-  public void addPlayer(Player player) {
+  public void addPlayer(String player) {
     this.players.add(player);
   }
 
@@ -209,7 +212,7 @@ public class QRCode implements Serializable {
    *
    * @param player This is the player to delete
    */
-  public void deletePlayer(Player player) {
+  public void deletePlayer(String player) {
     this.players.remove(player);
   }
 }

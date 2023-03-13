@@ -2,6 +2,8 @@ package com.cmput301w23t09.qrhunter.player;
 
 import com.cmput301w23t09.qrhunter.util.ValidationUtils;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Player implements Serializable {
@@ -15,6 +17,8 @@ public class Player implements Serializable {
   private String phoneNo;
   /** Email of the player */
   private String email;
+  /** Array of QR code hashes associated with player */
+  private ArrayList<String> scannedQRHashes = new ArrayList<>();
 
   /**
    * This initializes a Player with the deviceId, username, phoneNo, and email.
@@ -40,13 +44,21 @@ public class Player implements Serializable {
    * @param username username of the player
    * @param phoneNo phone number of the player
    * @param email email of the player
+   * @param scannedQRHashes qrcode hashes scanned by player
    */
-  public Player(String documentId, UUID deviceId, String username, String phoneNo, String email) {
+  public Player(
+      String documentId,
+      UUID deviceId,
+      String username,
+      String phoneNo,
+      String email,
+      ArrayList<String> scannedQRHashes) {
     this.documentId = documentId;
     this.deviceId = deviceId;
     this.username = username;
     this.phoneNo = phoneNo;
     this.email = email;
+    this.scannedQRHashes = scannedQRHashes;
   }
 
   /**
@@ -109,7 +121,7 @@ public class Player implements Serializable {
   }
 
   /**
-   * Get the pohne number associated with this player
+   * Get the phone number associated with this player
    *
    * @return phone number
    */
@@ -151,5 +163,23 @@ public class Player implements Serializable {
     }
 
     this.email = email;
+  }
+
+  /**
+   * returns a list of QR code hashes that have been scanned by player
+   *
+   * @return a list of qr code hashes scanned by player
+   */
+  public ArrayList<String> getQRCodeHashes() {
+    return scannedQRHashes;
+  }
+
+  /**
+   * Sets the list of QR code hashes that have been scanned by player
+   *
+   * @param scannedQRHashes a list of scanned QR code Hashes associated with player
+   */
+  public void setQRCodeHashes(List<String> scannedQRHashes) {
+    this.scannedQRHashes = new ArrayList<>(scannedQRHashes);
   }
 }

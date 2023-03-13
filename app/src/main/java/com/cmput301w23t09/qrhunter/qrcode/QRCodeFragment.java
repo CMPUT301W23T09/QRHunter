@@ -3,12 +3,14 @@ package com.cmput301w23t09.qrhunter.qrcode;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -18,6 +20,7 @@ import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoController;
 import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoFragment;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.Serializable;
 
 public class QRCodeFragment extends DialogFragment implements Serializable {
@@ -31,12 +34,16 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   private LocationHandler locationHandler;
   private LocationPhotoFragment locationPhotoFragment;
   private Player activePlayer;
+  private FloatingActionButton addButton;
+  private FloatingActionButton deleteButton;
+  private QRCodeDatabase qrCodeDatabase;
 
   /**
    * Creates a new QRCodeFragment to display a specific QR Code
    *
    * @param qrCode The QR code to view
-   * @return
+   * @param activePlayer The currently active/logged-in player
+   * @return QRCodeFragment
    */
   public static QRCodeFragment newInstance(QRCode qrCode, Player activePlayer) {
     Bundle args = new Bundle();
@@ -53,6 +60,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     qrCode = (QRCode) getArguments().getSerializable("qrcode");
     activePlayer = (Player) getArguments().getSerializable("activePlayer");
     locationHandler = new LocationHandler(this);
+    qrCodeDatabase = QRCodeDatabase.getInstance();
     setupViews(view);
     updateLocationPhoto();
     return createAlertDialog(view);
@@ -86,6 +94,28 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
           } else {
             qrCode.setLoc(null);
           }
+        });
+
+    addButton = view.findViewById(R.id.addButton);
+    deleteButton = view.findViewById(R.id.deleteButton);
+
+    updateAddDeleteButton();
+
+    // implementing the add button
+    addButton.setOnClickListener(
+        v -> {
+          qrCodeDatabase.addQRCode(qrCode);
+          qrCodeDatabase.addPlayerToQR(activePlayer, qrCode);
+          addButton.setVisibility(View.GONE);
+          deleteButton.setVisibility(View.VISIBLE);
+        });
+
+    // implementing the delete button
+    deleteButton.setOnClickListener(
+        v -> {
+          qrCodeDatabase.removeQRCodeFromPlayer(activePlayer, qrCode);
+          addButton.setVisibility(View.VISIBLE);
+          deleteButton.setVisibility(View.GONE);
         });
   }
 
@@ -135,6 +165,38 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     return builder.setView(view).setPositiveButton("Close", null).create();
   }
 
+  /**
+   * Display the add (+) QRCode button if the player does not have the QRCode to their name, else
+   * display the remove (x) QRCode button if the player has it.
+   */
+  private void updateAddDeleteButton() {
+    qrCodeDatabase.playerHasQRCode(
+        activePlayer,
+        qrCode,
+        results -> {
+          if (results.isSuccessful()) {
+            if (results.getData()) {
+              // QR code hash is already added to the player's account
+              // Thus, display delete button
+              addButton.setVisibility(View.GONE);
+              deleteButton.setVisibility(View.VISIBLE);
+            } else {
+              // QR code hash is not yet added to the player's account
+              // Thus, display add button
+              addButton.setVisibility(View.VISIBLE);
+              deleteButton.setVisibility(View.GONE);
+            }
+          } else {
+            Log.w("QRCodeFragment", "Error getting player by device ID.", results.getException());
+            Toast.makeText(getContext(), "Error getting player by device ID.", Toast.LENGTH_SHORT)
+                .show();
+          }
+        });
+  }
+
+  /**
+   * @return The location photo fragment
+   */
   public LocationPhotoFragment getLocationPhotoFragment() {
     return locationPhotoFragment;
   }

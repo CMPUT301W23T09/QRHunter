@@ -91,6 +91,7 @@ dependencies {
 
     // Mockito to help with mocking in tests
     testImplementation "org.mockito:mockito-inline:3.+"
+    androidTestImplementation "org.mockito:mockito-android:3.+"
 
     // CameraX Library
     def camerax_version = "1.1.0-beta01"
