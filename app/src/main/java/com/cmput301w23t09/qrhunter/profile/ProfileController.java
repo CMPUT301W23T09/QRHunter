@@ -281,7 +281,6 @@ public class ProfileController {
 
     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
       String qrHash = documentSnapshot.getString("hash");
-//      int score = documentSnapshot.getLong("score").intValue();
 
       if (topQR != null && qrHash.equals(topQR.getHash())) {
         return position;
