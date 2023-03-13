@@ -41,6 +41,7 @@ public class ProfileController {
   /** This is the collection containing the qr code data */
   private final CollectionReference qrcodeCollection;
 
+  /** Device UUID of the profile */
   private final UUID deviceUUID;
 
   /**
@@ -48,6 +49,7 @@ public class ProfileController {
    *
    * @param fragment This is the fragment the controller manages
    * @param gameController The game controller that controls the global view
+   * @param deviceUUID Device UUID of the profile.
    */
   public ProfileController(
       ProfileFragment fragment, GameController gameController, UUID deviceUUID) {
@@ -129,7 +131,7 @@ public class ProfileController {
                         assert players != null;
                         if (players.contains(playerID)) {
                           String hash = doc.getId();
-                          Integer score = (int) (long) doc.get("score");
+                          long score = (long) doc.get("score");
                           qrCodes.add(new QRCode(hash, null, null, score, null, null, null, null));
                         }
                       }
@@ -233,7 +235,7 @@ public class ProfileController {
    *
    * @return The top score
    */
-  public int getTopScore() {
+  public long getTopScore() {
     qrCodes.sort(new ScoreComparator().reversed());
     if (qrCodes.size() > 0) {
       QRCode topQR = qrCodes.get(0);

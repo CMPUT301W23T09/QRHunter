@@ -5,6 +5,7 @@ import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.util.DeviceUtils;
 import com.cmput301w23t09.qrhunter.util.ValidationUtils;
+import java.util.HashSet;
 import java.util.UUID;
 
 /**
@@ -81,7 +82,7 @@ public class LandingController {
    */
   private void onSuccessfulRegistrationDetails(String username, String phoneNo, String email) {
     UUID deviceUUID = DeviceUtils.getDeviceUUID(activity);
-    Player player = new Player(deviceUUID, username, phoneNo, email);
+    Player player = new Player(deviceUUID, username, phoneNo, email, new HashSet<>());
 
     PlayerDatabase.getInstance()
         .add(

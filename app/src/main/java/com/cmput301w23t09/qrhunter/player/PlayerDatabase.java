@@ -8,7 +8,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /** Manages all Player database operations. */
@@ -219,6 +221,31 @@ public class PlayerDatabase {
   }
 
   /**
+   * Retrieve all players from the database
+   *
+   * @param callback callback to call once the operation has finished
+   */
+  public void getAllPlayers(DatabaseConsumer<Set<Player>> callback) {
+    collection
+        .get()
+        .addOnCompleteListener(
+            task -> {
+              if (!task.isSuccessful()) {
+                callback.accept(new DatabaseQueryResults<>(null, task.getException()));
+                return;
+              }
+
+              // Convert all snapshots to Players
+              Set<Player> players = new HashSet<>();
+              for (QueryDocumentSnapshot snapshot : task.getResult()) {
+                players.add(snapshotToPlayer(snapshot));
+              }
+
+              callback.accept(new DatabaseQueryResults<>(players));
+            });
+  }
+
+  /**
    * Converts a database snapshot to its Player object equivalent.
    *
    * @param snapshot database snapshot
@@ -232,7 +259,8 @@ public class PlayerDatabase {
     String email = snapshot.getString("email");
     ArrayList<String> qrCodeHashes = (ArrayList<String>) snapshot.get("qrCodeHashes");
 
-    return new Player(documentId, deviceUUID, username, phoneNo, email, qrCodeHashes);
+    return new Player(
+        documentId, deviceUUID, username, phoneNo, email, new HashSet<>(qrCodeHashes));
   }
 
   /**
