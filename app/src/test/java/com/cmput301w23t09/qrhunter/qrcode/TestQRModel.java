@@ -13,7 +13,7 @@ public class TestQRModel {
   }
   // create a mock qr code
   private QRCode mockCode() {
-    return new QRCode(mockHash());
+    return new QRCode(mockHash(), "mock", null, 10, null, null, null, null);
   }
   // create a mock qr code list
   private ArrayList<QRCode> mockList() {

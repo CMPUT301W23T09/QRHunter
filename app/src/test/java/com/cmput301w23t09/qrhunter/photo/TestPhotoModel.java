@@ -5,9 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import android.graphics.Bitmap;
 import com.cmput301w23t09.qrhunter.player.Player;
-
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -19,7 +17,8 @@ public class TestPhotoModel {
   // create a mock player
   private Player mockPlayer() {
     UUID mockUUID = UUID.randomUUID();
-    return new Player(mockUUID, "Username", "587-998-1206", "mock-email@gmail.com", new ArrayList());
+    return new Player(
+        mockUUID, "Username", "587-998-1206", "mock-email@gmail.com", new ArrayList());
   }
 
   // test getting the bitmap image of a photo
@@ -32,7 +31,12 @@ public class TestPhotoModel {
   @Test
   public void testGetPlayer() {
     Player player =
-        new Player(UUID.randomUUID(), "Username", "587-998-1206", "mock-email@gmail.com", new ArrayList<>());
+        new Player(
+            UUID.randomUUID(),
+            "Username",
+            "587-998-1206",
+            "mock-email@gmail.com",
+            new ArrayList<>());
     Photo photo = new Photo(mockBitmap, player);
     assertEquals(photo.getPlayer(), player);
   }

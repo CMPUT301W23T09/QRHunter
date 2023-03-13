@@ -140,11 +140,17 @@ public class ProfileController {
                       }
                       // update qr code statistics
                       totalPoints.setText(
-                          gameController.getActivity().getString(R.string.total_points_txt, getTotalScore()));
+                          gameController
+                              .getActivity()
+                              .getString(R.string.total_points_txt, getTotalScore()));
                       totalCodes.setText(
-                              gameController.getActivity().getString(R.string.total_codes_txt, qrCodes.size()));
+                          gameController
+                              .getActivity()
+                              .getString(R.string.total_codes_txt, qrCodes.size()));
                       topCodeScore.setText(
-                              gameController.getActivity().getString(R.string.top_code_txt, getTopScore()));
+                          gameController
+                              .getActivity()
+                              .getString(R.string.top_code_txt, getTopScore()));
                       // sort codes and update qr code list view
                       updateQRListSort(orderSpinner);
                     }
