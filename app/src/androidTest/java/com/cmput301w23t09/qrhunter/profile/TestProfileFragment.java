@@ -3,10 +3,8 @@ package com.cmput301w23t09.qrhunter.profile;
 import static org.junit.Assert.assertTrue;
 
 import android.content.Intent;
-
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
 import com.cmput301w23t09.qrhunter.GameActivity;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
@@ -21,7 +19,8 @@ public class TestProfileFragment {
   private Solo solo;
 
   @Rule
-  public ActivityScenarioRule<GameActivity> activityScenarioRule = new ActivityScenarioRule<>(GameActivity.class);
+  public ActivityScenarioRule<GameActivity> activityScenarioRule =
+      new ActivityScenarioRule<>(GameActivity.class);
 
   /**
    * Runs before all tests and creates solo instance
@@ -29,15 +28,16 @@ public class TestProfileFragment {
    * @throws Exception
    */
   @Before
-  public void setUp() throws Exception {;
+  public void setUp() throws Exception {
+    ;
     // get solo
     activityScenarioRule
-            .getScenario()
-            .onActivity(
-                    activity -> {
-                      activity.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
-                      solo = new Solo(InstrumentationRegistry.getInstrumentation(), activity);
-                    });
+        .getScenario()
+        .onActivity(
+            activity -> {
+              activity.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+              solo = new Solo(InstrumentationRegistry.getInstrumentation(), activity);
+            });
     // navigate to profile fragment
     solo.clickOnView(solo.getView(R.id.navigation_my_profile));
   }
@@ -59,5 +59,4 @@ public class TestProfileFragment {
     TestCase.assertTrue(solo.waitForText("Ascending", 1, 2000));
     TestCase.assertTrue(solo.waitForText("Descending", 1, 2000));
   }
-
 }
