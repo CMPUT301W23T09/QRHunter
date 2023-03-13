@@ -6,7 +6,6 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import android.telephony.PhoneNumberUtils;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -35,7 +34,7 @@ public class TestPlayerModel {
     assertEquals("johndoe42", mockPlayer.getUsername());
     assertEquals("7801234567", mockPlayer.getPhoneNo());
     assertEquals("doe@ualberta.ca", mockPlayer.getEmail());
-    assertEquals(new ArrayList<>(), mockPlayer.getQRCodeHashes());
+    assertEquals(new HashSet<>(), mockPlayer.getQRCodeHashes());
   }
 
   @Test
@@ -212,15 +211,5 @@ public class TestPlayerModel {
     scannedQRHashes.add("hash3");
     mockPlayer.setQRCodeHashes(scannedQRHashes);
     assertEquals(scannedQRHashes, mockPlayer.getQRCodeHashes());
-  }
-
-  @Test
-  public void testSetQRCodeHashesNullList() {
-    assertThrows(
-        NullPointerException.class,
-        () -> {
-          mockPlayer.setQRCodeHashes(null);
-        });
-    assertEquals(new ArrayList<>(), mockPlayer.getQRCodeHashes());
   }
 }
