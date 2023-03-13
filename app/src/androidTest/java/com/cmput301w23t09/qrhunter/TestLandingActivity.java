@@ -6,6 +6,7 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
+import android.content.Intent;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import com.cmput301w23t09.qrhunter.player.MockPlayerDatabase;
@@ -42,6 +43,7 @@ public class TestLandingActivity {
         .getScenario()
         .onActivity(
             activity -> {
+              activity.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
               solo = new Solo(InstrumentationRegistry.getInstrumentation(), activity);
             });
   }
