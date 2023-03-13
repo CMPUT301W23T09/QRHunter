@@ -30,7 +30,6 @@ import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.robotium.solo.Solo;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;

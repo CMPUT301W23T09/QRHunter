@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.leaderboard.LeaderboardFragment;
+import com.cmput301w23t09.qrhunter.map.MapFragment;
 import com.cmput301w23t09.qrhunter.profile.ProfileFragment;
 import com.cmput301w23t09.qrhunter.scanqr.ScannerFragment;
 import com.cmput301w23t09.qrhunter.util.DeviceUtils;
@@ -31,6 +32,7 @@ public class NavigationControllerAdapter implements NavigationBarView.OnItemSele
       gameController.setBody(new ProfileFragment(gameController, deviceUUID));
     } else if (selectedItemId == R.id.navigation_qr_finder) {
       // mainController.setBody(new QRFinderFragment());
+      gameController.setBody(new MapFragment(gameController));
     } else if (selectedItemId == R.id.navigation_social) {
       gameController.setBody(new LeaderboardFragment(gameController));
     } else {
