@@ -27,6 +27,7 @@ import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.robotium.solo.Solo;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.junit.Before;
@@ -67,8 +68,8 @@ public class TestQRCodeFragment {
     mockPlayerUUID = UUID.randomUUID();
     mockPlayer =
         new Player(
-            "001", mockPlayerUUID, "johndoe42", "7801234567", "doe@ualberta.ca", new ArrayList<>());
-    mockQRCollection = new ArrayList<QRCode>();
+            "001", mockPlayerUUID, "johndoe42", "7801234567", "doe@ualberta.ca", new HashSet<>());
+    mockQRCollection = new ArrayList<>();
 
     // Mock QRCodeDatabase
     QRCodeDatabase mockedQRCodeDatabase = mock(QRCodeDatabase.class);

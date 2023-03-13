@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:exported="true"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        app:srcCompat="@drawable/ic_launcher_background" />
+
+    <TextView
+        android:id="@+id/leaderboard_entry_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Text"
+        android:gravity="center_vertical"
+        android:paddingStart="10sp"
+        android:textSize="18sp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/leaderboard_entry_score"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="Score"
+        android:gravity="center_vertical"
+        android:paddingEnd="10sp"
+        android:textSize="18sp"
+        android:layout_weight="0" />
+
+</LinearLayout>
