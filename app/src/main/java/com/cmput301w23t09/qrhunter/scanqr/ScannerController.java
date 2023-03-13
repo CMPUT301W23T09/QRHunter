@@ -39,6 +39,7 @@ public class ScannerController {
    * Creates a ScannerController
    *
    * @param fragment The fragment that the ScannerController is attached to
+   * @param activePlayer The current logged in player
    */
   public ScannerController(BaseFragment fragment, Player activePlayer) {
     this.fragment = fragment;
