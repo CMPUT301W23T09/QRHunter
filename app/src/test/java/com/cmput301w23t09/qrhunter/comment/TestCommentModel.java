@@ -3,6 +3,8 @@ package com.cmput301w23t09.qrhunter.comment;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.cmput301w23t09.qrhunter.player.Player;
+
+import java.util.HashSet;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +12,7 @@ public class TestCommentModel {
   // create a mock player
   private Player mockPlayer() {
     UUID mockUUID = UUID.randomUUID();
-    return new Player(mockUUID, "Username", "587-998-1206", "mock-email@gmail.com");
+    return new Player(mockUUID, "Username", "587-998-1206", "mock-email@gmail.com", new HashSet<>());
   }
   // create a mock comment
   private Comment mockComment() {
@@ -27,7 +29,7 @@ public class TestCommentModel {
   @Test
   public void testGetPlayer() {
     Player player =
-        new Player(UUID.randomUUID(), "Username", "587-998-1206", "mock-email@gmail.com");
+        new Player(UUID.randomUUID(), "Username", "587-998-1206", "mock-email@gmail.com", new HashSet<>());
     Comment comment = new Comment("Test", player);
     assertEquals(comment.getPlayer(), player);
   }

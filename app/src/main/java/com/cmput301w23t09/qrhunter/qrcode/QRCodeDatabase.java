@@ -185,7 +185,7 @@ public class QRCodeDatabase {
             player.getDeviceId(),
             results -> {
               if (results.isSuccessful()) {
-                Set<String> scannedQRCodeList = results.getData().getQRCodeHashes();
+                ArrayList<String> scannedQRCodeList = results.getData().getQRCodeHashes();
                 if (scannedQRCodeList != null && scannedQRCodeList.contains(qrCode.getHash()))
                   callback.accept(new DatabaseQueryResults<>(true));
                 else callback.accept(new DatabaseQueryResults<>(false));
@@ -231,7 +231,7 @@ public class QRCodeDatabase {
   public void addPlayerToQR(Player player, QRCode qrCode) {
     // Adds QRCode's hash to player's collection of QRCodes
     if (player.getQRCodeHashes() == null) { // Player hasn't scanned any codes yet
-      player.setQRCodeHashes(new HashSet<>());
+      player.setQRCodeHashes(new ArrayList<>());
     }
     player.getQRCodeHashes().add(qrCode.getHash());
     PlayerDatabase.getInstance()
