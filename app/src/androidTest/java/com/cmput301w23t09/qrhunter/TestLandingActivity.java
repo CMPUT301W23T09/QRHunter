@@ -12,6 +12,7 @@ import com.cmput301w23t09.qrhunter.player.MockPlayerDatabase;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.robotium.solo.Solo;
+import java.util.HashSet;
 import java.util.UUID;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -80,7 +81,7 @@ public class TestLandingActivity {
     String validEmail = "example@example.com";
 
     database.add(
-        new Player(UUID.randomUUID(), validUsername, validPhoneNo, validEmail),
+        new Player(UUID.randomUUID(), validUsername, validPhoneNo, validEmail, new HashSet<>()),
         task -> {
           onView(withId(R.id.landing_screen_usernameTextField))
               .perform(click(), typeText(validUsername.toLowerCase()), closeSoftKeyboard());
