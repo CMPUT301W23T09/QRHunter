@@ -1,6 +1,10 @@
 package com.cmput301w23t09.qrhunter.profile;
 
+import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 
 import android.content.Intent;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -8,7 +12,10 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import com.cmput301w23t09.qrhunter.GameActivity;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
+import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.robotium.solo.Solo;
+import java.util.UUID;
 import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Rule;
@@ -29,8 +36,16 @@ public class TestProfileFragment {
    */
   @Before
   public void setUp() throws Exception {
-    ;
-    // get solo
+    // Mock PlayerDatabase
+    PlayerDatabase mockPlayerDatabase = mock(PlayerDatabase.class);
+    doNothing()
+        .when(mockPlayerDatabase)
+        .getPlayerByDeviceId(any(UUID.class), any(DatabaseConsumer.class));
+    doNothing()
+        .when(mockPlayerDatabase)
+        .getPlayerByUsername(any(String.class), any(DatabaseConsumer.class));
+    PlayerDatabase.mockInstance(mockPlayerDatabase);
+
     activityScenarioRule
         .getScenario()
         .onActivity(
@@ -40,6 +55,11 @@ public class TestProfileFragment {
             });
     // navigate to profile fragment
     solo.clickOnView(solo.getView(R.id.navigation_my_profile));
+    await()
+        .until(
+            () ->
+                ((GameActivity) solo.getCurrentActivity()).getController().getBody()
+                    instanceof ProfileFragment);
   }
 
   /** Checks if the current fragment is correct */
