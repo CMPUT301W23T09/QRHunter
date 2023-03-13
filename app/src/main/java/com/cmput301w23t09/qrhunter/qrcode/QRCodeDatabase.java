@@ -133,8 +133,10 @@ public class QRCodeDatabase {
       playerIds = new ArrayList<>();
     }
 
+    String name = (String) snapshot.get("name");
+
     Set<String> playerDocumentIds = new HashSet<>(playerIds);
-    return new QRCode(hash, null, null, score, null, null, null, playerDocumentIds);
+    return new QRCode(hash, name, null, score, null, null, null, playerDocumentIds);
   }
 
   /**
