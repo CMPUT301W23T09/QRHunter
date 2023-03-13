@@ -1,11 +1,12 @@
 package com.cmput301w23t09.qrhunter.player;
 
 import com.cmput301w23t09.qrhunter.util.ValidationUtils;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class Player {
+public class Player implements Serializable {
   /** This is the firebase document id if any is associated with this object */
   private String documentId;
   /** UUID of the device this player is associated with */

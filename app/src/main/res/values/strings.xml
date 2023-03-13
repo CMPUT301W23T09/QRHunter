@@ -27,6 +27,10 @@
     <string name="search_for_player">Search For Player</string>
     <string name="qr_code_name">SuperUniqueGeneratedQRName</string>
     <string name="placeholder_points">999 PTS</string>
+    <string name="take_location_photo">Take Location Photo</string>
+    <string name="remove_location_photo">Remove Location Photo</string>
+    <string name="location_photo_label">Location Photo</string>
+    <string name="location_request">Record QR Location</string>
     <string name="settings_title">Settings</string>
     <string name="reset">Reset</string>
     <string name="save_changes">Save Changes</string>
