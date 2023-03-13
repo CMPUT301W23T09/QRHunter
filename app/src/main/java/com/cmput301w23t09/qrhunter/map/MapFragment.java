@@ -64,8 +64,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
      * Get the best and most recent location of the device, which may be null in rare cases when a
      * location is not available.
      */
-    fusedLocationProviderClient =
-        LocationServices.getFusedLocationProviderClient(getContext());
+    fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
 
     try {
       if (locationPermissionGranted) {
@@ -80,11 +79,12 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
                   // Set the map's camera position to the current location of the device.
                   lastKnownLocation = task.getResult();
                   if (lastKnownLocation != null) {
-                    currentLocation = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+                    currentLocation =
+                        new LatLng(
+                            lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
                     map.animateCamera(
                         CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM));
                     map.addMarker(new MarkerOptions().position(currentLocation).title("YOU"));
-
                   }
                 } else {
                   // Sets the map camera to the a set default location if lastKnownLocation is null
