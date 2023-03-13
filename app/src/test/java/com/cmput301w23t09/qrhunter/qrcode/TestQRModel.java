@@ -27,12 +27,12 @@ public class TestQRModel {
 
   @Test
   public void testGetName() {
-    assertEquals(mockCode().getName(), "");
+    assertEquals(mockCode().getName(), "mock");
   }
 
   @Test
   public void testGetScore() {
-    assertEquals((int) mockCode().getScore(), 0);
+    assertEquals((int) mockCode().getScore(), 10);
   }
 
   @Test
