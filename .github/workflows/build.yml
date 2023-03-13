@@ -23,5 +23,9 @@ jobs:
         name: Setup Java JDK 11
       - name: Give gradlew Execute Permission
         run: chmod +x gradlew
+      - name: Create local.properties
+        env:
+          MAPS_API_KEY: ${{secrets.MAPS_API_KEY}}
+        run: echo "MAPS_API_KEY=$MAPS_API_KEY" >> local.properties
       - name: Build App
         run: ./gradlew build --parallel -x test
