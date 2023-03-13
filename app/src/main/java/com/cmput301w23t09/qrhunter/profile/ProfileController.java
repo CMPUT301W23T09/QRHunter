@@ -276,7 +276,7 @@ public class ProfileController {
    * @return -1 if the user's top QR code was not found in the collection
    * @return The user's top QR position relative to all the other QR code positions
    */
-  private int getTopQRPosition(QuerySnapshot queryDocumentSnapshots, QRCodeTest topQR) {
+  private int getTopQRPosition(QuerySnapshot queryDocumentSnapshots, QRCode topQR) {
     int position = 1;
 
     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
@@ -297,15 +297,13 @@ public class ProfileController {
    * Calculates the percentile rank of the user's top QR code by score relative to all QR codes
    */
   public void calculateRankOfHighestQRScore() {
-    if (qrCodes.size() < 0) {
+    if (qrCodes.size() <= 0) {
       return;
     }
 
     qrCodes.sort(new ScoreComparator().reversed());
-//    QRCode topQR = qrCodes.get(0);
-    QRCodeTest topQR = new QRCodeTest("3e744b9dc39389baf0c5a0660589b8402f3dbb49b89b3e75f2c9355852a3c677", 40);
-    CollectionReference qrcodeCollectionTest = db.collection("qrcodestest");
-    Query query = qrcodeCollectionTest.orderBy("score", Query.Direction.ASCENDING);
+    QRCode topQR = qrCodes.get(0);
+    Query query = qrcodeCollection.orderBy("score", Query.Direction.ASCENDING);
     query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
       @Override
       public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
