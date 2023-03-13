@@ -7,7 +7,7 @@ import com.cmput301w23t09.qrhunter.photo.Photo;
 import com.cmput301w23t09.qrhunter.player.Player;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.List;
 
 /** This class defines a QR code */
 public class QRCode implements Serializable {
@@ -18,7 +18,7 @@ public class QRCode implements Serializable {
   /** This is the visual representation of the QR code */
   private Image visualRepresentation; // type subject to change
   /** This is the score of the QR code */
-  private Long score;
+  private long score;
   /** This is the location of the QR code */
   private Location loc;
   /** This is a list of photos that have been taken of the QR code */
@@ -26,7 +26,7 @@ public class QRCode implements Serializable {
   /** This is a list of comments on the QR code */
   private ArrayList<Comment> comments;
   /** This is a list of players who have scanned this QR code */
-  private Set<String> playerDocumentIds;
+  private List<String> players;
 
   /**
    * Initializes a *newly-scanned* QRCode using only its hash value
@@ -68,7 +68,7 @@ public class QRCode implements Serializable {
       Location loc,
       ArrayList<Photo> photos,
       ArrayList<Comment> comments,
-      Set<String> playerDocumentIds) {
+      List<String> playerDocumentIds) {
     this.hash = hash;
     this.name = name;
     this.visualRepresentation = visualRepresentation;
@@ -76,7 +76,7 @@ public class QRCode implements Serializable {
     this.loc = loc;
     this.photos = photos;
     this.comments = comments;
-    this.playerDocumentIds = playerDocumentIds;
+    this.players = playerDocumentIds;
   }
 
   /**
@@ -138,8 +138,8 @@ public class QRCode implements Serializable {
    *
    * @return Return the player who have scanned the QR code
    */
-  public Set<String> getPlayerIdsWhoScanned() {
-    return playerDocumentIds;
+  public List<String> getPlayers() {
+    return players;
   }
 
   /**
@@ -202,7 +202,7 @@ public class QRCode implements Serializable {
    * @param player This is the player to add
    */
   public void addPlayer(Player player) {
-    this.playerDocumentIds.add(player.getDocumentId());
+    this.players.add(player.getDocumentId());
   }
 
   /**
@@ -211,6 +211,6 @@ public class QRCode implements Serializable {
    * @param player This is the player to delete
    */
   public void deletePlayer(Player player) {
-    this.playerDocumentIds.remove(player.getDocumentId());
+    this.players.remove(player.getDocumentId());
   }
 }
