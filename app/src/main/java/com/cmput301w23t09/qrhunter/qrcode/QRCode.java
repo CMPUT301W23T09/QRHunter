@@ -1,11 +1,12 @@
 package com.cmput301w23t09.qrhunter.qrcode;
 
+import android.graphics.Bitmap;
 import android.location.Location;
-import android.media.Image;
 import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.photo.Photo;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /** This class defines a QR code */
 public class QRCode implements Serializable {
@@ -14,9 +15,9 @@ public class QRCode implements Serializable {
   /** This is the name of the QR code */
   private String name;
   /** This is the visual representation of the QR code */
-  private Image visualRepresentation; // type subject to change
+  private Bitmap visualRepresentation;
   /** This is the score of the QR code */
-  private long score;
+  private Integer score;
   /** This is the location of the QR code */
   private Location loc;
   /** This is a list of photos that have been taken of the QR code */
@@ -31,13 +32,16 @@ public class QRCode implements Serializable {
    *
    * @param hash The hash of the newly-scanned QRCode
    */
-  public QRCode(String hash) {
+  public QRCode(String hash) throws ExecutionException, InterruptedException {
     this.hash = hash;
 
     // TODO: Initialize all these fields according to hash
-    this.name = "";
-    this.visualRepresentation = null;
-    this.score = 0;
+    this.name = generateName(hash);
+    this.visualRepresentation =
+        new QRCodeVisualFetcher(this)
+            .execute("https://api.dicebear.com/5.x/pixel-art-neutral/jpg?seed=" + hash)
+            .get();
+    this.score = calculateScore(hash);
 
     this.loc = null;
     this.photos = new ArrayList<>();
@@ -61,8 +65,8 @@ public class QRCode implements Serializable {
   public QRCode(
       String hash,
       String name,
-      Image visualRepresentation,
-      long score,
+      Bitmap visualRepresentation,
+      Integer score,
       Location loc,
       ArrayList<Photo> photos,
       ArrayList<Comment> comments,
@@ -100,8 +104,17 @@ public class QRCode implements Serializable {
    *
    * @return Return the visual representation of the QR code
    */
-  public Image getVisualRepresentation() {
+  public Bitmap getVisualRepresentation() {
     return visualRepresentation;
+  }
+
+  /**
+   * Sets the visual representation of the QR code
+   *
+   * @param visualRepresentation The Bitmap to represent the QR code
+   */
+  public void setVisualRepresentation(Bitmap visualRepresentation) {
+    this.visualRepresentation = visualRepresentation;
   }
 
   /**
@@ -109,7 +122,7 @@ public class QRCode implements Serializable {
    *
    * @return Return the score of the QR code
    */
-  public Long getScore() {
+  public Integer getScore() {
     return this.score;
   }
 
@@ -214,5 +227,79 @@ public class QRCode implements Serializable {
    */
   public void deletePlayer(String player) {
     this.players.remove(player);
+  }
+
+  /**
+   * Generates a name given the QRCode's hash
+   *
+   * @param hash The QRCode's hash
+   * @return The name of the QRCode given its hash
+   */
+  private String generateName(String hash) {
+    // Though the git blame is on jmmabanta (John Mabanta), this is all andy-mtng (Andy Nguyen's)
+    // code
+    String binary = getFirstSixBits(hash);
+    String nameBitOne = (binary.charAt(0) == '0') ? "So" : "Ro";
+    String nameBitTwo = (binary.charAt(1) == '0') ? "ba" : "da";
+    String nameBitThree = (binary.charAt(2) == '0') ? "yin" : "qin";
+    String nameBitFour = (binary.charAt(3) == '0') ? "ect" : "ly";
+    String nameBitFive = (binary.charAt(4) == '0') ? "Panda" : "Tiger";
+    String nameBitSix = (binary.charAt(5) == '0') ? "★" : "✿";
+
+    return nameBitOne + nameBitTwo + nameBitThree + nameBitFour + nameBitFive + nameBitSix;
+  }
+
+  /**
+   * Gets the first six bits of a hash
+   *
+   * <p>Source: https://stackoverflow.com/a/8640831 By: Sergey Kalinichenko
+   * (https://stackoverflow.com/users/335858/sergey-kalinichenko) (2011-12-27) Edited By: Dave
+   * Jarvis (https://stackoverflow.com/users/59087/dave-jarvis) (2014-08-20) License: CC BY-SA
+   *
+   * @param hash The QRCode's hash
+   * @return A string representing the first six bits of the hash
+   */
+  private String getFirstSixBits(String hash) {
+    hash = hash.substring(hash.length() - 5);
+    long decimal = Long.parseLong(hash, 16);
+    String binary = Long.toBinaryString(decimal);
+    return binary;
+  }
+
+  /**
+   * Given the hash, calculate sore based on the proposed scoring system
+   *
+   * @param hash SHA256 hash to base score off of
+   * @return The score value of the QRCode
+   */
+  private int calculateScore(String hash) {
+    int score = 0;
+    char lastChar = '0';
+    int streak = 0;
+    for (int i = 0; i < hash.length(); i++) {
+      char current = hash.charAt(i);
+      if (current == lastChar) streak++;
+      else if (streak > 0) {
+        int value;
+        if (lastChar == '0') value = 20;
+        else value = Integer.parseInt(String.valueOf(lastChar), 16);
+        score += Math.pow(value, streak);
+        lastChar = current;
+        streak = 0;
+      } else {
+        lastChar = current;
+        streak = 0;
+      }
+    }
+
+    // Add any left over streak
+    if (streak > 0) {
+      int value;
+      if (lastChar == '0') value = 20;
+      else value = Integer.parseInt(String.valueOf(lastChar), 16);
+      score += Math.pow(value, streak);
+    }
+
+    return score;
   }
 }

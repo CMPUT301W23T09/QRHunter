@@ -21,6 +21,7 @@ import java.util.concurrent.Executors;
  * @author John Mabanta
  * @version 1.0
  * @see CameraScannerController
+ * @see CameraLocationPhotoController
  */
 public abstract class CameraController {
 

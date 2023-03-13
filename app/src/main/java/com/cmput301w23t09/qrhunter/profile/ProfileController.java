@@ -134,7 +134,7 @@ public class ProfileController {
                         // add the qr code if the current player has scanned it
                         if (players != null && players.contains(playerID)) {
                           String hash = doc.getId();
-                          long score = (long) doc.get("score");
+                          Integer score = (int) (long) doc.get("score");
                           qrCodes.add(new QRCode(hash, null, null, score, null, null, null, null));
                         }
                       }

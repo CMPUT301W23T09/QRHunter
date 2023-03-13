@@ -5,9 +5,7 @@ import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.util.DeviceUtils;
 import com.cmput301w23t09.qrhunter.util.ValidationUtils;
-
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.UUID;
 
 /**
