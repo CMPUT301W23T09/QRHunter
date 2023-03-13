@@ -79,8 +79,24 @@ public class QRCodeDatabase {
                 return;
               }
 
-              // No player by the QRCode exists.
-              callback.accept(new DatabaseQueryResults<>(null));
+              // No hash by the QRCode exists.
+              try {
+                QRCode addedQR = new QRCode(hash);
+                Map<String, Object> data = qrCodeToDBValues(addedQR);
+                collection
+                    .document(hash)
+                    .set(data, SetOptions.merge())
+                    .addOnSuccessListener(
+                        results -> {
+                          callback.accept(new DatabaseQueryResults<>(addedQR));
+                        })
+                    .addOnFailureListener(
+                        e -> {
+                          Log.w(LOGGER_TAG, "Error writing document", e);
+                        });
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
             });
   }
 
