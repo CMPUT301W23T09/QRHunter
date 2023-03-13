@@ -6,9 +6,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 
+import android.Manifest;
 import android.content.Intent;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 import com.cmput301w23t09.qrhunter.GameActivity;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
@@ -28,6 +30,9 @@ public class TestProfileFragment {
   @Rule
   public ActivityScenarioRule<GameActivity> activityScenarioRule =
       new ActivityScenarioRule<>(GameActivity.class);
+
+  @Rule
+  public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
 
   /**
    * Runs before all tests and creates solo instance
