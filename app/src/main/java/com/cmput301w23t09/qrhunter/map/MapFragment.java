@@ -40,11 +40,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private LatLng defaultLocation = new LatLng(-34, -34);
 
 
-
-    public MapFragment() {
-        // Required empty public constructor
-    }
-
     private void getLocationPermission() {
         /**
          * Request location permission, so that we can get the location of the
