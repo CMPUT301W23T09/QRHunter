@@ -194,9 +194,9 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
           new LatLng(53.52748572137864, -113.52965526862573), // Engineering Physics Club
           new LatLng(53.52644615688437, -113.52453761405557), // CAB
           new LatLng(53.526790555323736, -113.52716617858209), // CSC
-          new LatLng(53.52606986652603, -113.52166228586451),// Rutherford Library
+          new LatLng(53.52606986652603, -113.52166228586451), // Rutherford Library
           new LatLng(53.523182298052724, -113.52719701274522), // Butterdome
-          new LatLng(53.520845993958204, -113.523585870797) //Ualberta hospital
+          new LatLng(53.520845993958204, -113.523585870797) // Ualberta hospital
         };
 
     for (LatLng location : placeholderQR) {
