@@ -14,6 +14,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.cmput301w23t09.qrhunter.BaseFragment;
+import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -29,7 +31,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     private boolean locationPermissionGranted;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private GoogleMap map;
@@ -38,6 +40,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private static final String TAG = "MapFragment";
     private  static final int DEFAULT_ZOOM = 15;
     private LatLng defaultLocation = new LatLng(-34, -34);
+
+    public MapFragment(GameController gameController) {
+        super(gameController);
+    }
 
 
     private void getLocationPermission() {
