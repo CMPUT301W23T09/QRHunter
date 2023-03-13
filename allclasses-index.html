@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":2,"i1":2,"i2":2,"i3":2,"i4":2,"i5":2,"i6":2,"i7":2,"i8":1,"i9":2,"i10":2,"i11":2,"i12":2,"i13":2,"i14":2,"i15":2,"i16":2,"i17":2,"i18":2,"i19":2,"i20":2,"i21":2,"i22":2,"i23":2,"i24":2,"i25":2,"i26":2,"i27":2,"i28":2,"i29":2,"i30":2,"i31":2,"i32":2,"i33":2,"i34":2,"i35":2,"i36":2,"i37":2,"i38":2,"i39":2,"i40":2,"i41":2,"i42":2,"i43":2,"i44":2,"i45":2,"i46":2,"i47":2,"i48":2};
+var data = {"i0":2,"i1":2,"i2":2,"i3":2,"i4":2,"i5":2,"i6":2,"i7":2,"i8":1,"i9":2,"i10":2,"i11":2,"i12":2,"i13":2,"i14":2,"i15":2,"i16":2,"i17":2,"i18":2,"i19":2,"i20":2,"i21":2,"i22":2,"i23":2,"i24":2,"i25":2,"i26":2,"i27":2,"i28":2,"i29":2,"i30":2,"i31":2,"i32":2,"i33":2,"i34":2,"i35":2,"i36":2,"i37":2,"i38":2,"i39":2,"i40":2,"i41":2,"i42":2,"i43":2,"i44":2,"i45":2,"i46":2,"i47":2,"i48":2,"i49":2};
 var tabs = {65535:["t0","All Classes"],1:["t1","Interface Summary"],2:["t2","Class Summary"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -137,11 +137,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraLocationPhotoController.html" title="class in com.cmput301w23t09.qrhunter.scanqr.camera">CameraLocationPhotoController</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">Enables the ImageCapture camera use case to let players take location photos.</div>
+</th>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><a href="com/cmput301w23t09/qrhunter/scanqr/camera/CameraScannerController.html" title="class in com.cmput301w23t09.qrhunter.scanqr.camera">CameraScannerController</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">Enables the ImageAnalysis camera use case to let players scan codes.</div>
+</th>
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><a href="com/cmput301w23t09/qrhunter/comment/Comment.html" title="class in com.cmput301w23t09.qrhunter.comment">Comment</a></td>
@@ -164,7 +168,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><a href="com/cmput301w23t09/qrhunter/util/DeviceUtils.html" title="class in com.cmput301w23t09.qrhunter.util">DeviceUtils</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">Various device-related utility functions, such as fetching UUID</div>
+</th>
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentContactInfoPromptBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentContactInfoPromptBinding</a></td>
@@ -239,7 +245,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i26" class="altColor">
 <td class="colFirst"><a href="com/cmput301w23t09/qrhunter/map/LocationHandler.html" title="class in com.cmput301w23t09.qrhunter.map">LocationHandler</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">Handles location permissions and retrieving the location of the player's device.</div>
+</th>
 </tr>
 <tr id="i27" class="rowColor">
 <td class="colFirst"><a href="com/cmput301w23t09/qrhunter/scanqr/LocationPhotoController.html" title="class in com.cmput301w23t09.qrhunter.scanqr">LocationPhotoController</a></td>
@@ -280,7 +288,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i33" class="rowColor">
 <td class="colFirst"><a href="com/cmput301w23t09/qrhunter/player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">Represents a Player of QRHunter</div>
+</th>
 </tr>
 <tr id="i34" class="altColor">
 <td class="colFirst"><a href="com/cmput301w23t09/qrhunter/player/PlayerDatabase.html" title="class in com.cmput301w23t09.qrhunter.player">PlayerDatabase</a></td>
@@ -328,36 +338,50 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i42" class="altColor">
 <td class="colFirst"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeDatabase.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeDatabase</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">Manages all QRCode-related database operations, and ensures that the collection of QRCodes that a
+ each player has scanned is consistent with the collection of players that have scanned a specific
+ QR code.</div>
+</th>
 </tr>
 <tr id="i43" class="rowColor">
 <td class="colFirst"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeFragment.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeFragment</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">Displays information about a specific QRCode.</div>
+</th>
 </tr>
 <tr id="i44" class="altColor">
 <td class="colFirst"><a href="com/cmput301w23t09/qrhunter/databinding/QrcodeViewBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">QrcodeViewBinding</a></td>
 <th class="colLast" scope="row">&nbsp;</th>
 </tr>
 <tr id="i45" class="rowColor">
+<td class="colFirst"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeVisualFetcher.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeVisualFetcher</a></td>
+<th class="colLast" scope="row">
+<div class="block">Fetches QRCode's visual representation from DiceBear (https://www.dicebear.com) License: MIT Art
+ Style Used: Pixel Art Neutral (https://www.figma.com/community/file/1198754108850888330) By:
+ Florian Körner (contact@florian-koerner.com) License: CC BY</div>
+</th>
+</tr>
+<tr id="i46" class="altColor">
 <td class="colFirst"><a href="com/cmput301w23t09/qrhunter/scanqr/ScannerController.html" title="class in com.cmput301w23t09.qrhunter.scanqr">ScannerController</a></td>
 <th class="colLast" scope="row">
 <div class="block">Controls QR Code scanning using Google's MLKit Library
  (https://developers.google.com/ml-kit/vision/barcode-scanning/android)</div>
 </th>
 </tr>
-<tr id="i46" class="altColor">
+<tr id="i47" class="rowColor">
 <td class="colFirst"><a href="com/cmput301w23t09/qrhunter/scanqr/ScannerFragment.html" title="class in com.cmput301w23t09.qrhunter.scanqr">ScannerFragment</a></td>
 <th class="colLast" scope="row">
 <div class="block">The 'Scan QR' page where users can use their rear camera to scan QR codes</div>
 </th>
 </tr>
-<tr id="i47" class="rowColor">
+<tr id="i48" class="altColor">
 <td class="colFirst"><a href="com/cmput301w23t09/qrhunter/qrcode/ScoreComparator.html" title="class in com.cmput301w23t09.qrhunter.qrcode">ScoreComparator</a></td>
 <th class="colLast" scope="row">
 <div class="block">This implements the comparator for sorting QR codes by score</div>
 </th>
 </tr>
-<tr id="i48" class="altColor">
+<tr id="i49" class="rowColor">
 <td class="colFirst"><a href="com/cmput301w23t09/qrhunter/util/ValidationUtils.html" title="class in com.cmput301w23t09.qrhunter.util">ValidationUtils</a></td>
 <th class="colLast" scope="row">
 <div class="block">Utility class to validate various inputs.</div>
