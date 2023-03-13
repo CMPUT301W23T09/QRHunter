@@ -11,6 +11,13 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 
+/**
+ * Handles location permissions and retrieving the location of the player's device. Used to set the
+ * location of a QRCode.
+ *
+ * @author John Mabanta
+ * @version 1.0
+ */
 public class LocationHandler {
 
   private Fragment fragment;

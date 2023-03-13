@@ -24,6 +24,19 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.Serializable;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Displays information about a specific QRCode. It also lets the user:
+ *
+ * <ul>
+ *   <li>Add scanned QR code to profile
+ *   <li>Remove selected QR code from profile
+ *   <li>Record geolocation of scanned QR code
+ *   <li>Take location photo of scanned qr code
+ * </ul>
+ *
+ * @author John Mabanta
+ * @version 1.0
+ */
 public class QRCodeFragment extends DialogFragment implements Serializable {
 
   private ImageView locationPhoto;

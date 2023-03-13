@@ -11,6 +11,13 @@ import com.cmput301w23t09.qrhunter.scanqr.ScannerFragment;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Enables the ImageAnalysis camera use case to let players scan codes.
+ *
+ * @author John Mabanta
+ * @version 1.0
+ * @see CameraController
+ */
 public class CameraScannerController extends CameraController {
 
   private ScannerController controller;

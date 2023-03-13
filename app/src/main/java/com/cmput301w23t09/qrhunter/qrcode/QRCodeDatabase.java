@@ -15,6 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Manages all QRCode-related database operations, and ensures that the collection of QRCodes that a
+ * each player has scanned is consistent with the collection of players that have scanned a specific
+ * QR code.
+ */
 public class QRCodeDatabase {
   private static final String LOGGER_TAG = "QRCodeDatabase";
   private static final String DATABASE_COLLECTION_NAME = "qrcodes";

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/** Represents a Player of QRHunter */
 public class Player implements Serializable {
   /** This is the firebase document id if any is associated with this object */
   private String documentId;
