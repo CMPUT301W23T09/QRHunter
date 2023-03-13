@@ -59,7 +59,7 @@ public class TestProfileFragment {
             "Irene",
             "5873571506",
             "isun@ualberta.ca",
-            new ArrayList<String>());
+            null);
     // create mock qr codes
     mockQRCodes = new ArrayList<>();
 
