@@ -129,6 +129,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre>java.lang.String phoneNo</pre>
 <div class="block">Phone number of the player</div>
 </li>
+<li class="blockList">
+<h4>scannedQRHashes</h4>
+<pre>java.util.ArrayList&lt;java.lang.String&gt; scannedQRHashes</pre>
+<div class="block">Array of QR code hashes associated with player</div>
+</li>
 <li class="blockListLast">
 <h4>username</h4>
 <pre>java.lang.String username</pre>
@@ -180,8 +185,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </li>
 <li class="blockList">
 <h4>players</h4>
-<pre>java.util.ArrayList&lt;<a href="com/cmput301w23t09/qrhunter/player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&gt; players</pre>
-<div class="block">This is a list of players who have scanned this QR code</div>
+<pre>java.util.ArrayList&lt;java.lang.String&gt; players</pre>
+<div class="block">This is a list of players (UUID) who have scanned this QR code</div>
 </li>
 <li class="blockList">
 <h4>score</h4>
@@ -210,6 +215,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre><a href="com/cmput301w23t09/qrhunter/player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a> activePlayer</pre>
 </li>
 <li class="blockList">
+<h4>addButton</h4>
+<pre>com.google.android.material.floatingactionbutton.FloatingActionButton addButton</pre>
+</li>
+<li class="blockList">
+<h4>deleteButton</h4>
+<pre>com.google.android.material.floatingactionbutton.FloatingActionButton deleteButton</pre>
+</li>
+<li class="blockList">
 <h4>locationCheckbox</h4>
 <pre>android.widget.CheckBox locationCheckbox</pre>
 </li>
@@ -228,6 +241,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>qrCode</h4>
 <pre><a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a> qrCode</pre>
+</li>
+<li class="blockList">
+<h4>qrCodeDatabase</h4>
+<pre><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeDatabase.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeDatabase</a> qrCodeDatabase</pre>
 </li>
 <li class="blockList">
 <h4>qrName</h4>

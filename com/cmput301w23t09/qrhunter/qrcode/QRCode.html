@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -176,7 +176,7 @@ implements java.io.Serializable</pre>
       android.location.Location&nbsp;loc,
       java.util.ArrayList&lt;<a href="../photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a>&gt;&nbsp;photos,
       java.util.ArrayList&lt;<a href="../comment/Comment.html" title="class in com.cmput301w23t09.qrhunter.comment">Comment</a>&gt;&nbsp;comments,
-      java.util.ArrayList&lt;<a href="../player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&gt;&nbsp;players)</code></th>
+      java.util.ArrayList&lt;java.lang.String&gt;&nbsp;players)</code></th>
 <td class="colLast">
 <div class="block">This initializes a QR code with its hash, name, visual representation, score, location, photo,
  comments, and players who have scanned it</div>
@@ -216,7 +216,7 @@ implements java.io.Serializable</pre>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addPlayer(com.cmput301w23t09.qrhunter.player.Player)">addPlayer</a></span>&#8203;(<a href="../player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&nbsp;player)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addPlayer(java.lang.String)">addPlayer</a></span>&#8203;(java.lang.String&nbsp;player)</code></th>
 <td class="colLast">
 <div class="block">This adds a player that has scanned the QR code</div>
 </td>
@@ -237,7 +237,7 @@ implements java.io.Serializable</pre>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#deletePlayer(com.cmput301w23t09.qrhunter.player.Player)">deletePlayer</a></span>&#8203;(<a href="../player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&nbsp;player)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#deletePlayer(java.lang.String)">deletePlayer</a></span>&#8203;(java.lang.String&nbsp;player)</code></th>
 <td class="colLast">
 <div class="block">This removes a player that has scanned the QR code</div>
 </td>
@@ -278,7 +278,7 @@ implements java.io.Serializable</pre>
 </td>
 </tr>
 <tr id="i11" class="rowColor">
-<td class="colFirst"><code>java.util.ArrayList&lt;<a href="../player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&gt;</code></td>
+<td class="colFirst"><code>java.util.ArrayList&lt;java.lang.String&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPlayers()">getPlayers</a></span>()</code></th>
 <td class="colLast">
 <div class="block">This returns the player who have scanned the QR code</div>
@@ -304,6 +304,11 @@ implements java.io.Serializable</pre>
 <td class="colLast">
 <div class="block">This sets the location of the QR code</div>
 </td>
+</tr>
+<tr id="i15" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setPlayers(java.util.ArrayList)">setPlayers</a></span>&#8203;(java.util.ArrayList&lt;java.lang.String&gt;&nbsp;players)</code></th>
+<td class="colLast">&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -356,7 +361,7 @@ implements java.io.Serializable</pre>
               android.location.Location&nbsp;loc,
               java.util.ArrayList&lt;<a href="../photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a>&gt;&nbsp;photos,
               java.util.ArrayList&lt;<a href="../comment/Comment.html" title="class in com.cmput301w23t09.qrhunter.comment">Comment</a>&gt;&nbsp;comments,
-              java.util.ArrayList&lt;<a href="../player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&gt;&nbsp;players)</pre>
+              java.util.ArrayList&lt;java.lang.String&gt;&nbsp;players)</pre>
 <div class="block">This initializes a QR code with its hash, name, visual representation, score, location, photo,
  comments, and players who have scanned it</div>
 <dl>
@@ -368,7 +373,7 @@ implements java.io.Serializable</pre>
 <dd><code>loc</code> - This is the location of the QR code</dd>
 <dd><code>photos</code> - This is the list of photos of the QR code</dd>
 <dd><code>comments</code> - This is the list of comments on the QR code</dd>
-<dd><code>players</code> - This is the list of players that have scanned the QR code</dd>
+<dd><code>players</code> - This is the list of players (documentIDs) that have scanned the QR code</dd>
 </dl>
 </li>
 </ul>
@@ -472,12 +477,21 @@ implements java.io.Serializable</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getPlayers</h4>
-<pre class="methodSignature">public&nbsp;java.util.ArrayList&lt;<a href="../player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&gt;&nbsp;getPlayers()</pre>
+<pre class="methodSignature">public&nbsp;java.util.ArrayList&lt;java.lang.String&gt;&nbsp;getPlayers()</pre>
 <div class="block">This returns the player who have scanned the QR code</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Return the player who have scanned the QR code</dd>
 </dl>
+</li>
+</ul>
+<a id="setPlayers(java.util.ArrayList)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setPlayers</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;setPlayers&#8203;(java.util.ArrayList&lt;java.lang.String&gt;&nbsp;players)</pre>
 </li>
 </ul>
 <a id="getComments()">
@@ -564,13 +578,13 @@ implements java.io.Serializable</pre>
 </dl>
 </li>
 </ul>
-<a id="addPlayer(com.cmput301w23t09.qrhunter.player.Player)">
+<a id="addPlayer(java.lang.String)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>addPlayer</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;addPlayer&#8203;(<a href="../player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&nbsp;player)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;addPlayer&#8203;(java.lang.String&nbsp;player)</pre>
 <div class="block">This adds a player that has scanned the QR code</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -578,13 +592,13 @@ implements java.io.Serializable</pre>
 </dl>
 </li>
 </ul>
-<a id="deletePlayer(com.cmput301w23t09.qrhunter.player.Player)">
+<a id="deletePlayer(java.lang.String)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>deletePlayer</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;deletePlayer&#8203;(<a href="../player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&nbsp;player)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;deletePlayer&#8203;(java.lang.String&nbsp;player)</pre>
 <div class="block">This removes a player that has scanned the QR code</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
