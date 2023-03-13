@@ -6,7 +6,9 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import android.telephony.PhoneNumberUtils;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +35,16 @@ public class TestPlayerModel {
     assertEquals("johndoe42", mockPlayer.getUsername());
     assertEquals("7801234567", mockPlayer.getPhoneNo());
     assertEquals("doe@ualberta.ca", mockPlayer.getEmail());
+    assertEquals(new ArrayList<>(), mockPlayer.getQRCodeHashes());
+  }
+
+  @Test
+  public void testGetQRCodeHashes() {
+    Set<String> scannedQRHashes = new HashSet<>();
+    scannedQRHashes.add("hash1");
+    scannedQRHashes.add("hash2");
+    mockPlayer.setQRCodeHashes(scannedQRHashes);
+    assertEquals(scannedQRHashes, mockPlayer.getQRCodeHashes());
   }
 
   /* SETTER TESTS*/
@@ -190,5 +202,25 @@ public class TestPlayerModel {
         () -> {
           mockPlayer.setEmail("");
         });
+  }
+
+  @Test
+  public void testSetQRCodeHashes() {
+    Set<String> scannedQRHashes = new HashSet<>();
+    scannedQRHashes.add("hash1");
+    scannedQRHashes.add("hash2");
+    scannedQRHashes.add("hash3");
+    mockPlayer.setQRCodeHashes(scannedQRHashes);
+    assertEquals(scannedQRHashes, mockPlayer.getQRCodeHashes());
+  }
+
+  @Test
+  public void testSetQRCodeHashesNullList() {
+    assertThrows(
+        NullPointerException.class,
+        () -> {
+          mockPlayer.setQRCodeHashes(null);
+        });
+    assertEquals(new ArrayList<>(), mockPlayer.getQRCodeHashes());
   }
 }

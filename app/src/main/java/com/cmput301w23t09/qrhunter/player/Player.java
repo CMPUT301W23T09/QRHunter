@@ -124,7 +124,7 @@ public class Player implements Serializable {
   }
 
   /**
-   * Get the pohne number associated with this player
+   * Get the phone number associated with this player
    *
    * @return phone number
    */
@@ -169,7 +169,7 @@ public class Player implements Serializable {
   }
 
   /**
-   * Retrieve all of the QRCodes this player has scanned.
+   * <<<<<<< HEAD Retrieve all of the QRCodes this player has scanned.
    *
    * @return QR codes the player has scanned
    */
@@ -178,11 +178,20 @@ public class Player implements Serializable {
   }
 
   /**
-   * Modify the QRCodes this player has scanned.
+   * Returns a set of QR code hashes that have been scanned by player
    *
-   * @param qrCodeHashes QR code hashes the player has scanned.
+   * @return a set of qr code hashes scanned by player
    */
-  public void setQRCodes(Set<String> qrCodeHashes) {
-    this.qrCodeHashes = new HashSet<>(qrCodeHashes);
+  public Set<String> getQRCodeHashes() {
+    return qrCodeHashes;
+  }
+
+  /**
+   * Sets the list of QR code hashes that have been scanned by player
+   *
+   * @param scannedQRHashes a list of scanned QR code Hashes associated with player
+   */
+  public void setQRCodeHashes(Set<String> scannedQRHashes) {
+    this.qrCodeHashes = scannedQRHashes;
   }
 }

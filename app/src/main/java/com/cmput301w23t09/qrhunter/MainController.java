@@ -95,7 +95,7 @@ public class MainController {
               }
 
               // Successfully registered.
-              switchToGameActivity(player);
+              switchToGameActivity(addResults.getData());
             });
   }
 

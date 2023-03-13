@@ -4,10 +4,8 @@ import android.location.Location;
 import android.media.Image;
 import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.photo.Photo;
-import com.cmput301w23t09.qrhunter.player.Player;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 /** This class defines a QR code */
 public class QRCode implements Serializable {
@@ -25,8 +23,8 @@ public class QRCode implements Serializable {
   private ArrayList<Photo> photos;
   /** This is a list of comments on the QR code */
   private ArrayList<Comment> comments;
-  /** This is a list of players who have scanned this QR code */
-  private List<String> players;
+  /** This is a list of players (UUID) who have scanned this QR code */
+  private ArrayList<String> players;
 
   /**
    * Initializes a *newly-scanned* QRCode using only its hash value
@@ -58,17 +56,17 @@ public class QRCode implements Serializable {
    * @param loc This is the location of the QR code
    * @param photos This is the list of photos of the QR code
    * @param comments This is the list of comments on the QR code
-   * @param playerDocumentIds This is the list of players that have scanned the QR code
+   * @param players This is the list of players (documentIDs) that have scanned the QR code
    */
   public QRCode(
       String hash,
       String name,
       Image visualRepresentation,
-      Long score,
+      long score,
       Location loc,
       ArrayList<Photo> photos,
       ArrayList<Comment> comments,
-      List<String> playerDocumentIds) {
+      ArrayList<String> players) {
     this.hash = hash;
     this.name = name;
     this.visualRepresentation = visualRepresentation;
@@ -76,7 +74,7 @@ public class QRCode implements Serializable {
     this.loc = loc;
     this.photos = photos;
     this.comments = comments;
-    this.players = playerDocumentIds;
+    this.players = players;
   }
 
   /**
@@ -138,8 +136,12 @@ public class QRCode implements Serializable {
    *
    * @return Return the player who have scanned the QR code
    */
-  public List<String> getPlayers() {
+  public ArrayList<String> getPlayers() {
     return players;
+  }
+
+  public void setPlayers(ArrayList<String> players) {
+    this.players = players;
   }
 
   /**
@@ -201,8 +203,8 @@ public class QRCode implements Serializable {
    *
    * @param player This is the player to add
    */
-  public void addPlayer(Player player) {
-    this.players.add(player.getDocumentId());
+  public void addPlayer(String player) {
+    this.players.add(player);
   }
 
   /**
@@ -210,7 +212,7 @@ public class QRCode implements Serializable {
    *
    * @param player This is the player to delete
    */
-  public void deletePlayer(Player player) {
-    this.players.remove(player.getDocumentId());
+  public void deletePlayer(String player) {
+    this.players.remove(player);
   }
 }

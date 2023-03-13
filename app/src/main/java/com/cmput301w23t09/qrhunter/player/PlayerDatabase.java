@@ -9,7 +9,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -60,6 +59,7 @@ public class PlayerDatabase {
           }
 
           // The username is not in use, add the player.
+
           collection
               .add(playerToDBValues(player))
               .addOnCompleteListener(
@@ -157,31 +157,6 @@ public class PlayerDatabase {
   }
 
   /**
-   * Retrieve all players from the database
-   *
-   * @param callback callback to call once the operation has finished
-   */
-  public void getAllPlayers(DatabaseConsumer<Set<Player>> callback) {
-    collection
-        .get()
-        .addOnCompleteListener(
-            task -> {
-              if (!task.isSuccessful()) {
-                callback.accept(new DatabaseQueryResults<>(null, task.getException()));
-                return;
-              }
-
-              // Convert all snapshots to Players
-              Set<Player> players = new HashSet<>();
-              for (QueryDocumentSnapshot snapshot : task.getResult()) {
-                players.add(snapshotToPlayer(snapshot));
-              }
-
-              callback.accept(new DatabaseQueryResults<>(players));
-            });
-  }
-
-  /**
    * Retrieve a player by their device UUID from the database
    *
    * @param deviceUUID device UUID to lookup
@@ -239,6 +214,31 @@ public class PlayerDatabase {
   }
 
   /**
+   * Retrieve all players from the database
+   *
+   * @param callback callback to call once the operation has finished
+   */
+  public void getAllPlayers(DatabaseConsumer<Set<Player>> callback) {
+    collection
+        .get()
+        .addOnCompleteListener(
+            task -> {
+              if (!task.isSuccessful()) {
+                callback.accept(new DatabaseQueryResults<>(null, task.getException()));
+                return;
+              }
+
+              // Convert all snapshots to Players
+              Set<Player> players = new HashSet<>();
+              for (QueryDocumentSnapshot snapshot : task.getResult()) {
+                players.add(snapshotToPlayer(snapshot));
+              }
+
+              callback.accept(new DatabaseQueryResults<>(players));
+            });
+  }
+
+  /**
    * Converts a database snapshot to its Player object equivalent.
    *
    * @param snapshot database snapshot
@@ -250,10 +250,7 @@ public class PlayerDatabase {
     String username = snapshot.getString("username");
     String phoneNo = snapshot.getString("phoneNo");
     String email = snapshot.getString("email");
-    List<String> qrCodeHashes = (List<String>) snapshot.get("qrCodeHashes");
-    if (qrCodeHashes == null) {
-      qrCodeHashes = new ArrayList<>();
-    }
+    ArrayList<String> qrCodeHashes = (ArrayList<String>) snapshot.get("qrCodeHashes");
 
     return new Player(
         documentId, deviceUUID, username, phoneNo, email, new HashSet<>(qrCodeHashes));
@@ -272,7 +269,7 @@ public class PlayerDatabase {
     values.put("username_lower", player.getUsername().toLowerCase());
     values.put("phoneNo", player.getPhoneNo());
     values.put("email", player.getEmail());
-    values.put("qrCodeHashes", new ArrayList<>(player.getQrCodeHashes()));
+    values.put("qrCodeHashes", player.getQRCodeHashes());
 
     return values;
   }
