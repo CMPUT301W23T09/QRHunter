@@ -4,6 +4,7 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.leaderboard.LeaderboardFragment;
 import com.cmput301w23t09.qrhunter.profile.ProfileFragment;
 import com.cmput301w23t09.qrhunter.scanqr.ScannerFragment;
 import com.cmput301w23t09.qrhunter.util.DeviceUtils;
@@ -31,7 +32,7 @@ public class NavigationControllerAdapter implements NavigationBarView.OnItemSele
     } else if (selectedItemId == R.id.navigation_qr_finder) {
       // mainController.setBody(new QRFinderFragment());
     } else if (selectedItemId == R.id.navigation_social) {
-      // mainController.setBody(new SocialFragment());
+      gameController.setBody(new LeaderboardFragment(gameController));
     } else {
       throw new UnsupportedOperationException(
           "The navigation item id provided is missing a handler.");

@@ -69,6 +69,8 @@ public abstract class CameraController {
    * Adds in the camera's functionality
    *
    * @param cameraProviderFuture The camera's provider object
+   * @throws ExecutionException if setup fails
+   * @throws InterruptedException if setup fails
    */
   protected abstract void setupCamera(ListenableFuture<ProcessCameraProvider> cameraProviderFuture)
       throws ExecutionException, InterruptedException;

@@ -28,7 +28,7 @@ public class ScannerFragment extends BaseFragment {
   /**
    * Creates the ScannerFragment where users can scan and add new QR Codes to their profile
    *
-   * @param gameController
+   * @param gameController game controller
    */
   public ScannerFragment(GameController gameController) {
     super(gameController);
