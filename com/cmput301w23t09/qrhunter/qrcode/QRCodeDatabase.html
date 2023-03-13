@@ -171,7 +171,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getAllQRCodes(com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">getAllQRCodes</a></span>&#8203;(<a href="../database/DatabaseConsumer.html" title="interface in com.cmput301w23t09.qrhunter.database">DatabaseConsumer</a>&lt;java.util.Set&lt;<a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&gt;&gt;&nbsp;callback)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getAllQRCodes(com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">getAllQRCodes</a></span>&#8203;(<a href="../database/DatabaseConsumer.html" title="interface in com.cmput301w23t09.qrhunter.database">DatabaseConsumer</a>&lt;java.util.List&lt;<a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&gt;&gt;&nbsp;callback)</code></th>
 <td class="colLast">
 <div class="block">Retrieve all QRCodes stored in the database.</div>
 </td>
@@ -193,8 +193,8 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getQRCodeHashes(java.util.Set,com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">getQRCodeHashes</a></span>&#8203;(java.util.Set&lt;java.lang.String&gt;&nbsp;hashes,
-               <a href="../database/DatabaseConsumer.html" title="interface in com.cmput301w23t09.qrhunter.database">DatabaseConsumer</a>&lt;java.util.Set&lt;<a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&gt;&gt;&nbsp;callback)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getQRCodeHashes(java.util.List,com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">getQRCodeHashes</a></span>&#8203;(java.util.List&lt;java.lang.String&gt;&nbsp;hashes,
+               <a href="../database/DatabaseConsumer.html" title="interface in com.cmput301w23t09.qrhunter.database">DatabaseConsumer</a>&lt;java.util.List&lt;<a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&gt;&gt;&nbsp;callback)</code></th>
 <td class="colLast">
 <div class="block">Retrieve a set of QRCodes by their hashes</div>
 </td>
@@ -300,14 +300,14 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a id="getQRCodeHashes(java.util.Set,com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">
+<a id="getQRCodeHashes(java.util.List,com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getQRCodeHashes</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;getQRCodeHashes&#8203;(java.util.Set&lt;java.lang.String&gt;&nbsp;hashes,
-                            <a href="../database/DatabaseConsumer.html" title="interface in com.cmput301w23t09.qrhunter.database">DatabaseConsumer</a>&lt;java.util.Set&lt;<a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&gt;&gt;&nbsp;callback)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;getQRCodeHashes&#8203;(java.util.List&lt;java.lang.String&gt;&nbsp;hashes,
+                            <a href="../database/DatabaseConsumer.html" title="interface in com.cmput301w23t09.qrhunter.database">DatabaseConsumer</a>&lt;java.util.List&lt;<a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&gt;&gt;&nbsp;callback)</pre>
 <div class="block">Retrieve a set of QRCodes by their hashes</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -322,7 +322,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getAllQRCodes</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;getAllQRCodes&#8203;(<a href="../database/DatabaseConsumer.html" title="interface in com.cmput301w23t09.qrhunter.database">DatabaseConsumer</a>&lt;java.util.Set&lt;<a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&gt;&gt;&nbsp;callback)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;getAllQRCodes&#8203;(<a href="../database/DatabaseConsumer.html" title="interface in com.cmput301w23t09.qrhunter.database">DatabaseConsumer</a>&lt;java.util.List&lt;<a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&gt;&gt;&nbsp;callback)</pre>
 <div class="block">Retrieve all QRCodes stored in the database.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>

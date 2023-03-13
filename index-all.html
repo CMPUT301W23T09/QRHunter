@@ -359,7 +359,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Retrieve all players from the database</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeDatabase.html#getAllQRCodes(com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">getAllQRCodes(DatabaseConsumer&lt;Set&lt;QRCode&gt;&gt;)</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeDatabase.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeDatabase</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeDatabase.html#getAllQRCodes(com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">getAllQRCodes(DatabaseConsumer&lt;List&lt;QRCode&gt;&gt;)</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeDatabase.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeDatabase</a></dt>
 <dd>
 <div class="block">Retrieve all QRCodes stored in the database.</div>
 </dd>
@@ -483,7 +483,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Returns a set of QR code hashes that have been scanned by player</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeDatabase.html#getQRCodeHashes(java.util.Set,com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">getQRCodeHashes(Set&lt;String&gt;, DatabaseConsumer&lt;Set&lt;QRCode&gt;&gt;)</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeDatabase.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeDatabase</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeDatabase.html#getQRCodeHashes(java.util.List,com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">getQRCodeHashes(List&lt;String&gt;, DatabaseConsumer&lt;List&lt;QRCode&gt;&gt;)</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeDatabase.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeDatabase</a></dt>
 <dd>
 <div class="block">Retrieve a set of QRCodes by their hashes</div>
 </dd>
@@ -870,12 +870,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><a href="com/cmput301w23t09/qrhunter/player/Player.html" title="class in com.cmput301w23t09.qrhunter.player"><span class="typeNameLink">Player</span></a> - Class in <a href="com/cmput301w23t09/qrhunter/player/package-summary.html">com.cmput301w23t09.qrhunter.player</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/player/Player.html#%3Cinit%3E(java.lang.String,java.util.UUID,java.lang.String,java.lang.String,java.lang.String,java.util.Set)">Player(String, UUID, String, String, String, Set&lt;String&gt;)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.player.<a href="com/cmput301w23t09/qrhunter/player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/player/Player.html#%3Cinit%3E(java.lang.String,java.util.UUID,java.lang.String,java.lang.String,java.lang.String,java.util.List)">Player(String, UUID, String, String, String, List&lt;String&gt;)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.player.<a href="com/cmput301w23t09/qrhunter/player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a></dt>
 <dd>
 <div class="block">This initializes a Player with the firebase document id, deviceId, username, phoneNo, and
  email.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/player/Player.html#%3Cinit%3E(java.util.UUID,java.lang.String,java.lang.String,java.lang.String,java.util.Set)">Player(UUID, String, String, String, Set&lt;String&gt;)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.player.<a href="com/cmput301w23t09/qrhunter/player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/player/Player.html#%3Cinit%3E(java.util.UUID,java.lang.String,java.lang.String,java.lang.String,java.util.List)">Player(UUID, String, String, String, List&lt;String&gt;)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.player.<a href="com/cmput301w23t09/qrhunter/player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a></dt>
 <dd>
 <div class="block">This initializes a Player with the deviceId, username, phoneNo, and email.</div>
 </dd>
@@ -1071,7 +1071,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Change the current popup fragment.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/player/Player.html#setQRCodeHashes(java.util.Set)">setQRCodeHashes(Set&lt;String&gt;)</a></span> - Method in class com.cmput301w23t09.qrhunter.player.<a href="com/cmput301w23t09/qrhunter/player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/player/Player.html#setQRCodeHashes(java.util.List)">setQRCodeHashes(List&lt;String&gt;)</a></span> - Method in class com.cmput301w23t09.qrhunter.player.<a href="com/cmput301w23t09/qrhunter/player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a></dt>
 <dd>
 <div class="block">Sets the list of QR code hashes that have been scanned by player</div>
 </dd>

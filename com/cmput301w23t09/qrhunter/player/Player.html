@@ -162,23 +162,23 @@ implements java.io.Serializable</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String,java.util.UUID,java.lang.String,java.lang.String,java.lang.String,java.util.Set)">Player</a></span>&#8203;(java.lang.String&nbsp;documentId,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String,java.util.UUID,java.lang.String,java.lang.String,java.lang.String,java.util.List)">Player</a></span>&#8203;(java.lang.String&nbsp;documentId,
       java.util.UUID&nbsp;deviceId,
       java.lang.String&nbsp;username,
       java.lang.String&nbsp;phoneNo,
       java.lang.String&nbsp;email,
-      java.util.Set&lt;java.lang.String&gt;&nbsp;qrCodeHashes)</code></th>
+      java.util.List&lt;java.lang.String&gt;&nbsp;qrCodeHashes)</code></th>
 <td class="colLast">
 <div class="block">This initializes a Player with the firebase document id, deviceId, username, phoneNo, and
  email.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.util.UUID,java.lang.String,java.lang.String,java.lang.String,java.util.Set)">Player</a></span>&#8203;(java.util.UUID&nbsp;deviceId,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.util.UUID,java.lang.String,java.lang.String,java.lang.String,java.util.List)">Player</a></span>&#8203;(java.util.UUID&nbsp;deviceId,
       java.lang.String&nbsp;username,
       java.lang.String&nbsp;phoneNo,
       java.lang.String&nbsp;email,
-      java.util.Set&lt;java.lang.String&gt;&nbsp;qrCodeHashes)</code></th>
+      java.util.List&lt;java.lang.String&gt;&nbsp;qrCodeHashes)</code></th>
 <td class="colLast">
 <div class="block">This initializes a Player with the deviceId, username, phoneNo, and email.</div>
 </td>
@@ -230,14 +230,14 @@ implements java.io.Serializable</pre>
 </td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code>java.util.Set&lt;java.lang.String&gt;</code></td>
+<td class="colFirst"><code>java.util.List&lt;java.lang.String&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getQrCodeHashes()">getQrCodeHashes</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Retrieve all of the QRCodes this player has scanned.</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
-<td class="colFirst"><code>java.util.Set&lt;java.lang.String&gt;</code></td>
+<td class="colFirst"><code>java.util.List&lt;java.lang.String&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getQRCodeHashes()">getQRCodeHashes</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns a set of QR code hashes that have been scanned by player</div>
@@ -280,7 +280,7 @@ implements java.io.Serializable</pre>
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setQRCodeHashes(java.util.Set)">setQRCodeHashes</a></span>&#8203;(java.util.Set&lt;java.lang.String&gt;&nbsp;scannedQRHashes)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setQRCodeHashes(java.util.List)">setQRCodeHashes</a></span>&#8203;(java.util.List&lt;java.lang.String&gt;&nbsp;scannedQRHashes)</code></th>
 <td class="colLast">
 <div class="block">Sets the list of QR code hashes that have been scanned by player</div>
 </td>
@@ -316,7 +316,7 @@ implements java.io.Serializable</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;(java.util.UUID,java.lang.String,java.lang.String,java.lang.String,java.util.Set)">
+<a id="&lt;init&gt;(java.util.UUID,java.lang.String,java.lang.String,java.lang.String,java.util.List)">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -326,7 +326,7 @@ implements java.io.Serializable</pre>
               java.lang.String&nbsp;username,
               java.lang.String&nbsp;phoneNo,
               java.lang.String&nbsp;email,
-              java.util.Set&lt;java.lang.String&gt;&nbsp;qrCodeHashes)</pre>
+              java.util.List&lt;java.lang.String&gt;&nbsp;qrCodeHashes)</pre>
 <div class="block">This initializes a Player with the deviceId, username, phoneNo, and email.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -338,7 +338,7 @@ implements java.io.Serializable</pre>
 </dl>
 </li>
 </ul>
-<a id="&lt;init&gt;(java.lang.String,java.util.UUID,java.lang.String,java.lang.String,java.lang.String,java.util.Set)">
+<a id="&lt;init&gt;(java.lang.String,java.util.UUID,java.lang.String,java.lang.String,java.lang.String,java.util.List)">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -349,7 +349,7 @@ implements java.io.Serializable</pre>
               java.lang.String&nbsp;username,
               java.lang.String&nbsp;phoneNo,
               java.lang.String&nbsp;email,
-              java.util.Set&lt;java.lang.String&gt;&nbsp;qrCodeHashes)</pre>
+              java.util.List&lt;java.lang.String&gt;&nbsp;qrCodeHashes)</pre>
 <div class="block">This initializes a Player with the firebase document id, deviceId, username, phoneNo, and
  email.</div>
 <dl>
@@ -523,7 +523,7 @@ implements java.io.Serializable</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getQrCodeHashes</h4>
-<pre class="methodSignature">public&nbsp;java.util.Set&lt;java.lang.String&gt;&nbsp;getQrCodeHashes()</pre>
+<pre class="methodSignature">public&nbsp;java.util.List&lt;java.lang.String&gt;&nbsp;getQrCodeHashes()</pre>
 <div class="block">Retrieve all of the QRCodes this player has scanned.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -537,7 +537,7 @@ implements java.io.Serializable</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getQRCodeHashes</h4>
-<pre class="methodSignature">public&nbsp;java.util.Set&lt;java.lang.String&gt;&nbsp;getQRCodeHashes()</pre>
+<pre class="methodSignature">public&nbsp;java.util.List&lt;java.lang.String&gt;&nbsp;getQRCodeHashes()</pre>
 <div class="block">Returns a set of QR code hashes that have been scanned by player</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -545,13 +545,13 @@ implements java.io.Serializable</pre>
 </dl>
 </li>
 </ul>
-<a id="setQRCodeHashes(java.util.Set)">
+<a id="setQRCodeHashes(java.util.List)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>setQRCodeHashes</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;setQRCodeHashes&#8203;(java.util.Set&lt;java.lang.String&gt;&nbsp;scannedQRHashes)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;setQRCodeHashes&#8203;(java.util.List&lt;java.lang.String&gt;&nbsp;scannedQRHashes)</pre>
 <div class="block">Sets the list of QR code hashes that have been scanned by player</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
