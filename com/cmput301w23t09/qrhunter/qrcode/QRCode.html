@@ -169,10 +169,10 @@ implements java.io.Serializable</pre>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String,java.lang.String,android.media.Image,java.lang.Integer,android.location.Location,java.util.ArrayList,java.util.ArrayList,java.util.ArrayList)">QRCode</a></span>&#8203;(java.lang.String&nbsp;hash,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String,java.lang.String,android.media.Image,long,android.location.Location,java.util.ArrayList,java.util.ArrayList,java.util.ArrayList)">QRCode</a></span>&#8203;(java.lang.String&nbsp;hash,
       java.lang.String&nbsp;name,
       android.media.Image&nbsp;visualRepresentation,
-      java.lang.Integer&nbsp;score,
+      long&nbsp;score,
       android.location.Location&nbsp;loc,
       java.util.ArrayList&lt;<a href="../photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a>&gt;&nbsp;photos,
       java.util.ArrayList&lt;<a href="../comment/Comment.html" title="class in com.cmput301w23t09.qrhunter.comment">Comment</a>&gt;&nbsp;comments,
@@ -285,7 +285,7 @@ implements java.io.Serializable</pre>
 </td>
 </tr>
 <tr id="i12" class="altColor">
-<td class="colFirst"><code>java.lang.Integer</code></td>
+<td class="colFirst"><code>java.lang.Long</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getScore()">getScore</a></span>()</code></th>
 <td class="colLast">
 <div class="block">This returns the score of the QR code</div>
@@ -348,7 +348,7 @@ implements java.io.Serializable</pre>
 </dl>
 </li>
 </ul>
-<a id="&lt;init&gt;(java.lang.String,java.lang.String,android.media.Image,java.lang.Integer,android.location.Location,java.util.ArrayList,java.util.ArrayList,java.util.ArrayList)">
+<a id="&lt;init&gt;(java.lang.String,java.lang.String,android.media.Image,long,android.location.Location,java.util.ArrayList,java.util.ArrayList,java.util.ArrayList)">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -357,7 +357,7 @@ implements java.io.Serializable</pre>
 <pre>public&nbsp;QRCode&#8203;(java.lang.String&nbsp;hash,
               java.lang.String&nbsp;name,
               android.media.Image&nbsp;visualRepresentation,
-              java.lang.Integer&nbsp;score,
+              long&nbsp;score,
               android.location.Location&nbsp;loc,
               java.util.ArrayList&lt;<a href="../photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a>&gt;&nbsp;photos,
               java.util.ArrayList&lt;<a href="../comment/Comment.html" title="class in com.cmput301w23t09.qrhunter.comment">Comment</a>&gt;&nbsp;comments,
@@ -435,7 +435,7 @@ implements java.io.Serializable</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getScore</h4>
-<pre class="methodSignature">public&nbsp;java.lang.Integer&nbsp;getScore()</pre>
+<pre class="methodSignature">public&nbsp;java.lang.Long&nbsp;getScore()</pre>
 <div class="block">This returns the score of the QR code</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>

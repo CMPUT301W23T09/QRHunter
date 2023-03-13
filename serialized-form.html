@@ -130,9 +130,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Phone number of the player</div>
 </li>
 <li class="blockList">
-<h4>scannedQRHashes</h4>
-<pre>java.util.ArrayList&lt;java.lang.String&gt; scannedQRHashes</pre>
-<div class="block">Array of QR code hashes associated with player</div>
+<h4>qrCodeHashes</h4>
+<pre>java.util.Set&lt;java.lang.String&gt; qrCodeHashes</pre>
+<div class="block">QRCode hashes the player has scanned</div>
 </li>
 <li class="blockListLast">
 <h4>username</h4>
@@ -190,7 +190,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </li>
 <li class="blockList">
 <h4>score</h4>
-<pre>java.lang.Integer score</pre>
+<pre>long score</pre>
 <div class="block">This is the score of the QR code</div>
 </li>
 <li class="blockListLast">
