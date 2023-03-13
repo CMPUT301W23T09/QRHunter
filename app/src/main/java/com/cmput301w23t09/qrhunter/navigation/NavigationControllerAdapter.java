@@ -3,7 +3,7 @@ package com.cmput301w23t09.qrhunter.navigation;
 import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import com.cmput301w23t09.qrhunter.GameController;
-import com.cmput301w23t09.qrhunter.MapsFragment;
+import com.cmput301w23t09.qrhunter.map.MapFragment;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.profile.ProfileFragment;
 import com.cmput301w23t09.qrhunter.scanqr.ScannerFragment;
@@ -31,7 +31,7 @@ public class NavigationControllerAdapter implements NavigationBarView.OnItemSele
       gameController.setBody(new ProfileFragment(gameController, deviceUUID));
     } else if (selectedItemId == R.id.navigation_qr_finder) {
       // mainController.setBody(new QRFinderFragment());
-      gameController.setBody(new MapsFragment());
+//      gameController.setBody(new MapFragment());
     } else if (selectedItemId == R.id.navigation_social) {
       // mainController.setBody(new SocialFragment());
     } else {
