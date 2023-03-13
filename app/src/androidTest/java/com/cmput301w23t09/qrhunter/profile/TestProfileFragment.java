@@ -53,13 +53,7 @@ public class TestProfileFragment {
     mockPlayerID = "001";
     mockUUID = UUID.randomUUID();
     mockPlayer =
-        new Player(
-            mockPlayerID,
-            mockUUID,
-            "Irene",
-            "5873571506",
-            "isun@ualberta.ca",
-            null);
+        new Player(mockPlayerID, mockUUID, "Irene", "5873571506", "isun@ualberta.ca", null);
     // create mock qr codes
     mockQRCodes = new ArrayList<>();
 
