@@ -51,6 +51,7 @@ public class TestGameActivity {
             });
   }
 
+  /** Registered players should be directed to game activity. */
   @Test
   public void shouldSwitchToGameActivityIfHasExistingPlayer() {
     solo.waitForActivity(GameActivity.class, 15000);
