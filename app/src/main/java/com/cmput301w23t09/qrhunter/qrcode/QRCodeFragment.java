@@ -22,6 +22,7 @@ import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoFragment;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.Serializable;
+import java.util.concurrent.ExecutionException;
 
 public class QRCodeFragment extends DialogFragment implements Serializable {
 
@@ -61,7 +62,11 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     activePlayer = (Player) getArguments().getSerializable("activePlayer");
     locationHandler = new LocationHandler(this);
     qrCodeDatabase = QRCodeDatabase.getInstance();
-    setupViews(view);
+    try {
+      setupViews(view);
+    } catch (ExecutionException | InterruptedException e) {
+      throw new RuntimeException(e);
+    }
     updateLocationPhoto();
     return createAlertDialog(view);
   }
@@ -71,11 +76,15 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
    *
    * @param view The view that displays fragment_qrcode.xml
    */
-  private void setupViews(View view) {
+  private void setupViews(View view) throws ExecutionException, InterruptedException {
     qrName = view.findViewById(R.id.qr_name);
     locationPhoto = view.findViewById(R.id.location_photo);
     locationCheckbox = view.findViewById(R.id.location_request_box);
-    qrName.setText(qrCode.getHash());
+    qrName.setText(qrCode.getName());
+
+    ImageView qrCodeVisual = view.findViewById(R.id.qr_code_visual);
+    qrCodeVisual.setImageBitmap(qrCode.getVisualRepresentation());
+
     takeLocationPhotoBtn = view.findViewById(R.id.take_location_photo_btn);
     takeLocationPhotoBtn.setOnClickListener(
         v -> {
