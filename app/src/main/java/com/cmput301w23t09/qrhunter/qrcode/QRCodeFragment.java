@@ -36,6 +36,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   private Player activePlayer;
   private FloatingActionButton addButton;
   private FloatingActionButton deleteButton;
+  private boolean disableDB;
   private QRCodeDatabase qrCodeDatabase;
 
   /**
@@ -43,12 +44,14 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
    *
    * @param qrCode The QR code to view
    * @param activePlayer The currently active/logged-in player
+   * @param disableDB Whether to disable the database for testing purposes (TEMPORARY)
    * @return QRCodeFragment
    */
-  public static QRCodeFragment newInstance(QRCode qrCode, Player activePlayer) {
+  public static QRCodeFragment newInstance(QRCode qrCode, Player activePlayer, boolean disableDB) {
     Bundle args = new Bundle();
     args.putSerializable("qrcode", qrCode);
     args.putSerializable("activePlayer", activePlayer);
+    args.putBoolean("disableDB", disableDB);
     QRCodeFragment fragment = new QRCodeFragment();
     fragment.setArguments(args);
     return fragment;
@@ -60,7 +63,9 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     qrCode = (QRCode) getArguments().getSerializable("qrcode");
     activePlayer = (Player) getArguments().getSerializable("activePlayer");
     locationHandler = new LocationHandler(this);
-    qrCodeDatabase = QRCodeDatabase.getInstance();
+    disableDB = getArguments().getBoolean("disableDB");
+    if (disableDB) qrCodeDatabase = null;
+    else qrCodeDatabase = QRCodeDatabase.getInstance();
     setupViews(view);
     updateLocationPhoto();
     return createAlertDialog(view);
@@ -104,8 +109,10 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     // implementing the add button
     addButton.setOnClickListener(
         v -> {
-          qrCodeDatabase.addQRCode(qrCode);
-          qrCodeDatabase.addPlayerToQR(activePlayer, qrCode);
+          if (!disableDB) {
+            qrCodeDatabase.addQRCode(qrCode);
+            qrCodeDatabase.addPlayerToQR(activePlayer, qrCode);
+          }
           addButton.setVisibility(View.GONE);
           deleteButton.setVisibility(View.VISIBLE);
         });
@@ -113,7 +120,9 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     // implementing the delete button
     deleteButton.setOnClickListener(
         v -> {
-          qrCodeDatabase.removeQRCodeFromPlayer(activePlayer, qrCode);
+          if (!disableDB) {
+            qrCodeDatabase.removeQRCodeFromPlayer(activePlayer, qrCode);
+          }
           addButton.setVisibility(View.VISIBLE);
           deleteButton.setVisibility(View.GONE);
         });
@@ -170,28 +179,30 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
    * display the remove (x) QRCode button if the player has it.
    */
   private void updateAddDeleteButton() {
-    qrCodeDatabase.playerHasQRCode(
-        activePlayer,
-        qrCode,
-        results -> {
-          if (results.isSuccessful()) {
-            if (results.getData()) {
-              // QR code hash is already added to the player's account
-              // Thus, display delete button
-              addButton.setVisibility(View.GONE);
-              deleteButton.setVisibility(View.VISIBLE);
+    if (!disableDB) {
+      qrCodeDatabase.playerHasQRCode(
+          activePlayer,
+          qrCode,
+          results -> {
+            if (results.isSuccessful()) {
+              if (results.getData()) {
+                // QR code hash is already added to the player's account
+                // Thus, display delete button
+                addButton.setVisibility(View.GONE);
+                deleteButton.setVisibility(View.VISIBLE);
+              } else {
+                // QR code hash is not yet added to the player's account
+                // Thus, display add button
+                addButton.setVisibility(View.VISIBLE);
+                deleteButton.setVisibility(View.GONE);
+              }
             } else {
-              // QR code hash is not yet added to the player's account
-              // Thus, display add button
-              addButton.setVisibility(View.VISIBLE);
-              deleteButton.setVisibility(View.GONE);
+              Log.w("QRCodeFragment", "Error getting player by device ID.", results.getException());
+              Toast.makeText(getContext(), "Error getting player by device ID.", Toast.LENGTH_SHORT)
+                  .show();
             }
-          } else {
-            Log.w("QRCodeFragment", "Error getting player by device ID.", results.getException());
-            Toast.makeText(getContext(), "Error getting player by device ID.", Toast.LENGTH_SHORT)
-                .show();
-          }
-        });
+          });
+    }
   }
 
   /**
