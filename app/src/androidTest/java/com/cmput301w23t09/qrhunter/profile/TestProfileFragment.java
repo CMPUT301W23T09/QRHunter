@@ -8,16 +8,12 @@ import com.cmput301w23t09.qrhunter.GameActivity;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
 import com.robotium.solo.Solo;
-
 import junit.framework.TestCase;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-/**
- * Test classes for profile activity
- */
+/** Test classes for profile activity */
 public class TestProfileFragment {
   private Solo solo;
 
@@ -26,6 +22,7 @@ public class TestProfileFragment {
 
   /**
    * Runs before all tests and creates solo instance
+   *
    * @throws Exception
    */
   @Before
@@ -36,9 +33,7 @@ public class TestProfileFragment {
     solo.clickOnView(solo.getView(R.id.navigation_my_profile));
   }
 
-  /**
-   * Checks if the current fragment is correct
-   */
+  /** Checks if the current fragment is correct */
   @Test
   public void testStartProfile() {
     // get current fragment and check if it is a profile fragment
@@ -46,9 +41,7 @@ public class TestProfileFragment {
     assertTrue(gc.getBody() instanceof ProfileFragment);
   }
 
-  /**
-   * Checks if the spinners are displayed correctly
-   */
+  /** Checks if the spinners are displayed correctly */
   @Test
   public void testSpinnerView() {
     // click on spinner
@@ -57,4 +50,6 @@ public class TestProfileFragment {
     TestCase.assertTrue(solo.waitForText("Ascending", 1, 2000));
     TestCase.assertTrue(solo.waitForText("Descending", 1, 2000));
   }
+
+  /** */
 }

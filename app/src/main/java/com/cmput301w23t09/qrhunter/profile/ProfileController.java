@@ -228,7 +228,8 @@ public class ProfileController {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         QRCode qrCode = qrCodes.get(position);
-        QRCodeFragment.newInstance(qrCode, gameController.getActivePlayer()).show(fragment.getParentFragmentManager(), "");
+        QRCodeFragment.newInstance(qrCode, gameController.getActivePlayer())
+            .show(fragment.getParentFragmentManager(), "");
       }
     };
   }
@@ -272,6 +273,7 @@ public class ProfileController {
 
   /**
    * Finds the position of the user's top QR code relative to all QR codes
+   *
    * @param queryDocumentSnapshots Documents for all QR codes
    * @param topQR The user's highest scoring QR code
    * @return -1 if the user's top QR code was not found in the collection
@@ -293,9 +295,7 @@ public class ProfileController {
     return -1;
   }
 
-  /**
-   * Calculates the percentile rank of the user's top QR code by score relative to all QR codes
-   */
+  /** Calculates the percentile rank of the user's top QR code by score relative to all QR codes */
   public void calculateRankOfHighestQRScore() {
     if (qrCodes.size() <= 0) {
       return;
@@ -304,31 +304,38 @@ public class ProfileController {
     qrCodes.sort(new ScoreComparator().reversed());
     QRCode topQR = qrCodes.get(0);
     Query query = qrcodeCollection.orderBy("score", Query.Direction.ASCENDING);
-    query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-      @Override
-      public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-        int topQRPosition = getTopQRPosition(queryDocumentSnapshots, topQR);
-        int totalNumQRCodes = queryDocumentSnapshots.size();
+    query
+        .get()
+        .addOnSuccessListener(
+            new OnSuccessListener<QuerySnapshot>() {
+              @Override
+              public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                int topQRPosition = getTopQRPosition(queryDocumentSnapshots, topQR);
+                int totalNumQRCodes = queryDocumentSnapshots.size();
 
-        if (topQRPosition == -1) {
-          return;
-        }
+                if (topQRPosition == -1) {
+                  return;
+                }
 
-        float percentileRank = ((topQRPosition - 1) / (float) totalNumQRCodes) * 100;
-        displayHighestQRScoreToast(percentileRank);
-      }
-    });
+                float percentileRank = ((topQRPosition - 1) / (float) totalNumQRCodes) * 100;
+                displayHighestQRScoreToast(percentileRank);
+              }
+            });
   }
 
   /**
    * Displays the percentile rank of the user's top QR code by score relative to all QR codes
+   *
    * @param percentile Percentile value for the user's top QR code
    */
   private void displayHighestQRScoreToast(float percentile) {
     int duration = Toast.LENGTH_SHORT;
     Context context = fragment.getActivity();
     String formattedPercentile = String.format("%.2f", 100.0 - percentile);
-    String message = String.format("Your highest scoring unique QR code is in the top %s%% in terms of points.", formattedPercentile);
+    String message =
+        String.format(
+            "Your highest scoring unique QR code is in the top %s%% in terms of points.",
+            formattedPercentile);
     Toast toast = Toast.makeText(context, message, duration);
     toast.show();
   }
