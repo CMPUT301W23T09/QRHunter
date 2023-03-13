@@ -281,7 +281,7 @@ public class ProfileController {
 
     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
       String qrHash = documentSnapshot.getString("hash");
-      int score = documentSnapshot.getLong("score").intValue();
+//      int score = documentSnapshot.getLong("score").intValue();
 
       if (topQR != null && qrHash.equals(topQR.getHash())) {
         return position;
@@ -305,7 +305,7 @@ public class ProfileController {
 //    QRCode topQR = qrCodes.get(0);
     QRCodeTest topQR = new QRCodeTest("3e744b9dc39389baf0c5a0660589b8402f3dbb49b89b3e75f2c9355852a3c677", 40);
     CollectionReference qrcodeCollectionTest = db.collection("qrcodestest");
-    Query query = qrcodeCollectionTest.orderBy("score", Query.Direction.DESCENDING);
+    Query query = qrcodeCollectionTest.orderBy("score", Query.Direction.ASCENDING);
     query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
       @Override
       public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -316,7 +316,7 @@ public class ProfileController {
           return;
         }
 
-        float percentileRank = ((topQRPosition - 1) / totalNumQRCodes) * 100;
+        float percentileRank = ((topQRPosition - 1) / (float) totalNumQRCodes) * 100;
         displayHighestQRScoreToast(percentileRank);
       }
     });
@@ -329,8 +329,8 @@ public class ProfileController {
   private void displayHighestQRScoreToast(float percentile) {
     int duration = Toast.LENGTH_SHORT;
     Context context = fragment.getActivity();
-    String formattedPercentile = String.format("%2f", 100 - percentile);
-    String message = "Your highest scoring unique QR code is in the top ${formattedPercentile} in terms of points.";
+    String formattedPercentile = String.format("%.2f", 100.0 - percentile);
+    String message = String.format("Your highest scoring unique QR code is in the top %s%% in terms of points.", formattedPercentile);
     Toast toast = Toast.makeText(context, message, duration);
     toast.show();
   }
