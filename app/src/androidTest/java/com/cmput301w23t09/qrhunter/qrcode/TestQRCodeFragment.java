@@ -18,6 +18,9 @@ import static org.mockito.Mockito.mock;
 
 import android.Manifest;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.widget.ImageView;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
@@ -137,6 +140,9 @@ public class TestQRCodeFragment {
     // TODO: Currently, QRCodeFragment shows hash, CHANGE THIS TO NAME ONCE IMPLEMENTED
     onView(withId(R.id.qr_name)).inRoot(isDialog()).check(matches(withText("RobaqinectTiger✿")));
     onView(withId(R.id.qr_points)).inRoot(isDialog()).check(matches(withText("32 PTS")));
+    ImageView qrVisualView = (ImageView) solo.getView(R.id.qr_code_visual);
+    Bitmap qrVisualBitmap = ((BitmapDrawable) qrVisualView.getDrawable()).getBitmap();
+    assertTrue(qrVisualBitmap.sameAs(qrCode.getVisualRepresentation()));
   }
 
   /** Checks if we can set the QRCode's location by checking the checkbox */
