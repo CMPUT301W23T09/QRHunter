@@ -22,10 +22,10 @@ public class LeaderboardFragment extends BaseFragment {
 
   private final LeaderboardController controller;
   private LeaderboardEntryAdapter entryAdapter;
-  private List<LeaderboardEntry<?>> leaderboardEntries;
+  private List<LeaderboardEntry> leaderboardEntries;
 
   private String currentActiveTab;
-  private Map<String, Leaderboard<?>> cachedLeaderboards;
+  private Map<String, Leaderboard> cachedLeaderboards;
 
   public LeaderboardFragment(GameController gameController) {
     super(gameController);
@@ -65,7 +65,7 @@ public class LeaderboardFragment extends BaseFragment {
             currentActiveTab = tabText;
 
             // Render cached leaderboard data if any exists.
-            Leaderboard<?> cachedLeaderboard = cachedLeaderboards.getOrDefault(tabText, null);
+            Leaderboard cachedLeaderboard = cachedLeaderboards.getOrDefault(tabText, null);
             if (cachedLeaderboard != null) {
               renderLeaderboard(cachedLeaderboard);
             } else {
@@ -115,8 +115,7 @@ public class LeaderboardFragment extends BaseFragment {
     }
   }
 
-  private void onLeaderboardCallback(
-      String tabName, Exception exception, Leaderboard<?> leaderboard) {
+  private void onLeaderboardCallback(String tabName, Exception exception, Leaderboard leaderboard) {
     if (exception != null) {
       Log.e(getClass().getName(), exception.getLocalizedMessage());
       Toast.makeText(
@@ -140,14 +139,14 @@ public class LeaderboardFragment extends BaseFragment {
     entryAdapter.notifyDataSetChanged();
   }
 
-  private void renderLeaderboard(Leaderboard<?> leaderboard) {
+  private void renderLeaderboard(Leaderboard leaderboard) {
     clearLeaderboard();
 
     leaderboardEntries.addAll(leaderboard.getEntries());
     entryAdapter.notifyDataSetChanged();
   }
 
-  private void renderLeaderboard(Map<String, QRLeaderboard> leaderboardWithHeaders) {
+  private void renderLeaderboard(Map<String, Leaderboard> leaderboardWithHeaders) {
     // TODO: when locations are implemented
   }
 }

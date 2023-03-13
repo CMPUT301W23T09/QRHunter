@@ -25,7 +25,7 @@ public class LeaderboardController {
    *
    * @param callback callback to call with leaderboard
    */
-  public void getTotalPointsLeaderboard(BiConsumer<Exception, PlayerLeaderboard> callback) {
+  public void getTotalPointsLeaderboard(BiConsumer<Exception, Leaderboard> callback) {
     PlayerDatabase.getInstance()
         .getAllPlayers(
             task -> {
@@ -36,7 +36,7 @@ public class LeaderboardController {
               }
 
               // Map each player to their total qr code hash scores.
-              List<LeaderboardEntry<Player>> entries = new ArrayList<>();
+              List<LeaderboardEntry> entries = new ArrayList<>();
               AtomicInteger entriesLeft = new AtomicInteger(task.getData().size());
               AtomicReference<Exception> exception = new AtomicReference<>();
 
@@ -53,7 +53,8 @@ public class LeaderboardController {
                                     .reduce(0, Long::sum);
 
                             // Add new player leaderboard entry
-                            entries.add(new LeaderboardEntry<>(player, score));
+                            entries.add(
+                                new LeaderboardEntry(player.getUsername(), score, "points"));
                           } else {
                             exception.set(qrCodeHashesTask.getException());
                           }
@@ -68,7 +69,7 @@ public class LeaderboardController {
 
                             // entries now contains all players and their scores.
                             Collections.sort(entries);
-                            callback.accept(null, new PlayerLeaderboard(entries));
+                            callback.accept(null, new Leaderboard(entries));
                           }
                         });
               }
@@ -80,7 +81,7 @@ public class LeaderboardController {
    *
    * @param callback callback to call with leaderboard
    */
-  public void getTopScansLeaderboard(BiConsumer<Exception, PlayerLeaderboard> callback) {
+  public void getTopScansLeaderboard(BiConsumer<Exception, Leaderboard> callback) {
     PlayerDatabase.getInstance()
         .getAllPlayers(
             task -> {
@@ -89,14 +90,14 @@ public class LeaderboardController {
                 return;
               }
 
-              List<LeaderboardEntry<Player>> entries = new ArrayList<>();
+              List<LeaderboardEntry> entries = new ArrayList<>();
               for (Player player : task.getData()) {
                 long scans = player.getQrCodeHashes().size();
-                entries.add(new LeaderboardEntry<>(player, scans));
+                entries.add(new LeaderboardEntry(player.getUsername(), scans, "codes"));
               }
 
               Collections.sort(entries);
-              callback.accept(null, new PlayerLeaderboard(entries));
+              callback.accept(null, new Leaderboard(entries));
             });
   }
 
@@ -105,7 +106,7 @@ public class LeaderboardController {
    *
    * @param callback callback to call with leaderboard
    */
-  public void getTopQRCodesLeaderboard(BiConsumer<Exception, QRLeaderboard> callback) {
+  public void getTopQRCodesLeaderboard(BiConsumer<Exception, Leaderboard> callback) {
     QRCodeDatabase.getInstance()
         .getAllQRCodes(
             task -> {
@@ -114,18 +115,18 @@ public class LeaderboardController {
                 return;
               }
 
-              List<LeaderboardEntry<QRCode>> entries = new ArrayList<>();
+              List<LeaderboardEntry> entries = new ArrayList<>();
               for (QRCode qrCode : task.getData()) {
-                entries.add(new LeaderboardEntry<>(qrCode, qrCode.getScore()));
+                entries.add(new LeaderboardEntry(qrCode.getName(), qrCode.getScore(), "points"));
               }
 
               Collections.sort(entries);
-              callback.accept(null, new QRLeaderboard(entries));
+              callback.accept(null, new Leaderboard(entries));
             });
   }
 
   public void getTopQRCodesByRegionLeaderboard(
-      BiConsumer<Exception, Map<String, QRLeaderboard>> callback) {
+      BiConsumer<Exception, Map<String, Leaderboard>> callback) {
     // TODO: Implement after location recording is completed and fetch the region of the photo.
   }
 }

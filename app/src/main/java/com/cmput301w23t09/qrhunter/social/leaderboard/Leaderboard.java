@@ -2,15 +2,15 @@ package com.cmput301w23t09.qrhunter.social.leaderboard;
 
 import java.util.List;
 
-public abstract class Leaderboard<T> {
+public class Leaderboard {
 
-  private final List<LeaderboardEntry<T>> entries;
+  private final List<LeaderboardEntry> entries;
 
-  public Leaderboard(List<LeaderboardEntry<T>> entries) {
+  public Leaderboard(List<LeaderboardEntry> entries) {
     this.entries = entries;
   }
 
-  public List<LeaderboardEntry<T>> getEntries() {
+  public List<LeaderboardEntry> getEntries() {
     return entries;
   }
 }

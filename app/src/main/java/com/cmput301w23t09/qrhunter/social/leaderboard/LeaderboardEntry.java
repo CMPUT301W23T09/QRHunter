@@ -1,25 +1,38 @@
 package com.cmput301w23t09.qrhunter.social.leaderboard;
 
-public class LeaderboardEntry<T> implements Comparable<LeaderboardEntry<T>> {
+public class LeaderboardEntry implements Comparable<LeaderboardEntry> {
 
-  private final T key;
+  private final String name;
   private final long score;
+  private final String scoreSuffix;
 
-  public LeaderboardEntry(T key, long score) {
-    this.key = key;
+  public LeaderboardEntry(String name, long score, String scoreSuffix) {
+    this.name = name;
     this.score = score;
+    this.scoreSuffix = scoreSuffix;
   }
 
-  public T getKey() {
-    return key;
+  public String getName() {
+    return name;
   }
 
   public long getScore() {
     return score;
   }
 
+  public String getScoreSuffix() {
+    return scoreSuffix;
+  }
+
   @Override
-  public int compareTo(LeaderboardEntry<T> otherEntry) {
-    return Long.compare(otherEntry.getScore(), getScore());
+  public int compareTo(LeaderboardEntry otherEntry) {
+    int entryComparisonScore = Long.compare(otherEntry.getScore(), getScore());
+
+    // Compare name if score is equal.
+    if (entryComparisonScore == 0) {
+      return otherEntry.getName().compareTo(getName());
+    }
+
+    return entryComparisonScore;
   }
 }
