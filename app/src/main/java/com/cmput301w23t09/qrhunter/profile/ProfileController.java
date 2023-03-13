@@ -339,4 +339,19 @@ public class ProfileController {
     Toast toast = Toast.makeText(context, message, duration);
     toast.show();
   }
+
+  /**
+   * Set the qr codes of the profile, for UI testing only
+   */
+  public void setQRCodes(ArrayList<QRCode> qrCodes, Spinner orderSpinner, TextView totalPoints, TextView totalCodes, TextView topCodeScore) {
+    this.qrCodes = qrCodes;
+    // update qr code statistics
+    totalPoints.setText(
+            fragment.getString(R.string.total_points_txt, getTotalScore()));
+    totalCodes.setText(
+            fragment.getString(R.string.total_codes_txt, qrCodes.size()));
+    topCodeScore.setText(
+            fragment.getString(R.string.top_code_txt, getTopScore()));
+    updateQRListSort(orderSpinner);
+  }
 }
