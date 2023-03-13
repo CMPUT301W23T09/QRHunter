@@ -10,10 +10,10 @@ import java.util.UUID;
 /**
  * The MainController handles controlling whether or not to log the player in and also registration.
  */
-public class MainController {
-  private final MainActivity activity;
+public class LandingController {
+  private final LandingActivity activity;
 
-  public MainController(MainActivity activity) {
+  public LandingController(LandingActivity activity) {
     this.activity = activity;
 
     // Check if player is registered to determine which screen to show on launch.

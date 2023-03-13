@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import java.util.UUID;
 
 public class DeviceUtils {
-  private static final String DEVICE_UUID_FILE = "device_uuid.dat";
-  private static final String DEVICE_UUID_FILE_FIELD = "uuid";
+  public static final String DEVICE_UUID_FILE = "device_uuid.dat";
+  public static final String DEVICE_UUID_FILE_FIELD = "uuid";
 
   private DeviceUtils() {}
 

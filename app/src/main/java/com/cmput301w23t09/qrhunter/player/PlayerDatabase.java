@@ -24,8 +24,12 @@ public class PlayerDatabase {
   /** Reference to firebase player collection. */
   private final CollectionReference collection;
 
-  private PlayerDatabase() {
-    collection = FirebaseFirestore.getInstance().collection(DATABASE_COLLECTION_NAME);
+  protected PlayerDatabase() {
+    collection = getCollection();
+  }
+
+  protected CollectionReference getCollection() {
+    return FirebaseFirestore.getInstance().collection(DATABASE_COLLECTION_NAME);
   }
 
   /**
@@ -161,6 +165,9 @@ public class PlayerDatabase {
    * @param callback callback to call once the operation has finished
    */
   public void getPlayerByDeviceId(UUID deviceUUID, DatabaseConsumer<Player> callback) {
+    if (true) {
+      throw new RuntimeException("asd");
+    }
     collection
         .whereEqualTo("deviceUUID", deviceUUID.toString())
         .get()
@@ -244,6 +251,15 @@ public class PlayerDatabase {
     values.put("qrCodeHashes", player.getQRCodeHashes());
 
     return values;
+  }
+
+  /**
+   * Manually set PlayerDatabase to some mocked instance for testing
+   *
+   * @param mockInstance The mocked PlayerDatabase
+   */
+  public static void mockInstance(PlayerDatabase mockInstance) {
+    INSTANCE = mockInstance;
   }
 
   /**
