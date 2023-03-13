@@ -1,5 +1,6 @@
 package com.cmput301w23t09.qrhunter.profile;
 
+import android.content.Context;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -13,12 +14,15 @@ import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeAdapter;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.ScoreComparator;
 import com.cmput301w23t09.qrhunter.util.DeviceUtils;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
@@ -128,8 +132,7 @@ public class ProfileController {
                         // get list of players that have scanned the qr code
                         ArrayList<String> players = (ArrayList<String>) doc.get("players");
                         // add the qr code if the current player has scanned it
-                        assert players != null;
-                        if (players.contains(playerID)) {
+                        if (players != null && players.contains(playerID)) {
                           String hash = doc.getId();
                           Integer score = (int) (long) doc.get("score");
                           qrCodes.add(new QRCode(hash, null, null, score, null, null, null, null));
@@ -137,11 +140,17 @@ public class ProfileController {
                       }
                       // update qr code statistics
                       totalPoints.setText(
-                          fragment.getString(R.string.total_points_txt, getTotalScore()));
+                          gameController
+                              .getActivity()
+                              .getString(R.string.total_points_txt, getTotalScore()));
                       totalCodes.setText(
-                          fragment.getString(R.string.total_codes_txt, qrCodes.size()));
+                          gameController
+                              .getActivity()
+                              .getString(R.string.total_codes_txt, qrCodes.size()));
                       topCodeScore.setText(
-                          fragment.getString(R.string.top_code_txt, getTopScore()));
+                          gameController
+                              .getActivity()
+                              .getString(R.string.top_code_txt, getTopScore()));
                       // sort codes and update qr code list view
                       updateQRListSort(orderSpinner);
                     }
@@ -218,6 +227,22 @@ public class ProfileController {
   }
 
   /**
+   * This is the onclicklistener for qr codes displayed in the profile
+   *
+   * @return Return the onclicklistener
+   */
+  public AdapterView.OnItemClickListener handleQRSelect() {
+    return new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        QRCode qrCode = qrCodes.get(position);
+        QRCodeFragment.newInstance(qrCode, gameController.getActivePlayer())
+            .show(fragment.getParentFragmentManager(), "");
+      }
+    };
+  }
+
+  /**
    * This computes the sum of code scores
    *
    * @return Return the sum of code scores
@@ -251,6 +276,75 @@ public class ProfileController {
    * @param msg The message to display
    */
   private void showMsg(String msg) {
-    Toast.makeText(fragment.getActivity(), msg, Toast.LENGTH_SHORT).show();
+    Toast.makeText(gameController.getActivity(), msg, Toast.LENGTH_SHORT).show();
+  }
+
+  /**
+   * Finds the position of the user's top QR code relative to all QR codes
+   *
+   * @param queryDocumentSnapshots Documents for all QR codes
+   * @param topQR The user's highest scoring QR code
+   * @return -1 if the user's top QR code was not found in the collection
+   * @return The user's top QR position relative to all the other QR code positions
+   */
+  private int getTopQRPosition(QuerySnapshot queryDocumentSnapshots, QRCode topQR) {
+    int position = 1;
+
+    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+      String qrHash = documentSnapshot.getString("hash");
+
+      if (topQR != null && qrHash.equals(topQR.getHash())) {
+        return position;
+      }
+
+      position++;
+    }
+
+    return -1;
+  }
+
+  /** Calculates the percentile rank of the user's top QR code by score relative to all QR codes */
+  public void calculateRankOfHighestQRScore() {
+    if (qrCodes.size() <= 0) {
+      return;
+    }
+
+    qrCodes.sort(new ScoreComparator().reversed());
+    QRCode topQR = qrCodes.get(0);
+    Query query = qrcodeCollection.orderBy("score", Query.Direction.ASCENDING);
+    query
+        .get()
+        .addOnSuccessListener(
+            new OnSuccessListener<QuerySnapshot>() {
+              @Override
+              public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                int topQRPosition = getTopQRPosition(queryDocumentSnapshots, topQR);
+                int totalNumQRCodes = queryDocumentSnapshots.size();
+
+                if (topQRPosition == -1) {
+                  return;
+                }
+
+                float percentileRank = ((topQRPosition - 1) / (float) totalNumQRCodes) * 100;
+                displayHighestQRScoreToast(percentileRank);
+              }
+            });
+  }
+
+  /**
+   * Displays the percentile rank of the user's top QR code by score relative to all QR codes
+   *
+   * @param percentile Percentile value for the user's top QR code
+   */
+  private void displayHighestQRScoreToast(float percentile) {
+    int duration = Toast.LENGTH_SHORT;
+    Context context = gameController.getActivity();
+    String formattedPercentile = String.format("%.2f", 100.0 - percentile);
+    String message =
+        String.format(
+            "Your highest scoring unique QR code is in the top %s%% in terms of points.",
+            formattedPercentile);
+    Toast toast = Toast.makeText(context, message, duration);
+    toast.show();
   }
 }

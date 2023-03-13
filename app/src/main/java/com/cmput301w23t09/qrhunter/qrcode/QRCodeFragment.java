@@ -150,7 +150,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
    * @see LocationPhotoController
    */
   public void updateLocationPhoto() {
-    if (qrCode.getPhotos().size() > 0) {
+    if (qrCode.getPhotos() != null && qrCode.getPhotos().size() > 0) {
       takeLocationPhotoBtn.setText(R.string.remove_location_photo);
       locationPhoto.setImageBitmap(qrCode.getPhotos().get(0).getPhoto());
     } else {

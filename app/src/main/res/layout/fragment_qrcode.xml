@@ -105,5 +105,4 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_delete" />
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -279,15 +279,6 @@ public class PlayerDatabase {
   }
 
   /**
-   * Manually set PlayerDatabase to some mocked instance for testing
-   *
-   * @param mockInstance The mocked PlayerDatabase
-   */
-  public static void mockInstance(PlayerDatabase mockInstance) {
-    INSTANCE = mockInstance;
-  }
-
-  /**
    * Retrieves the PlayerDatabase
    *
    * @return PlayerDatabase
@@ -298,5 +289,14 @@ public class PlayerDatabase {
     }
 
     return INSTANCE;
+  }
+
+  /**
+   * Sets instance to a mocked PlayerDatabase for testing purposes.
+   *
+   * @param mockPlayerDB The mocked PlayerDatabase to use.
+   */
+  public static void mockInstance(PlayerDatabase mockPlayerDB) {
+    INSTANCE = mockPlayerDB;
   }
 }

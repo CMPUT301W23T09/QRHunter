@@ -73,7 +73,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="2sp"
-        android:background="@color/material_dynamic_neutral40"
+        android:background="#5C5F61"
         tools:ignore="SmallSp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
