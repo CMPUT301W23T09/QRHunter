@@ -2,10 +2,11 @@ package com.cmput301w23t09.qrhunter.player;
 
 import com.cmput301w23t09.qrhunter.util.ValidationUtils;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+/** Represents a Player of QRHunter */
 public class Player implements Serializable {
   /** This is the firebase document id if any is associated with this object */
   private String documentId;
@@ -18,7 +19,7 @@ public class Player implements Serializable {
   /** Email of the player */
   private String email;
   /** QRCode hashes the player has scanned */
-  private Set<String> qrCodeHashes;
+  private List<String> qrCodeHashes;
 
   /**
    * This initializes a Player with the deviceId, username, phoneNo, and email.
@@ -30,7 +31,7 @@ public class Player implements Serializable {
    * @param qrCodeHashes QRCodes the player has scanned
    */
   public Player(
-      UUID deviceId, String username, String phoneNo, String email, Set<String> qrCodeHashes) {
+      UUID deviceId, String username, String phoneNo, String email, List<String> qrCodeHashes) {
     this.deviceId = deviceId;
     this.username = username;
     this.phoneNo = phoneNo;
@@ -55,7 +56,7 @@ public class Player implements Serializable {
       String username,
       String phoneNo,
       String email,
-      Set<String> qrCodeHashes) {
+      List<String> qrCodeHashes) {
     this.documentId = documentId;
     this.deviceId = deviceId;
     this.username = username;
@@ -173,8 +174,8 @@ public class Player implements Serializable {
    *
    * @return QR codes the player has scanned
    */
-  public Set<String> getQrCodeHashes() {
-    return new HashSet<>(qrCodeHashes);
+  public List<String> getQrCodeHashes() {
+    return new ArrayList<>(qrCodeHashes);
   }
 
   /**
@@ -182,7 +183,7 @@ public class Player implements Serializable {
    *
    * @return a set of qr code hashes scanned by player
    */
-  public Set<String> getQRCodeHashes() {
+  public List<String> getQRCodeHashes() {
     return qrCodeHashes;
   }
 
@@ -191,7 +192,7 @@ public class Player implements Serializable {
    *
    * @param scannedQRHashes a list of scanned QR code Hashes associated with player
    */
-  public void setQRCodeHashes(Set<String> scannedQRHashes) {
+  public void setQRCodeHashes(List<String> scannedQRHashes) {
     this.qrCodeHashes = scannedQRHashes;
   }
 }

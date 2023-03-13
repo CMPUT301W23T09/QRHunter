@@ -260,7 +260,7 @@ public class PlayerDatabase {
     ArrayList<String> qrCodeHashes = (ArrayList<String>) snapshot.get("qrCodeHashes");
 
     return new Player(
-        documentId, deviceUUID, username, phoneNo, email, new HashSet<>(qrCodeHashes));
+        documentId, deviceUUID, username, phoneNo, email, new ArrayList<>(qrCodeHashes));
   }
 
   /**

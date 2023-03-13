@@ -18,6 +18,9 @@ import static org.mockito.Mockito.mock;
 
 import android.Manifest;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.widget.ImageView;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
@@ -27,8 +30,8 @@ import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.robotium.solo.Solo;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Rule;
@@ -64,11 +67,11 @@ public class TestQRCodeFragment {
 
   /** Opens the QRCodeFragment, assuming we've scanned a QR code with hash "test-hash123" */
   @Before
-  public void setUp() {
+  public void setUp() throws ExecutionException, InterruptedException {
     mockPlayerUUID = UUID.randomUUID();
     mockPlayer =
         new Player(
-            "001", mockPlayerUUID, "johndoe42", "7801234567", "doe@ualberta.ca", new HashSet<>());
+            "001", mockPlayerUUID, "johndoe42", "7801234567", "doe@ualberta.ca", new ArrayList<>());
     mockQRCollection = new ArrayList<>();
 
     // Mock QRCodeDatabase
@@ -111,7 +114,13 @@ public class TestQRCodeFragment {
         .removeQRCodeFromPlayer(any(Player.class), any(QRCode.class));
     QRCodeDatabase.mockInstance(mockedQRCodeDatabase);
 
-    qrCode = new QRCode("test-hash123");
+    // Mock QRCode Info
+    // Actual Data: CMPUT301W23T09-QRHunter
+    // Hash: 8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d
+    // Name: RobaqinectTiger✿
+    // Score: 32 PTS
+    qrCode = new QRCode("8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d");
+
     qrCodeFragment = QRCodeFragment.newInstance(qrCode, mockPlayer);
     activityScenarioRule
         .getScenario()
@@ -127,9 +136,13 @@ public class TestQRCodeFragment {
 
   /** Checks if the QRCodeFragment displays the QRCode's name correctly */
   @Test
-  public void testQRNameDisplay() {
+  public void testCorrectDisplayInfo() {
     // TODO: Currently, QRCodeFragment shows hash, CHANGE THIS TO NAME ONCE IMPLEMENTED
-    onView(withId(R.id.qr_name)).inRoot(isDialog()).check(matches(withText("test-hash123")));
+    onView(withId(R.id.qr_name)).inRoot(isDialog()).check(matches(withText("RobaqinectTiger✿")));
+    onView(withId(R.id.qr_points)).inRoot(isDialog()).check(matches(withText("32 PTS")));
+    ImageView qrVisualView = (ImageView) solo.getView(R.id.qr_code_visual);
+    Bitmap qrVisualBitmap = ((BitmapDrawable) qrVisualView.getDrawable()).getBitmap();
+    assertTrue(qrVisualBitmap.sameAs(qrCode.getVisualRepresentation()));
   }
 
   /** Checks if we can set the QRCode's location by checking the checkbox */

@@ -11,6 +11,13 @@ import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoFragment;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Enables the ImageCapture camera use case to let players take location photos.
+ *
+ * @author John Mabanta
+ * @version 1.0
+ * @see CameraController
+ */
 public class CameraLocationPhotoController extends CameraController {
 
   private LocationPhotoController controller;
