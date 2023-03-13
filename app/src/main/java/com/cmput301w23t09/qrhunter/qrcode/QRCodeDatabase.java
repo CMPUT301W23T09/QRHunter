@@ -17,6 +17,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Manages all QRCode-related database operations, and ensures that the collection of QRCodes that a
+ * each player has scanned is consistent with the collection of players that have scanned a specific
+ * QR code.
+ */
 public class QRCodeDatabase {
   private static final String LOGGER_TAG = "QRCodeDatabase";
   private static final String DATABASE_COLLECTION_NAME = "qrcodes";
@@ -74,8 +79,24 @@ public class QRCodeDatabase {
                 return;
               }
 
-              // No player by the QRCode exists.
-              callback.accept(new DatabaseQueryResults<>(null));
+              // No hash by the QRCode exists.
+              try {
+                QRCode addedQR = new QRCode(hash);
+                Map<String, Object> data = qrCodeToDBValues(addedQR);
+                collection
+                    .document(hash)
+                    .set(data, SetOptions.merge())
+                    .addOnSuccessListener(
+                        results -> {
+                          callback.accept(new DatabaseQueryResults<>(addedQR));
+                        })
+                    .addOnFailureListener(
+                        e -> {
+                          Log.w(LOGGER_TAG, "Error writing document", e);
+                        });
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
             });
   }
 

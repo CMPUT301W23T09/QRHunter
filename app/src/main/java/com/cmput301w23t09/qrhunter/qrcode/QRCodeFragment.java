@@ -22,11 +22,23 @@ import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoFragment;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.Serializable;
+import java.util.concurrent.ExecutionException;
 
+/**
+ * Displays information about a specific QRCode. It also lets the user:
+ *
+ * <ul>
+ *   <li>Add scanned QR code to profile
+ *   <li>Remove selected QR code from profile
+ *   <li>Record geolocation of scanned QR code
+ *   <li>Take location photo of scanned qr code
+ * </ul>
+ *
+ * @author John Mabanta
+ * @version 1.0
+ */
 public class QRCodeFragment extends DialogFragment implements Serializable {
 
-  // TODO: Figure out how to know when to display Add (+) button or Delete (Trash) button
-  private TextView qrName;
   private ImageView locationPhoto;
   private QRCode qrCode;
   private Button takeLocationPhotoBtn;
@@ -61,7 +73,11 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     activePlayer = (Player) getArguments().getSerializable("activePlayer");
     locationHandler = new LocationHandler(this);
     qrCodeDatabase = QRCodeDatabase.getInstance();
-    setupViews(view);
+    try {
+      setupViews(view);
+    } catch (ExecutionException | InterruptedException e) {
+      throw new RuntimeException(e);
+    }
     updateLocationPhoto();
     return createAlertDialog(view);
   }
@@ -71,11 +87,19 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
    *
    * @param view The view that displays fragment_qrcode.xml
    */
-  private void setupViews(View view) {
-    qrName = view.findViewById(R.id.qr_name);
+  private void setupViews(View view) throws ExecutionException, InterruptedException {
     locationPhoto = view.findViewById(R.id.location_photo);
     locationCheckbox = view.findViewById(R.id.location_request_box);
-    qrName.setText(qrCode.getHash());
+
+    TextView qrName = view.findViewById(R.id.qr_name);
+    qrName.setText(qrCode.getName());
+
+    TextView qrScore = view.findViewById(R.id.qr_points);
+    qrScore.setText(qrCode.getScore().toString() + " PTS");
+
+    ImageView qrCodeVisual = view.findViewById(R.id.qr_code_visual);
+    qrCodeVisual.setImageBitmap(qrCode.getVisualRepresentation());
+
     takeLocationPhotoBtn = view.findViewById(R.id.take_location_photo_btn);
     takeLocationPhotoBtn.setOnClickListener(
         v -> {

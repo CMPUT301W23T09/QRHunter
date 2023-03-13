@@ -131,7 +131,7 @@ public class ProfileController {
                         assert players != null;
                         if (players.contains(playerID)) {
                           String hash = doc.getId();
-                          long score = (long) doc.get("score");
+                          Integer score = (int) (long) doc.get("score");
                           qrCodes.add(new QRCode(hash, null, null, score, null, null, null, null));
                         }
                       }
