@@ -19,6 +19,7 @@ import com.cmput301w23t09.qrhunter.GameActivity;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.robotium.solo.Solo;
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.junit.Before;
@@ -56,7 +57,9 @@ public class TestQRCodeFragment {
   @Before
   public void setUp() {
     mockPlayerUUID = UUID.randomUUID();
-    mockPlayer = new Player("001", mockPlayerUUID, "johndoe42", "7801234567", "doe@ualberta.ca");
+    mockPlayer =
+        new Player(
+            "001", mockPlayerUUID, "johndoe42", "7801234567", "doe@ualberta.ca", new ArrayList<>());
 
     qrCode = new QRCode("test-hash123");
     qrCodeFragment = QRCodeFragment.newInstance(qrCode, mockPlayer);
