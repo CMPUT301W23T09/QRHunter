@@ -26,8 +26,6 @@ import java.util.concurrent.ExecutionException;
 
 public class QRCodeFragment extends DialogFragment implements Serializable {
 
-  // TODO: Figure out how to know when to display Add (+) button or Delete (Trash) button
-  private TextView qrName;
   private ImageView locationPhoto;
   private QRCode qrCode;
   private Button takeLocationPhotoBtn;
@@ -77,10 +75,14 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
    * @param view The view that displays fragment_qrcode.xml
    */
   private void setupViews(View view) throws ExecutionException, InterruptedException {
-    qrName = view.findViewById(R.id.qr_name);
     locationPhoto = view.findViewById(R.id.location_photo);
     locationCheckbox = view.findViewById(R.id.location_request_box);
+
+    TextView qrName = view.findViewById(R.id.qr_name);
     qrName.setText(qrCode.getName());
+
+    TextView qrScore = view.findViewById(R.id.qr_points);
+    qrScore.setText(qrCode.getScore().toString() + " PTS");
 
     ImageView qrCodeVisual = view.findViewById(R.id.qr_code_visual);
     qrCodeVisual.setImageBitmap(qrCode.getVisualRepresentation());

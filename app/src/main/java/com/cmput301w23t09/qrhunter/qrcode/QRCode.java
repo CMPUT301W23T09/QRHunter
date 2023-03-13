@@ -41,7 +41,7 @@ public class QRCode implements Serializable {
         new QRCodeVisualFetcher(this)
             .execute("https://api.dicebear.com/5.x/pixel-art-neutral/jpg?seed=" + hash)
             .get();
-    this.score = 0;
+    this.score = calculateScore(hash);
 
     this.loc = null;
     this.photos = new ArrayList<>();
@@ -264,5 +264,42 @@ public class QRCode implements Serializable {
     long decimal = Long.parseLong(hash, 16);
     String binary = Long.toBinaryString(decimal);
     return binary;
+  }
+
+  /**
+   * Given the hash, calculate sore based on the proposed scoring system
+   *
+   * @param hash SHA256 hash to base score off of
+   * @return The score value of the QRCode
+   */
+  private int calculateScore(String hash) {
+    int score = 0;
+    char lastChar = '0';
+    int streak = 0;
+    for (int i = 0; i < hash.length(); i++) {
+      char current = hash.charAt(i);
+      if (current == lastChar) streak++;
+      else if (streak > 0) {
+        int value;
+        if (lastChar == '0') value = 20;
+        else value = Integer.parseInt(String.valueOf(lastChar), 16);
+        score += Math.pow(value, streak);
+        lastChar = current;
+        streak = 0;
+      } else {
+        lastChar = current;
+        streak = 0;
+      }
+    }
+
+    // Add any left over streak
+    if (streak > 0) {
+      int value;
+      if (lastChar == '0') value = 20;
+      else value = Integer.parseInt(String.valueOf(lastChar), 16);
+      score += Math.pow(value, streak);
+    }
+
+    return score;
   }
 }
