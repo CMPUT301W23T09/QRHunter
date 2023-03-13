@@ -11,6 +11,10 @@
     <string name="phone_hint">Phone</string>
     <string name="email_hint">Email</string>
     <string name="landing_screen_register_text">Start Hunting</string>
+    <string name="leaderboard_navigation_total_points">Total Points</string>
+    <string name="leaderboard_navigation_scanned">Scanned</string>
+    <string name="leaderboard_navigation_top_codes">Top Codes</string>
+    <string name="leaderboard_navigation_top_codes_by_region">Top Codes (By Region)</string>
     <string name="settings_btn_desc">Settings Button</string>
     <string name="username_txt">Username</string>
     <string name="score_txt">Score</string>
@@ -20,7 +24,8 @@
     <string name="total_points_txt">%d\nTotalPoints</string>
     <string name="total_codes_txt">%d\nCodes Scanned</string>
     <string name="top_code_txt">%d\nTop Code</string>
-    <string name="qr_code_name">UniqueGeneratedQRName</string>
+    <string name="search_for_player">Search For Player</string>
+    <string name="qr_code_name">SuperUniqueGeneratedQRName</string>
     <string name="placeholder_points">999 PTS</string>
     <string name="take_location_photo">Take Location Photo</string>
     <string name="remove_location_photo">Remove Location Photo</string>
@@ -42,5 +47,11 @@
     <string-array name="order_options">
         <item>Descending</item>
         <item>Ascending</item>
+    </string-array>
+    <string-array name="leaderboard_options">
+        <item>Total Points</item>
+        <item>Scanned</item>
+        <item>Top Codes</item>
+        <item>Top Codes (By Region)</item>
     </string-array>
 </resources>

@@ -16,7 +16,7 @@ public class QRCode implements Serializable {
   /** This is the visual representation of the QR code */
   private Image visualRepresentation; // type subject to change
   /** This is the score of the QR code */
-  private Integer score;
+  private long score;
   /** This is the location of the QR code */
   private Location loc;
   /** This is a list of photos that have been taken of the QR code */
@@ -62,7 +62,7 @@ public class QRCode implements Serializable {
       String hash,
       String name,
       Image visualRepresentation,
-      Integer score,
+      long score,
       Location loc,
       ArrayList<Photo> photos,
       ArrayList<Comment> comments,
@@ -109,7 +109,7 @@ public class QRCode implements Serializable {
    *
    * @return Return the score of the QR code
    */
-  public Integer getScore() {
+  public Long getScore() {
     return this.score;
   }
 
