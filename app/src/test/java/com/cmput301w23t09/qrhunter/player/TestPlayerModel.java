@@ -6,8 +6,8 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import android.telephony.PhoneNumberUtils;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ public class TestPlayerModel {
     mockPlayerUUID = UUID.randomUUID();
     mockPlayer =
         new Player(
-            "001", mockPlayerUUID, "johndoe42", "7801234567", "doe@ualberta.ca", new HashSet<>());
+            "001", mockPlayerUUID, "johndoe42", "7801234567", "doe@ualberta.ca", new ArrayList<>());
   }
 
   @Test
@@ -34,12 +34,12 @@ public class TestPlayerModel {
     assertEquals("johndoe42", mockPlayer.getUsername());
     assertEquals("7801234567", mockPlayer.getPhoneNo());
     assertEquals("doe@ualberta.ca", mockPlayer.getEmail());
-    assertEquals(new HashSet<>(), mockPlayer.getQRCodeHashes());
+    assertEquals(new ArrayList<>(), mockPlayer.getQRCodeHashes());
   }
 
   @Test
   public void testGetQRCodeHashes() {
-    Set<String> scannedQRHashes = new HashSet<>();
+    List<String> scannedQRHashes = new ArrayList<>();
     scannedQRHashes.add("hash1");
     scannedQRHashes.add("hash2");
     mockPlayer.setQRCodeHashes(scannedQRHashes);
@@ -205,7 +205,7 @@ public class TestPlayerModel {
 
   @Test
   public void testSetQRCodeHashes() {
-    Set<String> scannedQRHashes = new HashSet<>();
+    List<String> scannedQRHashes = new ArrayList<>();
     scannedQRHashes.add("hash1");
     scannedQRHashes.add("hash2");
     scannedQRHashes.add("hash3");
