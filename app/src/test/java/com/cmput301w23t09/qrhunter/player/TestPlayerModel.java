@@ -6,7 +6,6 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import android.telephony.PhoneNumberUtils;
-
 import java.util.ArrayList;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +21,9 @@ public class TestPlayerModel {
   private void setUp() {
     // Initial values don't matter as we'll be testing each getter/setter separately.
     mockPlayerUUID = UUID.randomUUID();
-    mockPlayer = new Player("001", mockPlayerUUID, "johndoe42", "7801234567", "doe@ualberta.ca",new ArrayList<>());
+    mockPlayer =
+        new Player(
+            "001", mockPlayerUUID, "johndoe42", "7801234567", "doe@ualberta.ca", new ArrayList<>());
   }
 
   @Test
@@ -213,10 +214,11 @@ public class TestPlayerModel {
 
   @Test
   public void testSetQRCodeHashesNullList() {
-    assertThrows(NullPointerException.class, () -> {
-      mockPlayer.setQRCodeHashes(null);
-    });
+    assertThrows(
+        NullPointerException.class,
+        () -> {
+          mockPlayer.setQRCodeHashes(null);
+        });
     assertEquals(new ArrayList<>(), mockPlayer.getQRCodeHashes());
   }
-
 }

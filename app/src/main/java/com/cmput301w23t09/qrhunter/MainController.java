@@ -28,7 +28,7 @@ public class MainController {
 
               if (results.getData() != null) {
                 // Player has existing data, switch to GameActivity.
-                switchToGameActivity();
+                switchToGameActivity(results.getData());
                 return;
               }
 
@@ -94,7 +94,7 @@ public class MainController {
               }
 
               // Successfully registered.
-              switchToGameActivity();
+              switchToGameActivity(player);
             });
   }
 
@@ -123,8 +123,9 @@ public class MainController {
   }
 
   /** Switches the current activity to the game activity. */
-  private void switchToGameActivity() {
+  private void switchToGameActivity(Player player) {
     Intent switchToGameActivityIntent = new Intent(activity, GameActivity.class);
+    switchToGameActivityIntent.putExtra("activePlayer", player);
     switchToGameActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
     activity.startActivity(switchToGameActivityIntent);
   }

@@ -1,14 +1,14 @@
 package com.cmput301w23t09.qrhunter.qrcode;
 
+import android.location.Location;
 import android.media.Image;
 import com.cmput301w23t09.qrhunter.comment.Comment;
-import com.cmput301w23t09.qrhunter.map.Location;
 import com.cmput301w23t09.qrhunter.photo.Photo;
-import com.cmput301w23t09.qrhunter.player.Player;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /** This class defines a QR code */
-public class QRCode {
+public class QRCode implements Serializable {
   /** This is the hash of the QR code */
   private String hash;
   /** This is the name of the QR code */
@@ -23,8 +23,27 @@ public class QRCode {
   private ArrayList<Photo> photos;
   /** This is a list of comments on the QR code */
   private ArrayList<Comment> comments;
-  /** This is a list of players who have scanned this QR code */
-  private ArrayList<Player> players;
+  /** This is a list of players (UUID) who have scanned this QR code */
+  private ArrayList<String> players;
+
+  /**
+   * Initializes a *newly-scanned* QRCode using only its hash value
+   *
+   * @param hash The hash of the newly-scanned QRCode
+   */
+  public QRCode(String hash) {
+    this.hash = hash;
+
+    // TODO: Initialize all these fields according to hash
+    this.name = "";
+    this.visualRepresentation = null;
+    this.score = 0;
+
+    this.loc = null;
+    this.photos = new ArrayList<>();
+    this.comments = new ArrayList<>();
+    this.players = new ArrayList<>();
+  }
 
   /**
    * This initializes a QR code with its hash, name, visual representation, score, location, photo,
@@ -37,7 +56,7 @@ public class QRCode {
    * @param loc This is the location of the QR code
    * @param photos This is the list of photos of the QR code
    * @param comments This is the list of comments on the QR code
-   * @param players This is the list of players that have scanned the QR code
+   * @param players This is the list of players (documentIDs) that have scanned the QR code
    */
   public QRCode(
       String hash,
@@ -47,7 +66,7 @@ public class QRCode {
       Location loc,
       ArrayList<Photo> photos,
       ArrayList<Comment> comments,
-      ArrayList<Player> players) {
+      ArrayList<String> players) {
     this.hash = hash;
     this.name = name;
     this.visualRepresentation = visualRepresentation;
@@ -117,8 +136,12 @@ public class QRCode {
    *
    * @return Return the player who have scanned the QR code
    */
-  public ArrayList<Player> getPlayers() {
+  public ArrayList<String> getPlayers() {
     return players;
+  }
+
+  public void setPlayers(ArrayList<String> players) {
+    this.players = players;
   }
 
   /**
@@ -180,7 +203,7 @@ public class QRCode {
    *
    * @param player This is the player to add
    */
-  public void addPlayer(Player player) {
+  public void addPlayer(String player) {
     this.players.add(player);
   }
 
@@ -189,7 +212,7 @@ public class QRCode {
    *
    * @param player This is the player to delete
    */
-  public void deletePlayer(Player player) {
+  public void deletePlayer(String player) {
     this.players.remove(player);
   }
 }

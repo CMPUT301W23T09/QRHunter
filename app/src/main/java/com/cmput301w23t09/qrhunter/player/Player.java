@@ -1,12 +1,12 @@
 package com.cmput301w23t09.qrhunter.player;
 
 import com.cmput301w23t09.qrhunter.util.ValidationUtils;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Player {
+public class Player implements Serializable {
   /** This is the firebase document id if any is associated with this object */
   private String documentId;
   /** UUID of the device this player is associated with */
@@ -46,14 +46,19 @@ public class Player {
    * @param email email of the player
    * @param scannedQRHashes qrcode hashes scanned by player
    */
-  public Player(String documentId, UUID deviceId, String username, String phoneNo, String email, ArrayList<String> scannedQRHashes) {
+  public Player(
+      String documentId,
+      UUID deviceId,
+      String username,
+      String phoneNo,
+      String email,
+      ArrayList<String> scannedQRHashes) {
     this.documentId = documentId;
     this.deviceId = deviceId;
     this.username = username;
     this.phoneNo = phoneNo;
     this.email = email;
     this.scannedQRHashes = scannedQRHashes;
-
   }
 
   /**
@@ -161,7 +166,8 @@ public class Player {
   }
 
   /**
-   * returns a list of QR code hashes that have been scanned by  player
+   * returns a list of QR code hashes that have been scanned by player
+   *
    * @return a list of qr code hashes scanned by player
    */
   public ArrayList<String> getQRCodeHashes() {
@@ -170,6 +176,7 @@ public class Player {
 
   /**
    * Sets the list of QR code hashes that have been scanned by player
+   *
    * @param scannedQRHashes a list of scanned QR code Hashes associated with player
    */
   public void setQRCodeHashes(List<String> scannedQRHashes) {

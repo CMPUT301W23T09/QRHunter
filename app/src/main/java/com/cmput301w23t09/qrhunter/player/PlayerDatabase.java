@@ -4,15 +4,10 @@ import android.util.Log;
 import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
 import com.cmput301w23t09.qrhunter.database.DatabaseQueryResults;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-
-import org.checkerframework.common.returnsreceiver.qual.This;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -130,8 +125,6 @@ public class PlayerDatabase {
                     callback.accept(new DatabaseQueryResults<>(null));
                   });
         });
-
-
   }
 
   /**
@@ -232,7 +225,7 @@ public class PlayerDatabase {
     String email = snapshot.getString("email");
     ArrayList<String> qrCodeHashes = (ArrayList<String>) snapshot.get("qrCodeHashes");
 
-    return new Player(documentId, deviceUUID, username, phoneNo, email,  qrCodeHashes);
+    return new Player(documentId, deviceUUID, username, phoneNo, email, qrCodeHashes);
   }
 
   /**
@@ -253,7 +246,6 @@ public class PlayerDatabase {
     return values;
   }
 
-
   /**
    * Retrieves the PlayerDatabase
    *
@@ -266,8 +258,4 @@ public class PlayerDatabase {
 
     return INSTANCE;
   }
-
-
-
 }
-
