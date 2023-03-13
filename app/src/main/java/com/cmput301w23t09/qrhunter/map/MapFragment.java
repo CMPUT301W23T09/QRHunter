@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
@@ -27,21 +26,20 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 
 public class MapFragment extends BaseFragment implements OnMapReadyCallback {
-    private boolean locationPermissionGranted;
-    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    private GoogleMap map;
-    private Location lastKnownLocation;
-    private FusedLocationProviderClient fusedLocationProviderClient;
-    private static final String TAG = "MapFragment";
-    private  static final int DEFAULT_ZOOM = 15;
-    private LatLng defaultLocation = new LatLng(-34, -34);
+  private boolean locationPermissionGranted;
+  private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+  private GoogleMap map;
+  private Location lastKnownLocation;
+  private FusedLocationProviderClient fusedLocationProviderClient;
+  private static final String TAG = "MapFragment";
+  private static final int DEFAULT_ZOOM = 15;
+  private LatLng defaultLocation = new LatLng(-34, -34);
 
-    public MapFragment(GameController gameController) {
-        super(gameController);
-    }
+  public MapFragment(GameController gameController) {
+    super(gameController);
+  }
 
-
-    private void getLocationPermission() {
+  private void getLocationPermission() {
     /**
      * Request location permission, so that we can get the location of the device. The result of the
      * permission request is handled by a callback, onRequestPermissionsResult.
