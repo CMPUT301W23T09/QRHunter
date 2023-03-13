@@ -169,7 +169,7 @@ public class Player implements Serializable {
   }
 
   /**
-   * <<<<<<< HEAD Retrieve all of the QRCodes this player has scanned.
+   * Retrieve all of the QRCodes this player has scanned.
    *
    * @return QR codes the player has scanned
    */

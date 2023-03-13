@@ -41,6 +41,7 @@ public class ProfileController {
   /** This is the collection containing the qr code data */
   private final CollectionReference qrcodeCollection;
 
+  /** Device UUID of the profile */
   private final UUID deviceUUID;
 
   /**
@@ -48,6 +49,7 @@ public class ProfileController {
    *
    * @param fragment This is the fragment the controller manages
    * @param gameController The game controller that controls the global view
+   * @param deviceUUID Device UUID of the profile.
    */
   public ProfileController(
       ProfileFragment fragment, GameController gameController, UUID deviceUUID) {

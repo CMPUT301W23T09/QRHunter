@@ -21,6 +21,7 @@ public class CameraLocationPhotoController extends CameraController {
    *
    * @param fragment The fragment that uses the camera
    * @param previewView The UI element in fragment to show camera preview on
+   * @param controller location photo controller
    */
   public CameraLocationPhotoController(
       LocationPhotoFragment fragment, PreviewView previewView, LocationPhotoController controller) {

@@ -36,6 +36,7 @@ public class LocationPhotoFragment extends DialogFragment {
    *
    * @param qrCode The QRCode to add the location photo to
    * @param qrCodeFragment The QRCodeFragment to update once the location photo has been taken
+   * @param activePlayer The current logged in player
    * @see QRCodeFragment
    * @return The LocationPhotoFragment to display
    */
