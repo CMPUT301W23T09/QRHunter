@@ -1,4 +1,4 @@
-package com.cmput301w23t09.qrhunter.social.leaderboard;
+package com.cmput301w23t09.qrhunter.leaderboard;
 
 public class LeaderboardEntry implements Comparable<LeaderboardEntry> {
 
