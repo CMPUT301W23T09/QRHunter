@@ -26,10 +26,12 @@ public class QRCodeDatabase {
   private static QRCodeDatabase INSTANCE;
 
   /** Reference to the QRCode collection on firebase */
-  private final CollectionReference collection;
+  private CollectionReference collection;
+  /** All QRCode collection change listener callbacks */
+  private final Set<Listener> changeCallbacks = new HashSet<>();
 
   private QRCodeDatabase() {
-    collection = FirebaseFirestore.getInstance().collection(DATABASE_COLLECTION_NAME);
+    initFirebase();
   }
 
   /**
@@ -49,6 +51,22 @@ public class QRCodeDatabase {
    */
   public static void mockInstance(QRCodeDatabase mockInstance) {
     INSTANCE = mockInstance;
+  }
+
+  protected void initFirebase() {
+    collection = FirebaseFirestore.getInstance().collection(DATABASE_COLLECTION_NAME);
+
+    // Notify listener of data changes
+    collection.addSnapshotListener(
+        (query, error) -> {
+          // onEvent does not return all query snapshots. Therefore we must fetch it ourselves.
+          getAllQRCodes(
+              task -> {
+                if (task.isSuccessful()) {
+                  notifyListeners(task.getData());
+                }
+              });
+        });
   }
 
   /**
@@ -317,6 +335,43 @@ public class QRCodeDatabase {
   }
 
   /**
+   * Add a listener for any qr code changes
+   *
+   * @param callback callback to call with all the current qr codes in the collection
+   */
+  public void addChangeListener(Listener callback) {
+    changeCallbacks.add(callback);
+
+    // On the addition of a change listener, emit the current qr codes.
+    getAllQRCodes(
+        task -> {
+          if (task.isSuccessful()) {
+            callback.onQRCodesChange(task.getData());
+          }
+        });
+  }
+
+  /**
+   * Removes a listener for QR code changes
+   *
+   * @param callback callback that was previously added
+   */
+  public void removeChangeListener(Listener callback) {
+    changeCallbacks.remove(callback);
+  }
+
+  /**
+   * Notify all listeners of a QRCode change
+   *
+   * @param data data to emit to all callbacks
+   */
+  protected void notifyListeners(Set<QRCode> data) {
+    for (Listener callback : changeCallbacks) {
+      callback.onQRCodesChange(data);
+    }
+  }
+
+  /**
    * Converts a database snapshot to its QRCode object equivalent.
    *
    * @param snapshot database snapshot
@@ -352,5 +407,9 @@ public class QRCodeDatabase {
     values.put("longitude", qrCode.getLoc() != null ? qrCode.getLoc().getLongitude() : null);
     values.put("players", qrCode.getPlayers());
     return values;
+  }
+
+  public interface Listener {
+    void onQRCodesChange(Set<QRCode> codes);
   }
 }

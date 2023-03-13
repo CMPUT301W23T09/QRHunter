@@ -62,6 +62,12 @@ public class ProfileFragment extends BaseFragment {
     return view;
   }
 
+  @Override
+  public void onDestroyView() {
+    controller.onDestroy();
+    super.onDestroyView();
+  }
+
   /**
    * Creates the fragment elements
    *
