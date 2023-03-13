@@ -4,12 +4,15 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.awaitility.Awaitility.await;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 
@@ -20,6 +23,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 import com.cmput301w23t09.qrhunter.GameActivity;
 import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.robotium.solo.Solo;
 import java.util.ArrayList;
@@ -44,6 +48,7 @@ public class TestQRCodeFragment {
 
   private UUID mockPlayerUUID;
   private Player mockPlayer;
+  private ArrayList<QRCode> mockQRCollection; // Mimics collection on firestore
 
   @Rule
   public ActivityScenarioRule<GameActivity> activityScenarioRule =
@@ -63,12 +68,44 @@ public class TestQRCodeFragment {
     mockPlayer =
         new Player(
             "001", mockPlayerUUID, "johndoe42", "7801234567", "doe@ualberta.ca", new ArrayList<>());
+    mockQRCollection = new ArrayList<QRCode>();
 
     // Mock QRCodeDatabase
     QRCodeDatabase mockedQRCodeDatabase = mock(QRCodeDatabase.class);
-    doNothing().when(mockedQRCodeDatabase).addQRCode(any(QRCode.class));
-    doNothing().when(mockedQRCodeDatabase).addPlayerToQR(any(Player.class), any(QRCode.class));
     doNothing()
+        .when(mockedQRCodeDatabase)
+        .playerHasQRCode(any(Player.class), any(QRCode.class), any(DatabaseConsumer.class));
+
+    // Mock adding QRCode to Firebase collection
+    doAnswer(
+            answer -> {
+              mockQRCollection.add(answer.getArgument(0));
+              return null;
+            })
+        .when(mockedQRCodeDatabase)
+        .addQRCode(any(QRCode.class));
+
+    // Mock adding QRCode to player's profile
+    doAnswer(
+            answer -> {
+              Player playerArg = answer.getArgument(0);
+              QRCode qrCodeArg = answer.getArgument(1);
+              playerArg.getQRCodeHashes().add(qrCodeArg.getHash());
+              qrCodeArg.addPlayer(playerArg.getDocumentId());
+              return null;
+            })
+        .when(mockedQRCodeDatabase)
+        .addPlayerToQR(any(Player.class), any(QRCode.class));
+
+    // Mock removing QRCode from player's profile
+    doAnswer(
+            answer -> {
+              Player playerArg = answer.getArgument(0);
+              QRCode qrCodeArg = answer.getArgument(1);
+              playerArg.getQRCodeHashes().remove(qrCodeArg.getHash());
+              qrCodeArg.getPlayers().remove(playerArg.getDocumentId());
+              return null;
+            })
         .when(mockedQRCodeDatabase)
         .removeQRCodeFromPlayer(any(Player.class), any(QRCode.class));
     QRCodeDatabase.mockInstance(mockedQRCodeDatabase);
@@ -135,5 +172,38 @@ public class TestQRCodeFragment {
     onView(withId(R.id.take_location_photo_btn)).check(matches(withText("Remove Location Photo")));
     onView(withId(R.id.take_location_photo_btn)).inRoot(isDialog()).perform(click());
     await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getPhotos().size() == 0);
+  }
+
+  @Test
+  public void testAddQRCode() {
+    onView(withId(R.id.addButton)).inRoot(isDialog()).perform(click());
+    // Check if QRCode is in player's profile
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(() -> mockPlayer.getQRCodeHashes().contains(qrCode.getHash()));
+    // Check if QRCode kept track of player that scanned it
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(() -> qrCode.getPlayers().contains(mockPlayer.getDocumentId()));
+  }
+
+  @Test
+  public void testDeleteQRCode() {
+    onView(withId(R.id.addButton)).inRoot(isDialog()).perform(click());
+
+    // Check if button switched to remove since player has code
+    onView(withId(R.id.deleteButton)).inRoot(isDialog()).check(matches(isDisplayed()));
+    onView(withId(R.id.addButton)).inRoot(isDialog()).check(matches(not(isDisplayed())));
+
+    onView(withId(R.id.deleteButton)).inRoot(isDialog()).perform(click());
+
+    // Check if QRCode is no longer in player's profile
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(() -> !mockPlayer.getQRCodeHashes().contains(qrCode.getHash()));
+    // Check if QRCode removed previous player that scanned it
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(() -> !qrCode.getPlayers().contains(mockPlayer.getDocumentId()));
   }
 }
