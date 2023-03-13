@@ -6,11 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import android.graphics.Bitmap;
 
-import androidx.camera.core.ImageProxy;
-
 import com.cmput301w23t09.qrhunter.player.Player;
-import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
+
+import java.util.UUID;
+
 
 public class TestPhotoModel {
   // create blank mock bitmap image

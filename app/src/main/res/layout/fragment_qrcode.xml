@@ -6,17 +6,18 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/qrName"
-        android:layout_width="354dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="32dp"
+        android:id="@+id/qr_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="@string/qr_code_name"
         android:textAlignment="viewStart"
         android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/deleteButton"
+        app:layout_constraintEnd_toStartOf="@+id/addButton"
         app:layout_constraintStart_toEndOf="@+id/qr_code_visual"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,7 +28,7 @@
         android:layout_marginStart="8dp"
         android:text="@string/placeholder_points"
         app:layout_constraintStart_toEndOf="@+id/qr_code_visual"
-        app:layout_constraintTop_toBottomOf="@+id/qrName" />
+        app:layout_constraintTop_toBottomOf="@+id/qr_name" />
 
     <ImageView
         android:id="@+id/location_photo"
@@ -80,13 +81,13 @@
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:clickable="true"
         app:backgroundTint="#673AB7"
         app:fabSize="mini"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/qrName"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />
 
@@ -94,14 +95,13 @@
         android:id="@+id/deleteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:clickable="true"
         app:backgroundTint="#673AB7"
         app:fabSize="mini"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/qrName"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_delete" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

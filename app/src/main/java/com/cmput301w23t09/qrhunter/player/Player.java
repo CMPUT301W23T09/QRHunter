@@ -46,7 +46,13 @@ public class Player implements Serializable {
    * @param email email of the player
    * @param scannedQRHashes qrcode hashes scanned by player
    */
-  public Player(String documentId, UUID deviceId, String username, String phoneNo, String email, ArrayList<String> scannedQRHashes) {
+  public Player(
+      String documentId,
+      UUID deviceId,
+      String username,
+      String phoneNo,
+      String email,
+      ArrayList<String> scannedQRHashes) {
     this.documentId = documentId;
     this.deviceId = deviceId;
     this.username = username;
@@ -160,7 +166,8 @@ public class Player implements Serializable {
   }
 
   /**
-   * returns a list of QR code hashes that have been scanned by  player
+   * returns a list of QR code hashes that have been scanned by player
+   *
    * @return a list of qr code hashes scanned by player
    */
   public ArrayList<String> getQRCodeHashes() {
@@ -169,6 +176,7 @@ public class Player implements Serializable {
 
   /**
    * Sets the list of QR code hashes that have been scanned by player
+   *
    * @param scannedQRHashes a list of scanned QR code Hashes associated with player
    */
   public void setQRCodeHashes(List<String> scannedQRHashes) {
