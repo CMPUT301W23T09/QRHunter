@@ -17,6 +17,7 @@ import com.cmput301w23t09.qrhunter.qrcode.ScoreComparator;
 import com.cmput301w23t09.qrhunter.util.DeviceUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -251,7 +252,7 @@ public class ProfileController implements QRCodeDatabase.Listener {
   }
 
   @Override
-  public void onQRCodesChange(Set<QRCode> codes) {
+  public void onQRCodesChange(List<QRCode> codes) {
     qrCodes.clear();
     // add data from database
     for (QRCode code : codes) {

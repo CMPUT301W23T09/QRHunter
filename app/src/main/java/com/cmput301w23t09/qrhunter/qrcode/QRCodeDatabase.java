@@ -13,8 +13,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class QRCodeDatabase {
@@ -29,7 +31,7 @@ public class QRCodeDatabase {
   /** All QRCode collection change listener callbacks */
   private final Set<Listener> changeCallbacks = new HashSet<>();
 
-  private QRCodeDatabase() {
+  public QRCodeDatabase() {
     initFirebase();
   }
 
@@ -364,7 +366,7 @@ public class QRCodeDatabase {
    *
    * @param data data to emit to all callbacks
    */
-  protected void notifyListeners(Set<QRCode> data) {
+  protected void notifyListeners(List<QRCode> data) {
     for (Listener callback : changeCallbacks) {
       callback.onQRCodesChange(data);
     }
@@ -409,6 +411,6 @@ public class QRCodeDatabase {
   }
 
   public interface Listener {
-    void onQRCodesChange(Set<QRCode> codes);
+    void onQRCodesChange(List<QRCode> codes);
   }
 }
