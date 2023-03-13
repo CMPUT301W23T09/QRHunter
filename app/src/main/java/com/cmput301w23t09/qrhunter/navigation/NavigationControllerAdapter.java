@@ -31,7 +31,7 @@ public class NavigationControllerAdapter implements NavigationBarView.OnItemSele
       gameController.setBody(new ProfileFragment(gameController, deviceUUID));
     } else if (selectedItemId == R.id.navigation_qr_finder) {
       // mainController.setBody(new QRFinderFragment());
-      gameController.setBody(new MapFragment());
+      gameController.setBody(new MapFragment(gameController));
     } else if (selectedItemId == R.id.navigation_social) {
       // mainController.setBody(new SocialFragment());
     } else {
