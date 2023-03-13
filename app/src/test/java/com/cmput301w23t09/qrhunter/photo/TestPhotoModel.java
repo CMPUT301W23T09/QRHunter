@@ -1,24 +1,28 @@
 package com.cmput301w23t09.qrhunter.photo;
 
-/* has issues with mocking bitmaps
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import android.graphics.Bitmap;
+import com.cmput301w23t09.qrhunter.player.Player;
+import java.util.UUID;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+
+// needs work with mock bitmap generation
 public class TestPhotoModel {
   // create a mock bitmap
-  @Mock
-  private Bitmap mockBitmap;
+  @Mock private Bitmap mockBitmap;
   // create a mock player
   private Player mockPlayer() {
     UUID mockUUID = UUID.randomUUID();
     return new Player(mockUUID, "Username", "587-998-1206", "mock-email@gmail.com");
   }
-  // create a mock photo
-  private Photo mockPhoto() {
-    return new Photo(mockBitmap, mockPlayer());
-  }
 
   // test getting the bitmap image of a photo
   @Test
   public void testGetBitmapImage() {
-    assertTrue(mockPhoto().getPhoto().sameAs(mockBitmap));
+    assertNull(new Photo((Bitmap) null, mockPlayer()).getPhoto());
   }
 
   // test getting the player of a photo
@@ -33,11 +37,10 @@ public class TestPhotoModel {
   // test setting the photo of a photo to a different bitmap
   @Test
   public void testSetBitmapImage() {
-    Photo photo = mockPhoto();
-    // set the bitmap of the photo to a different bitmap
+    Photo photo = new Photo(mockBitmap, mockPlayer());
+    // change the bitmap of the photo
     photo.setPhoto((Bitmap) null);
     // check whether bitmap of photo was changed
-    assertFalse(photo.getPhoto().sameAs(mockBitmap));
-    assertTrue(photo.getPhoto().sameAs(null));
+    assertNull(photo.getPhoto());
   }
-}*/
+}

@@ -2,6 +2,9 @@ package com.cmput301w23t09.qrhunter.profile;
 
 import static org.junit.Assert.assertTrue;
 
+import android.content.Intent;
+
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import com.cmput301w23t09.qrhunter.GameActivity;
@@ -18,7 +21,7 @@ public class TestProfileFragment {
   private Solo solo;
 
   @Rule
-  public ActivityTestRule<GameActivity> rule = new ActivityTestRule(GameActivity.class, true, true);
+  public ActivityScenarioRule<GameActivity> activityScenarioRule = new ActivityScenarioRule<>(GameActivity.class);
 
   /**
    * Runs before all tests and creates solo instance
@@ -26,9 +29,15 @@ public class TestProfileFragment {
    * @throws Exception
    */
   @Before
-  public void setUp() throws Exception {
-    // create solo
-    solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
+  public void setUp() throws Exception {;
+    // get solo
+    activityScenarioRule
+            .getScenario()
+            .onActivity(
+                    activity -> {
+                      activity.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+                      solo = new Solo(InstrumentationRegistry.getInstrumentation(), activity);
+                    });
     // navigate to profile fragment
     solo.clickOnView(solo.getView(R.id.navigation_my_profile));
   }
@@ -51,5 +60,4 @@ public class TestProfileFragment {
     TestCase.assertTrue(solo.waitForText("Descending", 1, 2000));
   }
 
-  /** */
 }
