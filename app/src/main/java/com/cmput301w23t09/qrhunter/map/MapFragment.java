@@ -35,6 +35,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
   private static final int DEFAULT_ZOOM = 15;
   private LatLng defaultLocation = new LatLng(-34, -34);
 
+  private LatLng currentLocation;
+
   public MapFragment(GameController gameController) {
     super(gameController);
   }
@@ -61,9 +63,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
      * Get the best and most recent location of the device, which may be null in rare cases when a
      * location is not available.
      */
-
-    //        FusedLocationProviderClient fusedLocationProviderClient =
-    // LocationServices.getFusedLocationProviderClient(getContext());
+    fusedLocationProviderClient =
+        LocationServices.getFusedLocationProviderClient(getContext());
 
     try {
       if (locationPermissionGranted) {
@@ -181,6 +182,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
    */
   @Override
   public void onMapReady(GoogleMap map) {
+    this.map = map;
     // Turn on the My Location layer and the related control on the map.
     updateLocationUI();
 
