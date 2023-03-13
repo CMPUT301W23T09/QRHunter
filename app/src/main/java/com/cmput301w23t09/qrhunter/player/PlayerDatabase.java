@@ -167,9 +167,6 @@ public class PlayerDatabase {
    * @param callback callback to call once the operation has finished
    */
   public void getPlayerByDeviceId(UUID deviceUUID, DatabaseConsumer<Player> callback) {
-    if (true) {
-      throw new RuntimeException("asd");
-    }
     collection
         .whereEqualTo("deviceUUID", deviceUUID.toString())
         .get()
