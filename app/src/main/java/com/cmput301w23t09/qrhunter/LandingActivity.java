@@ -9,8 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputEditText;
 
 /** The MainActivity handles displaying the landing and initial loading page. */
-public class MainActivity extends AppCompatActivity {
-  private MainController controller;
+public class LandingActivity extends AppCompatActivity {
+  private LandingController controller;
 
   private TextInputEditText usernameInput;
   private TextInputEditText phoneInput;
@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main_loading);
 
-    controller = new MainController(this);
+    controller = new LandingController(this);
   }
 
   /** Switch the current view contents to the landing page. */

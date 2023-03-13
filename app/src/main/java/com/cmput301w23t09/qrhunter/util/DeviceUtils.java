@@ -6,8 +6,8 @@ import java.util.UUID;
 
 /** Various device-related utility functions, such as fetching UUID */
 public class DeviceUtils {
-  private static final String DEVICE_UUID_FILE = "device_uuid.dat";
-  private static final String DEVICE_UUID_FILE_FIELD = "uuid";
+  public static final String DEVICE_UUID_FILE = "device_uuid.dat";
+  public static final String DEVICE_UUID_FILE_FIELD = "uuid";
 
   private DeviceUtils() {}
 
