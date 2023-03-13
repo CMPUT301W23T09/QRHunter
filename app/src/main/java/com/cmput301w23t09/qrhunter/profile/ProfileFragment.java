@@ -147,4 +147,11 @@ public class ProfileFragment extends BaseFragment {
     // add listeners for item selection
     spinner.setOnItemSelectedListener(controller.handleSpinnerSelect(sortOrderSpinner));
   }
+
+  /**
+   * Gets the controller of the profile fragment, for UI testing only
+   */
+  public ProfileController getController() {
+    return controller;
+  }
 }
