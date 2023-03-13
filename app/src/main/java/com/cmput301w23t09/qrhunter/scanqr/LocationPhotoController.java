@@ -32,6 +32,7 @@ public class LocationPhotoController {
    *
    * @param fragment The LocationPhotoFragment that owns this LocationPhotoController
    * @param qrCode The QRCode that the user will add the location photo to
+   * @param activePlayer The current logged in player
    */
   public LocationPhotoController(
       LocationPhotoFragment fragment, QRCode qrCode, Player activePlayer) {

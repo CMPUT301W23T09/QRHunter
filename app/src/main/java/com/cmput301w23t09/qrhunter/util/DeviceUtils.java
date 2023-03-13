@@ -14,6 +14,7 @@ public class DeviceUtils {
    * Retrieve the UUID associated with this device.
    *
    * @return device UUID
+   * @param activity instance of an activity
    */
   public static UUID getDeviceUUID(Activity activity) {
     SharedPreferences sharedPreferences = activity.getSharedPreferences(DEVICE_UUID_FILE, 0);
