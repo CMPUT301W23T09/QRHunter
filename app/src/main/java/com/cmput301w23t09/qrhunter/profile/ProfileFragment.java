@@ -149,6 +149,10 @@ public class ProfileFragment extends BaseFragment {
     spinner.setOnItemSelectedListener(controller.handleSpinnerSelect(sortOrderSpinner));
   }
 
+  /**
+   * Creates click listener for highest QR code score estimates
+   * @param view The view of the fragment's layout
+   */
   private void handleProfileHeaderEstimates(View view) {
     topCodeScore.setOnClickListener(new View.OnClickListener() {
       @Override
