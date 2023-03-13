@@ -72,7 +72,7 @@ public class TestQRCodeFragment {
     mockPlayerUUID = UUID.randomUUID();
     mockPlayer =
         new Player(
-            "001", mockPlayerUUID, "johndoe42", "7801234567", "doe@ualberta.ca", new HashSet<>());
+            "001", mockPlayerUUID, "johndoe42", "7801234567", "doe@ualberta.ca", new ArrayList<>());
     mockQRCollection = new ArrayList<>();
 
     // Mock QRCodeDatabase

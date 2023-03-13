@@ -6,15 +6,8 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import android.telephony.PhoneNumberUtils;
-<<<<<<< HEAD
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-=======
 import java.util.ArrayList;
 import java.util.List;
->>>>>>> 6b62dff1e127d8339ce04ffa8531ad45dcfda464
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,11 +39,7 @@ public class TestPlayerModel {
 
   @Test
   public void testGetQRCodeHashes() {
-<<<<<<< HEAD
-    ArrayList<String> scannedQRHashes = new ArrayList<>();
-=======
     List<String> scannedQRHashes = new ArrayList<>();
->>>>>>> 6b62dff1e127d8339ce04ffa8531ad45dcfda464
     scannedQRHashes.add("hash1");
     scannedQRHashes.add("hash2");
     mockPlayer.setQRCodeHashes(scannedQRHashes);
@@ -216,11 +205,7 @@ public class TestPlayerModel {
 
   @Test
   public void testSetQRCodeHashes() {
-<<<<<<< HEAD
-    ArrayList<String> scannedQRHashes = new ArrayList<>();
-=======
     List<String> scannedQRHashes = new ArrayList<>();
->>>>>>> 6b62dff1e127d8339ce04ffa8531ad45dcfda464
     scannedQRHashes.add("hash1");
     scannedQRHashes.add("hash2");
     scannedQRHashes.add("hash3");
