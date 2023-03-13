@@ -33,9 +33,10 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
   private Location lastKnownLocation;
   private FusedLocationProviderClient fusedLocationProviderClient;
   private static final String TAG = "MapFragment";
-  private static final int DEFAULT_ZOOM = 15;
+  private static final int DEFAULT_ZOOM = 14;
   private LatLng defaultLocation = new LatLng(53.523565919249364, -113.52815038503842);
 
+  private static LatLng[] placeholderQR;
   private LatLng currentLocation;
 
   public MapFragment(GameController gameController) {
@@ -188,5 +189,18 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
     // Get the current location of the device and set the position of the map.
     getDeviceLocation();
+    placeholderQR =
+        new LatLng[] {
+          new LatLng(53.52748572137864, -113.52965526862573), // Engineering Physics Club
+          new LatLng(53.52644615688437, -113.52453761405557), // CAB
+          new LatLng(53.526790555323736, -113.52716617858209), // CSC
+          new LatLng(53.52606986652603, -113.52166228586451),// Rutherford Library
+          new LatLng(53.523182298052724, -113.52719701274522), // Butterdome
+          new LatLng(53.520845993958204, -113.523585870797) //Ualberta hospital
+        };
+
+    for (LatLng location : placeholderQR) {
+      map.addMarker(new MarkerOptions().position(location));
+    }
   }
 }
