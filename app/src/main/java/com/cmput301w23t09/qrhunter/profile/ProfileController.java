@@ -276,7 +276,7 @@ public class ProfileController {
    * @return -1 if the user's top QR code was not found in the collection
    * @return The user's top QR position relative to all the other QR code positions
    */
-  private int getTopQRPosition(QuerySnapshot queryDocumentSnapshots, QRCode topQR) {
+  private int getTopQRPosition(QuerySnapshot queryDocumentSnapshots, QRCodeTest topQR) {
     int position = 1;
 
     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
@@ -302,8 +302,10 @@ public class ProfileController {
     }
 
     qrCodes.sort(new ScoreComparator().reversed());
-    QRCode topQR = qrCodes.get(0);
-    Query query = qrcodeCollection.orderBy("score", Query.Direction.DESCENDING);
+//    QRCode topQR = qrCodes.get(0);
+    QRCodeTest topQR = new QRCodeTest("3e744b9dc39389baf0c5a0660589b8402f3dbb49b89b3e75f2c9355852a3c677", 40);
+    CollectionReference qrcodeCollectionTest = db.collection("qrcodestest");
+    Query query = qrcodeCollectionTest.orderBy("score", Query.Direction.DESCENDING);
     query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
       @Override
       public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
