@@ -34,7 +34,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
   private FusedLocationProviderClient fusedLocationProviderClient;
   private static final String TAG = "MapFragment";
   private static final int DEFAULT_ZOOM = 15;
-  private LatLng defaultLocation = new LatLng(-34, -34);
+  private LatLng defaultLocation = new LatLng(53.523565919249364, -113.52815038503842);
 
   private LatLng currentLocation;
 
