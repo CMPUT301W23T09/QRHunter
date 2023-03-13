@@ -228,7 +228,7 @@ public class ProfileController {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         QRCode qrCode = qrCodes.get(position);
-        QRCodeFragment.newInstance(qrCode, gameController.getActivePlayer(), false).show(fragment.getParentFragmentManager(), "");
+        QRCodeFragment.newInstance(qrCode, gameController.getActivePlayer()).show(fragment.getParentFragmentManager(), "");
       }
     };
   }

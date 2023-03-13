@@ -9,6 +9,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 
 import android.Manifest;
 import android.content.Intent;
@@ -61,8 +64,17 @@ public class TestQRCodeFragment {
         new Player(
             "001", mockPlayerUUID, "johndoe42", "7801234567", "doe@ualberta.ca", new ArrayList<>());
 
+    // Mock QRCodeDatabase
+    QRCodeDatabase mockedQRCodeDatabase = mock(QRCodeDatabase.class);
+    doNothing().when(mockedQRCodeDatabase).addQRCode(any(QRCode.class));
+    doNothing().when(mockedQRCodeDatabase).addPlayerToQR(any(Player.class), any(QRCode.class));
+    doNothing()
+        .when(mockedQRCodeDatabase)
+        .removeQRCodeFromPlayer(any(Player.class), any(QRCode.class));
+    QRCodeDatabase.mockInstance(mockedQRCodeDatabase);
+
     qrCode = new QRCode("test-hash123");
-    qrCodeFragment = QRCodeFragment.newInstance(qrCode, mockPlayer, true);
+    qrCodeFragment = QRCodeFragment.newInstance(qrCode, mockPlayer);
     activityScenarioRule
         .getScenario()
         .onActivity(

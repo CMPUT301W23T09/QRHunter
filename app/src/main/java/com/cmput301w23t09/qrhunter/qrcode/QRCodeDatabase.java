@@ -40,6 +40,15 @@ public class QRCodeDatabase {
   }
 
   /**
+   * Manually set QRCodeDatabase to some mocked instance for testing
+   *
+   * @param mockInstance The mocked QRCodeDatabase
+   */
+  public static void mockInstance(QRCodeDatabase mockInstance) {
+    INSTANCE = mockInstance;
+  }
+
+  /**
    * Retrieve a QRCode by its has from the database
    *
    * @param hash QRCode hash to lookup
