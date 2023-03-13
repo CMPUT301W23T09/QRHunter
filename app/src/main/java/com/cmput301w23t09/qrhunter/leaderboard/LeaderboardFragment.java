@@ -30,7 +30,7 @@ public class LeaderboardFragment extends BaseFragment {
   public LeaderboardFragment(GameController gameController) {
     super(gameController);
 
-    controller = new LeaderboardController(this);
+    controller = new LeaderboardController();
   }
 
   @Override

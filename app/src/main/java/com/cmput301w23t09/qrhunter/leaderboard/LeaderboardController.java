@@ -13,13 +13,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 
 public class LeaderboardController {
-
-  private final LeaderboardFragment fragment;
-
-  public LeaderboardController(LeaderboardFragment fragment) {
-    this.fragment = fragment;
-  }
-
   /**
    * Retrieve the total points leaderboard in descending order.
    *
