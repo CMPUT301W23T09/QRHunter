@@ -21,6 +21,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
@@ -79,12 +80,10 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
                   // Set the map's camera position to the current location of the device.
                   lastKnownLocation = task.getResult();
                   if (lastKnownLocation != null) {
+                    currentLocation = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
                     map.animateCamera(
-                        CameraUpdateFactory.newLatLngZoom(
-                            new LatLng(
-                                lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()),
-                            DEFAULT_ZOOM));
-                    // Todo Add map.addMarker()
+                        CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM));
+                    map.addMarker(new MarkerOptions().position(currentLocation).title("YOU"));
 
                   }
                 } else {
