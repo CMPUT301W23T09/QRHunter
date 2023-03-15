@@ -9,11 +9,9 @@ import static org.mockito.Mockito.mock;
 
 import android.Manifest;
 import android.content.Intent;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
-
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
@@ -143,8 +141,8 @@ public class TestProfileFragment {
   }
 
   /**
-   * Test if spinner displays spinner options correctly
-   * Assumes that the profile only has one spinner
+   * Test if spinner displays spinner options correctly Assumes that the profile only has one
+   * spinner
    */
   @Test
   public void testSpinnerView() {
@@ -156,9 +154,7 @@ public class TestProfileFragment {
     solo.isSpinnerTextSelected(0, "Ascending");
   }
 
-  /**
-   * Checks if qr codes are properly sorted
-   */
+  /** Checks if qr codes are properly sorted */
   @Test
   public void testQRListSort() {
     // get the highest and lowest score
@@ -261,10 +257,7 @@ public class TestProfileFragment {
     // press the save button
     solo.clickOnView(solo.getView(R.id.settings_save_button));
     // check if player phone number was changed
-    await()
-            .until(
-                    () ->
-                            Objects.equals(mockPlayer.getPhoneNo(), newPhoneNo));
+    await().until(() -> Objects.equals(mockPlayer.getPhoneNo(), newPhoneNo));
   }
 
   /** Checks the change of the user's email */
@@ -283,10 +276,7 @@ public class TestProfileFragment {
     // press the save button
     solo.clickOnView(solo.getView(R.id.settings_save_button));
     // check if player email was changed
-    await()
-            .until(
-                    () ->
-                            Objects.equals(mockPlayer.getEmail(), newEmail));
+    await().until(() -> Objects.equals(mockPlayer.getEmail(), newEmail));
   }
 
   /** Navigate back to profile fragment */
