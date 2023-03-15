@@ -27,6 +27,7 @@ import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.robotium.solo.Solo;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import org.junit.After;
 import org.junit.Before;
@@ -34,6 +35,10 @@ import org.junit.Rule;
 import org.junit.Test;
 
 /** Test classes for profile activity */
+// The following tests are still required
+// Check pressing the back button when there are unsaved changes
+// Checks discarding unsaved changes
+// Checks Andy's top score percentile toast
 public class TestProfileFragment {
   private Solo solo;
   private String mockPlayerID;
@@ -255,14 +260,9 @@ public class TestProfileFragment {
     assertTrue(solo.searchText(newPhoneNo));
     // press the save button
     solo.clickOnView(solo.getView(R.id.settings_save_button));
-    // click the back button
-    solo.clickOnView(solo.getView(R.id.settings_back_button));
-    // go back to settings
-    solo.clickOnView(solo.getView(R.id.contact_info_button));
-    // check if player phone number was updated
-    String phoneNoTxt =
-        String.valueOf(((EditText) solo.getView(R.id.settings_screen_phoneTextField)).getText());
-    assertEquals(phoneNoTxt, newPhoneNo);
+    // check if player phone number is updated
+    solo.sleep(1000);
+    await().until(() -> (Objects.equals(mockPlayer.getPhoneNo(), newPhoneNo)));
   }
 
   /** Checks the change of the user's email */
@@ -280,17 +280,12 @@ public class TestProfileFragment {
     assertTrue(solo.searchText(newEmail));
     // press the save button
     solo.clickOnView(solo.getView(R.id.settings_save_button));
-    // click the back button
-    solo.clickOnView(solo.getView(R.id.settings_back_button));
-    // go back to settings
-    solo.clickOnView(solo.getView(R.id.contact_info_button));
     // check if player email was updated
-    String emailTxt =
-        String.valueOf(((EditText) solo.getView(R.id.settings_screen_emailTextField)).getText());
-    assertEquals(emailTxt, newEmail);
+    solo.sleep(1000);
+    await().until(() -> (Objects.equals(mockPlayer.getEmail(), newEmail)));
   }
 
-  /** Navigate back to profile fragment */
+  /** Navigates back to profile fragment */
   @After
   public void goToProfile() {
     solo.clickOnView(solo.getView(R.id.navigation_my_profile));
