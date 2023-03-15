@@ -27,7 +27,6 @@ import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.robotium.solo.Solo;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import org.junit.After;
 import org.junit.Before;
@@ -256,8 +255,14 @@ public class TestProfileFragment {
     assertTrue(solo.searchText(newPhoneNo));
     // press the save button
     solo.clickOnView(solo.getView(R.id.settings_save_button));
-    // check if player phone number was changed
-    await().until(() -> Objects.equals(mockPlayer.getPhoneNo(), newPhoneNo));
+    // click the back button
+    solo.clickOnView(solo.getView(R.id.settings_back_button));
+    // go back to settings
+    solo.clickOnView(solo.getView(R.id.contact_info_button));
+    // check if player phone number was updated
+    String phoneNoTxt =
+        String.valueOf(((EditText) solo.getView(R.id.settings_screen_phoneTextField)).getText());
+    assertEquals(phoneNoTxt, newPhoneNo);
   }
 
   /** Checks the change of the user's email */
@@ -275,8 +280,14 @@ public class TestProfileFragment {
     assertTrue(solo.searchText(newEmail));
     // press the save button
     solo.clickOnView(solo.getView(R.id.settings_save_button));
-    // check if player email was changed
-    await().until(() -> Objects.equals(mockPlayer.getEmail(), newEmail));
+    // click the back button
+    solo.clickOnView(solo.getView(R.id.settings_back_button));
+    // go back to settings
+    solo.clickOnView(solo.getView(R.id.contact_info_button));
+    // check if player email was updated
+    String emailTxt =
+        String.valueOf(((EditText) solo.getView(R.id.settings_screen_emailTextField)).getText());
+    assertEquals(emailTxt, newEmail);
   }
 
   /** Navigate back to profile fragment */
