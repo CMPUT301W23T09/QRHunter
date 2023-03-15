@@ -1,6 +1,7 @@
 package com.cmput301w23t09.qrhunter.profile;
 
 import static org.awaitility.Awaitility.await;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
@@ -8,6 +9,7 @@ import static org.mockito.Mockito.mock;
 
 import android.Manifest;
 import android.content.Intent;
+import android.widget.EditText;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
@@ -24,7 +26,7 @@ import com.robotium.solo.Solo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import junit.framework.TestCase;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -55,8 +57,8 @@ public class TestProfileFragment {
     // create mock qr codes
     mockQRCodes = new ArrayList<>();
     mockHashes = new ArrayList<>();
-    QRCode qr1 = new QRCode("MockHash01");
-    QRCode qr2 = new QRCode("MockHash02");
+    QRCode qr1 = new QRCode("0424974c68530290458c8d58674e2637f65abc127057957d7b3acbd24c208f93");
+    QRCode qr2 = new QRCode("0424974c68530290458c8d58674e2637f65abc127057957d7b3acbd24c208f93");
     mockQRCodes.add(qr1);
     mockQRCodes.add(qr2);
     mockHashes.add(qr1.getHash());
@@ -78,6 +80,14 @@ public class TestProfileFragment {
             })
         .when(mockPlayerDatabase)
         .getPlayerByDeviceId(any(UUID.class), any(DatabaseConsumer.class));
+    doAnswer(
+            invocation -> {
+              DatabaseConsumer<Void> callback = invocation.getArgument(1);
+              callback.accept(new DatabaseQueryResults<>(null, null));
+              return null;
+            })
+        .when(mockPlayerDatabase)
+        .update(any(Player.class), any(DatabaseConsumer.class));
     PlayerDatabase.mockInstance(mockPlayerDatabase);
 
     // Mock QRCodeDatabase
@@ -88,8 +98,8 @@ public class TestProfileFragment {
               callback.accept(new DatabaseQueryResults<>(mockQRCodes));
               return null;
             })
-            .when(mockQRCodeDatabase)
-                    .getQRCodeHashes(any(List.class), any(DatabaseConsumer.class));
+        .when(mockQRCodeDatabase)
+        .getQRCodeHashes(any(List.class), any(DatabaseConsumer.class));
     QRCodeDatabase.mockInstance(mockQRCodeDatabase);
 
     // get solo
@@ -118,63 +128,113 @@ public class TestProfileFragment {
     assertTrue(gc.getBody() instanceof ProfileFragment);
   }
 
-  /** Checks if the spinners are displayed correctly */
-  @Test
-  public void testSpinnerView() {
-    /*// click on spinner
-    solo.clickOnView(solo.getView(R.id.order_spinner));
-    // check if both Ascending and Descending options appear on screen
-    TestCase.assertTrue(solo.waitForText("Ascending", 1, 2000));
-    TestCase.assertTrue(solo.waitForText("Descending", 1, 2000));
-    // click on "ascending" option(since default is "descending")
-    TestCase.assertFalse(solo.searchText("Descending"));
-    TestCase.assertTrue(solo.searchText("Ascending"));
-    */
-  }
-
   /** Checks if the username is correctly displayed */
   @Test
   public void testUsernameView() {
     // check if mockPlayer's username is displayed
-    TestCase.assertTrue(solo.waitForText(mockPlayer.getUsername(), 1, 2000));
+    assertTrue(solo.searchText(mockPlayer.getUsername()));
+  }
+
+  /**
+   * Test if spinner displays spinner options correctly Assumes that the profile only has one
+   * spinner
+   */
+  @Test
+  public void testSpinnerView() {
+    // checks the current selected value of spinner
+    solo.isSpinnerTextSelected(0, "Descending");
+    // click on spinner and select the next option
+    solo.pressSpinnerItem(0, 1);
+    // check if the selected option is correct
+    solo.isSpinnerTextSelected(0, "Ascending");
   }
 
   /** Checks if the fragment is properly changed when the settings button is clicked */
   @Test
   public void testSettingsButton() {
-    /*
     // click the settings button
     solo.clickOnView(solo.getView(R.id.contact_info_button));
     // check the current fragment
-    GameController gc = ((GameActivity) solo.getCurrentActivity()).getController();
-    assertTrue(gc.getBody() instanceof ProfileSettingsFragment);
-    */
+    await()
+        .until(
+            () ->
+                ((GameActivity) solo.getCurrentActivity()).getController().getBody()
+                    instanceof ProfileSettingsFragment);
+  }
+
+  @Test
+  public void testSettingsBackBtn() {
+    // navigate to settings
+    solo.clickOnView(solo.getView(R.id.contact_info_button));
+    // click on the back button from settings
+    solo.clickOnView(solo.getView(R.id.settings_back_button));
+    // check the current fragment
+    await()
+        .until(
+            () ->
+                ((GameActivity) solo.getCurrentActivity()).getController().getBody()
+                    instanceof ProfileFragment);
   }
 
   /** Checks if the player info is properly displayed in the settings */
   @Test
-  public void testSettingsView() {
-    // click the settings button
+  public void testSettingsInfo() {
+    // click the settings button to navigate to the settings fragment
     solo.clickOnView(solo.getView(R.id.contact_info_button));
-    // search for the player's phone and email info
-    assertTrue(solo.waitForText(mockPlayer.getPhoneNo(), 1, 2000));
-    assertTrue(solo.waitForText(mockPlayer.getEmail(), 1, 2000));
+    // search for the player's phone and email
+    assertTrue(solo.searchEditText(mockPlayer.getPhoneNo()));
+    assertTrue(solo.searchEditText(mockPlayer.getEmail()));
   }
 
-  /** Checks if the save changes button in the settings works */
+  /** Checks the change of the user's phone number */
   @Test
-  public void testSaveChangesBtn() {
-    /*// click the settings button
+  public void testPhoneNumChange() {
+    // click the settings button to navigate to the settings
     solo.clickOnView(solo.getView(R.id.contact_info_button));
-    // try changing the phone number
-    solo.enterText((EditText) solo.getView(R.id.settings_screen_phoneTextField), "1");
-    // press save changes button
+    // clear the current phone number
+    solo.clickOnView(solo.getView(R.id.settings_screen_phoneTextField));
+    // remove current phone number
+    solo.clearEditText((EditText) solo.getView(R.id.settings_screen_phoneTextField));
+    // enter a new phone number
+    String newPhoneNo = "5872571509";
+    solo.enterText((EditText) solo.getView(R.id.settings_screen_phoneTextField), newPhoneNo);
+    // check the phone number input
+    assertTrue(solo.searchText(newPhoneNo));
+    // press the save button
     solo.clickOnView(solo.getView(R.id.settings_save_button));
-    // go back to profile
-    solo.clickOnView(solo.getView(R.id.settings_back_button));
-    // go to settings again
+    // check if player phone number was changed
+    solo.sleep(1000); // wait for update callback to finish
+    assertEquals(mockPlayer.getPhoneNo(), newPhoneNo);
+  }
+
+  /** Checks the change of the user's email */
+  @Test
+  public void testEmailChange() {
+    // click the settings button to navigate to the settings
     solo.clickOnView(solo.getView(R.id.contact_info_button));
-    // check phone number
-    assertTrue(solo.searchText(mockPlayer.getPhoneNo() + "1"));*/
+    // clear the current email
+    solo.clickOnView(solo.getView(R.id.settings_screen_emailTextField));
+    solo.clearEditText((EditText) solo.getView(R.id.settings_screen_emailTextField));
+    // enter a new email
+    String newEmail = "irenerose.sun@gmail.com";
+    solo.enterText((EditText) solo.getView(R.id.settings_screen_emailTextField), newEmail);
+    // check the email input
+    assertTrue(solo.searchText(newEmail));
+    // press the save button
+    solo.clickOnView(solo.getView(R.id.settings_save_button));
+    // check if player email was changed
+    solo.sleep(1000); // wait for update callback to finish
+    assertEquals(mockPlayer.getEmail(), newEmail);
+  }
+
+  /** Navigate back to profile fragment */
+  @After
+  public void goToProfile() {
+    solo.clickOnView(solo.getView(R.id.navigation_my_profile));
+    await()
+        .until(
+            () ->
+                ((GameActivity) solo.getCurrentActivity()).getController().getBody()
+                    instanceof ProfileFragment);
   }
 }
