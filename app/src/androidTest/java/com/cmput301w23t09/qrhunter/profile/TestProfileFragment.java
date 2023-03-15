@@ -19,8 +19,10 @@ import com.cmput301w23t09.qrhunter.database.DatabaseQueryResults;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.robotium.solo.Solo;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import junit.framework.TestCase;
 import org.junit.Before;
@@ -33,6 +35,7 @@ public class TestProfileFragment {
   private String mockPlayerID;
   private UUID mockUUID;
   private Player mockPlayer;
+  private ArrayList<String> mockHashes;
   private ArrayList<QRCode> mockQRCodes;
 
   @Rule
@@ -49,13 +52,21 @@ public class TestProfileFragment {
    */
   @Before
   public void setUp() throws Exception {
+    // create mock qr codes
+    mockQRCodes = new ArrayList<>();
+    mockHashes = new ArrayList<>();
+    QRCode qr1 = new QRCode("MockHash01");
+    QRCode qr2 = new QRCode("MockHash02");
+    mockQRCodes.add(qr1);
+    mockQRCodes.add(qr2);
+    mockHashes.add(qr1.getHash());
+    mockHashes.add(qr2.getHash());
+
     // create a mock player
     mockPlayerID = "001";
     mockUUID = UUID.randomUUID();
     mockPlayer =
-        new Player(mockPlayerID, mockUUID, "Irene", "5873571506", "isun@ualberta.ca", null);
-    // create mock qr codes
-    mockQRCodes = new ArrayList<>();
+        new Player(mockPlayerID, mockUUID, "Irene", "5873571506", "isun@ualberta.ca", mockHashes);
 
     // Mock PlayerDatabase
     PlayerDatabase mockPlayerDatabase = mock(PlayerDatabase.class);
@@ -68,6 +79,18 @@ public class TestProfileFragment {
         .when(mockPlayerDatabase)
         .getPlayerByDeviceId(any(UUID.class), any(DatabaseConsumer.class));
     PlayerDatabase.mockInstance(mockPlayerDatabase);
+
+    // Mock QRCodeDatabase
+    QRCodeDatabase mockQRCodeDatabase = mock(QRCodeDatabase.class);
+    doAnswer(
+            invocation -> {
+              DatabaseConsumer<List<QRCode>> callback = invocation.getArgument(1);
+              callback.accept(new DatabaseQueryResults<>(mockQRCodes));
+              return null;
+            })
+            .when(mockQRCodeDatabase)
+                    .getQRCodeHashes(any(List.class), any(DatabaseConsumer.class));
+    QRCodeDatabase.mockInstance(mockQRCodeDatabase);
 
     // get solo
     activityScenarioRule
