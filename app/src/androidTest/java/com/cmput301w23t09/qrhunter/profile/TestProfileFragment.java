@@ -9,7 +9,11 @@ import static org.mockito.Mockito.mock;
 
 import android.Manifest;
 import android.content.Intent;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.TextView;
+
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
@@ -25,6 +29,7 @@ import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.robotium.solo.Solo;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import org.junit.After;
 import org.junit.Before;
@@ -37,6 +42,8 @@ public class TestProfileFragment {
   private String mockPlayerID;
   private UUID mockUUID;
   private Player mockPlayer;
+  private QRCode mockQR1;
+  private QRCode mockQR2;
   private ArrayList<String> mockHashes;
   private ArrayList<QRCode> mockQRCodes;
 
@@ -57,12 +64,12 @@ public class TestProfileFragment {
     // create mock qr codes
     mockQRCodes = new ArrayList<>();
     mockHashes = new ArrayList<>();
-    QRCode qr1 = new QRCode("0424974c68530290458c8d58674e2637f65abc127057957d7b3acbd24c208f93");
-    QRCode qr2 = new QRCode("0424974c68530290458c8d58674e2637f65abc127057957d7b3acbd24c208f93");
-    mockQRCodes.add(qr1);
-    mockQRCodes.add(qr2);
-    mockHashes.add(qr1.getHash());
-    mockHashes.add(qr2.getHash());
+    mockQR1 = new QRCode("0424974c68530290458c8d58674e2637f65abc127057957d7b3acbd24c208f93");
+    mockQR2 = new QRCode("0424974c68530290458c8d58674e2637f65abc127057957d7b3acbd24c208f93");
+    mockQRCodes.add(mockQR1);
+    mockQRCodes.add(mockQR2);
+    mockHashes.add(mockQR1.getHash());
+    mockHashes.add(mockQR2.getHash());
 
     // create a mock player
     mockPlayerID = "001";
@@ -136,8 +143,8 @@ public class TestProfileFragment {
   }
 
   /**
-   * Test if spinner displays spinner options correctly Assumes that the profile only has one
-   * spinner
+   * Test if spinner displays spinner options correctly
+   * Assumes that the profile only has one spinner
    */
   @Test
   public void testSpinnerView() {
@@ -147,6 +154,57 @@ public class TestProfileFragment {
     solo.pressSpinnerItem(0, 1);
     // check if the selected option is correct
     solo.isSpinnerTextSelected(0, "Ascending");
+  }
+
+  /**
+   * Checks if qr codes are properly sorted
+   */
+  @Test
+  public void testQRListSort() {
+    // get the highest and lowest score
+    Integer highestScore = Math.max(mockQR1.getScore(), mockQR2.getScore());
+    Integer lowestScore = Math.min(mockQR1.getScore(), mockQR2.getScore());
+    // get the qr code list
+    GridView codeList = (GridView) solo.getView(R.id.code_list);
+    // check that the highest scoring code is displayed first (since default sort is descending)
+    QRCode firstCode = (QRCode) codeList.getItemAtPosition(0);
+    assertEquals(firstCode.getScore(), highestScore);
+    // change the sort order
+    solo.pressSpinnerItem(0, 1);
+    // check that the lowest scoring code is displayed first
+    firstCode = (QRCode) codeList.getItemAtPosition(0);
+    assertEquals(firstCode.getScore(), lowestScore);
+  }
+
+  /** Checks if the total points of codes scanned is displayed correctly */
+  @Test
+  public void testTotalPoints() {
+    // compute the total score
+    Integer totalScore = mockQR1.getScore() + mockQR2.getScore();
+    // get the displayed text for total code score
+    String totalScoreText = (String) ((TextView) solo.getView(R.id.total_points)).getText();
+    // check the displayed text
+    assertEquals(totalScoreText, String.format("%d\nTotal Points", totalScore));
+  }
+
+  /** Checks if the number of codes scanned is displayed correctly */
+  @Test
+  public void testCodesScanned() {
+    // get the displayed text for total codes scanned
+    String codesScannedText = (String) ((TextView) solo.getView(R.id.total_codes)).getText();
+    // check the displayed text
+    assertEquals(codesScannedText, String.format("%d\nCodes Scanned", mockQRCodes.size()));
+  }
+
+  /** Checks if the top code score is displayed correctly */
+  @Test
+  public void testTopScore() {
+    // get the top score
+    Integer highestScore = Math.max(mockQR1.getScore(), mockQR2.getScore());
+    // get the displayed text for top code score
+    String topScoreText = (String) ((TextView) solo.getView(R.id.top_code_score)).getText();
+    // check the displayed text
+    assertEquals(topScoreText, String.format("%d\nTop Code", highestScore));
   }
 
   /** Checks if the fragment is properly changed when the settings button is clicked */
@@ -203,8 +261,10 @@ public class TestProfileFragment {
     // press the save button
     solo.clickOnView(solo.getView(R.id.settings_save_button));
     // check if player phone number was changed
-    solo.sleep(1000); // wait for update callback to finish
-    assertEquals(mockPlayer.getPhoneNo(), newPhoneNo);
+    await()
+            .until(
+                    () ->
+                            Objects.equals(mockPlayer.getPhoneNo(), newPhoneNo));
   }
 
   /** Checks the change of the user's email */
@@ -223,8 +283,10 @@ public class TestProfileFragment {
     // press the save button
     solo.clickOnView(solo.getView(R.id.settings_save_button));
     // check if player email was changed
-    solo.sleep(1000); // wait for update callback to finish
-    assertEquals(mockPlayer.getEmail(), newEmail);
+    await()
+            .until(
+                    () ->
+                            Objects.equals(mockPlayer.getEmail(), newEmail));
   }
 
   /** Navigate back to profile fragment */
