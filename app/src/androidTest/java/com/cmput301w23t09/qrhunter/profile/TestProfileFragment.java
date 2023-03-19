@@ -2,38 +2,32 @@ package com.cmput301w23t09.qrhunter.profile;
 
 import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
 
 import android.Manifest;
 import android.content.Intent;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
+import com.cmput301w23t09.qrhunter.BaseTest;
 import com.cmput301w23t09.qrhunter.GameActivity;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
-import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
-import com.cmput301w23t09.qrhunter.database.DatabaseQueryResults;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
-import com.cmput301w23t09.qrhunter.qrcode.QRCode;
+import com.cmput301w23t09.qrhunter.util.DeviceUtils;
 import com.robotium.solo.Solo;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 /** Test classes for profile activity */
-public class TestProfileFragment {
+public class TestProfileFragment extends BaseTest {
   private Solo solo;
-  private String mockPlayerID;
-  private UUID mockUUID;
-  private Player mockPlayer;
-  private ArrayList<QRCode> mockQRCodes;
+  private Player player;
 
   @Rule
   public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
@@ -49,25 +43,7 @@ public class TestProfileFragment {
    */
   @Before
   public void setUp() throws Exception {
-    // create a mock player
-    mockPlayerID = "001";
-    mockUUID = UUID.randomUUID();
-    mockPlayer =
-        new Player(mockPlayerID, mockUUID, "Irene", "5873571506", "isun@ualberta.ca", null);
-    // create mock qr codes
-    mockQRCodes = new ArrayList<>();
-
-    // Mock PlayerDatabase
-    PlayerDatabase mockPlayerDatabase = mock(PlayerDatabase.class);
-    doAnswer(
-            invocation -> {
-              DatabaseConsumer<Player> callback = invocation.getArgument(1);
-              callback.accept(new DatabaseQueryResults<>(mockPlayer));
-              return null;
-            })
-        .when(mockPlayerDatabase)
-        .getPlayerByDeviceId(any(UUID.class), any(DatabaseConsumer.class));
-    PlayerDatabase.mockInstance(mockPlayerDatabase);
+    CountDownLatch databaseSetup = new CountDownLatch(1);
 
     // get solo
     activityScenarioRule
@@ -76,7 +52,19 @@ public class TestProfileFragment {
             activity -> {
               activity.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
               solo = new Solo(InstrumentationRegistry.getInstrumentation(), activity);
+
+              // Retrieve our device UUID and add a player corresponding to that device UUID.
+              UUID ourDeviceUUID = DeviceUtils.getDeviceUUID(activity);
+              player =
+                  new Player(
+                      ourDeviceUUID, "Irene", "5873571506", "isun@ualberta.ca", new ArrayList<>());
+
+              // When the player is added, notify the JUnit thread to continue.
+              PlayerDatabase.getInstance().add(player, ignored -> databaseSetup.countDown());
             });
+
+    // Wait for the JUnit thread to be told that the player was added to the database.
+    databaseSetup.await();
 
     // navigate to profile fragment
     solo.clickOnView(solo.getView(R.id.navigation_my_profile));
@@ -96,9 +84,9 @@ public class TestProfileFragment {
   }
 
   /** Checks if the spinners are displayed correctly */
-  @Test
+  /*@Test
   public void testSpinnerView() {
-    /*// click on spinner
+    // click on spinner
     solo.clickOnView(solo.getView(R.id.order_spinner));
     // check if both Ascending and Descending options appear on screen
     TestCase.assertTrue(solo.waitForText("Ascending", 1, 2000));
@@ -106,27 +94,27 @@ public class TestProfileFragment {
     // click on "ascending" option(since default is "descending")
     TestCase.assertFalse(solo.searchText("Descending"));
     TestCase.assertTrue(solo.searchText("Ascending"));
-    */
-  }
+
+  }*/
 
   /** Checks if the username is correctly displayed */
   @Test
   public void testUsernameView() {
     // check if mockPlayer's username is displayed
-    TestCase.assertTrue(solo.waitForText(mockPlayer.getUsername(), 1, 2000));
+    TestCase.assertTrue(solo.waitForText(player.getUsername(), 1, 2000));
   }
 
   /** Checks if the fragment is properly changed when the settings button is clicked */
-  @Test
+  /*@Test
   public void testSettingsButton() {
-    /*
+
     // click the settings button
     solo.clickOnView(solo.getView(R.id.contact_info_button));
     // check the current fragment
     GameController gc = ((GameActivity) solo.getCurrentActivity()).getController();
     assertTrue(gc.getBody() instanceof ProfileSettingsFragment);
-    */
-  }
+
+  }*/
 
   /** Checks if the player info is properly displayed in the settings */
   @Test
@@ -134,14 +122,14 @@ public class TestProfileFragment {
     // click the settings button
     solo.clickOnView(solo.getView(R.id.contact_info_button));
     // search for the player's phone and email info
-    assertTrue(solo.waitForText(mockPlayer.getPhoneNo(), 1, 2000));
-    assertTrue(solo.waitForText(mockPlayer.getEmail(), 1, 2000));
+    assertTrue(solo.waitForText(player.getPhoneNo(), 1, 2000));
+    assertTrue(solo.waitForText(player.getEmail(), 1, 2000));
   }
 
   /** Checks if the save changes button in the settings works */
-  @Test
+  /*@Test
   public void testSaveChangesBtn() {
-    /*// click the settings button
+    // click the settings button
     solo.clickOnView(solo.getView(R.id.contact_info_button));
     // try changing the phone number
     solo.enterText((EditText) solo.getView(R.id.settings_screen_phoneTextField), "1");
@@ -152,6 +140,6 @@ public class TestProfileFragment {
     // go to settings again
     solo.clickOnView(solo.getView(R.id.contact_info_button));
     // check phone number
-    assertTrue(solo.searchText(mockPlayer.getPhoneNo() + "1"));*/
-  }
+    assertTrue(solo.searchText(mockPlayer.getPhoneNo() + "1"));
+  }*/
 }

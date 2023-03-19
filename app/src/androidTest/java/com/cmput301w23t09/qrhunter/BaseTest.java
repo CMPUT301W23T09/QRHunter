@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutionException;
 import org.junit.After;
 import org.junit.BeforeClass;
 
+/** Base class that implements destruction of the database after each test is completed. */
 public abstract class BaseTest {
 
   private static final String COLLECTION_PREFIX = "test_";
@@ -26,6 +27,10 @@ public abstract class BaseTest {
     initialize();
   }
 
+  /**
+   * Mocks the DatabaseConnection to know what collections from the real firebase database we need
+   * to clear after each test.
+   */
   protected static void initialize() {
     if (!initialized) {
       initialized = true;
