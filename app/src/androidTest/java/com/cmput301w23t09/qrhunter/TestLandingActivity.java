@@ -7,30 +7,28 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 import android.content.Intent;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.robotium.solo.Solo;
-import de.mannodermaus.junit5.ActivityScenarioExtension;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 /** Tests the landing activity to ensure that all UI is operational. */
-@ExtendWith(SetupTestDatabaseEnvironment.class)
-public class TestLandingActivity {
+public class TestLandingActivity extends BaseTest {
 
   private Solo solo;
 
-  @RegisterExtension
-  public ActivityScenarioExtension<LandingActivity> activityScenarioRule =
-      ActivityScenarioExtension.launch(LandingActivity.class);
+  @Rule
+  public ActivityScenarioRule<LandingActivity> activityScenarioRule =
+      new ActivityScenarioRule<>(LandingActivity.class);
 
-  @BeforeEach
+  @Before
   public void setUpTest() {
     activityScenarioRule
         .getScenario()
@@ -52,14 +50,11 @@ public class TestLandingActivity {
   /** When registering, the username must match the validation rules. 1-20 characters */
   @Test
   public void testUsernameValidation() {
-    String invalidUsername = "";
     String validPhoneNo = "123-456-7890";
     String validEmail = "example@example.com";
 
     solo.waitForView(R.id.landing_screen_title);
 
-    onView(withId(R.id.landing_screen_usernameTextField))
-        .perform(click(), typeText(invalidUsername), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_phoneNoTextField))
         .perform(click(), typeText(validPhoneNo), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_emailTextField))

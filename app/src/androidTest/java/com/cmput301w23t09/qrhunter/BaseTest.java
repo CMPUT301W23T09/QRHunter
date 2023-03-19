@@ -12,23 +12,21 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import org.junit.jupiter.api.extension.AfterEachCallback;
-import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.After;
+import org.junit.BeforeClass;
 
-/**
- * Used to automatically setup the test environment on the live firebase database for all tests and
- * tear down the database after each test.
- */
-public class SetupTestDatabaseEnvironment
-    implements BeforeAllCallback, AfterEachCallback, ExtensionContext.Store.CloseableResource {
+public abstract class BaseTest {
 
   private static final String COLLECTION_PREFIX = "test_";
-  private boolean initialized = false;
-  private final Set<String> collectionsToReset = new HashSet<>();
+  private static boolean initialized = false;
+  private static final Set<String> collectionsToReset = new HashSet<>();
 
-  @Override
-  public void beforeAll(ExtensionContext context) {
+  @BeforeClass
+  public static void setupDatabase() {
+    initialize();
+  }
+
+  protected static void initialize() {
     if (!initialized) {
       initialized = true;
 
@@ -49,15 +47,8 @@ public class SetupTestDatabaseEnvironment
     }
   }
 
-  @Override
-  public void afterEach(ExtensionContext context) throws Exception {
-    // Reset the database after each test
-    deleteAllCollections();
-  }
-
-  @Override
-  public void close() throws Throwable {
-    // Reset the database if an exception occurred/after all tests
+  @After
+  public void afterEachTest() throws Exception {
     deleteAllCollections();
   }
 
