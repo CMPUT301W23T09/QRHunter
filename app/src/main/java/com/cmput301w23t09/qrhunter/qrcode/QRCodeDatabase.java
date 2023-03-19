@@ -2,13 +2,13 @@ package com.cmput301w23t09.qrhunter.qrcode;
 
 import android.location.Location;
 import android.util.Log;
+import com.cmput301w23t09.qrhunter.database.DatabaseConnection;
 import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
 import com.cmput301w23t09.qrhunter.database.DatabaseQueryResults;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class QRCodeDatabase {
   private final CollectionReference collection;
 
   private QRCodeDatabase() {
-    collection = FirebaseFirestore.getInstance().collection(DATABASE_COLLECTION_NAME);
+    collection = DatabaseConnection.getInstance().getCollection(DATABASE_COLLECTION_NAME);
   }
 
   /**

@@ -79,10 +79,9 @@ public class TestLandingActivity {
 
     solo.waitForView(R.id.landing_screen_title);
 
-    CountDownLatch latch = new CountDownLatch(1);
-
     // UI testing related methods cannot be called on the main thread.
     // so we use a countdown latch to let the JUnit thread know when to proceed.
+    CountDownLatch latch = new CountDownLatch(1);
     PlayerDatabase.getInstance()
         .add(
             new Player(

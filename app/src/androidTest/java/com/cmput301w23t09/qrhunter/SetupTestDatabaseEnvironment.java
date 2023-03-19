@@ -16,7 +16,10 @@ import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-/** Used to automatically setup the test database prefix for all tests. */
+/**
+ * Used to automatically setup the test environment on the live firebase database for all tests and
+ * tear down the database after each test.
+ */
 public class SetupTestDatabaseEnvironment
     implements BeforeAllCallback, AfterEachCallback, ExtensionContext.Store.CloseableResource {
 
@@ -29,12 +32,16 @@ public class SetupTestDatabaseEnvironment
     if (!initialized) {
       initialized = true;
 
+      // Spy on the database connection so that we can tell what collections are being retrieved.
       DatabaseConnection testConnection = spy(new DatabaseConnection());
       when(testConnection.getCollectionPrefix()).thenReturn(COLLECTION_PREFIX);
       when(testConnection.getCollection(anyString()))
           .thenAnswer(
               invocation -> {
+                // Add the collection retrieved to the collections to reset
                 collectionsToReset.add(invocation.getArgument(0));
+
+                // Call the actual getCollection method to retrieve the real firebase collection
                 return invocation.callRealMethod();
               });
 
@@ -44,14 +51,22 @@ public class SetupTestDatabaseEnvironment
 
   @Override
   public void afterEach(ExtensionContext context) throws Exception {
+    // Reset the database after each test
     deleteAllCollections();
   }
 
   @Override
   public void close() throws Throwable {
+    // Reset the database if an exception occurred/after all tests
     deleteAllCollections();
   }
 
+  /**
+   * Deletes all collections accessed in the DatabaseConnection
+   *
+   * @throws InterruptedException if an exception occurred while deleting the collections
+   * @throws ExecutionException if an exception occurred while deleting the collections
+   */
   private void deleteAllCollections() throws InterruptedException, ExecutionException {
     for (String collectionName : collectionsToReset) {
       CollectionReference collection =
@@ -62,7 +77,5 @@ public class SetupTestDatabaseEnvironment
         Tasks.await(collection.document(documentSnapshot.getId()).delete());
       }
     }
-
-    collectionsToReset.clear();
   }
 }
