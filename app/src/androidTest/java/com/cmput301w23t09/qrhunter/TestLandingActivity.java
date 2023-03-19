@@ -7,38 +7,31 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 import android.content.Intent;
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
-import com.cmput301w23t09.qrhunter.player.MockPlayerDatabase;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.robotium.solo.Solo;
+import de.mannodermaus.junit5.ActivityScenarioExtension;
 import java.util.ArrayList;
 import java.util.UUID;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
+import java.util.concurrent.CountDownLatch;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /** Tests the landing activity to ensure that all UI is operational. */
+@ExtendWith(SetupTestDatabaseEnvironment.class)
 public class TestLandingActivity {
 
   private Solo solo;
-  private static MockPlayerDatabase database;
 
-  @Rule
-  public ActivityScenarioRule<LandingActivity> activityScenarioRule =
-      new ActivityScenarioRule<>(LandingActivity.class);
+  @RegisterExtension
+  public ActivityScenarioExtension<LandingActivity> activityScenarioRule =
+      ActivityScenarioExtension.launch(LandingActivity.class);
 
-  @BeforeClass
-  public static void setUpDatabase() {
-    database = new MockPlayerDatabase();
-    PlayerDatabase.mockInstance(database);
-  }
-
-  @Before
+  @BeforeEach
   public void setUpTest() {
-    database.reset();
     activityScenarioRule
         .getScenario()
         .onActivity(
@@ -51,7 +44,7 @@ public class TestLandingActivity {
   /** Players who do not have an account should stay on the landing page. */
   @Test
   public void testStayOnLandingWithoutRegisteredPlayer() {
-    solo.waitForActivity(GameActivity.class, 15000);
+    solo.waitForActivity(GameActivity.class, 5000);
     solo.assertCurrentActivity(
         "Player is on game activity without having an account.", LandingActivity.class);
   }
@@ -62,6 +55,8 @@ public class TestLandingActivity {
     String invalidUsername = "";
     String validPhoneNo = "123-456-7890";
     String validEmail = "example@example.com";
+
+    solo.waitForView(R.id.landing_screen_title);
 
     onView(withId(R.id.landing_screen_usernameTextField))
         .perform(click(), typeText(invalidUsername), closeSoftKeyboard());
@@ -77,26 +72,35 @@ public class TestLandingActivity {
 
   /** When registering, using an existing username should not be allowed. */
   @Test
-  public void testUsernameExisting() {
+  public void testUsernameExisting() throws InterruptedException {
     String validUsername = "User";
     String validPhoneNo = "123-456-7890";
     String validEmail = "example@example.com";
 
-    database.add(
-        new Player(UUID.randomUUID(), validUsername, validPhoneNo, validEmail, new ArrayList<>()),
-        task -> {
-          onView(withId(R.id.landing_screen_usernameTextField))
-              .perform(click(), typeText(validUsername.toLowerCase()), closeSoftKeyboard());
-          onView(withId(R.id.landing_screen_phoneNoTextField))
-              .perform(click(), typeText(validPhoneNo), closeSoftKeyboard());
-          onView(withId(R.id.landing_screen_emailTextField))
-              .perform(click(), typeText(validEmail), closeSoftKeyboard());
-          onView(withId(R.id.landing_screen_register_button)).perform(click());
+    solo.waitForView(R.id.landing_screen_title);
 
-          solo.waitForActivity(GameActivity.class, 5000);
-          solo.assertCurrentActivity(
-              "Allowed invalid existing username registration.", LandingActivity.class);
-        });
+    CountDownLatch latch = new CountDownLatch(1);
+
+    // UI testing related methods cannot be called on the main thread.
+    // so we use a countdown latch to let the JUnit thread know when to proceed.
+    PlayerDatabase.getInstance()
+        .add(
+            new Player(
+                UUID.randomUUID(), validUsername, validPhoneNo, validEmail, new ArrayList<>()),
+            task -> latch.countDown());
+    latch.await();
+
+    onView(withId(R.id.landing_screen_usernameTextField))
+        .perform(click(), typeText(validUsername.toLowerCase()), closeSoftKeyboard());
+    onView(withId(R.id.landing_screen_phoneNoTextField))
+        .perform(click(), typeText(validPhoneNo), closeSoftKeyboard());
+    onView(withId(R.id.landing_screen_emailTextField))
+        .perform(click(), typeText(validEmail), closeSoftKeyboard());
+    onView(withId(R.id.landing_screen_register_button)).perform(click());
+
+    solo.waitForActivity(GameActivity.class, 5000);
+    solo.assertCurrentActivity(
+        "Allowed invalid existing username registration.", LandingActivity.class);
   }
 
   /** When registering, the phone number must be valid. */
@@ -105,6 +109,8 @@ public class TestLandingActivity {
     String validUsername = "User";
     String invalidPhoneNo = "not valid";
     String validEmail = "example@example.com";
+
+    solo.waitForView(R.id.landing_screen_title);
 
     onView(withId(R.id.landing_screen_usernameTextField))
         .perform(click(), typeText(validUsername), closeSoftKeyboard());
@@ -124,6 +130,8 @@ public class TestLandingActivity {
     String validUsername = "User";
     String validPhoneNo = "123-456-7890";
     String invalidEmail = "example.com";
+
+    solo.waitForView(R.id.landing_screen_title);
 
     onView(withId(R.id.landing_screen_usernameTextField))
         .perform(click(), typeText(validUsername), closeSoftKeyboard());
@@ -145,17 +153,19 @@ public class TestLandingActivity {
   public void testRegistration() {
     String validUsername = "User";
     String validPhoneNo = "123-456-7890";
-    String invalidEmail = "example.com";
+    String validEmail = "example@example.com";
+
+    solo.waitForView(R.id.landing_screen_title);
 
     onView(withId(R.id.landing_screen_usernameTextField))
         .perform(click(), typeText(validUsername), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_phoneNoTextField))
         .perform(click(), typeText(validPhoneNo), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_emailTextField))
-        .perform(click(), typeText(invalidEmail), closeSoftKeyboard());
+        .perform(click(), typeText(validEmail), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_register_button)).perform(click());
 
     solo.waitForActivity(GameActivity.class, 5000);
-    solo.assertCurrentActivity("Did not switch to game activity.", LandingActivity.class);
+    solo.assertCurrentActivity("Did not switch to game activity.", GameActivity.class);
   }
 }
