@@ -151,12 +151,12 @@ public class TestLandingActivity extends BaseTest {
 
     solo.waitForView(R.id.landing_screen_title);
 
-    //    onView(withId(R.id.landing_screen_usernameTextField))
-    //        .perform(click(), typeText(validUsername), closeSoftKeyboard());
-    //    onView(withId(R.id.landing_screen_phoneNoTextField))
-    //        .perform(click(), typeText(validPhoneNo), closeSoftKeyboard());
-    //    onView(withId(R.id.landing_screen_emailTextField))
-    //        .perform(click(), typeText(validEmail), closeSoftKeyboard());
+    onView(withId(R.id.landing_screen_usernameTextField))
+        .perform(click(), typeText(validUsername), closeSoftKeyboard());
+    onView(withId(R.id.landing_screen_phoneNoTextField))
+        .perform(click(), typeText(validPhoneNo), closeSoftKeyboard());
+    onView(withId(R.id.landing_screen_emailTextField))
+        .perform(click(), typeText(validEmail), closeSoftKeyboard());
 
     onView(withId(R.id.landing_screen_register_button)).perform(click());
 
