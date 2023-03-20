@@ -1,4 +1,4 @@
-package com.cmput301w23t09.qrhunter.qrcode;
+package com.cmput301w23t09.qrhunter;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -19,11 +19,11 @@ import android.widget.ImageView;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
-import com.cmput301w23t09.qrhunter.BaseTest;
-import com.cmput301w23t09.qrhunter.GameActivity;
-import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
+import com.cmput301w23t09.qrhunter.qrcode.QRCode;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.robotium.solo.Solo;
 import java.util.ArrayList;
 import java.util.UUID;

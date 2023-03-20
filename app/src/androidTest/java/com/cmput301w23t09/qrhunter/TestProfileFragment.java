@@ -1,4 +1,4 @@
-package com.cmput301w23t09.qrhunter.profile;
+package com.cmput301w23t09.qrhunter;
 
 import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertTrue;
@@ -8,12 +8,9 @@ import android.content.Intent;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
-import com.cmput301w23t09.qrhunter.BaseTest;
-import com.cmput301w23t09.qrhunter.GameActivity;
-import com.cmput301w23t09.qrhunter.GameController;
-import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
+import com.cmput301w23t09.qrhunter.profile.ProfileFragment;
 import com.cmput301w23t09.qrhunter.util.DeviceUtils;
 import com.robotium.solo.Solo;
 import java.util.ArrayList;
