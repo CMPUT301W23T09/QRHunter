@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -38,6 +39,7 @@ import org.junit.Test;
 // The following tests are still required
 // Check pressing the back button when there are unsaved changes
 // Checks discarding unsaved changes
+// Checks settings reset button
 // Checks Andy's top score percentile toast
 public class TestProfileFragment {
   private Solo solo;
@@ -250,8 +252,6 @@ public class TestProfileFragment {
     // click the settings button to navigate to the settings
     solo.clickOnView(solo.getView(R.id.contact_info_button));
     // clear the current phone number
-    solo.clickOnView(solo.getView(R.id.settings_screen_phoneTextField));
-    // remove current phone number
     solo.clearEditText((EditText) solo.getView(R.id.settings_screen_phoneTextField));
     // enter a new phone number
     String newPhoneNo = "5872571509";
@@ -261,8 +261,9 @@ public class TestProfileFragment {
     // press the save button
     solo.clickOnView(solo.getView(R.id.settings_save_button));
     // check if player phone number is updated
-    solo.sleep(1000);
-    await().until(() -> (Objects.equals(mockPlayer.getPhoneNo(), newPhoneNo)));
+    await()
+        .atMost(1, TimeUnit.MINUTES)
+        .until(() -> (Objects.equals(mockPlayer.getPhoneNo(), newPhoneNo)));
   }
 
   /** Checks the change of the user's email */
@@ -271,7 +272,6 @@ public class TestProfileFragment {
     // click the settings button to navigate to the settings
     solo.clickOnView(solo.getView(R.id.contact_info_button));
     // clear the current email
-    solo.clickOnView(solo.getView(R.id.settings_screen_emailTextField));
     solo.clearEditText((EditText) solo.getView(R.id.settings_screen_emailTextField));
     // enter a new email
     String newEmail = "irenerose.sun@gmail.com";
@@ -281,8 +281,9 @@ public class TestProfileFragment {
     // press the save button
     solo.clickOnView(solo.getView(R.id.settings_save_button));
     // check if player email was updated
-    solo.sleep(1000);
-    await().until(() -> (Objects.equals(mockPlayer.getEmail(), newEmail)));
+    await()
+        .atMost(1, TimeUnit.MINUTES)
+        .until(() -> (Objects.equals(mockPlayer.getEmail(), newEmail)));
   }
 
   /** Navigates back to profile fragment */
@@ -290,6 +291,7 @@ public class TestProfileFragment {
   public void goToProfile() {
     solo.clickOnView(solo.getView(R.id.navigation_my_profile));
     await()
+        .atMost(1, TimeUnit.MINUTES)
         .until(
             () ->
                 ((GameActivity) solo.getCurrentActivity()).getController().getBody()
