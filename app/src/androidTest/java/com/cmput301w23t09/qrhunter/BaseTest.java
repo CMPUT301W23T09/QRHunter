@@ -23,7 +23,7 @@ public abstract class BaseTest {
   private static final Set<String> collectionsToReset = new HashSet<>();
 
   @BeforeClass
-  public static void setupDatabase() {
+  public static void setupDatabase() throws Exception {
     initialize();
   }
 
