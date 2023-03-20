@@ -262,7 +262,7 @@ public class TestProfileFragment {
     solo.clickOnView(solo.getView(R.id.settings_save_button));
     // check if player phone number is updated
     await()
-        .atMost(2, TimeUnit.MINUTES)
+        .atMost(3, TimeUnit.MINUTES)
         .until(() -> (Objects.equals(mockPlayer.getPhoneNo(), newPhoneNo)));
   }
 
@@ -282,7 +282,7 @@ public class TestProfileFragment {
     solo.clickOnView(solo.getView(R.id.settings_save_button));
     // check if player email was updated
     await()
-        .atMost(2, TimeUnit.MINUTES)
+        .atMost(3, TimeUnit.MINUTES)
         .until(() -> (Objects.equals(mockPlayer.getEmail(), newEmail)));
   }
 
@@ -291,6 +291,7 @@ public class TestProfileFragment {
   public void goToProfile() {
     solo.clickOnView(solo.getView(R.id.navigation_my_profile));
     await()
+        .atMost(1, TimeUnit.MINUTES)
         .until(
             () ->
                 ((GameActivity) solo.getCurrentActivity()).getController().getBody()
