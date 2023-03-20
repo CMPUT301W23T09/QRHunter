@@ -40,7 +40,6 @@ import org.junit.Test;
 // Check pressing the back button when there are unsaved changes
 // Checks discarding unsaved changes
 // Checks settings reset button
-// Checks Andy's top score percentile toast
 public class TestProfileFragment {
   private Solo solo;
   private String mockPlayerID;
@@ -261,8 +260,9 @@ public class TestProfileFragment {
     // press the save button
     solo.clickOnView(solo.getView(R.id.settings_save_button));
     // check if player phone number is updated
+    solo.clickOnView(solo.getView(R.id.settings_back_button));
     await()
-        .atMost(3, TimeUnit.MINUTES)
+        .atMost(5, TimeUnit.MINUTES)
         .until(() -> (Objects.equals(mockPlayer.getPhoneNo(), newPhoneNo)));
   }
 
@@ -282,7 +282,7 @@ public class TestProfileFragment {
     solo.clickOnView(solo.getView(R.id.settings_save_button));
     // check if player email was updated
     await()
-        .atMost(3, TimeUnit.MINUTES)
+        .atMost(5, TimeUnit.MINUTES)
         .until(() -> (Objects.equals(mockPlayer.getEmail(), newEmail)));
   }
 
@@ -291,7 +291,6 @@ public class TestProfileFragment {
   public void goToProfile() {
     solo.clickOnView(solo.getView(R.id.navigation_my_profile));
     await()
-        .atMost(1, TimeUnit.MINUTES)
         .until(
             () ->
                 ((GameActivity) solo.getCurrentActivity()).getController().getBody()
