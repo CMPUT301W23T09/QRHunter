@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.database.DatabaseConnection;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
@@ -63,7 +64,7 @@ public class ProfileController {
 
     // access database
     db = FirebaseFirestore.getInstance();
-    qrcodeCollection = db.collection("qrcodes");
+    qrcodeCollection = DatabaseConnection.getInstance().getCollection("qrcodes");
   }
 
   /**
