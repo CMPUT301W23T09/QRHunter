@@ -4,6 +4,8 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasFocus;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 import android.content.Intent;
@@ -59,8 +61,6 @@ public class TestLandingActivity extends BaseTest {
         .perform(click(), typeText(validPhoneNo), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_emailTextField))
         .perform(click(), typeText(validEmail), closeSoftKeyboard());
-
-    solo.sleep(5000);
     onView(withId(R.id.landing_screen_register_button)).perform(click());
 
     solo.waitForActivity(GameActivity.class, 5000);
@@ -92,8 +92,6 @@ public class TestLandingActivity extends BaseTest {
         .perform(click(), typeText(validPhoneNo), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_emailTextField))
         .perform(click(), typeText(validEmail), closeSoftKeyboard());
-
-    solo.sleep(5000);
     onView(withId(R.id.landing_screen_register_button)).perform(click());
 
     solo.waitForActivity(GameActivity.class, 5000);
@@ -116,8 +114,6 @@ public class TestLandingActivity extends BaseTest {
         .perform(click(), typeText(invalidPhoneNo), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_emailTextField))
         .perform(click(), typeText(validEmail), closeSoftKeyboard());
-
-    solo.sleep(5000);
     onView(withId(R.id.landing_screen_register_button)).perform(click());
 
     solo.waitForActivity(GameActivity.class, 5000);
@@ -139,8 +135,6 @@ public class TestLandingActivity extends BaseTest {
         .perform(click(), typeText(validPhoneNo), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_emailTextField))
         .perform(click(), typeText(invalidEmail), closeSoftKeyboard());
-
-    solo.sleep(5000);
     onView(withId(R.id.landing_screen_register_button)).perform(click());
 
     solo.waitForActivity(GameActivity.class, 5000);
@@ -160,13 +154,17 @@ public class TestLandingActivity extends BaseTest {
     solo.waitForView(R.id.landing_screen_title);
 
     onView(withId(R.id.landing_screen_usernameTextField))
-        .perform(click(), typeText(validUsername), closeSoftKeyboard());
+        .perform(click())
+        .check(matches(hasFocus()))
+        .perform(typeText(validUsername), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_phoneNoTextField))
-        .perform(click(), typeText(validPhoneNo), closeSoftKeyboard());
+        .perform(click())
+        .check(matches(hasFocus()))
+        .perform(typeText(validPhoneNo), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_emailTextField))
-        .perform(click(), typeText(validEmail), closeSoftKeyboard());
-
-    solo.sleep(5000);
+        .perform(click())
+        .check(matches(hasFocus()))
+        .perform(typeText(validEmail), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_register_button)).perform(click());
 
     solo.waitForActivity(GameActivity.class, 5000);
