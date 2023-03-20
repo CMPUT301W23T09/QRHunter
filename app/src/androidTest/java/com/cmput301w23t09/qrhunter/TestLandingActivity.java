@@ -59,6 +59,8 @@ public class TestLandingActivity extends BaseTest {
         .perform(click(), typeText(validPhoneNo), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_emailTextField))
         .perform(click(), typeText(validEmail), closeSoftKeyboard());
+
+    solo.sleep(5000);
     onView(withId(R.id.landing_screen_register_button)).perform(click());
 
     solo.waitForActivity(GameActivity.class, 5000);
@@ -90,6 +92,8 @@ public class TestLandingActivity extends BaseTest {
         .perform(click(), typeText(validPhoneNo), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_emailTextField))
         .perform(click(), typeText(validEmail), closeSoftKeyboard());
+
+    solo.sleep(5000);
     onView(withId(R.id.landing_screen_register_button)).perform(click());
 
     solo.waitForActivity(GameActivity.class, 5000);
@@ -112,6 +116,8 @@ public class TestLandingActivity extends BaseTest {
         .perform(click(), typeText(invalidPhoneNo), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_emailTextField))
         .perform(click(), typeText(validEmail), closeSoftKeyboard());
+
+    solo.sleep(5000);
     onView(withId(R.id.landing_screen_register_button)).perform(click());
 
     solo.waitForActivity(GameActivity.class, 5000);
@@ -133,6 +139,8 @@ public class TestLandingActivity extends BaseTest {
         .perform(click(), typeText(validPhoneNo), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_emailTextField))
         .perform(click(), typeText(invalidEmail), closeSoftKeyboard());
+
+    solo.sleep(5000);
     onView(withId(R.id.landing_screen_register_button)).perform(click());
 
     solo.waitForActivity(GameActivity.class, 5000);
@@ -157,6 +165,8 @@ public class TestLandingActivity extends BaseTest {
         .perform(click(), typeText(validPhoneNo), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_emailTextField))
         .perform(click(), typeText(validEmail), closeSoftKeyboard());
+
+    solo.sleep(5000);
     onView(withId(R.id.landing_screen_register_button)).perform(click());
 
     solo.waitForActivity(GameActivity.class, 5000);
