@@ -60,7 +60,7 @@ public class TestLandingActivity extends BaseTest {
         .perform(click(), typeText(validPhoneNo), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_emailTextField))
         .perform(click(), typeText(validEmail), closeSoftKeyboard());
-    onView(withId(R.id.landing_screen_register_button)).perform(click());
+    onView(withId(R.id.landing_screen_register_button)).perform(scrollTo(), click());
 
     solo.waitForActivity(GameActivity.class, 5000);
     solo.assertCurrentActivity("Allowed invalid username registration.", LandingActivity.class);
