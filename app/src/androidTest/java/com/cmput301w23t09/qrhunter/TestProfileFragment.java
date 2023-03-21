@@ -1,14 +1,21 @@
 package com.cmput301w23t09.qrhunter;
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.awaitility.Awaitility.await;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.anything;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
@@ -16,9 +23,7 @@ import static org.mockito.Mockito.mock;
 
 import android.Manifest;
 import android.content.Intent;
-import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.TextView;
+import androidx.test.espresso.DataInteraction;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
@@ -70,7 +75,7 @@ public class TestProfileFragment {
     mockQRCodes = new ArrayList<>();
     mockHashes = new ArrayList<>();
     mockQR1 = new QRCode("0424974c68530290458c8d58674e2637f65abc127057957d7b3acbd24c208f93");
-    mockQR2 = new QRCode("0424974c68530290458c8d58674e2637f65abc127057957d7b3acbd24c208f93");
+    mockQR2 = new QRCode("b5a384ee0ec5a8b625de9b24a96627c9ea5d246b70eb34a3a4f9ee781e581731");
     mockQRCodes.add(mockQR1);
     mockQRCodes.add(mockQR2);
     mockHashes.add(mockQR1.getHash());
@@ -82,8 +87,9 @@ public class TestProfileFragment {
     mockPlayer =
         new Player(mockPlayerID, mockUUID, "Irene", "5873571506", "isun@ualberta.ca", mockHashes);
 
-    // Mock PlayerDatabase
+    // mock PlayerDatabase
     PlayerDatabase mockPlayerDatabase = mock(PlayerDatabase.class);
+    // mock getting the player based on the device
     doAnswer(
             invocation -> {
               DatabaseConsumer<Player> callback = invocation.getArgument(1);
@@ -92,6 +98,7 @@ public class TestProfileFragment {
             })
         .when(mockPlayerDatabase)
         .getPlayerByDeviceId(any(UUID.class), any(DatabaseConsumer.class));
+    // mock updating a player's info in the database
     doAnswer(
             invocation -> {
               DatabaseConsumer<Void> callback = invocation.getArgument(1);
@@ -102,8 +109,9 @@ public class TestProfileFragment {
         .update(any(Player.class), any(DatabaseConsumer.class));
     PlayerDatabase.mockInstance(mockPlayerDatabase);
 
-    // Mock QRCodeDatabase
+    // mock QRCodeDatabase
     QRCodeDatabase mockQRCodeDatabase = mock(QRCodeDatabase.class);
+    // mock getting the qr codes for a list of hashes
     doAnswer(
             invocation -> {
               DatabaseConsumer<List<QRCode>> callback = invocation.getArgument(1);
@@ -124,7 +132,7 @@ public class TestProfileFragment {
             });
 
     // navigate to profile fragment
-    solo.clickOnView(solo.getView(R.id.navigation_my_profile));
+    onView(withId(R.id.navigation_my_profile)).perform(click());
     await()
         .until(
             () ->
@@ -144,7 +152,7 @@ public class TestProfileFragment {
   @Test
   public void testUsernameView() {
     // check if mockPlayer's username is displayed
-    assertTrue(solo.searchText(mockPlayer.getUsername()));
+    onView(withId(R.id.username)).check(matches(withText(mockPlayer.getUsername())));
   }
 
   /**
@@ -154,29 +162,35 @@ public class TestProfileFragment {
   @Test
   public void testSpinnerView() {
     // checks the current selected value of spinner
-    solo.isSpinnerTextSelected(0, "Descending");
+    onView(withId(R.id.order_spinner)).check(matches(withSpinnerText("Descending")));
     // click on spinner and select the next option
-    solo.pressSpinnerItem(0, 1);
+    onView(withId(R.id.order_spinner)).perform(click());
+    onData(allOf(is(instanceOf(String.class)), is("Ascending"))).perform(click());
     // check if the selected option is correct
-    solo.isSpinnerTextSelected(0, "Ascending");
+    onView(withId(R.id.order_spinner)).check(matches(withSpinnerText("Ascending")));
   }
 
-  /** Checks if qr codes are properly sorted */
+  /** Checks if qr codes are properly sorted and displayed */
   @Test
-  public void testQRListSort() {
+  public void testQRListView() {
     // get the highest and lowest score
     Integer highestScore = Math.max(mockQR1.getScore(), mockQR2.getScore());
     Integer lowestScore = Math.min(mockQR1.getScore(), mockQR2.getScore());
     // get the qr code list
-    GridView codeList = (GridView) solo.getView(R.id.code_list);
+    DataInteraction codeList = onData(anything()).inAdapterView(withId(R.id.code_list));
     // check that the highest scoring code is displayed first (since default sort is descending)
-    QRCode firstCode = (QRCode) codeList.getItemAtPosition(0);
-    assertEquals(firstCode.getScore(), highestScore);
+    codeList
+        .atPosition(0)
+        .onChildView(withId(R.id.score))
+        .check(matches(withText(String.valueOf(highestScore))));
     // change the sort order
-    solo.pressSpinnerItem(0, 1);
+    onView(withId(R.id.order_spinner)).perform(click());
+    onData(allOf(is(instanceOf(String.class)), is("Ascending"))).perform(click());
     // check that the lowest scoring code is displayed first
-    firstCode = (QRCode) codeList.getItemAtPosition(0);
-    assertEquals(firstCode.getScore(), lowestScore);
+    codeList
+        .atPosition(0)
+        .onChildView(withId(R.id.score))
+        .check(matches(withText(String.valueOf(lowestScore))));
   }
 
   /** Checks if the total points of codes scanned is displayed correctly */
@@ -184,37 +198,34 @@ public class TestProfileFragment {
   public void testTotalPoints() {
     // compute the total score
     Integer totalScore = mockQR1.getScore() + mockQR2.getScore();
-    // get the displayed text for total code score
-    String totalScoreText = (String) ((TextView) solo.getView(R.id.total_points)).getText();
-    // check the displayed text
-    assertEquals(totalScoreText, String.format("%d\nTotal Points", totalScore));
+    // check the displayed text for total code score
+    onView(withId(R.id.total_points))
+        .check(matches(withText(String.format("%d\nTotal Points", totalScore))));
   }
 
   /** Checks if the number of codes scanned is displayed correctly */
   @Test
   public void testCodesScanned() {
-    // get the displayed text for total codes scanned
-    String codesScannedText = (String) ((TextView) solo.getView(R.id.total_codes)).getText();
-    // check the displayed text
-    assertEquals(codesScannedText, String.format("%d\nCodes Scanned", mockQRCodes.size()));
+    // check the displayed text for total codes scanned
+    onView(withId(R.id.total_codes))
+        .check(matches(withText(String.format("%d\nCodes Scanned", mockQRCodes.size()))));
   }
 
   /** Checks if the top code score is displayed correctly */
   @Test
   public void testTopScore() {
-    // get the top score
+    // compute the top score
     Integer highestScore = Math.max(mockQR1.getScore(), mockQR2.getScore());
     // get the displayed text for top code score
-    String topScoreText = (String) ((TextView) solo.getView(R.id.top_code_score)).getText();
-    // check the displayed text
-    assertEquals(topScoreText, String.format("%d\nTop Code", highestScore));
+    onView(withId(R.id.top_code_score))
+        .check(matches(withText(String.format("%d\nTop Code", highestScore))));
   }
 
   /** Checks if the fragment is properly changed when the settings button is clicked */
   @Test
   public void testSettingsButton() {
     // click the settings button
-    solo.clickOnView(solo.getView(R.id.contact_info_button));
+    onView(withId(R.id.contact_info_button)).perform(click());
     // check the current fragment
     await()
         .until(
@@ -226,9 +237,9 @@ public class TestProfileFragment {
   @Test
   public void testSettingsBackBtn() {
     // navigate to settings
-    solo.clickOnView(solo.getView(R.id.contact_info_button));
+    onView(withId(R.id.contact_info_button)).perform(click());
     // click on the back button from settings
-    solo.clickOnView(solo.getView(R.id.settings_back_button));
+    onView(withId(R.id.settings_back_button)).perform(click());
     // check the current fragment
     await()
         .until(
@@ -241,10 +252,12 @@ public class TestProfileFragment {
   @Test
   public void testSettingsInfo() {
     // click the settings button to navigate to the settings fragment
-    solo.clickOnView(solo.getView(R.id.contact_info_button));
+    onView(withId(R.id.contact_info_button)).perform(click());
     // search for the player's phone and email
-    assertTrue(solo.searchEditText(mockPlayer.getPhoneNo()));
-    assertTrue(solo.searchEditText(mockPlayer.getEmail()));
+    onView(withId(R.id.settings_screen_phoneTextField))
+        .check(matches(withText(mockPlayer.getPhoneNo())));
+    onView(withId(R.id.settings_screen_emailTextField))
+        .check(matches(withText(mockPlayer.getEmail())));
   }
 
   /* Checks the change of the user's phone number */
@@ -258,7 +271,7 @@ public class TestProfileFragment {
     onView(withId(R.id.settings_screen_phoneTextField))
         .perform(click(), typeText(newPhoneNo), closeSoftKeyboard());
     // check the phone number input
-    assertTrue(solo.searchText(newPhoneNo));
+    onView(withId(R.id.settings_screen_phoneTextField)).check(matches(withText(newPhoneNo)));
     // press the save button
     onView(withId(R.id.settings_save_button)).perform(scrollTo(), click());
     await()
@@ -277,7 +290,7 @@ public class TestProfileFragment {
     onView(withId(R.id.settings_screen_emailTextField))
         .perform(click(), typeText(newEmail), closeSoftKeyboard());
     // check email input
-    assertTrue(solo.searchText(newEmail));
+    onView(withId(R.id.settings_screen_emailTextField)).check(matches(withText(newEmail)));
     // press the save button
     onView(withId(R.id.settings_save_button)).perform(scrollTo(), click());
     // check if player email was updated
@@ -289,7 +302,7 @@ public class TestProfileFragment {
   /** Navigates back to profile fragment */
   @After
   public void goToProfile() {
-    solo.clickOnView(solo.getView(R.id.navigation_my_profile));
+    onView(withId(R.id.navigation_my_profile)).perform(click());
     await()
         .until(
             () ->

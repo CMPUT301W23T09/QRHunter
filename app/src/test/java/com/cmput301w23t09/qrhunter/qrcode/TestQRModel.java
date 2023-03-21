@@ -3,7 +3,7 @@ package com.cmput301w23t09.qrhunter.qrcode;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.Test;
 
 public class TestQRModel {
@@ -11,10 +11,16 @@ public class TestQRModel {
   private String mockHash() {
     return "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
   }
+
   // create a mock qr code
   private QRCode mockCode() {
-    return new QRCode(mockHash(), "mock", null, 10, null, null, null, null);
+    try {
+      return new QRCode(mockHash(), "mockqr", 10, null, null, null, null);
+    } catch (ExecutionException | InterruptedException e) {
+      throw (new RuntimeException(e));
+    }
   }
+
   // create a mock qr code list
   private ArrayList<QRCode> mockList() {
     return new ArrayList<QRCode>();
@@ -27,7 +33,7 @@ public class TestQRModel {
 
   @Test
   public void testGetName() {
-    assertEquals(mockCode().getName(), "mock");
+    assertEquals(mockCode().getName(), "mockqr");
   }
 
   @Test
@@ -38,16 +44,5 @@ public class TestQRModel {
   @Test
   public void testGetLoc() {
     assertEquals(mockCode().getLoc(), null);
-  }
-
-  @Test
-  public void testQRSort() {
-    ArrayList<QRCode> mockList = mockList();
-    mockList.add(mockCode());
-    // add another qr code with a higher score
-    Comparator<QRCode> comparator = new ScoreComparator();
-    mockList.sort(comparator);
-    // check if order is correct
-    // check with comparator.reversed()
   }
 }
