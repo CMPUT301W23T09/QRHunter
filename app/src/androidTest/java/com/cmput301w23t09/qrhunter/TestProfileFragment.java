@@ -1,5 +1,12 @@
-package com.cmput301w23t09.qrhunter.profile;
+package com.cmput301w23t09.qrhunter;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.clearText;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -15,13 +22,12 @@ import android.widget.TextView;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
-import com.cmput301w23t09.qrhunter.GameActivity;
-import com.cmput301w23t09.qrhunter.GameController;
-import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
 import com.cmput301w23t09.qrhunter.database.DatabaseQueryResults;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
+import com.cmput301w23t09.qrhunter.profile.ProfileFragment;
+import com.cmput301w23t09.qrhunter.profile.ProfileSettingsFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.robotium.solo.Solo;
@@ -36,10 +42,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 /** Test classes for profile activity */
-// The following tests are still required
-// Check pressing the back button when there are unsaved changes
-// Checks discarding unsaved changes
-// Checks settings reset button
 public class TestProfileFragment {
   private Solo solo;
   private String mockPlayerID;
@@ -245,24 +247,22 @@ public class TestProfileFragment {
     assertTrue(solo.searchEditText(mockPlayer.getEmail()));
   }
 
-  /** Checks the change of the user's phone number */
+  /* Checks the change of the user's phone number */
   @Test
   public void testPhoneNumChange() {
     // click the settings button to navigate to the settings
-    solo.clickOnView(solo.getView(R.id.contact_info_button));
-    // clear the current phone number
-    solo.clearEditText((EditText) solo.getView(R.id.settings_screen_phoneTextField));
-    // enter a new phone number
+    onView(withId(R.id.contact_info_button)).perform(click());
+    // clear the current phone number and enter a new one
     String newPhoneNo = "5872571509";
-    solo.enterText((EditText) solo.getView(R.id.settings_screen_phoneTextField), newPhoneNo);
+    onView(withId(R.id.settings_screen_phoneTextField)).perform(click(), clearText());
+    onView(withId(R.id.settings_screen_phoneTextField))
+        .perform(click(), typeText(newPhoneNo), closeSoftKeyboard());
     // check the phone number input
     assertTrue(solo.searchText(newPhoneNo));
     // press the save button
-    solo.clickOnView(solo.getView(R.id.settings_save_button));
-    // check if player phone number is updated
-    solo.clickOnView(solo.getView(R.id.settings_back_button));
+    onView(withId(R.id.settings_save_button)).perform(scrollTo(), click());
     await()
-        .atMost(5, TimeUnit.MINUTES)
+        .atMost(30, TimeUnit.SECONDS)
         .until(() -> (Objects.equals(mockPlayer.getPhoneNo(), newPhoneNo)));
   }
 
@@ -270,19 +270,19 @@ public class TestProfileFragment {
   @Test
   public void testEmailChange() {
     // click the settings button to navigate to the settings
-    solo.clickOnView(solo.getView(R.id.contact_info_button));
-    // clear the current email
-    solo.clearEditText((EditText) solo.getView(R.id.settings_screen_emailTextField));
-    // enter a new email
+    onView(withId(R.id.contact_info_button)).perform(click());
+    // clear the current email and enter a new one
     String newEmail = "irenerose.sun@gmail.com";
-    solo.enterText((EditText) solo.getView(R.id.settings_screen_emailTextField), newEmail);
-    // check the email input
+    onView(withId(R.id.settings_screen_emailTextField)).perform(click(), clearText());
+    onView(withId(R.id.settings_screen_emailTextField))
+        .perform(click(), typeText(newEmail), closeSoftKeyboard());
+    // check email input
     assertTrue(solo.searchText(newEmail));
     // press the save button
-    solo.clickOnView(solo.getView(R.id.settings_save_button));
+    onView(withId(R.id.settings_save_button)).perform(scrollTo(), click());
     // check if player email was updated
     await()
-        .atMost(5, TimeUnit.MINUTES)
+        .atMost(30, TimeUnit.SECONDS)
         .until(() -> (Objects.equals(mockPlayer.getEmail(), newEmail)));
   }
 

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,8 +44,8 @@ public class QRCodeAdapter extends ArrayAdapter<QRCode> {
     QRCode qrCode = qrCodes.get(position);
 
     // set visual representation of qr code
-    // ImageView visual = view.findViewById(R.id.visual_representation);
-    // visual.setImageBitmap(qrCode.getVisualRepresentation());
+    ImageView visual = view.findViewById(R.id.visual_representation);
+    visual.setImageBitmap(qrCode.getVisualRepresentation());
 
     // set score field of view
     TextView score = view.findViewById(R.id.score);

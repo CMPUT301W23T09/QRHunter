@@ -55,7 +55,6 @@ public class QRCode implements Serializable {
    *
    * @param hash This is the hash of the QR code
    * @param name This is the name of the QR code
-   * @param visualRepresentation This is the visual representation of the QR code
    * @param score This is the score of the QR code
    * @param loc This is the location of the QR code
    * @param photos This is the list of photos of the QR code
@@ -65,15 +64,18 @@ public class QRCode implements Serializable {
   public QRCode(
       String hash,
       String name,
-      Bitmap visualRepresentation,
       Integer score,
       Location loc,
       ArrayList<Photo> photos,
       ArrayList<Comment> comments,
-      ArrayList<String> players) {
+      ArrayList<String> players)
+      throws ExecutionException, InterruptedException {
     this.hash = hash;
     this.name = name;
-    this.visualRepresentation = visualRepresentation;
+    this.visualRepresentation =
+        new QRCodeVisualFetcher(this)
+            .execute("https://api.dicebear.com/5.x/pixel-art-neutral/jpg?seed=" + hash)
+            .get();
     this.score = score;
     this.loc = loc;
     this.photos = photos;

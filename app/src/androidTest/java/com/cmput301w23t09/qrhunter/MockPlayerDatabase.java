@@ -1,7 +1,9 @@
-package com.cmput301w23t09.qrhunter.player;
+package com.cmput301w23t09.qrhunter;
 
 import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
 import com.cmput301w23t09.qrhunter.database.DatabaseQueryResults;
+import com.cmput301w23t09.qrhunter.player.Player;
+import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import java.util.HashMap;
 import java.util.Map;
