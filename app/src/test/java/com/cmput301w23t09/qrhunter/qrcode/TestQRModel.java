@@ -14,16 +14,11 @@ public class TestQRModel {
 
   // create a mock qr code
   private QRCode mockCode() {
-    try {
-      return new QRCode(mockHash(), "mockqr", 10, null, null, null, null);
-    } catch (ExecutionException | InterruptedException e) {
-      throw (new RuntimeException(e));
-    }
-  }
-
-  // create a mock qr code list
-  private ArrayList<QRCode> mockList() {
-    return new ArrayList<QRCode>();
+    QRCode qr = new QRCode();
+    qr.setHash(mockHash());
+    qr.setName("mockqr");
+    qr.setScore(10);
+    return qr;
   }
 
   @Test

@@ -37,11 +37,11 @@ public class QRCode implements Serializable {
 
     // TODO: Initialize all these fields according to hash
     this.name = generateName(hash);
-    this.visualRepresentation =
-        new QRCodeVisualFetcher(this)
-            .execute("https://api.dicebear.com/5.x/pixel-art-neutral/jpg?seed=" + hash)
-            .get();
     this.score = calculateScore(hash);
+    this.visualRepresentation =
+            new QRCodeVisualFetcher(this)
+                    .execute("https://api.dicebear.com/5.x/pixel-art-neutral/jpg?seed=" + hash)
+                    .get();
 
     this.loc = null;
     this.photos = new ArrayList<>();
@@ -72,15 +72,30 @@ public class QRCode implements Serializable {
       throws ExecutionException, InterruptedException {
     this.hash = hash;
     this.name = name;
-    this.visualRepresentation =
-        new QRCodeVisualFetcher(this)
-            .execute("https://api.dicebear.com/5.x/pixel-art-neutral/jpg?seed=" + hash)
-            .get();
     this.score = score;
+    this.visualRepresentation =
+            new QRCodeVisualFetcher(this)
+                    .execute("https://api.dicebear.com/5.x/pixel-art-neutral/jpg?seed=" + hash)
+                    .get();
     this.loc = loc;
     this.photos = photos;
     this.comments = comments;
     this.players = players;
+  }
+
+  /**
+   * This constructs a blank QR code with all fields set to null
+   * For testing purposes only
+   */
+  public QRCode() {
+    this.hash = null;
+    this.name = null;
+    this.score = null;
+    this.visualRepresentation = null;
+    this.loc = null;
+    this.photos = null;
+    this.comments = null;
+    this.players = null;
   }
 
   /**
@@ -93,12 +108,48 @@ public class QRCode implements Serializable {
   }
 
   /**
+   * This sets the has of the QR code
+   *
+   * @param hash The hash of the QR code
+   */
+  public void setHash(String hash) {
+    this.hash = hash;
+  }
+
+  /**
    * This returns the name of the QR code
    *
    * @return Return the name of the QR code
    */
   public String getName() {
     return name;
+  }
+
+  /**
+   * This sets the name of the QR code
+   *
+   * @param name The name of the QR code
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  /**
+   * This returns the score of the QR code
+   *
+   * @return Return the score of the QR code
+   */
+  public Integer getScore() {
+    return this.score;
+  }
+
+  /**
+   * This sets the score of the QR code
+   *
+   * @param score The score of the QR code
+   */
+  public void setScore(Integer score) {
+    this.score = score;
   }
 
   /**
@@ -120,21 +171,21 @@ public class QRCode implements Serializable {
   }
 
   /**
-   * This returns the score of the QR code
-   *
-   * @return Return the score of the QR code
-   */
-  public Integer getScore() {
-    return this.score;
-  }
-
-  /**
    * This returns the location of the QR code
    *
    * @return Return the location of the QR code
    */
   public Location getLoc() {
     return loc;
+  }
+
+  /**
+   * This sets the location of the QR code
+   *
+   * @param loc This is the location to set to
+   */
+  public void setLoc(Location loc) {
+    this.loc = loc;
   }
 
   /**
@@ -155,8 +206,31 @@ public class QRCode implements Serializable {
     return players;
   }
 
+  /**
+   * This sets the players who have scanned the QR code
+   *
+   * @param players The players that have scanned the QR code
+   */
   public void setPlayers(ArrayList<String> players) {
     this.players = players;
+  }
+
+  /**
+   * This adds a player that has scanned the QR code
+   *
+   * @param player This is the player to add
+   */
+  public void addPlayer(String player) {
+    this.players.add(player);
+  }
+
+  /**
+   * This removes a player that has scanned the QR code
+   *
+   * @param player This is the player to delete
+   */
+  public void deletePlayer(String player) {
+    this.players.remove(player);
   }
 
   /**
@@ -169,12 +243,12 @@ public class QRCode implements Serializable {
   }
 
   /**
-   * This sets the location of the QR code
+   * This sets the comments on the QR code
    *
-   * @param loc This is the location to set to
+   * @param comments The comments on the QR code
    */
-  public void setLoc(Location loc) {
-    this.loc = loc;
+  public void setComments(ArrayList<Comment> comments) {
+    this.comments = comments;
   }
 
   /**
@@ -196,6 +270,15 @@ public class QRCode implements Serializable {
   }
 
   /**
+   * This sets the photos of the QR code
+   *
+   * @param photos The photos on the QR code
+   */
+  public void setPhotos(ArrayList<Photo> photos) {
+    this.photos = photos;
+  }
+
+  /**
    * This adds a photo taken of the QR code
    *
    * @param photo This is the photo to add
@@ -211,24 +294,6 @@ public class QRCode implements Serializable {
    */
   public void deletePhoto(Photo photo) {
     this.photos.remove(photo);
-  }
-
-  /**
-   * This adds a player that has scanned the QR code
-   *
-   * @param player This is the player to add
-   */
-  public void addPlayer(String player) {
-    this.players.add(player);
-  }
-
-  /**
-   * This removes a player that has scanned the QR code
-   *
-   * @param player This is the player to delete
-   */
-  public void deletePlayer(String player) {
-    this.players.remove(player);
   }
 
   /**
