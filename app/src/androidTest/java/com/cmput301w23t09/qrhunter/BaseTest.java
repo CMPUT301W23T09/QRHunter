@@ -18,7 +18,7 @@ import org.junit.BeforeClass;
 /** Base class that implements destruction of the database after each test is completed. */
 public abstract class BaseTest {
 
-  private static final String COLLECTION_PREFIX = "test_";
+  private static final String COLLECTION_PREFIX = "test_" + Math.random();
   private static boolean initialized = false;
   private static final Set<String> collectionsToReset = new HashSet<>();
 
