@@ -2,8 +2,6 @@ package com.cmput301w23t09.qrhunter.qrcode;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.Test;
 
 public class TestQRModel {

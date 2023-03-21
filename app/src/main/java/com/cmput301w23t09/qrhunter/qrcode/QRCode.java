@@ -39,9 +39,9 @@ public class QRCode implements Serializable {
     this.name = generateName(hash);
     this.score = calculateScore(hash);
     this.visualRepresentation =
-            new QRCodeVisualFetcher(this)
-                    .execute("https://api.dicebear.com/5.x/pixel-art-neutral/jpg?seed=" + hash)
-                    .get();
+        new QRCodeVisualFetcher(this)
+            .execute("https://api.dicebear.com/5.x/pixel-art-neutral/jpg?seed=" + hash)
+            .get();
 
     this.loc = null;
     this.photos = new ArrayList<>();
@@ -74,19 +74,16 @@ public class QRCode implements Serializable {
     this.name = name;
     this.score = score;
     this.visualRepresentation =
-            new QRCodeVisualFetcher(this)
-                    .execute("https://api.dicebear.com/5.x/pixel-art-neutral/jpg?seed=" + hash)
-                    .get();
+        new QRCodeVisualFetcher(this)
+            .execute("https://api.dicebear.com/5.x/pixel-art-neutral/jpg?seed=" + hash)
+            .get();
     this.loc = loc;
     this.photos = photos;
     this.comments = comments;
     this.players = players;
   }
 
-  /**
-   * This constructs a blank QR code with all fields set to null
-   * For testing purposes only
-   */
+  /** This constructs a blank QR code with all fields set to null For testing purposes only */
   public QRCode() {
     this.hash = null;
     this.name = null;
