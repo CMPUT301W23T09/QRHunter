@@ -57,13 +57,10 @@ public class TestLandingActivity extends BaseTest {
     solo.waitForView(R.id.landing_screen_title);
 
     onView(withId(R.id.landing_screen_phoneNoTextField))
-        .perform(click(), typeText(validPhoneNo), closeSoftKeyboard());
+        .perform(scrollTo(), click(), typeText(validPhoneNo), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_emailTextField))
-        .perform(click(), typeText(validEmail), closeSoftKeyboard());
-
-    onView(withId(R.id.landing_screen_register_button)).perform(scrollTo());
-    solo.waitForText("Start Hunting", 1, 15000);
-    onView(withId(R.id.landing_screen_register_button)).perform(click());
+        .perform(scrollTo(), click(), typeText(validEmail), closeSoftKeyboard());
+    onView(withId(R.id.landing_screen_register_button)).perform(scrollTo(), click());
 
     solo.waitForActivity(GameActivity.class, 5000);
     solo.assertCurrentActivity("Allowed invalid username registration.", LandingActivity.class);
@@ -89,15 +86,12 @@ public class TestLandingActivity extends BaseTest {
     latch.await();
 
     onView(withId(R.id.landing_screen_usernameTextField))
-        .perform(click(), typeText(validUsername.toLowerCase()), closeSoftKeyboard());
+        .perform(scrollTo(), click(), typeText(validUsername.toLowerCase()), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_phoneNoTextField))
-        .perform(click(), typeText(validPhoneNo), closeSoftKeyboard());
+        .perform(scrollTo(), click(), typeText(validPhoneNo), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_emailTextField))
-        .perform(click(), typeText(validEmail), closeSoftKeyboard());
-
-    onView(withId(R.id.landing_screen_register_button)).perform(scrollTo());
-    solo.waitForText("Start Hunting", 1, 15000);
-    onView(withId(R.id.landing_screen_register_button)).perform(click());
+        .perform(scrollTo(), click(), typeText(validEmail), closeSoftKeyboard());
+    onView(withId(R.id.landing_screen_register_button)).perform(scrollTo(), click());
 
     solo.waitForActivity(GameActivity.class, 5000);
     solo.assertCurrentActivity(
@@ -114,15 +108,12 @@ public class TestLandingActivity extends BaseTest {
     solo.waitForView(R.id.landing_screen_title);
 
     onView(withId(R.id.landing_screen_usernameTextField))
-        .perform(click(), typeText(validUsername), closeSoftKeyboard());
+        .perform(scrollTo(), click(), typeText(validUsername), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_phoneNoTextField))
-        .perform(click(), typeText(invalidPhoneNo), closeSoftKeyboard());
+        .perform(scrollTo(), click(), typeText(invalidPhoneNo), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_emailTextField))
-        .perform(click(), typeText(validEmail), closeSoftKeyboard());
-
-    onView(withId(R.id.landing_screen_register_button)).perform(scrollTo());
-    solo.waitForText("Start Hunting", 1, 15000);
-    onView(withId(R.id.landing_screen_register_button)).perform(click());
+        .perform(scrollTo(), click(), typeText(validEmail), closeSoftKeyboard());
+    onView(withId(R.id.landing_screen_register_button)).perform(scrollTo(), click());
 
     solo.waitForActivity(GameActivity.class, 5000);
     solo.assertCurrentActivity("Allowed invalid phone number registration.", LandingActivity.class);
@@ -138,15 +129,12 @@ public class TestLandingActivity extends BaseTest {
     solo.waitForView(R.id.landing_screen_title);
 
     onView(withId(R.id.landing_screen_usernameTextField))
-        .perform(click(), typeText(validUsername), closeSoftKeyboard());
+        .perform(scrollTo(), click(), typeText(validUsername), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_phoneNoTextField))
-        .perform(click(), typeText(validPhoneNo), closeSoftKeyboard());
+        .perform(scrollTo(), click(), typeText(validPhoneNo), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_emailTextField))
-        .perform(click(), typeText(invalidEmail), closeSoftKeyboard());
-
-    onView(withId(R.id.landing_screen_register_button)).perform(scrollTo());
-    solo.waitForText("Start Hunting", 1, 15000);
-    onView(withId(R.id.landing_screen_register_button)).perform(click());
+        .perform(scrollTo(), click(), typeText(invalidEmail), closeSoftKeyboard());
+    onView(withId(R.id.landing_screen_register_button)).perform(scrollTo(), click());
 
     solo.waitForActivity(GameActivity.class, 5000);
     solo.assertCurrentActivity("Allowed invalid email registration.", LandingActivity.class);
@@ -165,15 +153,12 @@ public class TestLandingActivity extends BaseTest {
     solo.waitForView(R.id.landing_screen_title);
 
     onView(withId(R.id.landing_screen_usernameTextField))
-        .perform(click(), typeText(validUsername), closeSoftKeyboard());
+        .perform(scrollTo(), click(), typeText(validUsername), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_phoneNoTextField))
-        .perform(click(), typeText(validPhoneNo), closeSoftKeyboard());
+        .perform(scrollTo(), click(), typeText(validPhoneNo), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_emailTextField))
-        .perform(click(), typeText(validEmail), closeSoftKeyboard());
-
-    onView(withId(R.id.landing_screen_register_button)).perform(scrollTo());
-    solo.waitForText("Start Hunting", 1, 15000);
-    onView(withId(R.id.landing_screen_register_button)).perform(click());
+        .perform(scrollTo(), click(), typeText(validEmail), closeSoftKeyboard());
+    onView(withId(R.id.landing_screen_register_button)).perform(scrollTo(), click());
 
     solo.waitForActivity(GameActivity.class, 5000);
     solo.assertCurrentActivity("Did not switch to game activity.", GameActivity.class);
