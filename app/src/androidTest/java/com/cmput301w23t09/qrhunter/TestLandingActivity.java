@@ -3,8 +3,8 @@ package com.cmput301w23t09.qrhunter;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
-import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 import android.content.Intent;
@@ -57,9 +57,9 @@ public class TestLandingActivity extends BaseTest {
     solo.waitForView(R.id.landing_screen_title);
 
     onView(withId(R.id.landing_screen_phoneNoTextField))
-        .perform(scrollTo(), click(), typeText(validPhoneNo), closeSoftKeyboard());
+        .perform(scrollTo(), click(), replaceText(validPhoneNo), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_emailTextField))
-        .perform(scrollTo(), click(), typeText(validEmail), closeSoftKeyboard());
+        .perform(scrollTo(), click(), replaceText(validEmail), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_register_button)).perform(scrollTo(), click());
 
     solo.waitForActivity(GameActivity.class, 5000);
@@ -86,11 +86,12 @@ public class TestLandingActivity extends BaseTest {
     latch.await();
 
     onView(withId(R.id.landing_screen_usernameTextField))
-        .perform(scrollTo(), click(), typeText(validUsername.toLowerCase()), closeSoftKeyboard());
+        .perform(
+            scrollTo(), click(), replaceText(validUsername.toLowerCase()), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_phoneNoTextField))
-        .perform(scrollTo(), click(), typeText(validPhoneNo), closeSoftKeyboard());
+        .perform(scrollTo(), click(), replaceText(validPhoneNo), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_emailTextField))
-        .perform(scrollTo(), click(), typeText(validEmail), closeSoftKeyboard());
+        .perform(scrollTo(), click(), replaceText(validEmail), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_register_button)).perform(scrollTo(), click());
 
     solo.waitForActivity(GameActivity.class, 5000);
@@ -108,11 +109,11 @@ public class TestLandingActivity extends BaseTest {
     solo.waitForView(R.id.landing_screen_title);
 
     onView(withId(R.id.landing_screen_usernameTextField))
-        .perform(scrollTo(), click(), typeText(validUsername), closeSoftKeyboard());
+        .perform(scrollTo(), click(), replaceText(validUsername), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_phoneNoTextField))
-        .perform(scrollTo(), click(), typeText(invalidPhoneNo), closeSoftKeyboard());
+        .perform(scrollTo(), click(), replaceText(invalidPhoneNo), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_emailTextField))
-        .perform(scrollTo(), click(), typeText(validEmail), closeSoftKeyboard());
+        .perform(scrollTo(), click(), replaceText(validEmail), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_register_button)).perform(scrollTo(), click());
 
     solo.waitForActivity(GameActivity.class, 5000);
@@ -129,11 +130,11 @@ public class TestLandingActivity extends BaseTest {
     solo.waitForView(R.id.landing_screen_title);
 
     onView(withId(R.id.landing_screen_usernameTextField))
-        .perform(scrollTo(), click(), typeText(validUsername), closeSoftKeyboard());
+        .perform(scrollTo(), click(), replaceText(validUsername), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_phoneNoTextField))
-        .perform(scrollTo(), click(), typeText(validPhoneNo), closeSoftKeyboard());
+        .perform(scrollTo(), click(), replaceText(validPhoneNo), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_emailTextField))
-        .perform(scrollTo(), click(), typeText(invalidEmail), closeSoftKeyboard());
+        .perform(scrollTo(), click(), replaceText(invalidEmail), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_register_button)).perform(scrollTo(), click());
 
     solo.waitForActivity(GameActivity.class, 5000);
@@ -153,11 +154,11 @@ public class TestLandingActivity extends BaseTest {
     solo.waitForView(R.id.landing_screen_title);
 
     onView(withId(R.id.landing_screen_usernameTextField))
-        .perform(scrollTo(), click(), typeText(validUsername), closeSoftKeyboard());
+        .perform(scrollTo(), click(), replaceText(validUsername), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_phoneNoTextField))
-        .perform(scrollTo(), click(), typeText(validPhoneNo), closeSoftKeyboard());
+        .perform(scrollTo(), click(), replaceText(validPhoneNo), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_emailTextField))
-        .perform(scrollTo(), click(), typeText(validEmail), closeSoftKeyboard());
+        .perform(scrollTo(), click(), replaceText(validEmail), closeSoftKeyboard());
     onView(withId(R.id.landing_screen_register_button)).perform(scrollTo(), click());
 
     solo.waitForActivity(GameActivity.class, 5000);
