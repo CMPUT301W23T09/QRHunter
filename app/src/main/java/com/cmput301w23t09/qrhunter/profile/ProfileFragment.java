@@ -85,6 +85,7 @@ public class ProfileFragment extends BaseFragment {
     controller.setUpUsername(username);
     controller.setUpQRList(qrCodeList, totalPoints, totalCodes, topCodeScore, sortOrderSpinner);
     qrCodeList.setOnItemClickListener(controller.handleQRSelect());
+    controller.addUpdater();
   }
 
   /** Sets the profile elements to a blank/default state */
@@ -164,7 +165,11 @@ public class ProfileFragment extends BaseFragment {
         });
   }
 
-  /** Gets the controller of the profile fragment, for UI testing only */
+  /**
+   * Gets the controller of the profile fragment
+   *
+   * @return Return the controller of the fragment
+   */
   public ProfileController getController() {
     return controller;
   }

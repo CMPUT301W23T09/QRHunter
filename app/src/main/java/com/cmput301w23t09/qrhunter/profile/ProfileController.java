@@ -7,6 +7,7 @@ import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.cmput301w23t09.qrhunter.DatabaseChangeListener;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.player.Player;
@@ -30,7 +31,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 /** This is the controller for the profile fragment of the app */
-public class ProfileController {
+public class ProfileController implements DatabaseChangeListener {
   /** This is the game controller that controls the content on screen. */
   private final GameController gameController;
   /** This is the profile fragment the controller handles */
@@ -41,6 +42,16 @@ public class ProfileController {
   private QRCodeAdapter qrCodeAdapter;
   /** Device UUID of the profile */
   private final UUID deviceUUID;
+  /** This is the gridview showing the qr codes of the player */
+  private GridView qrCodeList;
+  /** This is the view that shows the qr codes of the player */
+  private TextView totalPoints;
+  /** This is the view showing the total number of codes the player has */
+  private TextView totalCodes;
+  /** This is the view showing the top score of the player's qr codes */
+  private TextView topScore;
+  /** This is the spinner that determines the qr code display order */
+  private Spinner orderSpinner;
 
   /**
    * This initializes the controller with its corresponding fragment
@@ -90,6 +101,13 @@ public class ProfileController {
       TextView totalCodes,
       TextView topScore,
       Spinner orderSpinner) {
+    // set controller attributes
+    this.qrCodeList = qrCodeList;
+    this.totalPoints = totalPoints;
+    this.totalCodes = totalCodes;
+    this.topScore = topScore;
+    this.orderSpinner = orderSpinner;
+
     // set QR code data and list view adapter
     qrCodes = new ArrayList<>();
     qrCodeAdapter = new QRCodeAdapter(gameController.getActivity(), qrCodes);
@@ -218,6 +236,16 @@ public class ProfileController {
             .show(fragment.getParentFragmentManager(), "");
       }
     };
+  }
+
+  /** This refreshes the profile upon database change */
+  public void onChange() {
+    setUpQRList(qrCodeList, totalPoints, totalCodes, topScore, orderSpinner);
+  }
+
+  /** This sets up the listener for real-time database changes */
+  public void addUpdater() {
+    QRCodeDatabase.getInstance().addListener(this);
   }
 
   /**

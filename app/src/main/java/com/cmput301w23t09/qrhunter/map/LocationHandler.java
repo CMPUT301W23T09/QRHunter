@@ -3,13 +3,16 @@ package com.cmput301w23t09.qrhunter.map;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.widget.Toast;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
+import java.util.ArrayList;
 
 /**
  * Handles location permissions and retrieving the location of the player's device. Used to set the
@@ -73,5 +76,29 @@ public class LocationHandler {
           == PackageManager.PERMISSION_GRANTED) return true;
     }
     return false;
+  }
+
+  public ArrayList<QRCode> getNearbyQRCodes() {
+    ArrayList<QRCode> nearbyCodes = new ArrayList<>();
+    QRCodeDatabase qrDatabase = QRCodeDatabase.getInstance();
+    qrDatabase.getAllQRCodes(
+        result -> {
+          // check if error occurred
+          if (result.getException() != null) {
+            Toast.makeText(
+                    fragment.getContext(),
+                    "An error occurred querying for nearby QR codes",
+                    Toast.LENGTH_SHORT)
+                .show();
+          }
+          // if query was successful
+          for (QRCode qrCode : result.getData()) {
+            if (qrCode.getLoc() != null) {
+              qrCode.getLoc().getLatitude();
+              qrCode.getLoc().getLongitude();
+            }
+          }
+        });
+    return nearbyCodes;
   }
 }

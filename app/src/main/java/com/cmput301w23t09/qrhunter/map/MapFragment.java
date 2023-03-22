@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -38,6 +39,9 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
   private static LatLng[] placeholderQR;
   private LatLng currentLocation;
+
+  private SearchView qrSearcher;
+  private SearchQRController searchController;
 
   public MapFragment(GameController gameController) {
     super(gameController);
@@ -158,7 +162,24 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     Places.initialize(
         getContext().getApplicationContext(), "AIzaSyDniTKVk4HDVsQVG-uDxQ-eFV4nCWeM-gU");
     fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
-    return inflater.inflate(R.layout.fragment_map, container, false);
+
+    View view = inflater.inflate(R.layout.fragment_map, container, false);
+    qrSearcher = view.findViewById(R.id.qr_searcher);
+    qrSearcher.setOnQueryTextListener(
+        new SearchView.OnQueryTextListener() {
+          @Override
+          public boolean onQueryTextSubmit(String query) {
+            searchController.handleSearch();
+            return true;
+          }
+
+          @Override
+          public boolean onQueryTextChange(String newText) {
+            return false;
+          }
+        });
+
+    return view;
   }
 
   /**

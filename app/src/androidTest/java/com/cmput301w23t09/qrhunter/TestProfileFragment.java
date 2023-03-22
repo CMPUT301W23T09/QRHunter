@@ -19,6 +19,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 
 import android.Manifest;
@@ -111,6 +112,8 @@ public class TestProfileFragment {
 
     // mock QRCodeDatabase
     QRCodeDatabase mockQRCodeDatabase = mock(QRCodeDatabase.class);
+    // mock
+    doNothing().when(mockQRCodeDatabase).addListener(any(DatabaseChangeListener.class));
     // mock getting the qr codes for a list of hashes
     doAnswer(
             invocation -> {

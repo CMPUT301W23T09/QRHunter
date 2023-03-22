@@ -2,14 +2,19 @@ package com.cmput301w23t09.qrhunter.qrcode;
 
 import android.location.Location;
 import android.util.Log;
+import androidx.annotation.Nullable;
+import com.cmput301w23t09.qrhunter.DatabaseChangeListener;
 import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
 import com.cmput301w23t09.qrhunter.database.DatabaseQueryResults;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -377,5 +382,17 @@ public class QRCodeDatabase {
     values.put("longitude", qrCode.getLoc() != null ? qrCode.getLoc().getLongitude() : null);
     values.put("players", qrCode.getPlayers());
     return values;
+  }
+
+  /** Add snapshot listener to database */
+  public void addListener(DatabaseChangeListener listener) {
+    collection.addSnapshotListener(
+        new EventListener<QuerySnapshot>() {
+          @Override
+          public void onEvent(
+              @Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+            listener.onChange();
+          }
+        });
   }
 }
