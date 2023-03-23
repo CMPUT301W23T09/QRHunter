@@ -79,13 +79,10 @@ public class ScannerController {
                               .hashString(scannedCode.getRawValue(), StandardCharsets.UTF_8)
                               .toString();
 
-                      if ((qrCodeFragment == null || !qrCodeFragment.isAdded())
-                          && !pastHash.equals(currentHash)) {
-                        pastHash = currentHash;
-                        if (qrCodeFragment != null) qrCodeFragment.dismissNow();
+                      if (fragment.getGameController().getPopup() == null) {
                         QRCode qrCode = null;
                         try {
-                          qrCode = new QRCode(pastHash);
+                          qrCode = new QRCode(currentHash);
                         } catch (ExecutionException | InterruptedException e) {
                           throw new RuntimeException(e);
                         }
