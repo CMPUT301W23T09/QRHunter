@@ -7,26 +7,25 @@ import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.annotation.Nullable;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeAdapter;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.ScoreComparator;
 import com.cmput301w23t09.qrhunter.util.DeviceUtils;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -40,11 +39,6 @@ public class ProfileController {
   private ArrayList<QRCode> qrCodes;
   /** This is the adapter for displaying the QRCode objects */
   private QRCodeAdapter qrCodeAdapter;
-  /** This is the database the controller gets its data from */
-  private final FirebaseFirestore db;
-  /** This is the collection containing the qr code data */
-  private final CollectionReference qrcodeCollection;
-
   /** Device UUID of the profile */
   private final UUID deviceUUID;
 
@@ -60,10 +54,6 @@ public class ProfileController {
     this.fragment = fragment;
     this.gameController = gameController;
     this.deviceUUID = deviceUUID;
-
-    // access database
-    db = FirebaseFirestore.getInstance();
-    qrcodeCollection = db.collection("qrcodes");
   }
 
   /**
@@ -89,72 +79,60 @@ public class ProfileController {
    * Sets up the list view of qr codes
    *
    * @param qrCodeList This is the view that contains the list view of codes
-   * @param totalPoints This is the view showing the sum of code scores
-   * @param totalCodes This is the view showing the total number of codes
-   * @param topCodeScore This is the view showing the top score from the codes
-   * @param orderSpinner This is the spinner for selecting the sorting order of codes
+   * @param totalPoints This is the view that displays the total points
+   * @param totalCodes This is the view that displays the total number of codes
+   * @param topScore This is the view that displays the top score
+   * @param orderSpinner This is the spinner that indicates the sort order
    */
   public void setUpQRList(
       GridView qrCodeList,
       TextView totalPoints,
       TextView totalCodes,
-      TextView topCodeScore,
+      TextView topScore,
       Spinner orderSpinner) {
     // set QR code data and list view adapter
     qrCodes = new ArrayList<>();
-    qrCodeAdapter = new QRCodeAdapter(fragment.getContext(), qrCodes);
+    qrCodeAdapter = new QRCodeAdapter(gameController.getActivity(), qrCodes);
     qrCodeList.setAdapter(qrCodeAdapter);
 
     // get current player
     PlayerDatabase.getInstance()
         .getPlayerByDeviceId(
             deviceUUID,
-            results -> {
+            playerCollectionResults -> {
               // check if database query was successful
-              if (!results.isSuccessful()) {
+              if (!playerCollectionResults.isSuccessful()) {
                 showMsg("An error occurred while loading in your player data.");
                 return;
               }
-              // otherwise get the qr codes for the current player
-              String playerID = results.getData().getDocumentId();
-              // add snapshot listener for updating data
-              qrcodeCollection.addSnapshotListener(
-                  new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(
-                        @Nullable QuerySnapshot queryDocumentSnapshots,
-                        @Nullable FirebaseFirestoreException error) {
-                      // clear QR code data
-                      qrCodes.clear();
-                      // add data from database
-                      assert queryDocumentSnapshots != null;
-                      for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        // get list of players that have scanned the qr code
-                        ArrayList<String> players = (ArrayList<String>) doc.get("players");
-                        // add the qr code if the current player has scanned it
-                        if (players != null && players.contains(playerID)) {
-                          String hash = doc.getId();
-                          Integer score = (int) (long) doc.get("score");
-                          qrCodes.add(new QRCode(hash, null, null, score, null, null, null, null));
-                        }
-                      }
-                      // update qr code statistics
-                      totalPoints.setText(
-                          gameController
-                              .getActivity()
-                              .getString(R.string.total_points_txt, getTotalScore()));
-                      totalCodes.setText(
-                          gameController
-                              .getActivity()
-                              .getString(R.string.total_codes_txt, qrCodes.size()));
-                      topCodeScore.setText(
-                          gameController
-                              .getActivity()
-                              .getString(R.string.top_code_txt, getTopScore()));
-                      // sort codes and update qr code list view
-                      updateQRListSort(orderSpinner);
-                    }
-                  });
+              // otherwise get the qr code hashes of the current player
+              List<String> codeHashes = playerCollectionResults.getData().getQRCodeHashes();
+              // get the qr codes from the hashes
+              QRCodeDatabase.getInstance()
+                  .getQRCodeHashes(
+                      codeHashes,
+                      QrCodeResults -> {
+                        // add qr codes from result to qrCodes
+                        qrCodes.clear();
+                        qrCodes.addAll(QrCodeResults.getData());
+
+                        // update qr code statistics
+                        totalPoints.setText(
+                            gameController
+                                .getActivity()
+                                .getString(R.string.total_points_txt, getTotalScore()));
+                        totalCodes.setText(
+                            gameController
+                                .getActivity()
+                                .getString(R.string.total_codes_txt, qrCodes.size()));
+                        topScore.setText(
+                            gameController
+                                .getActivity()
+                                .getString(R.string.top_code_txt, getTopScore()));
+
+                        // sort and display qr codes
+                        updateQRListSort(orderSpinner);
+                      });
             });
   }
 
@@ -311,6 +289,7 @@ public class ProfileController {
 
     qrCodes.sort(new ScoreComparator().reversed());
     QRCode topQR = qrCodes.get(0);
+    CollectionReference qrcodeCollection = FirebaseFirestore.getInstance().collection("qrcodes");
     Query query = qrcodeCollection.orderBy("score", Query.Direction.ASCENDING);
     query
         .get()

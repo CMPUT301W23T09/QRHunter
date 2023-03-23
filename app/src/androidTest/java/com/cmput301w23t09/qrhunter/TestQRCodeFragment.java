@@ -1,4 +1,4 @@
-package com.cmput301w23t09.qrhunter.qrcode;
+package com.cmput301w23t09.qrhunter;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -24,10 +24,11 @@ import android.widget.ImageView;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
-import com.cmput301w23t09.qrhunter.GameActivity;
-import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
 import com.cmput301w23t09.qrhunter.player.Player;
+import com.cmput301w23t09.qrhunter.qrcode.QRCode;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.robotium.solo.Solo;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -136,7 +137,7 @@ public class TestQRCodeFragment {
 
   /** Checks if the QRCodeFragment displays the QRCode's name correctly */
   @Test
-  public void testCorrectDisplayInfo() {
+  public void testCorrectDisplayInfo() throws InterruptedException, ExecutionException {
     // TODO: Currently, QRCodeFragment shows hash, CHANGE THIS TO NAME ONCE IMPLEMENTED
     onView(withId(R.id.qr_name)).inRoot(isDialog()).check(matches(withText("RobaqinectTiger✿")));
     onView(withId(R.id.qr_points)).inRoot(isDialog()).check(matches(withText("32 PTS")));

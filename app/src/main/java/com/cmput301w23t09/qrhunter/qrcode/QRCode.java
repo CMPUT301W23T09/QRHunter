@@ -32,16 +32,13 @@ public class QRCode implements Serializable {
    *
    * @param hash The hash of the newly-scanned QRCode
    */
-  public QRCode(String hash) throws ExecutionException, InterruptedException {
+  public QRCode(String hash) {
     this.hash = hash;
 
     // TODO: Initialize all these fields according to hash
     this.name = generateName(hash);
-    this.visualRepresentation =
-        new QRCodeVisualFetcher(this)
-            .execute("https://api.dicebear.com/5.x/pixel-art-neutral/jpg?seed=" + hash)
-            .get();
     this.score = calculateScore(hash);
+    this.visualRepresentation = null;
 
     this.loc = null;
     this.photos = new ArrayList<>();
@@ -55,7 +52,6 @@ public class QRCode implements Serializable {
    *
    * @param hash This is the hash of the QR code
    * @param name This is the name of the QR code
-   * @param visualRepresentation This is the visual representation of the QR code
    * @param score This is the score of the QR code
    * @param loc This is the location of the QR code
    * @param photos This is the list of photos of the QR code
@@ -65,20 +61,20 @@ public class QRCode implements Serializable {
   public QRCode(
       String hash,
       String name,
-      Bitmap visualRepresentation,
       Integer score,
       Location loc,
       ArrayList<Photo> photos,
       ArrayList<Comment> comments,
-      ArrayList<String> players) {
+      ArrayList<String> players)
+      throws ExecutionException, InterruptedException {
     this.hash = hash;
     this.name = name;
-    this.visualRepresentation = visualRepresentation;
     this.score = score;
     this.loc = loc;
     this.photos = photos;
     this.comments = comments;
     this.players = players;
+    this.visualRepresentation = null;
   }
 
   /**
@@ -100,24 +96,6 @@ public class QRCode implements Serializable {
   }
 
   /**
-   * This returns the visual representation of the QR code
-   *
-   * @return Return the visual representation of the QR code
-   */
-  public Bitmap getVisualRepresentation() {
-    return visualRepresentation;
-  }
-
-  /**
-   * Sets the visual representation of the QR code
-   *
-   * @param visualRepresentation The Bitmap to represent the QR code
-   */
-  public void setVisualRepresentation(Bitmap visualRepresentation) {
-    this.visualRepresentation = visualRepresentation;
-  }
-
-  /**
    * This returns the score of the QR code
    *
    * @return Return the score of the QR code
@@ -127,12 +105,36 @@ public class QRCode implements Serializable {
   }
 
   /**
+   * This returns the visual representation of the QR code
+   *
+   * @return Return the visual representation of the QR code
+   */
+  public Bitmap getVisualRepresentation() throws InterruptedException, ExecutionException {
+    if (visualRepresentation == null) {
+      visualRepresentation =
+          new QRCodeVisualFetcher()
+              .execute("https://api.dicebear.com/5.x/pixel-art-neutral/jpg?seed=" + hash)
+              .get();
+    }
+    return visualRepresentation;
+  }
+
+  /**
    * This returns the location of the QR code
    *
    * @return Return the location of the QR code
    */
   public Location getLoc() {
     return loc;
+  }
+
+  /**
+   * This sets the location of the QR code
+   *
+   * @param loc This is the location to set to
+   */
+  public void setLoc(Location loc) {
+    this.loc = loc;
   }
 
   /**
@@ -153,8 +155,31 @@ public class QRCode implements Serializable {
     return players;
   }
 
+  /**
+   * This sets the players who have scanned the QR code
+   *
+   * @param players The players that have scanned the QR code
+   */
   public void setPlayers(ArrayList<String> players) {
     this.players = players;
+  }
+
+  /**
+   * This adds a player that has scanned the QR code
+   *
+   * @param player This is the player to add
+   */
+  public void addPlayer(String player) {
+    this.players.add(player);
+  }
+
+  /**
+   * This removes a player that has scanned the QR code
+   *
+   * @param player This is the player to delete
+   */
+  public void deletePlayer(String player) {
+    this.players.remove(player);
   }
 
   /**
@@ -167,12 +192,12 @@ public class QRCode implements Serializable {
   }
 
   /**
-   * This sets the location of the QR code
+   * This sets the comments on the QR code
    *
-   * @param loc This is the location to set to
+   * @param comments The comments on the QR code
    */
-  public void setLoc(Location loc) {
-    this.loc = loc;
+  public void setComments(ArrayList<Comment> comments) {
+    this.comments = comments;
   }
 
   /**
@@ -194,6 +219,15 @@ public class QRCode implements Serializable {
   }
 
   /**
+   * This sets the photos of the QR code
+   *
+   * @param photos The photos on the QR code
+   */
+  public void setPhotos(ArrayList<Photo> photos) {
+    this.photos = photos;
+  }
+
+  /**
    * This adds a photo taken of the QR code
    *
    * @param photo This is the photo to add
@@ -209,24 +243,6 @@ public class QRCode implements Serializable {
    */
   public void deletePhoto(Photo photo) {
     this.photos.remove(photo);
-  }
-
-  /**
-   * This adds a player that has scanned the QR code
-   *
-   * @param player This is the player to add
-   */
-  public void addPlayer(String player) {
-    this.players.add(player);
-  }
-
-  /**
-   * This removes a player that has scanned the QR code
-   *
-   * @param player This is the player to delete
-   */
-  public void deletePlayer(String player) {
-    this.players.remove(player);
   }
 
   /**
