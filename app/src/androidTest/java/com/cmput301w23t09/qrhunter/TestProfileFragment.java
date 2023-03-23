@@ -112,7 +112,7 @@ public class TestProfileFragment {
 
     // mock QRCodeDatabase
     QRCodeDatabase mockQRCodeDatabase = mock(QRCodeDatabase.class);
-    // mock
+    // mock ignoring requests for a snapshot listener
     doNothing().when(mockQRCodeDatabase).addListener(any(DatabaseChangeListener.class));
     // mock getting the qr codes for a list of hashes
     doAnswer(

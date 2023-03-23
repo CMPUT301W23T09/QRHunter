@@ -6,7 +6,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.GridView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,7 +14,6 @@ import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 
 public class QRSearchResultFragment extends DialogFragment {
@@ -41,12 +39,13 @@ public class QRSearchResultFragment extends DialogFragment {
     Dialog dialog = builder.setView(view).create();
     dialog.getWindow().setGravity(Gravity.BOTTOM | Gravity.CENTER);
     // set close button on click listener
-    closeBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        dialog.dismiss();
-      }
-    });
+    closeBtn.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            dialog.dismiss();
+          }
+        });
     return dialog;
   }
 }
