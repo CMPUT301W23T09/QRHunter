@@ -884,8 +884,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/navigation/NavigationControllerAdapter.html#onNavigationItemSelected(android.view.MenuItem)">onNavigationItemSelected(MenuItem)</a></span> - Method in class com.cmput301w23t09.qrhunter.navigation.<a href="com/cmput301w23t09/qrhunter/navigation/NavigationControllerAdapter.html" title="class in com.cmput301w23t09.qrhunter.navigation">NavigationControllerAdapter</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeVisualFetcher.html#onPostExecute(android.graphics.Bitmap)">onPostExecute(Bitmap)</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeVisualFetcher.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeVisualFetcher</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/LandingController.html#onRegistration(java.lang.String,java.lang.String,java.lang.String)">onRegistration(String, String, String)</a></span> - Method in class com.cmput301w23t09.qrhunter.<a href="com/cmput301w23t09/qrhunter/LandingController.html" title="class in com.cmput301w23t09.qrhunter">LandingController</a></dt>
 <dd>
 <div class="block">Attempts to register player given the credentials</div>
@@ -993,7 +991,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Initializes a *newly-scanned* QRCode using only its hash value</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html#%3Cinit%3E(java.lang.String,java.lang.String,android.graphics.Bitmap,java.lang.Integer,android.location.Location,java.util.ArrayList,java.util.ArrayList,java.util.ArrayList)">QRCode(String, String, Bitmap, Integer, Location, ArrayList&lt;Photo&gt;, ArrayList&lt;Comment&gt;, ArrayList&lt;String&gt;)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html#%3Cinit%3E(java.lang.String,java.lang.String,java.lang.Integer,android.location.Location,java.util.ArrayList,java.util.ArrayList,java.util.ArrayList)">QRCode(String, String, Integer, Location, ArrayList&lt;Photo&gt;, ArrayList&lt;Comment&gt;, ArrayList&lt;String&gt;)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a></dt>
 <dd>
 <div class="block">This initializes a QR code with its hash, name, visual representation, score, location, photo,
  comments, and players who have scanned it</div>
@@ -1028,7 +1026,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  Style Used: Pixel Art Neutral (https://www.figma.com/community/file/1198754108850888330) By:
  Florian Körner (contact@florian-koerner.com) License: CC BY</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeVisualFetcher.html#%3Cinit%3E(com.cmput301w23t09.qrhunter.qrcode.QRCode)">QRCodeVisualFetcher(QRCode)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeVisualFetcher.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeVisualFetcher</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeVisualFetcher.html#%3Cinit%3E()">QRCodeVisualFetcher()</a></span> - Constructor for class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeVisualFetcher.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeVisualFetcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentQrcodeBinding.html#qrName">qrName</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentQrcodeBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentQrcodeBinding</a></dt>
 <dd>&nbsp;</dd>
@@ -1111,6 +1109,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">This sets the comment attribute</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html#setComments(java.util.ArrayList)">setComments(ArrayList&lt;Comment&gt;)</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a></dt>
+<dd>
+<div class="block">This sets the comments on the QR code</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/player/Player.html#setDeviceId(java.util.UUID)">setDeviceId(UUID)</a></span> - Method in class com.cmput301w23t09.qrhunter.player.<a href="com/cmput301w23t09/qrhunter/player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a></dt>
 <dd>
 <div class="block">Set the device id associated with this player</div>
@@ -1139,8 +1141,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">This sets the image of the photo, given an ImageProxy</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html#setPhotos(java.util.ArrayList)">setPhotos(ArrayList&lt;Photo&gt;)</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a></dt>
+<dd>
+<div class="block">This sets the photos of the QR code</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html#setPlayers(java.util.ArrayList)">setPlayers(ArrayList&lt;String&gt;)</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">This sets the players who have scanned the QR code</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/GameController.html#setPopup(androidx.fragment.app.DialogFragment)">setPopup(DialogFragment)</a></span> - Method in class com.cmput301w23t09.qrhunter.<a href="com/cmput301w23t09/qrhunter/GameController.html" title="class in com.cmput301w23t09.qrhunter">GameController</a></dt>
 <dd>
 <div class="block">Change the current popup fragment.</div>
@@ -1192,10 +1200,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/player/Player.html#setUsername(java.lang.String)">setUsername(String)</a></span> - Method in class com.cmput301w23t09.qrhunter.player.<a href="com/cmput301w23t09/qrhunter/player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a></dt>
 <dd>
 <div class="block">Change the username associated with this player</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html#setVisualRepresentation(android.graphics.Bitmap)">setVisualRepresentation(Bitmap)</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a></dt>
-<dd>
-<div class="block">Sets the visual representation of the QR code</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/LandingActivity.html#showLandingPage()">showLandingPage()</a></span> - Method in class com.cmput301w23t09.qrhunter.<a href="com/cmput301w23t09/qrhunter/LandingActivity.html" title="class in com.cmput301w23t09.qrhunter">LandingActivity</a></dt>
 <dd>

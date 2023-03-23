@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10};
+var data = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -201,7 +201,7 @@ extends android.os.AsyncTask&lt;java.lang.String,&#8203;java.lang.Void,&#8203;an
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.cmput301w23t09.qrhunter.qrcode.QRCode)">QRCodeVisualFetcher</a></span>&#8203;(<a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&nbsp;qrCode)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E()">QRCodeVisualFetcher</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </table>
@@ -232,18 +232,13 @@ extends android.os.AsyncTask&lt;java.lang.String,&#8203;java.lang.Void,&#8203;an
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getResponseCode()">getResponseCode</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
-<td class="colFirst"><code>protected void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onPostExecute(android.graphics.Bitmap)">onPostExecute</a></span>&#8203;(android.graphics.Bitmap&nbsp;result)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.android.os.AsyncTask">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;android.os.AsyncTask</h3>
-<code>cancel, execute, execute, executeOnExecutor, get, get, getStatus, isCancelled, onCancelled, onCancelled, onPreExecute, onProgressUpdate, publishProgress</code></li>
+<code>cancel, execute, execute, executeOnExecutor, get, get, getStatus, isCancelled, onCancelled, onCancelled, onPostExecute, onPreExecute, onProgressUpdate, publishProgress</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
@@ -268,13 +263,13 @@ extends android.os.AsyncTask&lt;java.lang.String,&#8203;java.lang.Void,&#8203;an
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;(com.cmput301w23t09.qrhunter.qrcode.QRCode)">
+<a id="&lt;init&gt;()">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>QRCodeVisualFetcher</h4>
-<pre>public&nbsp;QRCodeVisualFetcher&#8203;(<a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&nbsp;qrCode)</pre>
+<pre>public&nbsp;QRCodeVisualFetcher()</pre>
 </li>
 </ul>
 </li>
@@ -297,19 +292,6 @@ extends android.os.AsyncTask&lt;java.lang.String,&#8203;java.lang.Void,&#8203;an
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>doInBackground</code>&nbsp;in class&nbsp;<code>android.os.AsyncTask&lt;java.lang.String,&#8203;java.lang.Void,&#8203;android.graphics.Bitmap&gt;</code></dd>
-</dl>
-</li>
-</ul>
-<a id="onPostExecute(android.graphics.Bitmap)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>onPostExecute</h4>
-<pre class="methodSignature">protected&nbsp;void&nbsp;onPostExecute&#8203;(android.graphics.Bitmap&nbsp;result)</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code>onPostExecute</code>&nbsp;in class&nbsp;<code>android.os.AsyncTask&lt;java.lang.String,&#8203;java.lang.Void,&#8203;android.graphics.Bitmap&gt;</code></dd>
 </dl>
 </li>
 </ul>
