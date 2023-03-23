@@ -17,10 +17,12 @@ import androidx.fragment.app.DialogFragment;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.map.LocationHandler;
 import com.cmput301w23t09.qrhunter.player.Player;
+import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoAdapter;
 import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoController;
 import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoFragment;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.smarteist.autoimageslider.SliderView;
 import java.io.Serializable;
 import java.util.concurrent.ExecutionException;
 
@@ -39,7 +41,6 @@ import java.util.concurrent.ExecutionException;
  */
 public class QRCodeFragment extends DialogFragment implements Serializable {
 
-  private ImageView locationPhoto;
   private QRCode qrCode;
   private Button takeLocationPhotoBtn;
   private CheckBox locationCheckbox;
@@ -76,7 +77,9 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_qrcode, null);
     qrCode = (QRCode) getArguments().getSerializable("qrcode");
     activePlayer = (Player) getArguments().getSerializable("activePlayer");
+
     locationHandler = new LocationHandler(this);
+
     locationPhotoFragment = LocationPhotoFragment.newInstance(qrCode, this, activePlayer);
     locationPhotoController =
         new LocationPhotoController(locationPhotoFragment, qrCode, activePlayer);
@@ -96,7 +99,6 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
    * @param view The view that displays fragment_qrcode.xml
    */
   private void setupViews(View view) throws ExecutionException, InterruptedException {
-    locationPhoto = view.findViewById(R.id.location_photo);
     locationCheckbox = view.findViewById(R.id.location_request_box);
 
     TextView qrName = view.findViewById(R.id.qr_name);
@@ -108,15 +110,20 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     ImageView qrCodeVisual = view.findViewById(R.id.qr_code_visual);
     qrCodeVisual.setImageBitmap(qrCode.getVisualRepresentation());
 
+    SliderView locationPhotoSlider = view.findViewById(R.id.location_photos);
+    LocationPhotoAdapter locationPhotoAdapter = new LocationPhotoAdapter(this.getContext(), qrCode);
+    locationPhotoSlider.setSliderAdapter(locationPhotoAdapter, false);
+
     takeLocationPhotoBtn = view.findViewById(R.id.take_location_photo_btn);
     takeLocationPhotoBtn.setOnClickListener(
         v -> {
+          /*
           if (locationPhotoController.getUserLocationPhoto() != null) {
             locationPhotoFragment.deletePhoto();
             updateLocationPhoto();
           } else {
             locationPhotoFragment.show(getParentFragmentManager(), "Take Location Photo");
-          }
+          }*/
         });
     locationCheckbox.setOnCheckedChangeListener(
         (buttonView, isChecked) -> {
@@ -157,13 +164,13 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
    * @see LocationPhotoController
    */
   public void updateLocationPhoto() {
+    /*
     if (locationPhotoController.getUserLocationPhoto() != null) {
       takeLocationPhotoBtn.setText(R.string.remove_location_photo);
-      locationPhoto.setImageBitmap(locationPhotoController.getUserLocationPhoto().getPhoto());
     } else {
       takeLocationPhotoBtn.setText(R.string.take_location_photo);
-      locationPhoto.setImageResource(android.R.color.transparent);
     }
+    */
   }
 
   /**
