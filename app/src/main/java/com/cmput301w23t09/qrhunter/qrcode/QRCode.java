@@ -32,16 +32,13 @@ public class QRCode implements Serializable {
    *
    * @param hash The hash of the newly-scanned QRCode
    */
-  public QRCode(String hash) throws ExecutionException, InterruptedException {
+  public QRCode(String hash) {
     this.hash = hash;
 
     // TODO: Initialize all these fields according to hash
     this.name = generateName(hash);
     this.score = calculateScore(hash);
-    this.visualRepresentation =
-        new QRCodeVisualFetcher(this)
-            .execute("https://api.dicebear.com/5.x/pixel-art-neutral/jpg?seed=" + hash)
-            .get();
+    this.visualRepresentation = null;
 
     this.loc = null;
     this.photos = new ArrayList<>();
@@ -73,26 +70,11 @@ public class QRCode implements Serializable {
     this.hash = hash;
     this.name = name;
     this.score = score;
-    this.visualRepresentation =
-        new QRCodeVisualFetcher(this)
-            .execute("https://api.dicebear.com/5.x/pixel-art-neutral/jpg?seed=" + hash)
-            .get();
     this.loc = loc;
     this.photos = photos;
     this.comments = comments;
     this.players = players;
-  }
-
-  /** This constructs a blank QR code with all fields set to null For testing purposes only */
-  public QRCode() {
-    this.hash = null;
-    this.name = null;
-    this.score = null;
     this.visualRepresentation = null;
-    this.loc = null;
-    this.photos = null;
-    this.comments = null;
-    this.players = null;
   }
 
   /**
@@ -105,30 +87,12 @@ public class QRCode implements Serializable {
   }
 
   /**
-   * This sets the has of the QR code
-   *
-   * @param hash The hash of the QR code
-   */
-  public void setHash(String hash) {
-    this.hash = hash;
-  }
-
-  /**
    * This returns the name of the QR code
    *
    * @return Return the name of the QR code
    */
   public String getName() {
     return name;
-  }
-
-  /**
-   * This sets the name of the QR code
-   *
-   * @param name The name of the QR code
-   */
-  public void setName(String name) {
-    this.name = name;
   }
 
   /**
@@ -141,30 +105,18 @@ public class QRCode implements Serializable {
   }
 
   /**
-   * This sets the score of the QR code
-   *
-   * @param score The score of the QR code
-   */
-  public void setScore(Integer score) {
-    this.score = score;
-  }
-
-  /**
    * This returns the visual representation of the QR code
    *
    * @return Return the visual representation of the QR code
    */
-  public Bitmap getVisualRepresentation() {
+  public Bitmap getVisualRepresentation() throws InterruptedException, ExecutionException {
+    if (visualRepresentation == null) {
+      visualRepresentation =
+          new QRCodeVisualFetcher()
+              .execute("https://api.dicebear.com/5.x/pixel-art-neutral/jpg?seed=" + hash)
+              .get();
+    }
     return visualRepresentation;
-  }
-
-  /**
-   * Sets the visual representation of the QR code
-   *
-   * @param visualRepresentation The Bitmap to represent the QR code
-   */
-  public void setVisualRepresentation(Bitmap visualRepresentation) {
-    this.visualRepresentation = visualRepresentation;
   }
 
   /**

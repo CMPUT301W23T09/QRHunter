@@ -7,31 +7,27 @@ import org.junit.jupiter.api.Test;
 public class TestQRModel {
   // create a mock hash
   private String mockHash() {
-    return "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
+    return "8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d";
   }
 
   // create a mock qr code
   private QRCode mockCode() {
-    QRCode qr = new QRCode();
-    qr.setHash(mockHash());
-    qr.setName("mockqr");
-    qr.setScore(10);
-    return qr;
+    return new QRCode(mockHash());
   }
 
   @Test
-  public void testGetHash() {
+  public void testGetCorrectHash() {
     assertEquals(mockCode().getHash(), mockHash());
   }
 
   @Test
-  public void testGetName() {
-    assertEquals(mockCode().getName(), "mockqr");
+  public void testGetCorrectName() {
+    assertEquals(mockCode().getName(), "RobaqinectTiger✿");
   }
 
   @Test
-  public void testGetScore() {
-    assertEquals((int) mockCode().getScore(), 10);
+  public void testGetCorrectScore() {
+    assertEquals((int) mockCode().getScore(), 32);
   }
 
   @Test

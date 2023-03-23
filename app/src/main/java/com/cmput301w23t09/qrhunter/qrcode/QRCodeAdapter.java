@@ -1,12 +1,14 @@
 package com.cmput301w23t09.qrhunter.qrcode;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.cmput301w23t09.qrhunter.R;
@@ -45,7 +47,14 @@ public class QRCodeAdapter extends ArrayAdapter<QRCode> {
 
     // set visual representation of qr code
     ImageView visual = view.findViewById(R.id.visual_representation);
-    visual.setImageBitmap(qrCode.getVisualRepresentation());
+    try {
+      visual.setImageBitmap(qrCode.getVisualRepresentation());
+    } catch (Exception exception) {
+      Log.e("QRCodeAdapter", "An exception occurred while fetching the QR image", exception);
+      Toast.makeText(
+              context, "An exception occurred while fetching the QR image...", Toast.LENGTH_SHORT)
+          .show();
+    }
 
     // set score field of view
     TextView score = view.findViewById(R.id.score);

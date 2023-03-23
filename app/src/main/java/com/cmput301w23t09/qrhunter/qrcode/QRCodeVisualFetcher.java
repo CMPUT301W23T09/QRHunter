@@ -3,7 +3,6 @@ package com.cmput301w23t09.qrhunter.qrcode;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Log;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -21,11 +20,6 @@ import java.net.URL;
  */
 public class QRCodeVisualFetcher extends AsyncTask<String, Void, Bitmap> {
   private int responseCode;
-  private QRCode qrCode;
-
-  public QRCodeVisualFetcher(QRCode qrCode) {
-    this.qrCode = qrCode;
-  }
 
   @Override
   protected Bitmap doInBackground(String... urls) {
@@ -47,21 +41,10 @@ public class QRCodeVisualFetcher extends AsyncTask<String, Void, Bitmap> {
       }
 
       // Convert the InputStream to a Bitmap
-      Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-      return bitmap;
+      return BitmapFactory.decodeStream(inputStream);
     } catch (Exception e) {
       e.printStackTrace();
       return null;
-    }
-  }
-
-  @Override
-  protected void onPostExecute(Bitmap result) {
-    if (result != null) {
-      // run the save image method on the QR code
-      qrCode.setVisualRepresentation(result);
-    } else {
-      Log.d("imageApiCall", "API call for DiceBear failed.");
     }
   }
 
