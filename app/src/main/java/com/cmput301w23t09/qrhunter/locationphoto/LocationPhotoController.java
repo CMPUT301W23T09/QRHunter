@@ -1,4 +1,4 @@
-package com.cmput301w23t09.qrhunter.scanqr;
+package com.cmput301w23t09.qrhunter.locationphoto;
 
 import android.graphics.Bitmap;
 import android.util.Log;
@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.ImageProxy;
-import com.cmput301w23t09.qrhunter.photo.Photo;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
@@ -32,7 +31,7 @@ public class LocationPhotoController implements Serializable {
   private LocationPhotoFragment fragment;
   private ImageCapture imageCapture;
   private QRCode qrCode;
-  private Photo locationPhoto;
+  private LocationPhoto locationPhoto;
   private ExecutorService cameraExecutor;
   private Player activePlayer;
   private StorageReference storageRef;
@@ -76,7 +75,7 @@ public class LocationPhotoController implements Serializable {
           public void onCaptureSuccess(@NonNull ImageProxy image) {
             super.onCaptureSuccess(image);
 
-            locationPhoto = new Photo(image, activePlayer);
+            locationPhoto = new LocationPhoto(image, activePlayer);
             uploadPhoto();
             image.close();
             fragment.dismiss();

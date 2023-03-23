@@ -6,8 +6,8 @@ import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.lifecycle.LifecycleOwner;
-import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoController;
-import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoFragment;
+import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoController;
+import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoFragment;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.concurrent.ExecutionException;
 

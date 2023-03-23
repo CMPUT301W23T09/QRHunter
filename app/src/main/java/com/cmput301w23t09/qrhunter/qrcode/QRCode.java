@@ -3,7 +3,7 @@ package com.cmput301w23t09.qrhunter.qrcode;
 import android.graphics.Bitmap;
 import android.location.Location;
 import com.cmput301w23t09.qrhunter.comment.Comment;
-import com.cmput301w23t09.qrhunter.photo.Photo;
+import com.cmput301w23t09.qrhunter.locationphoto.LocationPhoto;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -21,7 +21,7 @@ public class QRCode implements Serializable {
   /** This is the location of the QR code */
   private Location loc;
   /** This is a list of photos that have been taken of the QR code */
-  private ArrayList<Photo> photos;
+  private ArrayList<LocationPhoto> locationPhotos;
   /** This is a list of comments on the QR code */
   private ArrayList<Comment> comments;
   /** This is a list of players (UUID) who have scanned this QR code */
@@ -44,7 +44,7 @@ public class QRCode implements Serializable {
     this.score = calculateScore(hash);
 
     this.loc = null;
-    this.photos = new ArrayList<>();
+    this.locationPhotos = new ArrayList<>();
     this.comments = new ArrayList<>();
     this.players = new ArrayList<>();
   }
@@ -58,7 +58,7 @@ public class QRCode implements Serializable {
    * @param visualRepresentation This is the visual representation of the QR code
    * @param score This is the score of the QR code
    * @param loc This is the location of the QR code
-   * @param photos This is the list of photos of the QR code
+   * @param locationPhotos This is the list of photos of the QR code
    * @param comments This is the list of comments on the QR code
    * @param players This is the list of players (documentIDs) that have scanned the QR code
    */
@@ -68,7 +68,7 @@ public class QRCode implements Serializable {
       Bitmap visualRepresentation,
       Integer score,
       Location loc,
-      ArrayList<Photo> photos,
+      ArrayList<LocationPhoto> locationPhotos,
       ArrayList<Comment> comments,
       ArrayList<String> players) {
     this.hash = hash;
@@ -76,7 +76,7 @@ public class QRCode implements Serializable {
     this.visualRepresentation = visualRepresentation;
     this.score = score;
     this.loc = loc;
-    this.photos = photos;
+    this.locationPhotos = locationPhotos;
     this.comments = comments;
     this.players = players;
   }
@@ -140,8 +140,8 @@ public class QRCode implements Serializable {
    *
    * @return Return the photos taken of the QR code
    */
-  public ArrayList<Photo> getPhotos() {
-    return photos;
+  public ArrayList<LocationPhoto> getPhotos() {
+    return locationPhotos;
   }
 
   /**
@@ -196,19 +196,19 @@ public class QRCode implements Serializable {
   /**
    * This adds a photo taken of the QR code
    *
-   * @param photo This is the photo to add
+   * @param locationPhoto This is the photo to add
    */
-  public void addPhoto(Photo photo) {
-    this.photos.add(photo);
+  public void addPhoto(LocationPhoto locationPhoto) {
+    this.locationPhotos.add(locationPhoto);
   }
 
   /**
    * This deletes a photo taken of the QR code
    *
-   * @param photo This is the photo to delete
+   * @param locationPhoto This is the photo to delete
    */
-  public void deletePhoto(Photo photo) {
-    this.photos.remove(photo);
+  public void deletePhoto(LocationPhoto locationPhoto) {
+    this.locationPhotos.remove(locationPhoto);
   }
 
   /**

@@ -1,4 +1,4 @@
-package com.cmput301w23t09.qrhunter.scanqr;
+package com.cmput301w23t09.qrhunter.locationphoto;
 
 import android.content.Context;
 import android.view.LayoutInflater;
