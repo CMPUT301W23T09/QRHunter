@@ -25,7 +25,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  */
 public class LocationPhotoFragment extends DialogFragment {
 
-  private LocationPhotoController controller;
   private QRCode qrCode;
   private QRCodeFragment qrCodeFragment;
   private CameraLocationPhotoController cameraController;
@@ -65,14 +64,15 @@ public class LocationPhotoFragment extends DialogFragment {
     qrCode = (QRCode) getArguments().getSerializable("qrcode");
     qrCodeFragment = (QRCodeFragment) getArguments().getSerializable("qrcodefrag");
     activePlayer = (Player) getArguments().getSerializable("activePlayer");
-    controller = new LocationPhotoController(this, qrCode, activePlayer);
     cameraController =
         new CameraLocationPhotoController(
-            this, view.findViewById(R.id.locationPhotoCameraPreview), controller);
+            this,
+            view.findViewById(R.id.locationPhotoCameraPreview),
+            qrCodeFragment.getLocationPhotoController());
     FloatingActionButton shutterButton = view.findViewById(R.id.location_photo_shutter);
     shutterButton.setOnClickListener(
         v -> {
-          controller.takePhoto();
+          qrCodeFragment.getLocationPhotoController().takePhoto();
         });
     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
     return builder.setView(view).create();
@@ -88,5 +88,9 @@ public class LocationPhotoFragment extends DialogFragment {
   public void onDismiss(@NonNull DialogInterface dialog) {
     super.onDismiss(dialog);
     qrCodeFragment.updateLocationPhoto();
+  }
+
+  public void deletePhoto() {
+    qrCodeFragment.getLocationPhotoController().deletePhoto();
   }
 }
