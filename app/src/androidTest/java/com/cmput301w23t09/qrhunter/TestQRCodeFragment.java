@@ -21,8 +21,6 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
-import com.cmput301w23t09.qrhunter.qrcode.AddQRCodeFragment;
-import com.cmput301w23t09.qrhunter.qrcode.DeleteQRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
@@ -86,7 +84,7 @@ public class TestQRCodeFragment extends BaseTest {
     // Score: 32 PTS
     qrCode = new QRCode("8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d");
 
-    qrCodeFragment = AddQRCodeFragment.newInstance(qrCode, player);
+    qrCodeFragment = QRCodeFragment.newInstance(qrCode, player);
     activityScenarioRule
         .getScenario()
         .onActivity(
@@ -131,19 +129,9 @@ public class TestQRCodeFragment extends BaseTest {
   public void testSnapLocationPhoto() {
     assertEquals(0, qrCode.getPhotos().size());
     onView(withId(R.id.take_location_photo_btn)).inRoot(isDialog()).perform(click());
-    await()
-        .until(
-            () ->
-                ((AddQRCodeFragment) qrCodeFragment)
-                    .getLocationPhotoFragment()
-                    .getDialog()
-                    .isShowing());
+    await().until(() -> qrCodeFragment.getLocationPhotoFragment().getDialog().isShowing());
     onView(withId(R.id.location_photo_shutter)).inRoot(isDialog()).perform(click());
-    await()
-        .until(
-            () ->
-                ((AddQRCodeFragment) qrCodeFragment).getLocationPhotoFragment().getDialog()
-                    == null);
+    await().until(() -> qrCodeFragment.getLocationPhotoFragment().getDialog() == null);
     await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getPhotos().size() > 0);
     // Check if player that snapped location photo is correct
     await()
@@ -155,19 +143,9 @@ public class TestQRCodeFragment extends BaseTest {
   @Test
   public void testRemoveLocationPhoto() {
     onView(withId(R.id.take_location_photo_btn)).inRoot(isDialog()).perform(click());
-    await()
-        .until(
-            () ->
-                ((AddQRCodeFragment) qrCodeFragment)
-                    .getLocationPhotoFragment()
-                    .getDialog()
-                    .isShowing());
+    await().until(() -> qrCodeFragment.getLocationPhotoFragment().getDialog().isShowing());
     onView(withId(R.id.location_photo_shutter)).inRoot(isDialog()).perform(click());
-    await()
-        .until(
-            () ->
-                ((AddQRCodeFragment) qrCodeFragment).getLocationPhotoFragment().getDialog()
-                    == null);
+    await().until(() -> qrCodeFragment.getLocationPhotoFragment().getDialog() == null);
     onView(withId(R.id.take_location_photo_btn)).check(matches(withText("Remove Location Photo")));
     onView(withId(R.id.take_location_photo_btn)).inRoot(isDialog()).perform(click());
     await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getPhotos().size() == 0);
@@ -182,8 +160,8 @@ public class TestQRCodeFragment extends BaseTest {
         .atMost(30, TimeUnit.SECONDS)
         .until(
             () ->
-                qrCodeFragment.getDialog().findViewById(R.id.addButton).getVisibility()
-                    == View.GONE);
+                qrCodeFragment.getDialog().findViewById(R.id.deleteButton).getVisibility()
+                    == View.VISIBLE);
 
     // Check that the database details are correct in that the player exists in the QR's scanned
     // player fields
@@ -237,7 +215,14 @@ public class TestQRCodeFragment extends BaseTest {
   /** Test to see that QRCodes are successfully removed from the player account */
   @Test
   public void testDeleteQRCode() {
-    qrCodeFragment = DeleteQRCodeFragment.newInstance(qrCode, player);
+    // Add the QRCode first
+    onView(withId(R.id.addButton)).inRoot(isDialog()).perform(click());
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(
+            () ->
+                qrCodeFragment.getDialog().findViewById(R.id.deleteButton).getVisibility()
+                    == View.VISIBLE);
 
     // Delete the QRCode from the player's account
     onView(withId(R.id.deleteButton)).inRoot(isDialog()).perform(click());
@@ -245,8 +230,8 @@ public class TestQRCodeFragment extends BaseTest {
         .atMost(30, TimeUnit.SECONDS)
         .until(
             () ->
-                qrCodeFragment.getDialog().findViewById(R.id.deleteButton).getVisibility()
-                    == View.GONE);
+                qrCodeFragment.getDialog().findViewById(R.id.addButton).getVisibility()
+                    == View.VISIBLE);
 
     // Check that the database details are correct in that the player does not exist in the qr's
     // scanned player fields
