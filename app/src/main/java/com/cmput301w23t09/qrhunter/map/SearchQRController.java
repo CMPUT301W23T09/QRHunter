@@ -69,7 +69,7 @@ public class SearchQRController {
     }
     // get address coordinates
     Address address = addresses.get(0);
-    return new LatLng(address.getLatitude() / 1E6, address.getLongitude() / 1E6);
+    return new LatLng(address.getLatitude(), address.getLongitude());
   }
 
   public Double parseDoubleInput(String str) {
@@ -119,7 +119,7 @@ public class SearchQRController {
             Toast.makeText(fragment.getContext(), "No nearby qr codes found", Toast.LENGTH_SHORT)
                 .show();
           } else {
-            new QRSearchResultFragment(nearbyCodes, fragment.getContext())
+            new QRSearchResultFragment(nearbyCodes, fragment)
                 .show(fragment.getChildFragmentManager(), "Show QR code search information");
           }
         });

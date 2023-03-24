@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.player.Player;
+import com.cmput301w23t09.qrhunter.qrcode.AddQRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
@@ -27,7 +28,7 @@ public class LocationPhotoFragment extends DialogFragment {
 
   private LocationPhotoController controller;
   private QRCode qrCode;
-  private QRCodeFragment qrCodeFragment;
+  private AddQRCodeFragment qrCodeFragment;
   private CameraLocationPhotoController cameraController;
   private Player activePlayer;
 
@@ -37,11 +38,11 @@ public class LocationPhotoFragment extends DialogFragment {
    * @param qrCode The QRCode to add the location photo to
    * @param qrCodeFragment The QRCodeFragment to update once the location photo has been taken
    * @param activePlayer The current logged in player
-   * @see QRCodeFragment
+   * @see AddQRCodeFragment
    * @return The LocationPhotoFragment to display
    */
   public static LocationPhotoFragment newInstance(
-      QRCode qrCode, QRCodeFragment qrCodeFragment, Player activePlayer) {
+      QRCode qrCode, AddQRCodeFragment qrCodeFragment, Player activePlayer) {
     // TODO: May need to bundle arguments
     Bundle args = new Bundle();
     args.putSerializable("qrcode", qrCode);
@@ -63,7 +64,7 @@ public class LocationPhotoFragment extends DialogFragment {
   public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
     View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_location_photo, null);
     qrCode = (QRCode) getArguments().getSerializable("qrcode");
-    qrCodeFragment = (QRCodeFragment) getArguments().getSerializable("qrcodefrag");
+    qrCodeFragment = (AddQRCodeFragment) getArguments().getSerializable("qrcodefrag");
     activePlayer = (Player) getArguments().getSerializable("activePlayer");
     controller = new LocationPhotoController(this, qrCode, activePlayer);
     cameraController =
