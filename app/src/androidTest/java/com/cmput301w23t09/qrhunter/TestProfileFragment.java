@@ -17,46 +17,38 @@ import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
 
 import android.Manifest;
 import android.content.Intent;
+import android.widget.TextView;
 import androidx.test.espresso.DataInteraction;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
-import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
-import com.cmput301w23t09.qrhunter.database.DatabaseQueryResults;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.profile.ProfileFragment;
 import com.cmput301w23t09.qrhunter.profile.ProfileSettingsFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
+import com.cmput301w23t09.qrhunter.util.DeviceUtils;
+import com.google.android.material.textfield.TextInputEditText;
 import com.robotium.solo.Solo;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import org.junit.After;
+import java.util.concurrent.atomic.AtomicReference;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 /** Test classes for profile activity */
-public class TestProfileFragment {
+public class TestProfileFragment extends BaseTest {
   private Solo solo;
-  private String mockPlayerID;
-  private UUID mockUUID;
-  private Player mockPlayer;
-  private QRCode mockQR1;
-  private QRCode mockQR2;
-  private ArrayList<String> mockHashes;
-  private ArrayList<QRCode> mockQRCodes;
+  private Player player;
+  private QRCode qr1;
+  private QRCode qr2;
 
   @Rule
   public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
@@ -72,58 +64,10 @@ public class TestProfileFragment {
    */
   @Before
   public void setUp() throws Exception {
+    CountDownLatch databaseSetup = new CountDownLatch(2);
     // create mock qr codes
-    mockQRCodes = new ArrayList<>();
-    mockHashes = new ArrayList<>();
-    mockQR1 = new QRCode("0424974c68530290458c8d58674e2637f65abc127057957d7b3acbd24c208f93");
-    mockQR2 = new QRCode("b5a384ee0ec5a8b625de9b24a96627c9ea5d246b70eb34a3a4f9ee781e581731");
-    mockQRCodes.add(mockQR1);
-    mockQRCodes.add(mockQR2);
-    mockHashes.add(mockQR1.getHash());
-    mockHashes.add(mockQR2.getHash());
-
-    // create a mock player
-    mockPlayerID = "001";
-    mockUUID = UUID.randomUUID();
-    mockPlayer =
-        new Player(mockPlayerID, mockUUID, "Irene", "5873571506", "isun@ualberta.ca", mockHashes);
-
-    // mock PlayerDatabase
-    PlayerDatabase mockPlayerDatabase = mock(PlayerDatabase.class);
-    // mock getting the player based on the device
-    doAnswer(
-            invocation -> {
-              DatabaseConsumer<Player> callback = invocation.getArgument(1);
-              callback.accept(new DatabaseQueryResults<>(mockPlayer));
-              return null;
-            })
-        .when(mockPlayerDatabase)
-        .getPlayerByDeviceId(any(UUID.class), any(DatabaseConsumer.class));
-    // mock updating a player's info in the database
-    doAnswer(
-            invocation -> {
-              DatabaseConsumer<Void> callback = invocation.getArgument(1);
-              callback.accept(new DatabaseQueryResults<>(null, null));
-              return null;
-            })
-        .when(mockPlayerDatabase)
-        .update(any(Player.class), any(DatabaseConsumer.class));
-    PlayerDatabase.mockInstance(mockPlayerDatabase);
-
-    // mock QRCodeDatabase
-    QRCodeDatabase mockQRCodeDatabase = mock(QRCodeDatabase.class);
-    // mock ignoring requests for a snapshot listener
-    doNothing().when(mockQRCodeDatabase).addListener(any(DatabaseChangeListener.class));
-    // mock getting the qr codes for a list of hashes
-    doAnswer(
-            invocation -> {
-              DatabaseConsumer<List<QRCode>> callback = invocation.getArgument(1);
-              callback.accept(new DatabaseQueryResults<>(mockQRCodes));
-              return null;
-            })
-        .when(mockQRCodeDatabase)
-        .getQRCodeHashes(any(List.class), any(DatabaseConsumer.class));
-    QRCodeDatabase.mockInstance(mockQRCodeDatabase);
+    qr1 = new QRCode("0424974c68530290458c8d58674e2637f65abc127057957d7b3acbd24c208f93");
+    qr2 = new QRCode("b5a384ee0ec5a8b625de9b24a96627c9ea5d246b70eb34a3a4f9ee781e581731");
 
     // get solo
     activityScenarioRule
@@ -132,7 +76,43 @@ public class TestProfileFragment {
             activity -> {
               activity.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
               solo = new Solo(InstrumentationRegistry.getInstrumentation(), activity);
+              UUID ourDeviceUUID = DeviceUtils.getDeviceUUID(activity);
+
+              // First create our user.
+              player =
+                  new Player(
+                      ourDeviceUUID, "Irene", "5873571506", "isun@ualberta.ca", new ArrayList<>());
+
+              // Set up existing data within database.
+              PlayerDatabase.getInstance()
+                  .add(
+                      player,
+                      ignored -> {
+                        // Add the 2 QRs.
+                        QRCodeDatabase.getInstance()
+                            .addQRCode(
+                                qr1,
+                                ignored2 -> {
+                                  // Add the player to this QR.
+                                  QRCodeDatabase.getInstance()
+                                      .addPlayerToQR(
+                                          player, qr1, ignoredQr -> databaseSetup.countDown());
+                                });
+                        QRCodeDatabase.getInstance()
+                            .addQRCode(
+                                qr2,
+                                ignored2 -> {
+                                  // Add the player to this QR.
+                                  QRCodeDatabase.getInstance()
+                                      .addPlayerToQR(
+                                          player, qr2, ignoredQr -> databaseSetup.countDown());
+                                });
+                      });
             });
+
+    // Wait for the JUnit thread to be told that the player was added to the database
+    // and that the two QRs were added/the player has scanned them.
+    databaseSetup.await();
 
     // navigate to profile fragment
     onView(withId(R.id.navigation_my_profile)).perform(click());
@@ -141,6 +121,17 @@ public class TestProfileFragment {
             () ->
                 ((GameActivity) solo.getCurrentActivity()).getController().getBody()
                     instanceof ProfileFragment);
+
+    // Wait for the default profile to no longer exist.
+    await()
+        .atMost(10, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              TextView usernameView = (TextView) solo.getView(R.id.username);
+              TextView totalPoints = (TextView) solo.getView(R.id.total_points);
+              return !usernameView.getText().toString().equals("")
+                  && !totalPoints.getText().toString().equals("");
+            });
   }
 
   /** Checks if the current fragment is correct */
@@ -155,7 +146,7 @@ public class TestProfileFragment {
   @Test
   public void testUsernameView() {
     // check if mockPlayer's username is displayed
-    onView(withId(R.id.username)).check(matches(withText(mockPlayer.getUsername())));
+    onView(withId(R.id.username)).check(matches(withText(player.getUsername())));
   }
 
   /**
@@ -177,8 +168,8 @@ public class TestProfileFragment {
   @Test
   public void testQRListView() {
     // get the highest and lowest score
-    Integer highestScore = Math.max(mockQR1.getScore(), mockQR2.getScore());
-    Integer lowestScore = Math.min(mockQR1.getScore(), mockQR2.getScore());
+    Integer highestScore = Math.max(qr1.getScore(), qr2.getScore());
+    Integer lowestScore = Math.min(qr1.getScore(), qr2.getScore());
     // get the qr code list
     DataInteraction codeList = onData(anything()).inAdapterView(withId(R.id.code_list));
     // check that the highest scoring code is displayed first (since default sort is descending)
@@ -200,7 +191,7 @@ public class TestProfileFragment {
   @Test
   public void testTotalPoints() {
     // compute the total score
-    Integer totalScore = mockQR1.getScore() + mockQR2.getScore();
+    Integer totalScore = qr1.getScore() + qr2.getScore();
     // check the displayed text for total code score
     onView(withId(R.id.total_points))
         .check(matches(withText(String.format("%d\nTotal Points", totalScore))));
@@ -211,14 +202,14 @@ public class TestProfileFragment {
   public void testCodesScanned() {
     // check the displayed text for total codes scanned
     onView(withId(R.id.total_codes))
-        .check(matches(withText(String.format("%d\nCodes Scanned", mockQRCodes.size()))));
+        .check(matches(withText(String.format("%d\nCodes Scanned", 2))));
   }
 
   /** Checks if the top code score is displayed correctly */
   @Test
   public void testTopScore() {
     // compute the top score
-    Integer highestScore = Math.max(mockQR1.getScore(), mockQR2.getScore());
+    Integer highestScore = Math.max(qr1.getScore(), qr2.getScore());
     // get the displayed text for top code score
     onView(withId(R.id.top_code_score))
         .check(matches(withText(String.format("%d\nTop Code", highestScore))));
@@ -237,6 +228,7 @@ public class TestProfileFragment {
                     instanceof ProfileSettingsFragment);
   }
 
+  /** Test that the back button on the settings page redirects the player to the profile page. */
   @Test
   public void testSettingsBackBtn() {
     // navigate to settings
@@ -258,16 +250,17 @@ public class TestProfileFragment {
     onView(withId(R.id.contact_info_button)).perform(click());
     // search for the player's phone and email
     onView(withId(R.id.settings_screen_phoneTextField))
-        .check(matches(withText(mockPlayer.getPhoneNo())));
-    onView(withId(R.id.settings_screen_emailTextField))
-        .check(matches(withText(mockPlayer.getEmail())));
+        .check(matches(withText(player.getPhoneNo())));
+    onView(withId(R.id.settings_screen_emailTextField)).check(matches(withText(player.getEmail())));
   }
 
-  /* Checks the change of the user's phone number */
+  /** Checks the change of the user's phone number */
   @Test
   public void testPhoneNumChange() {
     // click the settings button to navigate to the settings
     onView(withId(R.id.contact_info_button)).perform(click());
+    waitForSettingsPageToLoad();
+
     // clear the current phone number and enter a new one
     String newPhoneNo = "5872571509";
     onView(withId(R.id.settings_screen_phoneTextField)).perform(click(), clearText());
@@ -277,9 +270,27 @@ public class TestProfileFragment {
     onView(withId(R.id.settings_screen_phoneTextField)).check(matches(withText(newPhoneNo)));
     // press the save button
     onView(withId(R.id.settings_save_button)).perform(scrollTo(), click());
+
+    AtomicReference<Player> updatedPlayer = new AtomicReference<>();
     await()
         .atMost(30, TimeUnit.SECONDS)
-        .until(() -> (Objects.equals(mockPlayer.getPhoneNo(), newPhoneNo)));
+        .until(
+            () -> {
+              // If we have already fetched the player, check if the phone no was updated.
+              Player databasePlayer = updatedPlayer.get();
+              if (databasePlayer != null && databasePlayer.getPhoneNo().equals(newPhoneNo)) {
+                return true; // Player was correctly updated!
+              }
+
+              // If the phone no was not updated yet or if we have not fetched the newest copy of
+              // the player...
+              // fetch the latest database saved entry.
+              PlayerDatabase.getInstance()
+                  .getPlayerByUsername(
+                      player.getUsername(),
+                      fetchedPlayer -> updatedPlayer.set(fetchedPlayer.getData()));
+              return false; // Try again.
+            });
   }
 
   /** Checks the change of the user's email */
@@ -287,6 +298,8 @@ public class TestProfileFragment {
   public void testEmailChange() {
     // click the settings button to navigate to the settings
     onView(withId(R.id.contact_info_button)).perform(click());
+    waitForSettingsPageToLoad();
+
     // clear the current email and enter a new one
     String newEmail = "irenerose.sun@gmail.com";
     onView(withId(R.id.settings_screen_emailTextField)).perform(click(), clearText());
@@ -296,20 +309,44 @@ public class TestProfileFragment {
     onView(withId(R.id.settings_screen_emailTextField)).check(matches(withText(newEmail)));
     // press the save button
     onView(withId(R.id.settings_save_button)).perform(scrollTo(), click());
-    // check if player email was updated
+
+    AtomicReference<Player> updatedPlayer = new AtomicReference<>();
     await()
         .atMost(30, TimeUnit.SECONDS)
-        .until(() -> (Objects.equals(mockPlayer.getEmail(), newEmail)));
+        .until(
+            () -> {
+              // If we have already fetched the player, check if the email was updated.
+              Player databasePlayer = updatedPlayer.get();
+              if (databasePlayer != null && databasePlayer.getEmail().equals(newEmail)) {
+                return true; // Player was correctly updated!
+              }
+
+              // If the email was not updated yet or if we have not fetched the newest copy of
+              // the player...
+              // fetch the latest database saved entry.
+              PlayerDatabase.getInstance()
+                  .getPlayerByUsername(
+                      player.getUsername(),
+                      fetchedPlayer -> updatedPlayer.set(fetchedPlayer.getData()));
+              return false; // Try again.
+            });
   }
 
-  /** Navigates back to profile fragment */
-  @After
-  public void goToProfile() {
-    onView(withId(R.id.navigation_my_profile)).perform(click());
+  /** Helper method to wait for the settings page details to load. */
+  private void waitForSettingsPageToLoad() {
+    // Wait for contact details to load in.
     await()
+        .atMost(10, TimeUnit.SECONDS)
         .until(
-            () ->
-                ((GameActivity) solo.getCurrentActivity()).getController().getBody()
-                    instanceof ProfileFragment);
+            () -> {
+              TextInputEditText emailField =
+                  (TextInputEditText) solo.getView(R.id.settings_screen_emailTextField);
+              TextInputEditText phoneField =
+                  (TextInputEditText) solo.getView(R.id.settings_screen_phoneTextField);
+              return emailField.getText() != null
+                  && !emailField.getText().toString().equals("")
+                  && phoneField.getText() != null
+                  && !phoneField.getText().toString().equals("");
+            });
   }
 }
