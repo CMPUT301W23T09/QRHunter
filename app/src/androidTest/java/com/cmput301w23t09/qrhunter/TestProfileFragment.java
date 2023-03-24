@@ -32,6 +32,7 @@ import com.cmput301w23t09.qrhunter.profile.ProfileSettingsFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.cmput301w23t09.qrhunter.util.DeviceUtils;
+import com.google.android.material.textfield.TextInputEditText;
 import com.robotium.solo.Solo;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -127,7 +128,9 @@ public class TestProfileFragment extends BaseTest {
         .until(
             () -> {
               TextView usernameView = (TextView) solo.getView(R.id.username);
-              return !usernameView.getText().toString().equals("");
+              TextView totalPoints = (TextView) solo.getView(R.id.total_points);
+              return !usernameView.getText().toString().equals("")
+                  && !totalPoints.getText().toString().equals("");
             });
   }
 
@@ -242,6 +245,16 @@ public class TestProfileFragment extends BaseTest {
   /** Checks if the player info is properly displayed in the settings */
   @Test
   public void testSettingsInfo() {
+    // Wait for contact details to load in first.
+    await()
+        .atMost(10, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              TextInputEditText emailField =
+                  (TextInputEditText) solo.getView(R.id.settings_screen_emailTextField);
+              return emailField.getText() != null && !emailField.getText().toString().equals("");
+            });
+
     // click the settings button to navigate to the settings fragment
     onView(withId(R.id.contact_info_button)).perform(click());
     // search for the player's phone and email
@@ -253,6 +266,16 @@ public class TestProfileFragment extends BaseTest {
   /* Checks the change of the user's phone number */
   @Test
   public void testPhoneNumChange() {
+    // Wait for contact details to load in first.
+    await()
+        .atMost(10, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              TextInputEditText emailField =
+                  (TextInputEditText) solo.getView(R.id.settings_screen_emailTextField);
+              return emailField.getText() != null && !emailField.getText().toString().equals("");
+            });
+
     // click the settings button to navigate to the settings
     onView(withId(R.id.contact_info_button)).perform(click());
     // clear the current phone number and enter a new one
@@ -290,6 +313,16 @@ public class TestProfileFragment extends BaseTest {
   /** Checks the change of the user's email */
   @Test
   public void testEmailChange() {
+    // Wait for contact details to load in first.
+    await()
+        .atMost(10, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              TextInputEditText emailField =
+                  (TextInputEditText) solo.getView(R.id.settings_screen_emailTextField);
+              return emailField.getText() != null && !emailField.getText().toString().equals("");
+            });
+
     // click the settings button to navigate to the settings
     onView(withId(R.id.contact_info_button)).perform(click());
     // clear the current email and enter a new one
