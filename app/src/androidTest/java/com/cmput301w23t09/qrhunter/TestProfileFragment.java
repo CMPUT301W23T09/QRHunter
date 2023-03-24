@@ -228,6 +228,7 @@ public class TestProfileFragment extends BaseTest {
                     instanceof ProfileSettingsFragment);
   }
 
+  /** Test that the back button on the settings page redirects the player to the profile page. */
   @Test
   public void testSettingsBackBtn() {
     // navigate to settings
@@ -245,16 +246,6 @@ public class TestProfileFragment extends BaseTest {
   /** Checks if the player info is properly displayed in the settings */
   @Test
   public void testSettingsInfo() {
-    // Wait for contact details to load in first.
-    await()
-        .atMost(10, TimeUnit.SECONDS)
-        .until(
-            () -> {
-              TextInputEditText emailField =
-                  (TextInputEditText) solo.getView(R.id.settings_screen_emailTextField);
-              return emailField.getText() != null && !emailField.getText().toString().equals("");
-            });
-
     // click the settings button to navigate to the settings fragment
     onView(withId(R.id.contact_info_button)).perform(click());
     // search for the player's phone and email
@@ -263,21 +254,13 @@ public class TestProfileFragment extends BaseTest {
     onView(withId(R.id.settings_screen_emailTextField)).check(matches(withText(player.getEmail())));
   }
 
-  /* Checks the change of the user's phone number */
+  /** Checks the change of the user's phone number */
   @Test
   public void testPhoneNumChange() {
-    // Wait for contact details to load in first.
-    await()
-        .atMost(10, TimeUnit.SECONDS)
-        .until(
-            () -> {
-              TextInputEditText emailField =
-                  (TextInputEditText) solo.getView(R.id.settings_screen_emailTextField);
-              return emailField.getText() != null && !emailField.getText().toString().equals("");
-            });
-
     // click the settings button to navigate to the settings
     onView(withId(R.id.contact_info_button)).perform(click());
+    waitForSettingsPageToLoad();
+
     // clear the current phone number and enter a new one
     String newPhoneNo = "5872571509";
     onView(withId(R.id.settings_screen_phoneTextField)).perform(click(), clearText());
@@ -313,18 +296,10 @@ public class TestProfileFragment extends BaseTest {
   /** Checks the change of the user's email */
   @Test
   public void testEmailChange() {
-    // Wait for contact details to load in first.
-    await()
-        .atMost(10, TimeUnit.SECONDS)
-        .until(
-            () -> {
-              TextInputEditText emailField =
-                  (TextInputEditText) solo.getView(R.id.settings_screen_emailTextField);
-              return emailField.getText() != null && !emailField.getText().toString().equals("");
-            });
-
     // click the settings button to navigate to the settings
     onView(withId(R.id.contact_info_button)).perform(click());
+    waitForSettingsPageToLoad();
+
     // clear the current email and enter a new one
     String newEmail = "irenerose.sun@gmail.com";
     onView(withId(R.id.settings_screen_emailTextField)).perform(click(), clearText());
@@ -354,6 +329,24 @@ public class TestProfileFragment extends BaseTest {
                       player.getUsername(),
                       fetchedPlayer -> updatedPlayer.set(fetchedPlayer.getData()));
               return false; // Try again.
+            });
+  }
+
+  /** Helper method to wait for the settings page details to load. */
+  private void waitForSettingsPageToLoad() {
+    // Wait for contact details to load in.
+    await()
+        .atMost(10, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              TextInputEditText emailField =
+                  (TextInputEditText) solo.getView(R.id.settings_screen_emailTextField);
+              TextInputEditText phoneField =
+                  (TextInputEditText) solo.getView(R.id.settings_screen_phoneTextField);
+              return emailField.getText() != null
+                  && !emailField.getText().toString().equals("")
+                  && phoneField.getText() != null
+                  && !phoneField.getText().toString().equals("");
             });
   }
 }
