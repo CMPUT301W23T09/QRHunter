@@ -1,6 +1,7 @@
 package com.cmput301w23t09.qrhunter;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -12,35 +13,32 @@ import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.view.View;
 import android.widget.ImageView;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
+import com.cmput301w23t09.qrhunter.qrcode.DeleteQRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
-import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.robotium.solo.Solo;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-/**
- * Tests the QRCodeFragment if it displays the QRCode's info correctly and if can modify the code
- * correctly
- *
- * @see QRCodeFragment
- * @author John Mabanta
- * @version 1.0
- */
-public class TestQRCodeFragment extends BaseTest {
+public class TestDeleteQRCodeFragment {
   private QRCode qrCode;
   private Solo solo;
-  private QRCodeFragment qrCodeFragment;
+  private DeleteQRCodeFragment qrCodeFragment;
+
   private Player player;
 
   @Rule
@@ -50,8 +48,8 @@ public class TestQRCodeFragment extends BaseTest {
   @Rule
   public GrantPermissionRule permissionRule =
       GrantPermissionRule.grant(
-          Manifest.permission.ACCESS_FINE_LOCATION,
-          Manifest.permission.ACCESS_COARSE_LOCATION,
+          android.Manifest.permission.ACCESS_FINE_LOCATION,
+          android.Manifest.permission.ACCESS_COARSE_LOCATION,
           Manifest.permission.CAMERA);
 
   /** Opens the QRCodeFragment, assuming we've scanned a QR code with hash "test-hash123" */
@@ -77,14 +75,14 @@ public class TestQRCodeFragment extends BaseTest {
     // Score: 32 PTS
     qrCode = new QRCode("8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d");
 
-    qrCodeFragment = QRCodeFragment.newInstance(qrCode, player);
+    qrCodeFragment = DeleteQRCodeFragment.newInstance(qrCode, player);
     activityScenarioRule
         .getScenario()
         .onActivity(
             activity -> {
               activity.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
               solo = new Solo(InstrumentationRegistry.getInstrumentation(), activity);
-              qrCodeFragment.show(activity.getSupportFragmentManager(), "QRCodeFragment");
+              qrCodeFragment.show(activity.getSupportFragmentManager(), "DeleteQRCodeFragment");
             });
     await().until(() -> qrCodeFragment.getDialog() != null);
     await().until(() -> qrCodeFragment.getDialog().isShowing());
@@ -99,5 +97,65 @@ public class TestQRCodeFragment extends BaseTest {
     ImageView qrVisualView = (ImageView) solo.getView(R.id.qr_code_visual);
     Bitmap qrVisualBitmap = ((BitmapDrawable) qrVisualView.getDrawable()).getBitmap();
     assertTrue(qrVisualBitmap.sameAs(qrCode.getVisualRepresentation()));
+  }
+
+  /** Test to see that QRCodes are successfully removed from the player account */
+  @Test
+  public void testDeleteQRCode() {
+    // Delete the QRCode from the player's account
+    onView(withId(R.id.deleteButton)).inRoot(isDialog()).perform(click());
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(
+            () ->
+                !qrCodeFragment.getDialog().isShowing());
+
+    // Check that the database details are correct in that the player does not exist in the qr's
+    // scanned player fields
+    // and that the qr does not exist in the player's scanned qr field.
+
+    AtomicReference<Player> updatedPlayer = new AtomicReference<>();
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              // If we have already fetched the player, check that the QRCode is not within the
+              // Player.
+              Player databasePlayer = updatedPlayer.get();
+              if (databasePlayer != null
+                  && !databasePlayer.getQRCodeHashes().contains(qrCode.getHash())) {
+                return true; // Player was correctly updated!
+              }
+
+              // If the phone no was not updated yet or if we have not fetched the newest copy of
+              // the player
+              // then fetch the latest database saved entry.
+              PlayerDatabase.getInstance()
+                  .getPlayerByUsername(
+                      player.getUsername(),
+                      fetchedPlayer -> updatedPlayer.set(fetchedPlayer.getData()));
+              return false; // Try again.
+            });
+
+    AtomicReference<QRCode> updatedQR = new AtomicReference<>();
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              // If we have already fetched the QRCode, check that the Player is not within the
+              // QRCode.
+              QRCode databaseQR = updatedQR.get();
+              if (databaseQR != null && !databaseQR.getPlayers().contains(player.getDocumentId())) {
+                return true; // Player was correctly updated!
+              }
+
+              // If the QRCode was not updated yet or if we have not fetched the newest copy of the
+              // QRCode
+              // then fetch the latest database saved entry.
+              QRCodeDatabase.getInstance()
+                  .getQRCodeByHash(
+                      qrCode.getHash(), fetchedQR -> updatedQR.set(fetchedQR.getData()));
+              return false; // Try again.
+            });
   }
 }
