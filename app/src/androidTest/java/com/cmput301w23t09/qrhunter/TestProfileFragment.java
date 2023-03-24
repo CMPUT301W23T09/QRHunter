@@ -33,10 +33,10 @@ import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.cmput301w23t09.qrhunter.util.DeviceUtils;
 import com.robotium.solo.Solo;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -45,8 +45,8 @@ import org.junit.Test;
 public class TestProfileFragment extends BaseTest {
   private Solo solo;
   private Player player;
-  private QRCode mockQR1;
-  private QRCode mockQR2;
+  private QRCode qr1;
+  private QRCode qr2;
 
   @Rule
   public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
@@ -62,10 +62,10 @@ public class TestProfileFragment extends BaseTest {
    */
   @Before
   public void setUp() throws Exception {
-    CountDownLatch databaseSetup = new CountDownLatch(1);
+    CountDownLatch databaseSetup = new CountDownLatch(2);
     // create mock qr codes
-    mockQR1 = new QRCode("0424974c68530290458c8d58674e2637f65abc127057957d7b3acbd24c208f93");
-    mockQR2 = new QRCode("b5a384ee0ec5a8b625de9b24a96627c9ea5d246b70eb34a3a4f9ee781e581731");
+    qr1 = new QRCode("0424974c68530290458c8d58674e2637f65abc127057957d7b3acbd24c208f93");
+    qr2 = new QRCode("b5a384ee0ec5a8b625de9b24a96627c9ea5d246b70eb34a3a4f9ee781e581731");
 
     // get solo
     activityScenarioRule
@@ -81,34 +81,35 @@ public class TestProfileFragment extends BaseTest {
                   new Player(
                       ourDeviceUUID, "Irene", "5873571506", "isun@ualberta.ca", new ArrayList<>());
 
-              // When the player is added, notify the JUnit thread to continue.
+              // Set up existing data within database.
               PlayerDatabase.getInstance()
                   .add(
                       player,
-                      ignored ->
-                          QRCodeDatabase.getInstance()
-                              .addQRCode(
-                                  mockQR1,
-                                  ignored2 ->
-                                      QRCodeDatabase.getInstance()
-                                          .addQRCode(
-                                              mockQR2,
-                                              ignored3 -> {
-                                                QRCodeDatabase.getInstance()
-                                                    .addPlayerToQR(
-                                                        player,
-                                                        mockQR1,
-                                                        ignored4 ->
-                                                            QRCodeDatabase.getInstance()
-                                                                .addPlayerToQR(
-                                                                    player,
-                                                                    mockQR2,
-                                                                    ignored5 ->
-                                                                        databaseSetup.countDown()));
-                                              })));
+                      ignored -> {
+                        // Add the 2 QRs.
+                        QRCodeDatabase.getInstance()
+                            .addQRCode(
+                                qr1,
+                                ignored2 -> {
+                                  // Add the player to this QR.
+                                  QRCodeDatabase.getInstance()
+                                      .addPlayerToQR(
+                                          player, qr1, ignoredQr -> databaseSetup.countDown());
+                                });
+                        QRCodeDatabase.getInstance()
+                            .addQRCode(
+                                qr2,
+                                ignored2 -> {
+                                  // Add the player to this QR.
+                                  QRCodeDatabase.getInstance()
+                                      .addPlayerToQR(
+                                          player, qr2, ignoredQr -> databaseSetup.countDown());
+                                });
+                      });
             });
 
-    // Wait for the JUnit thread to be told that the player was added to the database.
+    // Wait for the JUnit thread to be told that the player was added to the database
+    // and that the two QRs were added/the player has scanned them.
     databaseSetup.await();
 
     // navigate to profile fragment
@@ -135,16 +136,6 @@ public class TestProfileFragment extends BaseTest {
     onView(withId(R.id.username)).check(matches(withText(player.getUsername())));
   }
 
-  /** Checks if the player info is properly displayed in the settings */
-  @Test
-  public void testSettingsView() {
-    // click the settings button
-    solo.clickOnView(solo.getView(R.id.contact_info_button));
-    // search for the player's phone and email info
-    assertTrue(solo.waitForText(player.getPhoneNo(), 1, 2000));
-    assertTrue(solo.waitForText(player.getEmail(), 1, 2000));
-  }
-
   /**
    * Test if spinner displays spinner options correctly Assumes that the profile only has one
    * spinner
@@ -164,8 +155,8 @@ public class TestProfileFragment extends BaseTest {
   @Test
   public void testQRListView() {
     // get the highest and lowest score
-    Integer highestScore = Math.max(mockQR1.getScore(), mockQR2.getScore());
-    Integer lowestScore = Math.min(mockQR1.getScore(), mockQR2.getScore());
+    Integer highestScore = Math.max(qr1.getScore(), qr2.getScore());
+    Integer lowestScore = Math.min(qr1.getScore(), qr2.getScore());
     // get the qr code list
     DataInteraction codeList = onData(anything()).inAdapterView(withId(R.id.code_list));
     // check that the highest scoring code is displayed first (since default sort is descending)
@@ -187,7 +178,7 @@ public class TestProfileFragment extends BaseTest {
   @Test
   public void testTotalPoints() {
     // compute the total score
-    Integer totalScore = mockQR1.getScore() + mockQR2.getScore();
+    Integer totalScore = qr1.getScore() + qr2.getScore();
     // check the displayed text for total code score
     onView(withId(R.id.total_points))
         .check(matches(withText(String.format("%d\nTotal Points", totalScore))));
@@ -205,7 +196,7 @@ public class TestProfileFragment extends BaseTest {
   @Test
   public void testTopScore() {
     // compute the top score
-    Integer highestScore = Math.max(mockQR1.getScore(), mockQR2.getScore());
+    Integer highestScore = Math.max(qr1.getScore(), qr2.getScore());
     // get the displayed text for top code score
     onView(withId(R.id.top_code_score))
         .check(matches(withText(String.format("%d\nTop Code", highestScore))));
@@ -263,9 +254,27 @@ public class TestProfileFragment extends BaseTest {
     onView(withId(R.id.settings_screen_phoneTextField)).check(matches(withText(newPhoneNo)));
     // press the save button
     onView(withId(R.id.settings_save_button)).perform(scrollTo(), click());
+
+    AtomicReference<Player> updatedPlayer = new AtomicReference<>();
     await()
         .atMost(30, TimeUnit.SECONDS)
-        .until(() -> (Objects.equals(player.getPhoneNo(), newPhoneNo)));
+        .until(
+            () -> {
+              // If we have already fetched the player, check if the phone no was updated.
+              Player databasePlayer = updatedPlayer.get();
+              if (databasePlayer != null && databasePlayer.getPhoneNo().equals(newPhoneNo)) {
+                return true; // Player was correctly updated!
+              }
+
+              // If the phone no was not updated yet or if we have not fetched the newest copy of
+              // the player...
+              // fetch the latest database saved entry.
+              PlayerDatabase.getInstance()
+                  .getPlayerByUsername(
+                      player.getUsername(),
+                      fetchedPlayer -> updatedPlayer.set(fetchedPlayer.getData()));
+              return false; // Try again.
+            });
   }
 
   /** Checks the change of the user's email */
@@ -282,7 +291,26 @@ public class TestProfileFragment extends BaseTest {
     onView(withId(R.id.settings_screen_emailTextField)).check(matches(withText(newEmail)));
     // press the save button
     onView(withId(R.id.settings_save_button)).perform(scrollTo(), click());
-    // check if player email was updated
-    await().atMost(30, TimeUnit.SECONDS).until(() -> (Objects.equals(player.getEmail(), newEmail)));
+
+    AtomicReference<Player> updatedPlayer = new AtomicReference<>();
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              // If we have already fetched the player, check if the phone no was updated.
+              Player databasePlayer = updatedPlayer.get();
+              if (databasePlayer != null && databasePlayer.getEmail().equals(newEmail)) {
+                return true; // Player was correctly updated!
+              }
+
+              // If the phone no was not updated yet or if we have not fetched the newest copy of
+              // the player...
+              // fetch the latest database saved entry.
+              PlayerDatabase.getInstance()
+                  .getPlayerByUsername(
+                      player.getUsername(),
+                      fetchedPlayer -> updatedPlayer.set(fetchedPlayer.getData()));
+              return false; // Try again.
+            });
   }
 }
