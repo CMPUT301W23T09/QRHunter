@@ -30,7 +30,7 @@ import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -63,7 +63,7 @@ public class TestQRCodeFragment extends BaseTest {
 
   /** Opens the QRCodeFragment, assuming we've scanned a QR code with hash "test-hash123" */
   @Before
-  public void setUp() throws ExecutionException, InterruptedException {
+  public void setUp() throws InterruptedException {
     player =
         new Player(
             UUID.randomUUID(), "johndoe42", "7801234567", "doe@ualberta.ca", new ArrayList<>());
@@ -163,43 +163,58 @@ public class TestQRCodeFragment extends BaseTest {
                 qrCodeFragment.getDialog().findViewById(R.id.deleteButton).getVisibility()
                     == View.VISIBLE);
 
-    // Wait until both database operations have completed before continuing with the UI test.
-    // If we successfully added the QR, then the qr and player should reference one another.
-    CountDownLatch dbTask = new CountDownLatch(2);
+    // Check that the database details are correct in that the player exists in the QR's scanned
+    // player fields
+    // and that the qr exists in the player's scanned qr field.
 
-    AtomicBoolean playerHasQRHash = new AtomicBoolean(false);
-    AtomicBoolean qrCodeHasPlayer = new AtomicBoolean(false);
-
-    PlayerDatabase.getInstance()
-        .getPlayerByDeviceId(
-            player.getDeviceId(),
-            task -> {
-              if (task.getException() == null) {
-                Player player = task.getData();
-                playerHasQRHash.set(player.getQRCodeHashes().contains(qrCode.getHash()));
+    AtomicReference<Player> updatedPlayer = new AtomicReference<>();
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              // If we have already fetched the player, check that the QRCode is not within the
+              // Player.
+              Player databasePlayer = updatedPlayer.get();
+              if (databasePlayer != null
+                  && databasePlayer.getQRCodeHashes().contains(qrCode.getHash())) {
+                return true; // Player was correctly updated!
               }
-              dbTask.countDown();
+
+              // If the phone no was not updated yet or if we have not fetched the newest copy of
+              // the player
+              // then fetch the latest database saved entry.
+              PlayerDatabase.getInstance()
+                  .getPlayerByUsername(
+                      player.getUsername(),
+                      fetchedPlayer -> updatedPlayer.set(fetchedPlayer.getData()));
+              return false; // Try again.
             });
-    QRCodeDatabase.getInstance()
-        .getQRCodeByHash(
-            qrCode.getHash(),
-            task -> {
-              if (task.getException() == null) {
-                QRCode retrievedQRCode = task.getData();
-                qrCodeHasPlayer.set(retrievedQRCode.getPlayers().contains(player.getDocumentId()));
+
+    AtomicReference<QRCode> updatedQR = new AtomicReference<>();
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              // If we have already fetched the QRCode, check that the Player is not within the
+              // QRCode.
+              QRCode databaseQR = updatedQR.get();
+              if (databaseQR != null && databaseQR.getPlayers().contains(player.getDocumentId())) {
+                return true; // Player was correctly updated!
               }
-              dbTask.countDown();
+
+              // If the QRCode was not updated yet or if we have not fetched the newest copy of the
+              // QRCode
+              // then fetch the latest database saved entry.
+              QRCodeDatabase.getInstance()
+                  .getQRCodeByHash(
+                      qrCode.getHash(), fetchedQR -> updatedQR.set(fetchedQR.getData()));
+              return false; // Try again.
             });
-
-    dbTask.await();
-
-    assertTrue("Player object does not have QR code hash.", playerHasQRHash.get());
-    assertTrue("QRCode does not have player document id.", qrCodeHasPlayer.get());
   }
 
   /** Test to see that QRCodes are successfully removed from the player account */
   @Test
-  public void testDeleteQRCode() throws Exception {
+  public void testDeleteQRCode() {
     // Add the QRCode first
     onView(withId(R.id.addButton)).inRoot(isDialog()).perform(click());
     await()
@@ -218,38 +233,52 @@ public class TestQRCodeFragment extends BaseTest {
                 qrCodeFragment.getDialog().findViewById(R.id.addButton).getVisibility()
                     == View.VISIBLE);
 
-    // Wait until both database operations have completed before continuing with the UI test.
-    // If we successfully removed the QR, then the qr and player should no longer reference one
-    // another.
-    CountDownLatch dbTask = new CountDownLatch(2);
+    // Check that the database details are correct in that the player does not exist in the qr's
+    // scanned player fields
+    // and that the qr does not exist in the player's scanned qr field.
 
-    AtomicBoolean playerDoesNotHaveQRHash = new AtomicBoolean(false);
-    AtomicBoolean qrCodeDoesNotHavePlayer = new AtomicBoolean(false);
-
-    PlayerDatabase.getInstance()
-        .getPlayerByDeviceId(
-            player.getDeviceId(),
-            task -> {
-              if (task.getException() == null) {
-                Player player = task.getData();
-                playerDoesNotHaveQRHash.set(!player.getQRCodeHashes().contains(qrCode.getHash()));
+    AtomicReference<Player> updatedPlayer = new AtomicReference<>();
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              // If we have already fetched the player, check that the QRCode is not within the
+              // Player.
+              Player databasePlayer = updatedPlayer.get();
+              if (databasePlayer != null
+                  && !databasePlayer.getQRCodeHashes().contains(qrCode.getHash())) {
+                return true; // Player was correctly updated!
               }
-              dbTask.countDown();
-            });
-    QRCodeDatabase.getInstance()
-        .getQRCodeByHash(
-            qrCode.getHash(),
-            task -> {
-              if (task.getException() == null) {
-                QRCode retrievedQRCode = task.getData();
-                qrCodeDoesNotHavePlayer.set(
-                    !retrievedQRCode.getPlayers().contains(player.getDocumentId()));
-              }
-              dbTask.countDown();
-            });
-    dbTask.await();
 
-    assertTrue("Player object still has QR code hash.", playerDoesNotHaveQRHash.get());
-    assertTrue("QRCode still has player document id.", qrCodeDoesNotHavePlayer.get());
+              // If the phone no was not updated yet or if we have not fetched the newest copy of
+              // the player
+              // then fetch the latest database saved entry.
+              PlayerDatabase.getInstance()
+                  .getPlayerByUsername(
+                      player.getUsername(),
+                      fetchedPlayer -> updatedPlayer.set(fetchedPlayer.getData()));
+              return false; // Try again.
+            });
+
+    AtomicReference<QRCode> updatedQR = new AtomicReference<>();
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              // If we have already fetched the QRCode, check that the Player is not within the
+              // QRCode.
+              QRCode databaseQR = updatedQR.get();
+              if (databaseQR != null && !databaseQR.getPlayers().contains(player.getDocumentId())) {
+                return true; // Player was correctly updated!
+              }
+
+              // If the QRCode was not updated yet or if we have not fetched the newest copy of the
+              // QRCode
+              // then fetch the latest database saved entry.
+              QRCodeDatabase.getInstance()
+                  .getQRCodeByHash(
+                      qrCode.getHash(), fetchedQR -> updatedQR.set(fetchedQR.getData()));
+              return false; // Try again.
+            });
   }
 }

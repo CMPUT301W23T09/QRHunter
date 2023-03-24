@@ -20,6 +20,7 @@ import static org.junit.Assert.assertTrue;
 
 import android.Manifest;
 import android.content.Intent;
+import android.widget.TextView;
 import androidx.test.espresso.DataInteraction;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -119,6 +120,15 @@ public class TestProfileFragment extends BaseTest {
             () ->
                 ((GameActivity) solo.getCurrentActivity()).getController().getBody()
                     instanceof ProfileFragment);
+
+    // Wait for the default profile to no longer exist.
+    await()
+        .atMost(10, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              TextView usernameView = (TextView) solo.getView(R.id.username);
+              return !usernameView.getText().toString().equals("");
+            });
   }
 
   /** Checks if the current fragment is correct */
@@ -297,13 +307,13 @@ public class TestProfileFragment extends BaseTest {
         .atMost(30, TimeUnit.SECONDS)
         .until(
             () -> {
-              // If we have already fetched the player, check if the phone no was updated.
+              // If we have already fetched the player, check if the email was updated.
               Player databasePlayer = updatedPlayer.get();
               if (databasePlayer != null && databasePlayer.getEmail().equals(newEmail)) {
                 return true; // Player was correctly updated!
               }
 
-              // If the phone no was not updated yet or if we have not fetched the newest copy of
+              // If the email was not updated yet or if we have not fetched the newest copy of
               // the player...
               // fetch the latest database saved entry.
               PlayerDatabase.getInstance()
