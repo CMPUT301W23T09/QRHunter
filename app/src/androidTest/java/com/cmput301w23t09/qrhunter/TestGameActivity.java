@@ -21,8 +21,6 @@ import org.junit.Test;
 
 public class TestGameActivity extends BaseTest {
 
-  private static UUID playerUUID;
-
   private Solo solo;
 
   @Rule
@@ -39,10 +37,13 @@ public class TestGameActivity extends BaseTest {
             .getSharedPreferences(DeviceUtils.DEVICE_UUID_FILE, 0);
     String existingUUIDField = preferences.getString(DeviceUtils.DEVICE_UUID_FILE_FIELD, null);
 
+    // If our UUID doesn't exist yet, create one.
     if (existingUUIDField == null) {
       existingUUIDField = UUID.randomUUID().toString();
     }
-    playerUUID = UUID.fromString(existingUUIDField);
+
+    // Overwrite UUID with fetched UUID
+    UUID playerUUID = UUID.fromString(existingUUIDField);
     preferences.edit().putString(DeviceUtils.DEVICE_UUID_FILE_FIELD, existingUUIDField).commit();
 
     // Insert a player with our device UUID

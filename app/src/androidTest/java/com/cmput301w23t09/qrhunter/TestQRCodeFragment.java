@@ -48,8 +48,7 @@ public class TestQRCodeFragment extends BaseTest {
   private Solo solo;
   private QRCodeFragment qrCodeFragment;
 
-  private UUID mockPlayerUUID;
-  private Player mockPlayer;
+  private Player player;
 
   @Rule
   public ActivityScenarioRule<GameActivity> activityScenarioRule =
@@ -65,14 +64,14 @@ public class TestQRCodeFragment extends BaseTest {
   /** Opens the QRCodeFragment, assuming we've scanned a QR code with hash "test-hash123" */
   @Before
   public void setUp() throws ExecutionException, InterruptedException {
-    mockPlayerUUID = UUID.randomUUID();
-    mockPlayer =
-        new Player(mockPlayerUUID, "johndoe42", "7801234567", "doe@ualberta.ca", new ArrayList<>());
+    player =
+        new Player(
+            UUID.randomUUID(), "johndoe42", "7801234567", "doe@ualberta.ca", new ArrayList<>());
 
     CountDownLatch dbTasks = new CountDownLatch(1);
     PlayerDatabase.getInstance()
         .add(
-            mockPlayer,
+            player,
             ignored -> {
               dbTasks.countDown();
             });
@@ -85,7 +84,7 @@ public class TestQRCodeFragment extends BaseTest {
     // Score: 32 PTS
     qrCode = new QRCode("8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d");
 
-    qrCodeFragment = QRCodeFragment.newInstance(qrCode, mockPlayer);
+    qrCodeFragment = QRCodeFragment.newInstance(qrCode, player);
     activityScenarioRule
         .getScenario()
         .onActivity(
@@ -137,7 +136,7 @@ public class TestQRCodeFragment extends BaseTest {
     // Check if player that snapped location photo is correct
     await()
         .atMost(30, TimeUnit.SECONDS)
-        .until(() -> qrCode.getPhotos().get(0).getPlayer().equals(mockPlayer));
+        .until(() -> qrCode.getPhotos().get(0).getPlayer().equals(player));
   }
 
   /** Test if after we take a location photo, we can remove it using the same button */
@@ -173,7 +172,7 @@ public class TestQRCodeFragment extends BaseTest {
 
     PlayerDatabase.getInstance()
         .getPlayerByDeviceId(
-            mockPlayer.getDeviceId(),
+            player.getDeviceId(),
             task -> {
               if (task.getException() == null) {
                 Player player = task.getData();
@@ -187,8 +186,7 @@ public class TestQRCodeFragment extends BaseTest {
             task -> {
               if (task.getException() == null) {
                 QRCode retrievedQRCode = task.getData();
-                qrCodeHasPlayer.set(
-                    retrievedQRCode.getPlayers().contains(mockPlayer.getDocumentId()));
+                qrCodeHasPlayer.set(retrievedQRCode.getPlayers().contains(player.getDocumentId()));
               }
               dbTask.countDown();
             });
@@ -230,7 +228,7 @@ public class TestQRCodeFragment extends BaseTest {
 
     PlayerDatabase.getInstance()
         .getPlayerByDeviceId(
-            mockPlayer.getDeviceId(),
+            player.getDeviceId(),
             task -> {
               if (task.getException() == null) {
                 Player player = task.getData();
@@ -245,7 +243,7 @@ public class TestQRCodeFragment extends BaseTest {
               if (task.getException() == null) {
                 QRCode retrievedQRCode = task.getData();
                 qrCodeDoesNotHavePlayer.set(
-                    !retrievedQRCode.getPlayers().contains(mockPlayer.getDocumentId()));
+                    !retrievedQRCode.getPlayers().contains(player.getDocumentId()));
               }
               dbTask.countDown();
             });
