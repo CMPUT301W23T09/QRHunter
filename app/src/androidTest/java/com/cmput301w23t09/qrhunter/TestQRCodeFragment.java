@@ -100,7 +100,8 @@ public class TestQRCodeFragment extends BaseTest {
 
   /** Checks if the QRCodeFragment displays the QRCode's name correctly */
   @Test
-  public void testCorrectDisplayInfo() {
+  public void testCorrectDisplayInfo() throws InterruptedException, ExecutionException {
+    // TODO: Currently, QRCodeFragment shows hash, CHANGE THIS TO NAME ONCE IMPLEMENTED
     onView(withId(R.id.qr_name)).inRoot(isDialog()).check(matches(withText("RobaqinectTiger✿")));
     onView(withId(R.id.qr_points)).inRoot(isDialog()).check(matches(withText("32 PTS")));
     ImageView qrVisualView = (ImageView) solo.getView(R.id.qr_code_visual);

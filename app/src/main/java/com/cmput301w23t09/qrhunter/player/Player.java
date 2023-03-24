@@ -2,7 +2,6 @@ package com.cmput301w23t09.qrhunter.player;
 
 import com.cmput301w23t09.qrhunter.util.ValidationUtils;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -167,15 +166,6 @@ public class Player implements Serializable {
     }
 
     this.email = email;
-  }
-
-  /**
-   * Retrieve all of the QRCodes this player has scanned.
-   *
-   * @return QR codes the player has scanned
-   */
-  public List<String> getQrCodeHashes() {
-    return new ArrayList<>(qrCodeHashes);
   }
 
   /**
