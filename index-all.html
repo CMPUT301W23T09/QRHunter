@@ -121,12 +121,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">This adds a player that has scanned the QR code</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeDatabase.html#addPlayerToQR(com.cmput301w23t09.qrhunter.player.Player,com.cmput301w23t09.qrhunter.qrcode.QRCode)">addPlayerToQR(Player, QRCode)</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeDatabase.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeDatabase</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeDatabase.html#addPlayerToQR(com.cmput301w23t09.qrhunter.player.Player,com.cmput301w23t09.qrhunter.qrcode.QRCode,com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">addPlayerToQR(Player, QRCode, DatabaseConsumer&lt;Void&gt;)</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeDatabase.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeDatabase</a></dt>
 <dd>
 <div class="block">Adds the QRCode to the player's account, as well as the Player to the QRCode's collection of
  players that have added it.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeDatabase.html#addQRCode(com.cmput301w23t09.qrhunter.qrcode.QRCode)">addQRCode(QRCode)</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeDatabase.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeDatabase</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeDatabase.html#addQRCode(com.cmput301w23t09.qrhunter.qrcode.QRCode,com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">addQRCode(QRCode, DatabaseConsumer&lt;Void&gt;)</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeDatabase.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeDatabase</a></dt>
 <dd>
 <div class="block">Adds a never-before-scanned QRCode to the database</div>
 </dd>
@@ -269,6 +269,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h2 class="title">D</h2>
 <dl>
+<dt><a href="com/cmput301w23t09/qrhunter/database/DatabaseConnection.html" title="class in com.cmput301w23t09.qrhunter.database"><span class="typeNameLink">DatabaseConnection</span></a> - Class in <a href="com/cmput301w23t09/qrhunter/database/package-summary.html">com.cmput301w23t09.qrhunter.database</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/database/DatabaseConnection.html#%3Cinit%3E()">DatabaseConnection()</a></span> - Constructor for class com.cmput301w23t09.qrhunter.database.<a href="com/cmput301w23t09/qrhunter/database/DatabaseConnection.html" title="class in com.cmput301w23t09.qrhunter.database">DatabaseConnection</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/cmput301w23t09/qrhunter/database/DatabaseConsumer.html" title="interface in com.cmput301w23t09.qrhunter.database"><span class="typeNameLink">DatabaseConsumer</span></a>&lt;<a href="com/cmput301w23t09/qrhunter/database/DatabaseConsumer.html" title="type parameter in DatabaseConsumer">T</a>&gt; - Interface in <a href="com/cmput301w23t09/qrhunter/database/package-summary.html">com.cmput301w23t09.qrhunter.database</a></dt>
 <dd>
 <div class="block">Utility interface as a shortcut to specifying a Consumer of a DatabaseQueryResult</div>
@@ -387,8 +391,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Retrieve the current body fragment.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/player/PlayerDatabase.html#getCollection()">getCollection()</a></span> - Method in class com.cmput301w23t09.qrhunter.player.<a href="com/cmput301w23t09/qrhunter/player/PlayerDatabase.html" title="class in com.cmput301w23t09.qrhunter.player">PlayerDatabase</a></dt>
-<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/database/DatabaseConnection.html#getCollection(java.lang.String)">getCollection(String)</a></span> - Method in class com.cmput301w23t09.qrhunter.database.<a href="com/cmput301w23t09/qrhunter/database/DatabaseConnection.html" title="class in com.cmput301w23t09.qrhunter.database">DatabaseConnection</a></dt>
+<dd>
+<div class="block">Retrieve a firebase collection prefixed by the collection prefix</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/database/DatabaseConnection.html#getCollectionPrefix()">getCollectionPrefix()</a></span> - Method in class com.cmput301w23t09.qrhunter.database.<a href="com/cmput301w23t09/qrhunter/database/DatabaseConnection.html" title="class in com.cmput301w23t09.qrhunter.database">DatabaseConnection</a></dt>
+<dd>
+<div class="block">All collections have a prefix describing their current environment.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/comment/Comment.html#getComment()">getComment()</a></span> - Method in class com.cmput301w23t09.qrhunter.comment.<a href="com/cmput301w23t09/qrhunter/comment/Comment.html" title="class in com.cmput301w23t09.qrhunter.comment">Comment</a></dt>
 <dd>
 <div class="block">This returns the comment attribute</div>
@@ -438,6 +448,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html#getHash()">getHash()</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a></dt>
 <dd>
 <div class="block">This returns the hash of the QR code</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/database/DatabaseConnection.html#getInstance()">getInstance()</a></span> - Static method in class com.cmput301w23t09.qrhunter.database.<a href="com/cmput301w23t09/qrhunter/database/DatabaseConnection.html" title="class in com.cmput301w23t09.qrhunter.database">DatabaseConnection</a></dt>
+<dd>
+<div class="block">Retrieve the instance of the DatabaseConnection</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/player/PlayerDatabase.html#getInstance()">getInstance()</a></span> - Static method in class com.cmput301w23t09.qrhunter.player.<a href="com/cmput301w23t09/qrhunter/player/PlayerDatabase.html" title="class in com.cmput301w23t09.qrhunter.player">PlayerDatabase</a></dt>
 <dd>
@@ -759,6 +773,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentContactInfoPromptBinding.html#linearLayout">linearLayout</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentContactInfoPromptBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentContactInfoPromptBinding</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/databinding/FragmentQrcodeBinding.html#loadingButton">loadingButton</a></span> - Variable in class com.cmput301w23t09.qrhunter.databinding.<a href="com/cmput301w23t09/qrhunter/databinding/FragmentQrcodeBinding.html" title="class in com.cmput301w23t09.qrhunter.databinding">FragmentQrcodeBinding</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/map/LocationHandler.html#LOCATION_PERMISSIONS">LOCATION_PERMISSIONS</a></span> - Static variable in class com.cmput301w23t09.qrhunter.map.<a href="com/cmput301w23t09/qrhunter/map/LocationHandler.html" title="class in com.cmput301w23t09.qrhunter.map">LocationHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/cmput301w23t09/qrhunter/map/LocationHandler.html" title="class in com.cmput301w23t09.qrhunter.map"><span class="typeNameLink">LocationHandler</span></a> - Class in <a href="com/cmput301w23t09/qrhunter/map/package-summary.html">com.cmput301w23t09.qrhunter.map</a></dt>
@@ -808,6 +824,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/map/MapFragment.html#%3Cinit%3E(com.cmput301w23t09.qrhunter.GameController)">MapFragment(GameController)</a></span> - Constructor for class com.cmput301w23t09.qrhunter.map.<a href="com/cmput301w23t09/qrhunter/map/MapFragment.html" title="class in com.cmput301w23t09.qrhunter.map">MapFragment</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/database/DatabaseConnection.html#mockInstance(com.cmput301w23t09.qrhunter.database.DatabaseConnection)">mockInstance(DatabaseConnection)</a></span> - Static method in class com.cmput301w23t09.qrhunter.database.<a href="com/cmput301w23t09/qrhunter/database/DatabaseConnection.html" title="class in com.cmput301w23t09.qrhunter.database">DatabaseConnection</a></dt>
+<dd>
+<div class="block">Update the instance of the database connection</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/player/PlayerDatabase.html#mockInstance(com.cmput301w23t09.qrhunter.player.PlayerDatabase)">mockInstance(PlayerDatabase)</a></span> - Static method in class com.cmput301w23t09.qrhunter.player.<a href="com/cmput301w23t09/qrhunter/player/PlayerDatabase.html" title="class in com.cmput301w23t09.qrhunter.player">PlayerDatabase</a></dt>
 <dd>
 <div class="block">Sets instance to a mocked PlayerDatabase for testing purposes.</div>
@@ -1038,7 +1058,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h2 class="title">R</h2>
 <dl>
-<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeDatabase.html#removeQRCodeFromPlayer(com.cmput301w23t09.qrhunter.player.Player,com.cmput301w23t09.qrhunter.qrcode.QRCode)">removeQRCodeFromPlayer(Player, QRCode)</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeDatabase.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeDatabase</a></dt>
+<dt><span class="memberNameLink"><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeDatabase.html#removeQRCodeFromPlayer(com.cmput301w23t09.qrhunter.player.Player,com.cmput301w23t09.qrhunter.qrcode.QRCode,com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">removeQRCodeFromPlayer(Player, QRCode, DatabaseConsumer&lt;Void&gt;)</a></span> - Method in class com.cmput301w23t09.qrhunter.qrcode.<a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeDatabase.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeDatabase</a></dt>
 <dd>
 <div class="block">Removes the QRCode to the player's account, as well as the Player from the QRCode's collection
  of players that have added it.</div>

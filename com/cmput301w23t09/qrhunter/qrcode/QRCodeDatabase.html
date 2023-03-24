@@ -158,8 +158,9 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addPlayerToQR(com.cmput301w23t09.qrhunter.player.Player,com.cmput301w23t09.qrhunter.qrcode.QRCode)">addPlayerToQR</a></span>&#8203;(<a href="../player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&nbsp;player,
-             <a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&nbsp;qrCode)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addPlayerToQR(com.cmput301w23t09.qrhunter.player.Player,com.cmput301w23t09.qrhunter.qrcode.QRCode,com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">addPlayerToQR</a></span>&#8203;(<a href="../player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&nbsp;player,
+             <a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&nbsp;qrCode,
+             <a href="../database/DatabaseConsumer.html" title="interface in com.cmput301w23t09.qrhunter.database">DatabaseConsumer</a>&lt;java.lang.Void&gt;&nbsp;task)</code></th>
 <td class="colLast">
 <div class="block">Adds the QRCode to the player's account, as well as the Player to the QRCode's collection of
  players that have added it.</div>
@@ -167,7 +168,8 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addQRCode(com.cmput301w23t09.qrhunter.qrcode.QRCode)">addQRCode</a></span>&#8203;(<a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&nbsp;qrCode)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addQRCode(com.cmput301w23t09.qrhunter.qrcode.QRCode,com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">addQRCode</a></span>&#8203;(<a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&nbsp;qrCode,
+         <a href="../database/DatabaseConsumer.html" title="interface in com.cmput301w23t09.qrhunter.database">DatabaseConsumer</a>&lt;java.lang.Void&gt;&nbsp;task)</code></th>
 <td class="colLast">
 <div class="block">Adds a never-before-scanned QRCode to the database</div>
 </td>
@@ -220,8 +222,9 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#removeQRCodeFromPlayer(com.cmput301w23t09.qrhunter.player.Player,com.cmput301w23t09.qrhunter.qrcode.QRCode)">removeQRCodeFromPlayer</a></span>&#8203;(<a href="../player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&nbsp;player,
-                      <a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&nbsp;qrCode)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#removeQRCodeFromPlayer(com.cmput301w23t09.qrhunter.player.Player,com.cmput301w23t09.qrhunter.qrcode.QRCode,com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">removeQRCodeFromPlayer</a></span>&#8203;(<a href="../player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&nbsp;player,
+                      <a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&nbsp;qrCode,
+                      <a href="../database/DatabaseConsumer.html" title="interface in com.cmput301w23t09.qrhunter.database">DatabaseConsumer</a>&lt;java.lang.Void&gt;&nbsp;task)</code></th>
 <td class="colLast">
 <div class="block">Removes the QRCode to the player's account, as well as the Player from the QRCode's collection
  of players that have added it.</div>
@@ -367,13 +370,14 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a id="addQRCode(com.cmput301w23t09.qrhunter.qrcode.QRCode)">
+<a id="addQRCode(com.cmput301w23t09.qrhunter.qrcode.QRCode,com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>addQRCode</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;addQRCode&#8203;(<a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&nbsp;qrCode)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;addQRCode&#8203;(<a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&nbsp;qrCode,
+                      <a href="../database/DatabaseConsumer.html" title="interface in com.cmput301w23t09.qrhunter.database">DatabaseConsumer</a>&lt;java.lang.Void&gt;&nbsp;task)</pre>
 <div class="block">Adds a never-before-scanned QRCode to the database</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -381,14 +385,15 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a id="addPlayerToQR(com.cmput301w23t09.qrhunter.player.Player,com.cmput301w23t09.qrhunter.qrcode.QRCode)">
+<a id="addPlayerToQR(com.cmput301w23t09.qrhunter.player.Player,com.cmput301w23t09.qrhunter.qrcode.QRCode,com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>addPlayerToQR</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;addPlayerToQR&#8203;(<a href="../player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&nbsp;player,
-                          <a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&nbsp;qrCode)</pre>
+                          <a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&nbsp;qrCode,
+                          <a href="../database/DatabaseConsumer.html" title="interface in com.cmput301w23t09.qrhunter.database">DatabaseConsumer</a>&lt;java.lang.Void&gt;&nbsp;task)</pre>
 <div class="block">Adds the QRCode to the player's account, as well as the Player to the QRCode's collection of
  players that have added it.</div>
 <dl>
@@ -398,14 +403,15 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a id="removeQRCodeFromPlayer(com.cmput301w23t09.qrhunter.player.Player,com.cmput301w23t09.qrhunter.qrcode.QRCode)">
+<a id="removeQRCodeFromPlayer(com.cmput301w23t09.qrhunter.player.Player,com.cmput301w23t09.qrhunter.qrcode.QRCode,com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>removeQRCodeFromPlayer</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;removeQRCodeFromPlayer&#8203;(<a href="../player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&nbsp;player,
-                                   <a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&nbsp;qrCode)</pre>
+                                   <a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&nbsp;qrCode,
+                                   <a href="../database/DatabaseConsumer.html" title="interface in com.cmput301w23t09.qrhunter.database">DatabaseConsumer</a>&lt;java.lang.Void&gt;&nbsp;task)</pre>
 <div class="block">Removes the QRCode to the player's account, as well as the Player from the QRCode's collection
  of players that have added it.</div>
 <dl>
