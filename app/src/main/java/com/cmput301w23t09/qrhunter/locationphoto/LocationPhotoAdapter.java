@@ -12,6 +12,7 @@ import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.google.firebase.storage.StorageReference;
 import com.smarteist.autoimageslider.SliderViewAdapter;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Displays a QRCode's location photos inside a slider view.
@@ -32,16 +33,23 @@ public class LocationPhotoAdapter
     this.ctx = ctx;
     this.qrCode = qrCode;
     locationPhotoDatabase = LocationPhotoDatabase.getInstance();
-    renewLocationPhotos();
+    renewLocationPhotos(unused -> {});
   }
 
   /** Fetches all location photos for the QRCode and updates the slider view */
-  public void renewLocationPhotos() {
+
+  /**
+   * Fetchs all location photos for the QRCode and updates the slider view
+   *
+   * @param callback A callback function to run after all photos have been fetched
+   */
+  public void renewLocationPhotos(Consumer<List<StorageReference>> callback) {
     locationPhotoDatabase.getLocationPhotos(
         qrCode,
         (refs) -> {
           locationPhotosRefs = refs;
           notifyDataSetChanged();
+          callback.accept(refs);
         });
   }
 

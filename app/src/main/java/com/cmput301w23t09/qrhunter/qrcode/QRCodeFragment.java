@@ -188,7 +188,11 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
                 locationPhotoAdapter.getPlayerLocationPhoto(activePlayer));
           } else takeLocationPhotoBtn.setText(R.string.take_location_photo);
         });
-    locationPhotoAdapter.renewLocationPhotos();
+    locationPhotoAdapter.renewLocationPhotos(
+        photos -> {
+          if (photos.size() == 0) locationPhotoSlider.setVisibility(View.GONE);
+          else locationPhotoSlider.setVisibility(View.VISIBLE);
+        });
   }
 
   /**
