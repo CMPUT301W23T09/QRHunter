@@ -78,8 +78,10 @@ public class LocationPhotoDatabase {
    */
   public void uploadPhoto(QRCode qrCode, LocationPhoto locationPhoto, Consumer<Boolean> callback) {
     ByteArrayOutputStream output = new ByteArrayOutputStream();
-    // Use 50 JPEG quality to keep image sizes low (US 09.01.01)
-    locationPhoto.getPhoto().compress(Bitmap.CompressFormat.JPEG, 50, output);
+    // Resize to a maximum of 960x1280, preserving aspect ratio
+    Bitmap resizedPhoto = resizeBitmap(locationPhoto.getPhoto(), 960, 1280);
+    // Use 25 JPEG quality to keep image sizes low (US 09.01.01)
+    resizedPhoto.compress(Bitmap.CompressFormat.JPEG, 25, output);
     byte[] data = output.toByteArray();
     StorageReference locationPhotoRef =
         getQRCodeRef(qrCode).child(locationPhoto.getPlayer().getDocumentId() + ".jpg");
@@ -136,5 +138,38 @@ public class LocationPhotoDatabase {
    */
   private StorageReference getQRCodeRef(QRCode qrCode) {
     return FirebaseStorage.getInstance().getReference().child(PREFIX + qrCode.getHash() + "/");
+  }
+
+  /**
+   * Resizes the image bitmap, preserving aspect ratio.
+   *
+   * <p>Source: https://stackoverflow.com/a/28367226 By: joaomgcd
+   * (https://stackoverflow.com/users/1002963/joaomgcd) (2015-02-06) Edited By: Abel Hamilton
+   * (https://stackoverflow.com/users/7396999/abel-hamilton) (2017-10-22) License: CC BY-SA
+   *
+   * @param image The bitmap to resize
+   * @param maxWidth The maximum width it can be resized to.
+   * @param maxHeight The maximum height it can be resized to.
+   * @return The resized bitmap
+   */
+  private Bitmap resizeBitmap(Bitmap image, int maxWidth, int maxHeight) {
+    if (maxHeight > 0 && maxWidth > 0) {
+      int width = image.getWidth();
+      int height = image.getHeight();
+      float ratioBitmap = (float) width / (float) height;
+      float ratioMax = (float) maxWidth / (float) maxHeight;
+
+      int finalWidth = maxWidth;
+      int finalHeight = maxHeight;
+      if (ratioMax > ratioBitmap) {
+        finalWidth = (int) ((float) maxHeight * ratioBitmap);
+      } else {
+        finalHeight = (int) ((float) maxWidth / ratioBitmap);
+      }
+      image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
+      return image;
+    } else {
+      return image;
+    }
   }
 }
