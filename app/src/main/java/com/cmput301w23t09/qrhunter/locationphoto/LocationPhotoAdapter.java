@@ -8,12 +8,8 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import com.smarteist.autoimageslider.SliderViewAdapter;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,28 +24,24 @@ public class LocationPhotoAdapter
 
   private Context ctx;
   private QRCode qrCode;
+  private LocationPhotoDatabase locationPhotoDatabase;
   private List<StorageReference> locationPhotosRefs;
 
   public LocationPhotoAdapter(Context ctx, QRCode qrCode) {
     this.ctx = ctx;
     this.qrCode = qrCode;
+    locationPhotoDatabase = new LocationPhotoDatabase();
     renewLocationPhotos();
   }
 
+  /** Fetches all location photos for the QRCode and updates the slider view */
   public void renewLocationPhotos() {
-    locationPhotosRefs = new ArrayList<>();
-    StorageReference qrCodeLocPhotos =
-        FirebaseStorage.getInstance().getReference().child(qrCode.getHash() + "/");
-    qrCodeLocPhotos
-        .listAll()
-        .addOnSuccessListener(
-            new OnSuccessListener<ListResult>() {
-              @Override
-              public void onSuccess(ListResult listResult) {
-                for (StorageReference photo : listResult.getItems()) locationPhotosRefs.add(photo);
-                notifyDataSetChanged();
-              }
-            });
+    locationPhotoDatabase.getLocationPhotos(
+        qrCode,
+        (refs) -> {
+          locationPhotosRefs = refs;
+          notifyDataSetChanged();
+        });
   }
 
   @Override
