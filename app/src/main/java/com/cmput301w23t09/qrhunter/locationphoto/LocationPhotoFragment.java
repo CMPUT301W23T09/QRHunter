@@ -2,7 +2,6 @@ package com.cmput301w23t09.qrhunter.locationphoto;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,15 +77,7 @@ public class LocationPhotoFragment extends DialogFragment {
     return builder.setView(view).create();
   }
 
-  /**
-   * Once the user dismisses the LocationPhotoFragment, update the QRCodeFragment to show the
-   * newly-taken location photo
-   *
-   * @param dialog the dialog that was dismissed will be passed into the method
-   */
-  @Override
-  public void onDismiss(@NonNull DialogInterface dialog) {
-    super.onDismiss(dialog);
-    qrCodeFragment.updateLocationPhoto();
+  public QRCodeFragment getQRCodeFragment() {
+    return qrCodeFragment;
   }
 }
