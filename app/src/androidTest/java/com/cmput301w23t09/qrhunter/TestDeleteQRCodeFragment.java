@@ -9,15 +9,12 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertTrue;
 
-import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.view.View;
 import android.widget.ImageView;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.GrantPermissionRule;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.DeleteQRCodeFragment;
@@ -34,7 +31,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-public class TestDeleteQRCodeFragment {
+public class TestDeleteQRCodeFragment extends BaseTest {
   private QRCode qrCode;
   private Solo solo;
   private DeleteQRCodeFragment qrCodeFragment;
@@ -44,13 +41,6 @@ public class TestDeleteQRCodeFragment {
   @Rule
   public ActivityScenarioRule<GameActivity> activityScenarioRule =
       new ActivityScenarioRule<>(GameActivity.class);
-
-  @Rule
-  public GrantPermissionRule permissionRule =
-      GrantPermissionRule.grant(
-          android.Manifest.permission.ACCESS_FINE_LOCATION,
-          android.Manifest.permission.ACCESS_COARSE_LOCATION,
-          Manifest.permission.CAMERA);
 
   /** Opens the QRCodeFragment, assuming we've scanned a QR code with hash "test-hash123" */
   @Before
@@ -74,6 +64,14 @@ public class TestDeleteQRCodeFragment {
     // Name: RobaqinectTiger✿
     // Score: 32 PTS
     qrCode = new QRCode("8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d");
+
+    QRCodeDatabase.getInstance()
+        .addPlayerToQR(
+            player,
+            qrCode,
+            ignored -> {
+              dbTasks.countDown();
+            });
 
     qrCodeFragment = DeleteQRCodeFragment.newInstance(qrCode, player);
     activityScenarioRule
@@ -104,11 +102,7 @@ public class TestDeleteQRCodeFragment {
   public void testDeleteQRCode() {
     // Delete the QRCode from the player's account
     onView(withId(R.id.deleteButton)).inRoot(isDialog()).perform(click());
-    await()
-        .atMost(30, TimeUnit.SECONDS)
-        .until(
-            () ->
-                !qrCodeFragment.getDialog().isShowing());
+    await().atMost(30, TimeUnit.SECONDS).until(() -> qrCodeFragment.getDialog() == null);
 
     // Check that the database details are correct in that the player does not exist in the qr's
     // scanned player fields

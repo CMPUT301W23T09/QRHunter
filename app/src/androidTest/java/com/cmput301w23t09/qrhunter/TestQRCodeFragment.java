@@ -8,14 +8,12 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertTrue;
 
-import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageView;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.GrantPermissionRule;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
@@ -46,13 +44,6 @@ public class TestQRCodeFragment extends BaseTest {
   @Rule
   public ActivityScenarioRule<GameActivity> activityScenarioRule =
       new ActivityScenarioRule<>(GameActivity.class);
-
-  @Rule
-  public GrantPermissionRule permissionRule =
-      GrantPermissionRule.grant(
-          Manifest.permission.ACCESS_FINE_LOCATION,
-          Manifest.permission.ACCESS_COARSE_LOCATION,
-          Manifest.permission.CAMERA);
 
   /** Opens the QRCodeFragment, assuming we've scanned a QR code with hash "test-hash123" */
   @Before

@@ -14,7 +14,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.view.View;
 import android.widget.ImageView;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -35,7 +34,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-public class TestAddQRCodeFragment {
+public class TestAddQRCodeFragment extends BaseTest {
   private QRCode qrCode;
   private Solo solo;
   private AddQRCodeFragment qrCodeFragment;
@@ -148,11 +147,7 @@ public class TestAddQRCodeFragment {
   public void testAddQRCode() throws Exception {
     // Click the add QR button and add the QR
     onView(withId(R.id.addButton)).inRoot(isDialog()).perform(click());
-    await()
-        .atMost(30, TimeUnit.SECONDS)
-        .until(
-            () ->
-                !qrCodeFragment.getDialog().isShowing());
+    await().atMost(30, TimeUnit.SECONDS).until(() -> qrCodeFragment.getDialog() == null);
 
     // Check that the database details are correct in that the player exists in the QR's scanned
     // player fields
