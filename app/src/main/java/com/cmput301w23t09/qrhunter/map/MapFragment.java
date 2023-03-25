@@ -168,7 +168,6 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     // create search view
     qrSearcher = view.findViewById(R.id.qr_searcher);
     searchController = new SearchQRController(qrSearcher, this);
-    searchController.setSuggestions();
     qrSearcher.setOnQueryTextListener(searchController.handleSearch());
 
     return view;

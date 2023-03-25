@@ -72,10 +72,6 @@ public class DeleteQRCodeFragment extends QRCodeFragment {
               // QR code hash is already added to the player's account
               // Thus, display delete button
               deleteButton.setVisibility(View.VISIBLE);
-            } else {
-              // QR code hash is not yet added to the player's account
-              // Thus, hide the delete button
-              deleteButton.setVisibility(View.GONE);
             }
           } else {
             Log.w("QRCodeFragment", "Error getting player by device ID.", results.getException());

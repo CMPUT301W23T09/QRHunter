@@ -5,7 +5,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.widget.SearchView;
 import android.widget.Toast;
-import androidx.fragment.app.Fragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.google.android.gms.maps.model.LatLng;
@@ -14,15 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchQRController {
-  private Fragment fragment;
+  private MapFragment fragment;
   private SearchView searchView;
 
-  public SearchQRController(SearchView searchView, Fragment fragment) {
+  public SearchQRController(SearchView searchView, MapFragment fragment) {
     this.searchView = searchView;
     this.fragment = fragment;
+    searchView.setQueryHint("Enter location");
   }
-
-  public void setSuggestions() {}
 
   public SearchView.OnQueryTextListener handleSearch() {
     return new SearchView.OnQueryTextListener() {
@@ -32,14 +30,17 @@ public class SearchQRController {
         // parse location input
         LatLng loc = parseInput(locationInput);
         if (loc == null) {
-          Toast.makeText(
+          Toast msg =
+              Toast.makeText(
                   fragment.getContext(),
-                  "Invalid format, enter a location name or location coordinates seperated by a comma",
-                  Toast.LENGTH_SHORT)
-              .show();
+                  "Invalid format, enter \"Here\", geolocation coordinates, or an address",
+                  Toast.LENGTH_LONG);
+
+          msg.show();
+        } else {
+          // query for nearby qr codes
+          showNearbyQRCodes(loc);
         }
-        // query for nearby qr codes
-        showNearbyQRCodes(loc);
         return true;
       }
 
@@ -50,28 +51,34 @@ public class SearchQRController {
     };
   }
 
-  public LatLng parseInput(String locationInput) {
+  private LatLng parseInput(String locationInput) {
     // check if input is blank
     if (locationInput.equals("")) {
       return null;
     }
 
+    // check if input is "here"
+    // ... to be implemented ... //
+
     // check if a location coordinate was given
     if (locationInput.matches(".*\\d.*")) {
+      String[] coords = {};
       if (locationInput.matches(".*,+.*")) {
-        // check input format
-        String[] coords = locationInput.split(",");
-        if (coords.length != 2) {
-          return null;
-        }
-        // get location coordinates
-        Double latitude = parseDoubleInput(coords[0]);
-        Double longitude = parseDoubleInput(coords[1]);
-        return new LatLng(latitude, longitude);
+        coords = locationInput.split(",");
+      } else if (locationInput.matches(".* +.*")) {
+        coords = locationInput.split(" ");
       }
+      // check input format
+      if (coords.length != 2) {
+        return null;
+      }
+      // get location coordinates
+      Double latitude = parseDoubleInput(coords[0]);
+      Double longitude = parseDoubleInput(coords[1]);
+      return new LatLng(latitude, longitude);
     }
 
-    // if a location name was given
+    // check if a location address was given
     Geocoder geocoder = new Geocoder(fragment.getContext());
     List<Address> addresses;
     // parse location name
@@ -81,11 +88,14 @@ public class SearchQRController {
       return null;
     }
     // get address coordinates
+    if (addresses.size() != 1) {
+      return null;
+    }
     Address address = addresses.get(0);
     return new LatLng(address.getLatitude(), address.getLongitude());
   }
 
-  public Double parseDoubleInput(String str) {
+  private Double parseDoubleInput(String str) {
     try {
       return Double.parseDouble(str);
     } catch (NumberFormatException e) {
@@ -98,7 +108,7 @@ public class SearchQRController {
    *
    * @param loc Location to find nearby qr codes from
    */
-  public void showNearbyQRCodes(LatLng loc) {
+  private void showNearbyQRCodes(LatLng loc) {
     ArrayList<QRCode> nearbyCodes = new ArrayList<>();
     QRCodeDatabase qrDatabase = QRCodeDatabase.getInstance();
     qrDatabase.getAllQRCodes(

@@ -12,6 +12,7 @@ import static org.junit.Assert.assertTrue;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.view.View;
 import android.widget.ImageView;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -98,7 +99,8 @@ public class TestDeleteQRCodeFragment extends BaseTest {
   /** Test to see that QRCodes are successfully removed from the player account */
   @Test
   public void testDeleteQRCode() {
-    // Delete the QRCode from the player's account
+    // Delete the QRCode from the player's
+    await().until(() -> solo.getView(R.id.deleteButton).getVisibility() == View.VISIBLE);
     onView(withId(R.id.deleteButton)).inRoot(isDialog()).perform(click());
     await().atMost(30, TimeUnit.SECONDS).until(() -> qrCodeFragment.getDialog() == null);
 
