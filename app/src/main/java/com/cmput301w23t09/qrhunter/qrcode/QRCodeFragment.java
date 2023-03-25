@@ -4,8 +4,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -21,6 +24,7 @@ import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoController;
 import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoFragment;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
 import java.io.Serializable;
 import java.util.concurrent.ExecutionException;
 
@@ -82,12 +86,25 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     return createAlertDialog(view);
   }
 
+  @Override
+  public void onResume() {
+    super.onResume();
+
+    // Adjust QRFragment window size to match content.
+    Window window = getDialog().getWindow();
+    window.setLayout(
+        WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+    window.setGravity(Gravity.CENTER);
+  }
+
   /**
    * Binds the UI components with the attributes of the QRCode
    *
    * @param view The view that displays fragment_qrcode.xml
    */
   private void setupViews(View view) throws ExecutionException, InterruptedException {
+    setUpTab(view);
+
     locationPhoto = view.findViewById(R.id.location_photo);
     locationCheckbox = view.findViewById(R.id.location_request_box);
 
@@ -141,6 +158,17 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
           addButton.setVisibility(View.VISIBLE);
           deleteButton.setVisibility(View.GONE);
         });
+  }
+
+  /**
+   * Sets up the tab related items and listeners for the qr fragment.
+   *
+   * @param view dialog
+   */
+  private void setUpTab(View view) {
+    TabLayout layout = view.findViewById(R.id.qr_nav);
+    layout.addTab(layout.newTab().setText(getText(R.string.players_who_scanned_tab_title)));
+    layout.addTab(layout.newTab().setText(getText(R.string.comments_tab_title)));
   }
 
   /**
