@@ -10,6 +10,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -143,24 +144,41 @@ public class QRCodeDatabase {
    *
    * @param callback callback to call with the qr codes.
    */
+//  public void getAllQRCodes(DatabaseConsumer<List<QRCode>> callback) {
+//    collection
+//        .get()
+//        .addOnCompleteListener(
+//            task -> {
+//              if (!task.isSuccessful()) {
+//                callback.accept(new DatabaseQueryResults<>(null, task.getException()));
+//                return;
+//              }
+//
+//              // Convert all snapshots to QRCodes.
+//              List<QRCode> qrCodes = new ArrayList<>();
+//              for (QueryDocumentSnapshot snapshot : task.getResult()) {
+//                qrCodes.add(snapshotToQRCode(snapshot));
+//              }
+//
+//              callback.accept(new DatabaseQueryResults<>(qrCodes));
+//            });
+//  }
   public void getAllQRCodes(DatabaseConsumer<List<QRCode>> callback) {
-    collection
-        .get()
-        .addOnCompleteListener(
-            task -> {
-              if (!task.isSuccessful()) {
-                callback.accept(new DatabaseQueryResults<>(null, task.getException()));
-                return;
-              }
-
-              // Convert all snapshots to QRCodes.
-              List<QRCode> qrCodes = new ArrayList<>();
-              for (QueryDocumentSnapshot snapshot : task.getResult()) {
-                qrCodes.add(snapshotToQRCode(snapshot));
-              }
-
-              callback.accept(new DatabaseQueryResults<>(qrCodes));
-            });
+      collection
+              .get()
+              .addOnCompleteListener(
+                      task -> {
+                          if (task.isSuccessful()) {
+                              QuerySnapshot querySnapshot = task.getResult();
+                              List<QRCode> qrCodes = new ArrayList<>();
+                              for (QueryDocumentSnapshot snapshot : querySnapshot) {
+                                  qrCodes.add(snapshotToQRCode(snapshot));
+                              }
+                              callback.accept(new DatabaseQueryResults<>(qrCodes));
+                          } else {
+                              callback.accept(new DatabaseQueryResults<>(null, task.getException()));
+                          }
+                      });
   }
 
   /**

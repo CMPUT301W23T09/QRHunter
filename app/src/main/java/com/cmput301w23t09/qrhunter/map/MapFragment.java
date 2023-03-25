@@ -14,6 +14,12 @@ import androidx.core.content.ContextCompat;
 import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
+import com.cmput301w23t09.qrhunter.database.DatabaseQueryResults;
+import com.cmput301w23t09.qrhunter.leaderboard.Leaderboard;
+import com.cmput301w23t09.qrhunter.leaderboard.LeaderboardEntry;
+import com.cmput301w23t09.qrhunter.qrcode.QRCode;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,6 +31,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.BiConsumer;
 
 public class MapFragment extends BaseFragment implements OnMapReadyCallback {
   private boolean locationPermissionGranted;
@@ -38,6 +49,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
   private static LatLng[] placeholderQR;
   private LatLng currentLocation;
+
+  private List<LatLng> latLngsList;
 
   public MapFragment(GameController gameController) {
     super(gameController);
@@ -142,6 +155,69 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     updateLocationUI();
   }
 
+//    private void getQRFromDB() {
+//      QRCodeDatabase.getInstance().getAllQRCodes(task -> {
+//        if (!task.isSuccessful()) {
+//          // do error handling here as database query failed
+//          return;
+//        }
+//
+//        // do stuff with ALL qr codes
+//        List<LatLng> latLngs = new ArrayList<>();
+//        if (task.isSuccessful()) {
+//          for (QRCode qrCode : task.getData()) {
+//            // Extract the latitude and longitude values for each QRCode.
+//            Location loc = qrCode.getLoc();
+//            double latitude = loc.getLatitude();
+//            double longitude = loc.getLongitude();
+//            // Create a new LatLng object and add it to the list.
+//            LatLng latLng = new LatLng(latitude, longitude);
+//            latLngs.add(latLng);
+//          }
+//        }
+//      });
+//    }
+  public void getQRFromDB(DatabaseConsumer<List<LatLng>> callback) {
+    QRCodeDatabase.getInstance().getAllQRCodes(task -> {
+      if (!task.isSuccessful()) {
+        // do error handling here as database query failed
+        return;
+      }
+
+      latLngsList = new ArrayList<>();
+      if (task.isSuccessful()) {
+        for (QRCode qrCode : task.getData()) {
+          Location loc = qrCode.getLoc();
+          double latitude = loc.getLatitude();
+          double longitude = loc.getLongitude();
+          LatLng latLng = new LatLng(latitude, longitude);
+          latLngsList.add(latLng);
+        }
+      }
+      callback.accept(new DatabaseQueryResults<>(latLngsList));
+    });
+  }
+
+//  public void getTopQRCodesLeaderboard(BiConsumer<Exception, Leaderboard> callback) {
+//    QRCodeDatabase.getInstance()
+//            .getAllQRCodes(
+//                    task -> {
+//                      if (!task.isSuccessful()) {
+//                        callback.accept(task.getException(), null);
+//                        return;
+//                      }
+//
+//                      List<LeaderboardEntry> entries = new ArrayList<>();
+//                      for (QRCode qrCode : task.getData()) {
+//                        entries.add(new LeaderboardEntry(qrCode.getName(), qrCode.getScore(), "points"));
+//                      }
+//
+//                      Collections.sort(entries);
+//                      callback.accept(null, new Leaderboard(entries));
+//                    });
+//  }
+
+
   /**
    * @param inflater The LayoutInflater object that can be used to inflate any views in the
    *     fragment,
@@ -189,18 +265,28 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
     // Get the current location of the device and set the position of the map.
     getDeviceLocation();
-    placeholderQR =
-        new LatLng[] {
-          new LatLng(53.52748572137864, -113.52965526862573), // Engineering Physics Club
-          new LatLng(53.52644615688437, -113.52453761405557), // CAB
-          new LatLng(53.526790555323736, -113.52716617858209), // CSC
-          new LatLng(53.52606986652603, -113.52166228586451), // Rutherford Library
-          new LatLng(53.523182298052724, -113.52719701274522), // Butterdome
-          new LatLng(53.520845993958204, -113.523585870797) // Ualberta hospital
-        };
+    //loop through arraylist
+    getQRFromDB(latLngList -> {
+      for (LatLng latLng : latLngsList) {
+        // add a marker for each LatLng on the map
+        map.addMarker(new MarkerOptions().position(latLng));
+      }
+    });
 
-    for (LatLng location : placeholderQR) {
-      map.addMarker(new MarkerOptions().position(location));
+
+
+
+//    placeholderQR =
+//        new LatLng[] {
+//          new LatLng(53.52748572137864, -113.52965526862573), // Engineering Physics Club
+//          new LatLng(53.52644615688437, -113.52453761405557), // CAB
+//          new LatLng(53.526790555323736, -113.52716617858209), // CSC
+//          new LatLng(53.52606986652603, -113.52166228586451), // Rutherford Library
+//          new LatLng(53.523182298052724, -113.52719701274522), // Butterdome
+//          new LatLng(53.520845993958204, -113.523585870797) // Ualberta hospital
+//        };
+//    //replace with listQR
+//    for (LatLng location : placeholderQR) {
+//      map.addMarker(new MarkerOptions().position(location));
     }
-  }
 }
