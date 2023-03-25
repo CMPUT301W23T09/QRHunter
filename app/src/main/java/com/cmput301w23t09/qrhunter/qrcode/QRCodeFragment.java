@@ -17,6 +17,7 @@ import androidx.fragment.app.DialogFragment;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoAdapter;
 import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoController;
+import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoDatabase;
 import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoFragment;
 import com.cmput301w23t09.qrhunter.map.LocationHandler;
 import com.cmput301w23t09.qrhunter.player.Player;
@@ -49,6 +50,10 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
 
   private LocationPhotoFragment locationPhotoFragment;
   private LocationPhotoController locationPhotoController;
+  private LocationPhotoDatabase locationPhotoDatabase;
+  private SliderView locationPhotoSlider;
+  private LocationPhotoAdapter locationPhotoAdapter;
+
   private Player activePlayer;
 
   private FloatingActionButton addButton;
@@ -81,6 +86,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     locationHandler = new LocationHandler(this);
 
     locationPhotoFragment = LocationPhotoFragment.newInstance(qrCode, this, activePlayer);
+    locationPhotoDatabase = LocationPhotoDatabase.getInstance();
     locationPhotoController =
         new LocationPhotoController(locationPhotoFragment, qrCode, activePlayer);
     qrCodeDatabase = QRCodeDatabase.getInstance();
@@ -110,20 +116,28 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     ImageView qrCodeVisual = view.findViewById(R.id.qr_code_visual);
     qrCodeVisual.setImageBitmap(qrCode.getVisualRepresentation());
 
-    SliderView locationPhotoSlider = view.findViewById(R.id.location_photos);
-    LocationPhotoAdapter locationPhotoAdapter = new LocationPhotoAdapter(this.getContext(), qrCode);
+    locationPhotoSlider = view.findViewById(R.id.location_photos);
+    locationPhotoAdapter = new LocationPhotoAdapter(this.getContext(), qrCode);
     locationPhotoSlider.setSliderAdapter(locationPhotoAdapter, false);
 
     takeLocationPhotoBtn = view.findViewById(R.id.take_location_photo_btn);
     takeLocationPhotoBtn.setOnClickListener(
         v -> {
-          /*
-          if (locationPhotoController.getUserLocationPhoto() != null) {
-            locationPhotoFragment.deletePhoto();
-            updateLocationPhoto();
-          } else {
-            locationPhotoFragment.show(getParentFragmentManager(), "Take Location Photo");
-          }*/
+          locationPhotoDatabase.playerHasLocationPhoto(
+              qrCode,
+              activePlayer,
+              (hasPhoto) -> {
+                if (hasPhoto) {
+                  locationPhotoDatabase.deletePhoto(
+                      qrCode,
+                      activePlayer,
+                      isSuccessful -> {
+                        if (isSuccessful) updateLocationPhoto();
+                      });
+                } else {
+                  locationPhotoFragment.show(getParentFragmentManager(), "Take Location Photo");
+                }
+              });
         });
     locationCheckbox.setOnCheckedChangeListener(
         (buttonView, isChecked) -> {
@@ -164,13 +178,17 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
    * @see LocationPhotoController
    */
   public void updateLocationPhoto() {
-    /*
-    if (locationPhotoController.getUserLocationPhoto() != null) {
-      takeLocationPhotoBtn.setText(R.string.remove_location_photo);
-    } else {
-      takeLocationPhotoBtn.setText(R.string.take_location_photo);
-    }
-    */
+    locationPhotoDatabase.playerHasLocationPhoto(
+        qrCode,
+        activePlayer,
+        (hasPhoto) -> {
+          if (hasPhoto) {
+            takeLocationPhotoBtn.setText(R.string.remove_location_photo);
+            locationPhotoSlider.setCurrentPagePosition(
+                locationPhotoAdapter.getPlayerLocationPhoto(activePlayer));
+          } else takeLocationPhotoBtn.setText(R.string.take_location_photo);
+        });
+    locationPhotoAdapter.renewLocationPhotos();
   }
 
   /**

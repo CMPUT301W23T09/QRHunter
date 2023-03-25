@@ -74,8 +74,9 @@ public class LocationPhotoDatabase {
    *
    * @param qrCode The QRCode associated with the location photo
    * @param locationPhoto The location photo to upload
+   * @param callback The callback function that handles result of upload
    */
-  public void uploadPhoto(QRCode qrCode, LocationPhoto locationPhoto) {
+  public void uploadPhoto(QRCode qrCode, LocationPhoto locationPhoto, Consumer<Boolean> callback) {
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     // Use 50 JPEG quality to keep image sizes low (US 09.01.01)
     locationPhoto.getPhoto().compress(Bitmap.CompressFormat.JPEG, 50, output);
@@ -83,10 +84,13 @@ public class LocationPhotoDatabase {
     StorageReference locationPhotoRef =
         getQRCodeRef(qrCode).child(locationPhoto.getPlayer().getDocumentId() + ".jpg");
     UploadTask uploadTask = locationPhotoRef.putBytes(data);
-    uploadTask.addOnFailureListener(
-        e -> {
-          Log.e(DEBUG_TAG, e.getMessage());
-        });
+    uploadTask
+        .addOnSuccessListener(unused -> callback.accept(true))
+        .addOnFailureListener(
+            e -> {
+              Log.e(DEBUG_TAG, e.getMessage());
+              callback.accept(false);
+            });
   }
 
   /**
@@ -94,14 +98,17 @@ public class LocationPhotoDatabase {
    *
    * @param qrCode The QRCode to delete location photo from
    * @param player The Player who'd like to delete their location photo
+   * @param callback The callback function that handles result of deletion
    */
-  public void deletePhoto(QRCode qrCode, Player player) {
+  public void deletePhoto(QRCode qrCode, Player player, Consumer<Boolean> callback) {
     StorageReference locationPhotoRef = getQRCodeRef(qrCode).child(player.getDocumentId() + ".jpg");
     locationPhotoRef
         .delete()
+        .addOnSuccessListener(unused -> callback.accept(true))
         .addOnFailureListener(
             e -> {
               Log.e(DEBUG_TAG, e.getMessage());
+              callback.accept(false);
             });
   }
   ;

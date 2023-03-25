@@ -89,8 +89,4 @@ public class LocationPhotoFragment extends DialogFragment {
     super.onDismiss(dialog);
     qrCodeFragment.updateLocationPhoto();
   }
-
-  public void deletePhoto() {
-    qrCodeFragment.getLocationPhotoController().deletePhoto();
-  }
 }

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.google.firebase.storage.StorageReference;
 import com.smarteist.autoimageslider.SliderViewAdapter;
@@ -30,7 +31,7 @@ public class LocationPhotoAdapter
   public LocationPhotoAdapter(Context ctx, QRCode qrCode) {
     this.ctx = ctx;
     this.qrCode = qrCode;
-    locationPhotoDatabase = new LocationPhotoDatabase();
+    locationPhotoDatabase = LocationPhotoDatabase.getInstance();
     renewLocationPhotos();
   }
 
@@ -42,6 +43,20 @@ public class LocationPhotoAdapter
           locationPhotosRefs = refs;
           notifyDataSetChanged();
         });
+  }
+
+  /**
+   * Gets the index of the player's location photo
+   *
+   * @param player The player we want to find the location photo of
+   * @return The index of the player's location photo
+   */
+  public int getPlayerLocationPhoto(Player player) {
+    if (locationPhotosRefs == null) return -1;
+    for (int i = 0; i < locationPhotosRefs.size(); i++) {
+      if (locationPhotosRefs.get(i).getName().equals(player.getDocumentId() + ".jpg")) return i;
+    }
+    return -1;
   }
 
   @Override
@@ -62,7 +77,7 @@ public class LocationPhotoAdapter
 
   @Override
   public int getCount() {
-    return locationPhotosRefs.size();
+    return locationPhotosRefs != null ? locationPhotosRefs.size() : 0;
   }
 
   class LocationPhotoHolder extends SliderViewAdapter.ViewHolder {

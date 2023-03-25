@@ -1,6 +1,5 @@
 package com.cmput301w23t09.qrhunter.locationphoto;
 
-import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -11,10 +10,7 @@ import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.util.concurrent.ExecutorService;
 
@@ -35,6 +31,7 @@ public class LocationPhotoController implements Serializable {
   private ExecutorService cameraExecutor;
   private Player activePlayer;
   private StorageReference storageRef;
+  private LocationPhotoDatabase locationPhotoDatabase;
 
   /**
    * Creates the LocationPhotoController
@@ -51,6 +48,7 @@ public class LocationPhotoController implements Serializable {
     this.activePlayer = activePlayer;
     this.imageCapture = null;
     this.storageRef = FirebaseStorage.getInstance().getReference();
+    this.locationPhotoDatabase = LocationPhotoDatabase.getInstance();
   }
 
   /**
@@ -76,9 +74,16 @@ public class LocationPhotoController implements Serializable {
             super.onCaptureSuccess(image);
 
             locationPhoto = new LocationPhoto(image, activePlayer);
-            uploadPhoto();
+            locationPhotoDatabase.uploadPhoto(
+                qrCode,
+                locationPhoto,
+                (isSuccessful) -> {
+                  if (!isSuccessful)
+                    Toast.makeText(
+                        fragment.getContext(), "Image failed to upload!", Toast.LENGTH_LONG);
+                  fragment.dismiss();
+                });
             image.close();
-            fragment.dismiss();
           }
 
           @Override
@@ -87,45 +92,5 @@ public class LocationPhotoController implements Serializable {
             Log.e("ERROR", exception.getMessage());
           }
         });
-  }
-
-  /**
-   * Uploads locationPhoto to Firebase Cloud Storage The format of the URL is
-   * `QRCodeHash/PlayerDocId`
-   *
-   * <p>Adapted from https://firebase.google.com/docs/storage/android/upload-files License: Apache
-   * 2.0
-   */
-  public void uploadPhoto() {
-    ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
-    // Use 25 JPEG quality to keep image sizes low (US 09.01.01)
-    locationPhoto.getPhoto().compress(Bitmap.CompressFormat.JPEG, 50, byteOutput);
-    byte[] data = byteOutput.toByteArray();
-    StorageReference locationPhotoRef =
-        storageRef.child(qrCode.getHash() + "/" + activePlayer.getDocumentId() + ".jpg");
-    UploadTask uploadTask = locationPhotoRef.putBytes(data);
-    uploadTask.addOnFailureListener(
-        e -> {
-          Toast.makeText(
-              fragment.getContext(), "Location image failed to upload!", Toast.LENGTH_LONG);
-          Log.e("LocationPhotoController", e.getMessage());
-        });
-  }
-
-  public void deletePhoto() {
-    StorageReference locationPhotoRef =
-        storageRef.child(qrCode.getHash() + "/" + activePlayer.getDocumentId() + ".jpg");
-    locationPhotoRef
-        .delete()
-        .addOnFailureListener(
-            e -> {
-              if (((StorageException) e).getErrorCode()
-                  != StorageException.ERROR_OBJECT_NOT_FOUND) {
-                Toast.makeText(
-                    fragment.getContext(), "Location image failed to delete!", Toast.LENGTH_LONG);
-                Log.e("LocationPhotoController", e.getMessage());
-              }
-            })
-        .addOnSuccessListener(unused -> locationPhoto = null);
   }
 }
