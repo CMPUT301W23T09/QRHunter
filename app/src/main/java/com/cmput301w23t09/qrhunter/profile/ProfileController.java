@@ -124,6 +124,9 @@ public class ProfileController implements DatabaseChangeListener {
                 return;
               }
               // otherwise get the qr code hashes of the current player
+              if (playerCollectionResults.getData() == null) {
+                return;
+              }
               List<String> codeHashes = playerCollectionResults.getData().getQRCodeHashes();
               // get the qr codes from the hashes
               QRCodeDatabase.getInstance()
@@ -245,7 +248,7 @@ public class ProfileController implements DatabaseChangeListener {
 
   /** This sets up the listener for real-time database changes */
   public void addUpdater() {
-    QRCodeDatabase.getInstance().addListener(this);
+    // QRCodeDatabase.getInstance().addListener(this);
   }
 
   /**

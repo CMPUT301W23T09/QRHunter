@@ -22,19 +22,32 @@ public class SearchQRController {
     this.fragment = fragment;
   }
 
-  public void handleSearch() {
-    String locationInput = searchView.getQuery().toString().trim();
-    // parse location input
-    LatLng loc = parseInput(locationInput);
-    if (loc == null) {
-      Toast.makeText(
-              fragment.getContext(),
-              "Invalid format, enter a location name or location coordinates seperated by a comma",
-              Toast.LENGTH_SHORT)
-          .show();
-    }
-    // query for nearby qr codes
-    showNearbyQRCodes(loc);
+  public void setSuggestions() {}
+
+  public SearchView.OnQueryTextListener handleSearch() {
+    return new SearchView.OnQueryTextListener() {
+      @Override
+      public boolean onQueryTextSubmit(String query) {
+        String locationInput = searchView.getQuery().toString().trim();
+        // parse location input
+        LatLng loc = parseInput(locationInput);
+        if (loc == null) {
+          Toast.makeText(
+                  fragment.getContext(),
+                  "Invalid format, enter a location name or location coordinates seperated by a comma",
+                  Toast.LENGTH_SHORT)
+              .show();
+        }
+        // query for nearby qr codes
+        showNearbyQRCodes(loc);
+        return true;
+      }
+
+      @Override
+      public boolean onQueryTextChange(String newText) {
+        return false;
+      }
+    };
   }
 
   public LatLng parseInput(String locationInput) {

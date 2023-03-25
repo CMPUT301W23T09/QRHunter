@@ -164,21 +164,12 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
 
     View view = inflater.inflate(R.layout.fragment_map, container, false);
+
+    // create search view
     qrSearcher = view.findViewById(R.id.qr_searcher);
     searchController = new SearchQRController(qrSearcher, this);
-    qrSearcher.setOnQueryTextListener(
-        new SearchView.OnQueryTextListener() {
-          @Override
-          public boolean onQueryTextSubmit(String query) {
-            searchController.handleSearch();
-            return true;
-          }
-
-          @Override
-          public boolean onQueryTextChange(String newText) {
-            return false;
-          }
-        });
+    searchController.setSuggestions();
+    qrSearcher.setOnQueryTextListener(searchController.handleSearch());
 
     return view;
   }

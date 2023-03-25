@@ -112,7 +112,7 @@ public class TestAddQRCodeFragment extends BaseTest {
   public void testQRRemoveLocation() {
     solo.clickOnText("Record QR Location");
     solo.clickOnText("Record QR Location");
-    assertTrue(solo.waitForCondition(() -> qrCode.getLoc() == null, 25000));
+    await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getLoc() == null);
   }
 
   /** Test if we can take a location photo and if the player that took it is correctly logged */

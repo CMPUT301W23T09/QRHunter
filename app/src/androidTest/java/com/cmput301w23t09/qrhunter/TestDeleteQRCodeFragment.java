@@ -35,7 +35,6 @@ public class TestDeleteQRCodeFragment extends BaseTest {
   private QRCode qrCode;
   private Solo solo;
   private DeleteQRCodeFragment qrCodeFragment;
-
   private Player player;
 
   @Rule
@@ -64,7 +63,6 @@ public class TestDeleteQRCodeFragment extends BaseTest {
     // Name: RobaqinectTiger✿
     // Score: 32 PTS
     qrCode = new QRCode("8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d");
-
     QRCodeDatabase.getInstance()
         .addPlayerToQR(
             player,
