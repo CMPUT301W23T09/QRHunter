@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
@@ -80,6 +81,9 @@ public class LocationPhotoAdapter
     Glide.with(viewHolder.itemView)
         .load(locationPhotoRef)
         .fitCenter()
+        // Disable caching so location photo is updated properly
+        .diskCacheStrategy(DiskCacheStrategy.NONE)
+        .skipMemoryCache(true)
         .into(viewHolder.locationPhotoView);
   }
 
