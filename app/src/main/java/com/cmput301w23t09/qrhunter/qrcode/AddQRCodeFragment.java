@@ -47,7 +47,8 @@ public class AddQRCodeFragment extends QRCodeFragment {
    */
   @Override
   protected void setUpButtons(View view) {
-    addButton.setVisibility(View.GONE);
+    addButton.setVisibility(View.VISIBLE);
+    deleteButton.setVisibility(View.GONE);
     loadingButton.setVisibility(View.GONE);
     locationHandler = new LocationHandler(this);
     takeLocationPhotoBtn.setOnClickListener(
@@ -162,10 +163,7 @@ public class AddQRCodeFragment extends QRCodeFragment {
     }
   }
 
-  /**
-   * Display the add (+) QRCode button if the player does not have the QRCode to their name, else
-   * display the remove (x) QRCode button if the player has it.
-   */
+  /** Display the add (+) QRCode button if the player does not have the QRCode to their name */
   private void updateAddButton() {
     qrCodeDatabase.playerHasQRCode(
         activePlayer,

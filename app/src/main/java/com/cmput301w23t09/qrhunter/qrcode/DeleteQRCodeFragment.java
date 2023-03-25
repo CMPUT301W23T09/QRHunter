@@ -32,9 +32,10 @@ public class DeleteQRCodeFragment extends QRCodeFragment {
 
   @Override
   protected void setUpButtons(View view) {
+    deleteButton.setVisibility(View.VISIBLE);
+    addButton.setVisibility(View.GONE);
     takeLocationPhotoBtn.setVisibility(View.GONE);
     locationCheckbox.setVisibility(View.GONE);
-    addButton.setVisibility(View.GONE);
     loadingButton.setVisibility(View.GONE);
     updateDeleteButton();
     deleteButton.setOnClickListener(this::onRemoveQRClicked);
@@ -60,10 +61,7 @@ public class DeleteQRCodeFragment extends QRCodeFragment {
         });
   }
 
-  /**
-   * Display the add (+) QRCode button if the player does not have the QRCode to their name, else
-   * display the remove (x) QRCode button if the player has it.
-   */
+  /** Display the remove (x) QRCode button if the player has the QR code to their name. */
   private void updateDeleteButton() {
     qrCodeDatabase.playerHasQRCode(
         activePlayer,
