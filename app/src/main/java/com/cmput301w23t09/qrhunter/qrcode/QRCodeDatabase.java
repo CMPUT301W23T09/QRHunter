@@ -2,19 +2,20 @@ package com.cmput301w23t09.qrhunter.qrcode;
 
 import android.location.Location;
 import android.util.Log;
+import com.cmput301w23t09.qrhunter.database.DatabaseConnection;
 import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
 import com.cmput301w23t09.qrhunter.database.DatabaseQueryResults;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 /**
@@ -33,7 +34,7 @@ public class QRCodeDatabase {
   private final CollectionReference collection;
 
   private QRCodeDatabase() {
-    collection = FirebaseFirestore.getInstance().collection(DATABASE_COLLECTION_NAME);
+    collection = DatabaseConnection.getInstance().getCollection(DATABASE_COLLECTION_NAME);
   }
 
   /**
@@ -220,7 +221,7 @@ public class QRCodeDatabase {
    *
    * @param qrCode The never-before-scanned QRCode to add
    */
-  public void addQRCode(QRCode qrCode) {
+  public void addQRCode(QRCode qrCode, DatabaseConsumer<Void> task) {
     getQRCodeByHash(
         qrCode.getHash(),
         existingQRCode -> {
@@ -232,11 +233,17 @@ public class QRCodeDatabase {
                 .addOnSuccessListener(
                     results -> {
                       Log.d(LOGGER_TAG, "QRCode added to database");
+                      task.accept(new DatabaseQueryResults<>(null));
                     })
                 .addOnFailureListener(
                     e -> {
                       Log.w(LOGGER_TAG, "Error writing document", e);
+                      task.accept(new DatabaseQueryResults<>(null, e));
                     });
+          } else {
+            task.accept(
+                new DatabaseQueryResults<>(
+                    null, new IllegalArgumentException("QRCode already exists in database.")));
           }
         });
   }
@@ -248,7 +255,7 @@ public class QRCodeDatabase {
    * @param player The player to add QRCode to.
    * @param qrCode The QRCode to be added.
    */
-  public void addPlayerToQR(Player player, QRCode qrCode) {
+  public void addPlayerToQR(Player player, QRCode qrCode, DatabaseConsumer<Void> task) {
     // Adds QRCode's hash to player's collection of QRCodes
     if (player.getQRCodeHashes() == null) { // Player hasn't scanned any codes yet
       player.setQRCodeHashes(new ArrayList<>());
@@ -258,32 +265,42 @@ public class QRCodeDatabase {
         .update(
             player,
             result -> {
-              if (result.isSuccessful()) {
-                Log.d(LOGGER_TAG, "QR code added to user's account.");
-              } else {
+              if (!result.isSuccessful()) {
                 Log.w(LOGGER_TAG, "Error adding QR code to account.", result.getException());
+                task.accept(new DatabaseQueryResults<>(null, result.getException()));
+                return;
               }
-            });
 
-    // Add Player's UUID to QRCode's collection of players that have scanned it.
-    getQRCodeByHash(
-        qrCode.getHash(),
-        result -> {
-          if (result.isSuccessful()) {
-            QRCode updatedQRCode = result.getData();
-            updatedQRCode.addPlayer(player.getDocumentId());
-            updatedQRCode.setLoc(qrCode.getLoc());
-            updateQRCode(
-                updatedQRCode,
-                updateResult -> {
-                  if (updateResult.isSuccessful())
-                    Log.d(LOGGER_TAG, "Player has been added to QRCode's players list");
-                  else
-                    Log.w(
-                        LOGGER_TAG, "Error adding player to QR code", updateResult.getException());
-                });
-          }
-        });
+              Log.d(LOGGER_TAG, "QR code added to user's account.");
+              // Add Player's UUID to QRCode's collection of players that have scanned it.
+              getQRCodeByHash(
+                  qrCode.getHash(),
+                  qrHashTask -> {
+                    if (!qrHashTask.isSuccessful()) {
+                      task.accept(new DatabaseQueryResults<>(null, qrHashTask.getException()));
+                      return;
+                    }
+
+                    QRCode updatedQRCode = qrHashTask.getData();
+                    updatedQRCode.addPlayer(player.getDocumentId());
+                    updatedQRCode.setLoc(qrCode.getLoc());
+                    updateQRCode(
+                        updatedQRCode,
+                        updateResult -> {
+                          if (!updateResult.isSuccessful()) {
+                            Log.w(
+                                LOGGER_TAG,
+                                "Error adding player to QR code",
+                                updateResult.getException());
+                            task.accept(
+                                new DatabaseQueryResults<>(null, updateResult.getException()));
+                            return;
+                          }
+                          Log.d(LOGGER_TAG, "Player has been added to QRCode's players list");
+                          task.accept(new DatabaseQueryResults<>(null));
+                        });
+                  });
+            });
   }
 
   /**
@@ -293,45 +310,66 @@ public class QRCodeDatabase {
    * @param player The player to remove QRCode from.
    * @param qrCode The QRCode to be removed
    */
-  public void removeQRCodeFromPlayer(Player player, QRCode qrCode) {
+  public void removeQRCodeFromPlayer(Player player, QRCode qrCode, DatabaseConsumer<Void> task) {
     // Adds QRCode's hash to player's collection of QRCodes
     if (player.getQRCodeHashes() == null) { // Player hasn't scanned any codes yet
       throw new IllegalArgumentException("Player has no QRCodes to remove!");
     }
-    if (!player.getQRCodeHashes().remove(qrCode.getHash()))
+    if (!player.getQRCodeHashes().remove(qrCode.getHash())) {
       throw new IllegalArgumentException("Player does not have QRCode!");
+    }
+
+    // Update player database to remove qr hash from their data
     PlayerDatabase.getInstance()
         .update(
             player,
             result -> {
-              if (result.isSuccessful()) {
-                Log.d(LOGGER_TAG, "QR code has been removed from user's account.");
-              } else {
+              if (!result.isSuccessful()) {
                 Log.w(LOGGER_TAG, "Error removing QR code from account.", result.getException());
+                task.accept(new DatabaseQueryResults<>(null, result.getException()));
               }
-            });
+              Log.d(LOGGER_TAG, "QR code has been removed from user's account.");
 
-    // Remove Player's UUID to QRCode's collection of players that have scanned it.
-    collection
-        .document(qrCode.getHash())
-        .get()
-        .addOnCompleteListener(
-            snapshot -> {
-              qrCode.setPlayers((ArrayList<String>) snapshot.getResult().getData().get("players"));
-              if (qrCode.getPlayers() == null)
-                throw new IllegalArgumentException("QRCode hasn't been scanned by anybody!");
-              if (!qrCode.getPlayers().remove(player.getDocumentId()))
-                throw new IllegalArgumentException("QRCode has not been added by the player!");
+              // Remove Player's UUID from QRCode's collection of players that have scanned it.
               collection
                   .document(qrCode.getHash())
-                  .update(qrCodeToDBValues(qrCode))
-                  .addOnSuccessListener(
-                      results -> {
-                        Log.d(LOGGER_TAG, "Player has been removed from QRCode's players list");
-                      })
-                  .addOnFailureListener(
-                      e -> {
-                        Log.w(LOGGER_TAG, "Error removing player from QR code.", e);
+                  .get()
+                  .addOnCompleteListener(
+                      snapshot -> {
+                        qrCode.setPlayers(
+                            (ArrayList<String>) snapshot.getResult().getData().get("players"));
+                        if (qrCode.getPlayers() == null) {
+                          task.accept(
+                              new DatabaseQueryResults<>(
+                                  null,
+                                  new IllegalArgumentException(
+                                      "QRCode hasn't been scanned by anybody!")));
+                          return;
+                        }
+                        if (!qrCode.getPlayers().remove(player.getDocumentId())) {
+                          task.accept(
+                              new DatabaseQueryResults<>(
+                                  null,
+                                  new IllegalArgumentException(
+                                      "QRCode has not been added by the player!")));
+                          return;
+                        }
+
+                        collection
+                            .document(qrCode.getHash())
+                            .update(qrCodeToDBValues(qrCode))
+                            .addOnSuccessListener(
+                                results -> {
+                                  Log.d(
+                                      LOGGER_TAG,
+                                      "Player has been removed from QRCode's players list");
+                                  task.accept(new DatabaseQueryResults<>(null));
+                                })
+                            .addOnFailureListener(
+                                e -> {
+                                  Log.w(LOGGER_TAG, "Error removing player from QR code.", e);
+                                  task.accept(new DatabaseQueryResults<>(null, e));
+                                });
                       });
             });
   }
@@ -354,7 +392,11 @@ public class QRCodeDatabase {
       location.setLongitude((double) snapshot.get("longitude"));
     }
     ArrayList<String> players = (ArrayList<String>) snapshot.get("players");
-    return new QRCode(hash, name, null, score, null, null, null, players);
+    try {
+      return new QRCode(hash, name, score, null, null, null, players);
+    } catch (ExecutionException | InterruptedException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   /**

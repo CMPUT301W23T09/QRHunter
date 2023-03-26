@@ -21,7 +21,7 @@ jobs:
         run: echo "MAPS_API_KEY=$MAPS_API_KEY" >> local.properties
       - uses: actions/setup-java@v3
         with:
-          distribution: "adopt"
+          distribution: "temurin"
           java-version: "11"
           cache: "gradle"
         name: Setup Java JDK 11

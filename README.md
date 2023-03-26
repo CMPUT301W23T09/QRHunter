@@ -11,4 +11,3 @@
 3. Setup autoformatter by running `git config core.hooksPath .git-hooks/hooks` when inside the repo.
    - This will automatically format your code according to [Google's Style Guide](https://google.github.io/styleguide/javaguide.html) just before you make a commit.
    - **Build will fail if style guide is not adhered to!**
-4. Under Gradle Scripts navigate to local.properties and paste the following: MAPS_API_KEY=AIzaSyDniTKVk4HDVsQVG-uDxQ-eFV4nCWeM-gU

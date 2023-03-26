@@ -58,6 +58,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
 
   private FloatingActionButton addButton;
   private FloatingActionButton deleteButton;
+  private FloatingActionButton loadingButton;
 
   private QRCodeDatabase qrCodeDatabase;
 
@@ -150,24 +151,85 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
 
     addButton = view.findViewById(R.id.addButton);
     deleteButton = view.findViewById(R.id.deleteButton);
+    loadingButton = view.findViewById(R.id.loadingButton);
 
     updateAddDeleteButton();
 
-    // implementing the add button
-    addButton.setOnClickListener(
-        v -> {
-          qrCodeDatabase.addQRCode(qrCode);
-          qrCodeDatabase.addPlayerToQR(activePlayer, qrCode);
-          addButton.setVisibility(View.GONE);
-          deleteButton.setVisibility(View.VISIBLE);
-        });
+    // implementing the add/delete button listeners
+    addButton.setOnClickListener(this::onAddQRClicked);
+    deleteButton.setOnClickListener(this::onRemoveQRClicked);
+  }
 
-    // implementing the delete button
-    deleteButton.setOnClickListener(
-        v -> {
-          qrCodeDatabase.removeQRCodeFromPlayer(activePlayer, qrCode);
+  /**
+   * Called when the add QR button is clicked
+   *
+   * @param view view
+   */
+  private void onAddQRClicked(View view) {
+    addButton.setVisibility(View.GONE);
+    loadingButton.setVisibility(View.VISIBLE);
+
+    // Add QR to database, when the QR has been added, allow the deletion of the QRCode.
+    // First check if the qr code exists.
+    qrCodeDatabase.getQRCodeByHash(
+        qrCode.getHash(),
+        qrCodeHash -> {
+          if (qrCodeHash.getException() != null) {
+            addButton.setVisibility(View.VISIBLE);
+            loadingButton.setVisibility(View.GONE);
+            return;
+          }
+
+          // If it doesn't exist, add the QR
+          if (qrCodeHash.getData() == null) {
+            qrCodeDatabase.addQRCode(
+                qrCode,
+                task -> {
+                  if (!task.isSuccessful()) {
+                    addButton.setVisibility(View.VISIBLE);
+                    loadingButton.setVisibility(View.GONE);
+                    return;
+                  }
+
+                  // Add the player to the QR
+                  qrCodeDatabase.addPlayerToQR(
+                      activePlayer,
+                      qrCode,
+                      ignored -> {
+                        deleteButton.setVisibility(View.VISIBLE);
+                        loadingButton.setVisibility(View.GONE);
+                      });
+                });
+
+          } else {
+            // QRCode already exists, add player to the QR
+            qrCodeDatabase.addPlayerToQR(
+                activePlayer,
+                qrCode,
+                ignored -> {
+                  deleteButton.setVisibility(View.VISIBLE);
+                  loadingButton.setVisibility(View.GONE);
+                });
+          }
+        });
+  }
+
+  /**
+   * Called when the remove QR button is clicked
+   *
+   * @param view view
+   */
+  private void onRemoveQRClicked(View view) {
+    deleteButton.setVisibility(View.GONE);
+    loadingButton.setVisibility(View.VISIBLE);
+
+    // Remove QR from player
+    qrCodeDatabase.removeQRCodeFromPlayer(
+        activePlayer,
+        qrCode,
+        ignored2 -> {
           addButton.setVisibility(View.VISIBLE);
-          deleteButton.setVisibility(View.GONE);
+          loadingButton.setVisibility(View.GONE);
         });
   }
 

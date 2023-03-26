@@ -21,7 +21,7 @@
     <string name="sort_spinner_desc">QR Code Sort Spinner</string>
     <string name="order_spinner_desc">QR Code Order Spinner</string>
     <string name="visual_representation_desc">Visual Representation of QR code</string>
-    <string name="total_points_txt">%d\nTotalPoints</string>
+    <string name="total_points_txt">%d\nTotal Points</string>
     <string name="total_codes_txt">%d\nCodes Scanned</string>
     <string name="top_code_txt">%d\nTop Code</string>
     <string name="search_for_player">Search For Player</string>

@@ -18,7 +18,6 @@ import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Controls QR Code scanning using Google's MLKit Library
@@ -80,12 +79,7 @@ public class ScannerController {
                               .toString();
 
                       if (fragment.getGameController().getPopup() == null) {
-                        QRCode qrCode = null;
-                        try {
-                          qrCode = new QRCode(currentHash);
-                        } catch (ExecutionException | InterruptedException e) {
-                          throw new RuntimeException(e);
-                        }
+                        QRCode qrCode = new QRCode(currentHash);
                         qrCodeFragment = QRCodeFragment.newInstance(qrCode, activePlayer);
                         fragment.getGameController().setPopup(qrCodeFragment);
                       }
