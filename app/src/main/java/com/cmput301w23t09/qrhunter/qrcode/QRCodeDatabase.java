@@ -398,7 +398,7 @@ public class QRCodeDatabase {
     }
     ArrayList<String> players = (ArrayList<String>) snapshot.get("players");
     try {
-      return new QRCode(hash, name, score, location, null, null, players);
+      return new QRCode(hash, name, score, location, new ArrayList<>(), new ArrayList<>(), players);
     } catch (ExecutionException | InterruptedException e) {
       throw new RuntimeException(e);
     }
