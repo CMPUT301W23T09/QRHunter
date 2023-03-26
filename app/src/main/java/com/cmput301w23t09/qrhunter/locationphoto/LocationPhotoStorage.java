@@ -2,38 +2,38 @@ package com.cmput301w23t09.qrhunter.locationphoto;
 
 import android.graphics.Bitmap;
 import android.util.Log;
-import androidx.annotation.NonNull;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class LocationPhotoDatabase {
-  private final String PREFIX;
-  private static final String DEBUG_TAG = "LocationPhotoDatabase";
+public class LocationPhotoStorage {
+  private static final String DEBUG_TAG = "LocationPhotoStorage";
 
-  private static LocationPhotoDatabase INSTANCE;
+  private static LocationPhotoStorage INSTANCE;
 
-  /**
-   * Creates a LocationPhotoDatabase without a prefix to the QRCode's folder Should be used in
-   * production
-   */
-  protected LocationPhotoDatabase() {
-    PREFIX = "";
+  public LocationPhotoStorage() {}
+
+  public String getPrefix() {
+    return "";
   }
 
-  public static LocationPhotoDatabase getInstance() {
+  /**
+   * @return Retrieves the LocationPhotoStorage
+   */
+  public static LocationPhotoStorage getInstance() {
     if (INSTANCE == null) {
-      INSTANCE = new LocationPhotoDatabase();
+      INSTANCE = new LocationPhotoStorage();
     }
     return INSTANCE;
+  }
+
+  public static void mockInstance(LocationPhotoStorage mockInstance) {
+    INSTANCE = mockInstance;
   }
 
   /**
@@ -47,20 +47,11 @@ public class LocationPhotoDatabase {
     getQRCodeRef(qrCode)
         .listAll()
         .addOnSuccessListener(
-            new OnSuccessListener<ListResult>() {
-              @Override
-              public void onSuccess(ListResult listResult) {
-                for (StorageReference photo : listResult.getItems()) locationPhotoRefs.add(photo);
-                callback.accept(locationPhotoRefs);
-              }
+            listResult -> {
+              for (StorageReference photo : listResult.getItems()) locationPhotoRefs.add(photo);
+              callback.accept(locationPhotoRefs);
             })
-        .addOnFailureListener(
-            new OnFailureListener() {
-              @Override
-              public void onFailure(@NonNull Exception e) {
-                callback.accept(null);
-              }
-            });
+        .addOnFailureListener(e -> callback.accept(null));
   }
 
   /**
@@ -136,8 +127,10 @@ public class LocationPhotoDatabase {
    * @param qrCode The QRCode to fetch location photos of
    * @return A StorageReference pointing to the folder of the QRCode's location photos
    */
-  private StorageReference getQRCodeRef(QRCode qrCode) {
-    return FirebaseStorage.getInstance().getReference().child(PREFIX + qrCode.getHash() + "/");
+  public StorageReference getQRCodeRef(QRCode qrCode) {
+    if (qrCode != null) // Sometimes qrCode is null when run in android test
+    return FirebaseStorage.getInstance().getReference().child(getPrefix() + qrCode.getHash() + "/");
+    return null;
   }
 
   /**

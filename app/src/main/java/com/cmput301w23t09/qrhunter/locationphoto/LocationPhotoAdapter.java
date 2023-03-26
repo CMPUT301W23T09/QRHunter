@@ -27,13 +27,13 @@ public class LocationPhotoAdapter
 
   private Context ctx;
   private QRCode qrCode;
-  private LocationPhotoDatabase locationPhotoDatabase;
+  private LocationPhotoStorage locationPhotoStorage;
   private List<StorageReference> locationPhotosRefs;
 
   public LocationPhotoAdapter(Context ctx, QRCode qrCode) {
     this.ctx = ctx;
     this.qrCode = qrCode;
-    locationPhotoDatabase = LocationPhotoDatabase.getInstance();
+    locationPhotoStorage = LocationPhotoStorage.getInstance();
     renewLocationPhotos(unused -> {});
   }
 
@@ -45,7 +45,7 @@ public class LocationPhotoAdapter
    * @param callback A callback function to run after all photos have been fetched
    */
   public void renewLocationPhotos(Consumer<List<StorageReference>> callback) {
-    locationPhotoDatabase.getLocationPhotos(
+    locationPhotoStorage.getLocationPhotos(
         qrCode,
         (refs) -> {
           locationPhotosRefs = refs;

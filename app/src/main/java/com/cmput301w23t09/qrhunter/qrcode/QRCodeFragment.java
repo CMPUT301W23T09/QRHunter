@@ -17,8 +17,8 @@ import androidx.fragment.app.DialogFragment;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoAdapter;
 import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoController;
-import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoDatabase;
 import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoFragment;
+import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoStorage;
 import com.cmput301w23t09.qrhunter.map.LocationHandler;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
@@ -50,7 +50,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
 
   private LocationPhotoFragment locationPhotoFragment;
   private LocationPhotoController locationPhotoController;
-  private LocationPhotoDatabase locationPhotoDatabase;
+  private LocationPhotoStorage locationPhotoStorage;
   private SliderView locationPhotoSlider;
   private LocationPhotoAdapter locationPhotoAdapter;
 
@@ -87,7 +87,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     locationHandler = new LocationHandler(this);
 
     locationPhotoFragment = LocationPhotoFragment.newInstance(qrCode, this, activePlayer);
-    locationPhotoDatabase = LocationPhotoDatabase.getInstance();
+    locationPhotoStorage = LocationPhotoStorage.getInstance();
     locationPhotoController =
         new LocationPhotoController(locationPhotoFragment, qrCode, activePlayer);
     qrCodeDatabase = QRCodeDatabase.getInstance();
@@ -124,12 +124,12 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     takeLocationPhotoBtn = view.findViewById(R.id.take_location_photo_btn);
     takeLocationPhotoBtn.setOnClickListener(
         v -> {
-          locationPhotoDatabase.playerHasLocationPhoto(
+          locationPhotoStorage.playerHasLocationPhoto(
               qrCode,
               activePlayer,
               (hasPhoto) -> {
                 if (hasPhoto) {
-                  locationPhotoDatabase.deletePhoto(
+                  locationPhotoStorage.deletePhoto(
                       qrCode,
                       activePlayer,
                       isSuccessful -> {
@@ -240,7 +240,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
    * @see LocationPhotoController
    */
   public void updateLocationPhoto() {
-    locationPhotoDatabase.playerHasLocationPhoto(
+    locationPhotoStorage.playerHasLocationPhoto(
         qrCode,
         activePlayer,
         (hasPhoto) -> {
@@ -325,5 +325,9 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
 
   public LocationPhotoController getLocationPhotoController() {
     return locationPhotoController;
+  }
+
+  public LocationPhotoAdapter getLocationPhotoAdapter() {
+    return locationPhotoAdapter;
   }
 }

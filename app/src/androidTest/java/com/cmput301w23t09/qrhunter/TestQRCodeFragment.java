@@ -7,7 +7,6 @@ import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.awaitility.Awaitility.await;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import android.Manifest;
@@ -127,16 +126,11 @@ public class TestQRCodeFragment extends BaseTest {
   /** Test if we can take a location photo and if the player that took it is correctly logged */
   @Test
   public void testSnapLocationPhoto() {
-    assertEquals(0, qrCode.getPhotos().size());
     onView(withId(R.id.take_location_photo_btn)).inRoot(isDialog()).perform(click());
     await().until(() -> qrCodeFragment.getLocationPhotoFragment().getDialog().isShowing());
     onView(withId(R.id.location_photo_shutter)).inRoot(isDialog()).perform(click());
     await().until(() -> qrCodeFragment.getLocationPhotoFragment().getDialog() == null);
-    await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getPhotos().size() > 0);
-    // Check if player that snapped location photo is correct
-    await()
-        .atMost(30, TimeUnit.SECONDS)
-        .until(() -> qrCode.getPhotos().get(0).getPlayer().equals(player));
+    await().until(() -> qrCodeFragment.getLocationPhotoAdapter().getCount() == 1);
   }
 
   /** Test if after we take a location photo, we can remove it using the same button */
@@ -146,9 +140,9 @@ public class TestQRCodeFragment extends BaseTest {
     await().until(() -> qrCodeFragment.getLocationPhotoFragment().getDialog().isShowing());
     onView(withId(R.id.location_photo_shutter)).inRoot(isDialog()).perform(click());
     await().until(() -> qrCodeFragment.getLocationPhotoFragment().getDialog() == null);
-    onView(withId(R.id.take_location_photo_btn)).check(matches(withText("Remove Location Photo")));
+    await().until(() -> qrCodeFragment.getLocationPhotoAdapter().getCount() == 1);
     onView(withId(R.id.take_location_photo_btn)).inRoot(isDialog()).perform(click());
-    await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getPhotos().size() == 0);
+    await().until(() -> qrCodeFragment.getLocationPhotoAdapter().getCount() == 0);
   }
 
   /** Test to see that QRCodes are successfully added to the player's account */

@@ -31,7 +31,7 @@ public class LocationPhotoController implements Serializable {
   private ExecutorService cameraExecutor;
   private Player activePlayer;
   private StorageReference storageRef;
-  private LocationPhotoDatabase locationPhotoDatabase;
+  private LocationPhotoStorage locationPhotoStorage;
 
   /**
    * Creates the LocationPhotoController
@@ -48,7 +48,7 @@ public class LocationPhotoController implements Serializable {
     this.activePlayer = activePlayer;
     this.imageCapture = null;
     this.storageRef = FirebaseStorage.getInstance().getReference();
-    this.locationPhotoDatabase = LocationPhotoDatabase.getInstance();
+    this.locationPhotoStorage = LocationPhotoStorage.getInstance();
   }
 
   /**
@@ -74,7 +74,7 @@ public class LocationPhotoController implements Serializable {
             super.onCaptureSuccess(image);
 
             locationPhoto = new LocationPhoto(image, activePlayer);
-            locationPhotoDatabase.uploadPhoto(
+            locationPhotoStorage.uploadPhoto(
                 qrCode,
                 locationPhoto,
                 (isSuccessful) -> {
