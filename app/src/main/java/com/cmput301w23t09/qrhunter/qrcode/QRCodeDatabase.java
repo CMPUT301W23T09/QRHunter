@@ -396,7 +396,7 @@ public class QRCodeDatabase {
       location.setLongitude((double) snapshot.get("longitude"));
     }
     ArrayList<String> players = (ArrayList<String>) snapshot.get("players");
-    return new QRCode(hash, name, score, location, null, null, players);
+    return new QRCode(hash, name, score, location, new ArrayList<>(), new ArrayList<>(), players);
   }
 
   /**

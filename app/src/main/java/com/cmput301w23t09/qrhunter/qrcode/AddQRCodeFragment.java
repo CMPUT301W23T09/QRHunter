@@ -173,13 +173,10 @@ public class AddQRCodeFragment extends QRCodeFragment {
             if (results.getData()) {
               // QR code hash is already added to the player's account
               addButton.setVisibility(View.GONE);
-              DeleteQRCodeFragment.newInstance(qrCode, activePlayer)
-                  .show(getParentFragmentManager(), "Switch to delete QR code fragment");
               this.dismiss();
             } else {
               // QR code hash is not yet added to the player's account
-              // Thus, display add button
-              addButton.setVisibility(View.VISIBLE);
+              // Thus, display add buttonAAAA    addButton.setVisibility(View.VISIBLE);
             }
           } else {
             Log.w("QRCodeFragment", "Error getting player by device ID.", results.getException());
