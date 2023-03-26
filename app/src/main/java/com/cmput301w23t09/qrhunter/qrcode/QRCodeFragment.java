@@ -62,7 +62,6 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   private List<QRCodePlayerScansAdapter.Entry> playersWhoScanned;
 
   private FloatingActionButton loadingButton;
-  private QRCodeDatabase qrCodeDatabase;
 
   /**
    * Creates a new QRCodeFragment to display a specific QR Code
@@ -168,47 +167,51 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
 
     // Add QR to database, when the QR has been added, allow the deletion of the QRCode.
     // First check if the qr code exists.
-    qrCodeDatabase.getQRCodeByHash(
-        qrCode.getHash(),
-        qrCodeHash -> {
-          if (qrCodeHash.getException() != null) {
-            addButton.setVisibility(View.VISIBLE);
-            loadingButton.setVisibility(View.GONE);
-            return;
-          }
+    QRCodeDatabase.getInstance()
+        .getQRCodeByHash(
+            qrCode.getHash(),
+            qrCodeHash -> {
+              if (qrCodeHash.getException() != null) {
+                addButton.setVisibility(View.VISIBLE);
+                loadingButton.setVisibility(View.GONE);
+                return;
+              }
 
-          // If it doesn't exist, add the QR
-          if (qrCodeHash.getData() == null) {
-            qrCodeDatabase.addQRCode(
-                qrCode,
-                task -> {
-                  if (!task.isSuccessful()) {
-                    addButton.setVisibility(View.VISIBLE);
-                    loadingButton.setVisibility(View.GONE);
-                    return;
-                  }
+              // If it doesn't exist, add the QR
+              if (qrCodeHash.getData() == null) {
+                QRCodeDatabase.getInstance()
+                    .addQRCode(
+                        qrCode,
+                        task -> {
+                          if (!task.isSuccessful()) {
+                            addButton.setVisibility(View.VISIBLE);
+                            loadingButton.setVisibility(View.GONE);
+                            return;
+                          }
 
-                  // Add the player to the QR
-                  qrCodeDatabase.addPlayerToQR(
-                      activePlayer,
-                      qrCode,
-                      ignored -> {
-                        deleteButton.setVisibility(View.VISIBLE);
-                        loadingButton.setVisibility(View.GONE);
-                      });
-                });
+                          // Add the player to the QR
+                          QRCodeDatabase.getInstance()
+                              .addPlayerToQR(
+                                  activePlayer,
+                                  qrCode,
+                                  ignored -> {
+                                    deleteButton.setVisibility(View.VISIBLE);
+                                    loadingButton.setVisibility(View.GONE);
+                                  });
+                        });
 
-          } else {
-            // QRCode already exists, add player to the QR
-            qrCodeDatabase.addPlayerToQR(
-                activePlayer,
-                qrCode,
-                ignored -> {
-                  deleteButton.setVisibility(View.VISIBLE);
-                  loadingButton.setVisibility(View.GONE);
-                });
-          }
-        });
+              } else {
+                // QRCode already exists, add player to the QR
+                QRCodeDatabase.getInstance()
+                    .addPlayerToQR(
+                        activePlayer,
+                        qrCode,
+                        ignored -> {
+                          deleteButton.setVisibility(View.VISIBLE);
+                          loadingButton.setVisibility(View.GONE);
+                        });
+              }
+            });
   }
 
   /**
@@ -221,13 +224,14 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     loadingButton.setVisibility(View.VISIBLE);
 
     // Remove QR from player
-    qrCodeDatabase.removeQRCodeFromPlayer(
-        activePlayer,
-        qrCode,
-        ignored2 -> {
-          addButton.setVisibility(View.VISIBLE);
-          loadingButton.setVisibility(View.GONE);
-        });
+    QRCodeDatabase.getInstance()
+        .removeQRCodeFromPlayer(
+            activePlayer,
+            qrCode,
+            ignored2 -> {
+              addButton.setVisibility(View.VISIBLE);
+              loadingButton.setVisibility(View.GONE);
+            });
   }
 
   /**
@@ -283,7 +287,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
 
                 QRCodeDatabase.getInstance()
                     .getQRCodeHashes(
-                        qrCode.getPlayers(),
+                        player.getQRCodeHashes(),
                         qrsTask -> {
                           if (!qrsTask.isSuccessful()) {
                             Toast.makeText(

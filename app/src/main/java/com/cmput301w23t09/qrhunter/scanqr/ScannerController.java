@@ -7,6 +7,7 @@ import androidx.camera.core.ImageProxy;
 import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraController;
 import com.google.android.gms.tasks.Task;
@@ -82,9 +83,24 @@ public class ScannerController {
                           && !pastHash.equals(currentHash)) {
                         pastHash = currentHash;
                         if (qrCodeFragment != null) qrCodeFragment.dismissNow();
-                        QRCode qrCode = new QRCode(pastHash);
-                        qrCodeFragment = QRCodeFragment.newInstance(qrCode, activePlayer);
-                        fragment.getGameController().setPopup(qrCodeFragment);
+
+                        // Fetch existing QR data or create new QR
+                        QRCodeDatabase.getInstance()
+                            .getQRCodeByHash(
+                                pastHash,
+                                task -> {
+                                  if (task.isSuccessful()) {
+                                    QRCode qrCode;
+                                    if (task.getData() != null) {
+                                      qrCode = task.getData();
+                                    } else {
+                                      qrCode = new QRCode(pastHash);
+                                    }
+                                    qrCodeFragment =
+                                        QRCodeFragment.newInstance(qrCode, activePlayer);
+                                    fragment.getGameController().setPopup(qrCodeFragment);
+                                  }
+                                });
                       }
                     }
                   })
