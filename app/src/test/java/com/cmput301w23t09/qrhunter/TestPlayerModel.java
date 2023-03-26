@@ -6,9 +6,7 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import android.telephony.PhoneNumberUtils;
-
 import com.cmput301w23t09.qrhunter.player.Player;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;

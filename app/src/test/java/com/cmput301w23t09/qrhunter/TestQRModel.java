@@ -1,18 +1,18 @@
 package com.cmput301w23t09.qrhunter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import com.cmput301w23t09.qrhunter.comment.Comment;
-import com.cmput301w23t09.qrhunter.photo.Photo;
-import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 
 import android.graphics.Bitmap;
 import android.location.Location;
+import com.cmput301w23t09.qrhunter.comment.Comment;
+import com.cmput301w23t09.qrhunter.photo.Photo;
+import com.cmput301w23t09.qrhunter.qrcode.QRCode;
+import java.util.ArrayList;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import java.util.ArrayList;
-import java.util.UUID;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestQRModel {
@@ -20,8 +20,7 @@ public class TestQRModel {
   private String mockHash = "8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d";
 
   // create a mock location
-  @Mock
-  private Location mockLoc = new Location("");
+  @Mock private Location mockLoc = new Location("");
 
   // create a mock list of player IDs
   private ArrayList<String> mockPlayers() {
