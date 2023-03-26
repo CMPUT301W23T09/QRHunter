@@ -139,25 +139,6 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
 
 
 
-    // implementing tabs for scanned by and comments
-    TabLayout tabLayout = view.findViewById(R.id.qr_nav);
-    tabLayout.addTab(tabLayout.newTab().setText("Tab 1"));
-    tabLayout.addTab(tabLayout.newTab().setText("Comments"));
-
-    tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-      @Override
-      public void onTabSelected(TabLayout.Tab tab) {
-        //Comment tab selected
-        if(tab.getPosition()==1){
-          commentSection();
-        }
-      }
-
-      @Override
-      public void onTabUnselected(TabLayout.Tab tab) {}
-      @Override
-      public void onTabReselected(TabLayout.Tab tab) {}
-    });
 
   }
 
@@ -315,16 +296,6 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   public LocationPhotoFragment getLocationPhotoFragment() {
     return locationPhotoFragment;
   }
-
-  public void commentSection(){
-
-
-
-  }
-
-
-
-
 
 
 
