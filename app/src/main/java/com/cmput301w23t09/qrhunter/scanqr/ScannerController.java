@@ -6,8 +6,8 @@ import android.util.Log;
 import androidx.camera.core.ImageProxy;
 import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.player.Player;
+import com.cmput301w23t09.qrhunter.qrcode.AddQRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
-import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraController;
 import com.google.android.gms.tasks.Task;
 import com.google.common.hash.Hashing;
@@ -31,7 +31,7 @@ public class ScannerController {
   private BarcodeScannerOptions options;
   private BarcodeScanner scanner;
   private BaseFragment fragment;
-  private QRCodeFragment qrCodeFragment = null;
+  private AddQRCodeFragment qrCodeFragment = null;
   private String pastHash = "";
   private Player activePlayer;
 
@@ -83,7 +83,7 @@ public class ScannerController {
                         pastHash = currentHash;
                         if (qrCodeFragment != null) qrCodeFragment.dismissNow();
                         QRCode qrCode = new QRCode(pastHash);
-                        qrCodeFragment = QRCodeFragment.newInstance(qrCode, activePlayer);
+                        qrCodeFragment = AddQRCodeFragment.newInstance(qrCode, activePlayer);
                         fragment.getGameController().setPopup(qrCodeFragment);
                       }
                     }
