@@ -21,6 +21,9 @@ import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoController;
 import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoFragment;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
+
+
 import java.io.Serializable;
 import java.util.concurrent.ExecutionException;
 
@@ -81,6 +84,9 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     }
     updateLocationPhoto();
     return createAlertDialog(view);
+
+
+
   }
 
   /**
@@ -130,6 +136,29 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     // implementing the add/delete button listeners
     addButton.setOnClickListener(this::onAddQRClicked);
     deleteButton.setOnClickListener(this::onRemoveQRClicked);
+
+
+
+    // implementing tabs for scanned by and comments
+    TabLayout tabLayout = view.findViewById(R.id.qr_nav);
+    tabLayout.addTab(tabLayout.newTab().setText("Tab 1"));
+    tabLayout.addTab(tabLayout.newTab().setText("Comments"));
+
+    tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+      @Override
+      public void onTabSelected(TabLayout.Tab tab) {
+        //Comment tab selected
+        if(tab.getPosition()==1){
+          commentSection();
+        }
+      }
+
+      @Override
+      public void onTabUnselected(TabLayout.Tab tab) {}
+      @Override
+      public void onTabReselected(TabLayout.Tab tab) {}
+    });
+
   }
 
   /**
@@ -286,4 +315,17 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   public LocationPhotoFragment getLocationPhotoFragment() {
     return locationPhotoFragment;
   }
+
+  public void commentSection(){
+
+
+
+  }
+
+
+
+
+
+
+
 }
