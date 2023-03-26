@@ -65,8 +65,7 @@ public class QRCode implements Serializable {
       Location loc,
       ArrayList<Photo> photos,
       ArrayList<Comment> comments,
-      ArrayList<String> players)
-      throws ExecutionException, InterruptedException {
+      ArrayList<String> players) {
     this.hash = hash;
     this.name = name;
     this.score = score;
@@ -135,15 +134,6 @@ public class QRCode implements Serializable {
    */
   public void setLoc(Location loc) {
     this.loc = loc;
-  }
-
-  /**
-   * This returns the photos taken of the QR code
-   *
-   * @return Return the photos taken of the QR code
-   */
-  public ArrayList<Photo> getPhotos() {
-    return photos;
   }
 
   /**
@@ -216,6 +206,15 @@ public class QRCode implements Serializable {
    */
   public void deleteComment(Comment comment) {
     this.comments.remove(comment);
+  }
+
+  /**
+   * This returns the photos taken of the QR code
+   *
+   * @return Return the photos taken of the QR code
+   */
+  public ArrayList<Photo> getPhotos() {
+    return photos;
   }
 
   /**

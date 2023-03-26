@@ -1,4 +1,4 @@
-package com.cmput301w23t09.qrhunter.player;
+package com.cmput301w23t09.qrhunter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -6,6 +6,9 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import android.telephony.PhoneNumberUtils;
+
+import com.cmput301w23t09.qrhunter.player.Player;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;

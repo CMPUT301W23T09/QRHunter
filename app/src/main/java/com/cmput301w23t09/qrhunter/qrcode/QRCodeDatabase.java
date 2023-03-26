@@ -397,11 +397,7 @@ public class QRCodeDatabase {
       location.setLongitude((double) snapshot.get("longitude"));
     }
     ArrayList<String> players = (ArrayList<String>) snapshot.get("players");
-    try {
-      return new QRCode(hash, name, score, location, null, null, players);
-    } catch (ExecutionException | InterruptedException e) {
-      throw new RuntimeException(e);
-    }
+    return new QRCode(hash, name, score, location, null, null, players);
   }
 
   /**
