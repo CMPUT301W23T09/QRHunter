@@ -62,7 +62,6 @@ public class ProfileFragment extends BaseFragment {
 
     controller = new ProfileController(this, getGameController(), deviceUUID);
     createProfile(view);
-    handleProfileHeaderEstimates(view);
     return view;
   }
 
@@ -89,6 +88,10 @@ public class ProfileFragment extends BaseFragment {
     controller.setUpUsername(username);
     controller.setUpQRList(qrCodeList, totalPoints, totalCodes, topCodeScore, sortOrderSpinner);
     qrCodeList.setOnItemClickListener(controller.handleQRSelect());
+    handleProfileHeaderEstimates(view);
+
+    // calculate qr code rankings
+    controller.calculateRankOfHighestQRScore();
   }
 
   /** Sets the profile elements to a blank/default state */
@@ -163,6 +166,8 @@ public class ProfileFragment extends BaseFragment {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            // TODO: If possible wait until calculation is complete before displaying the information
+            controller.calculateRankOfHighestQRScore();
             String rankingsMessage = controller.getFormattedQRPercentile();
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("Your Rankings");

@@ -337,15 +337,10 @@ public class ProfileController {
                 }
 
                 QRPercentileRank = ((topQRPosition - 1) / (float) totalNumQRCodes) * 100;
-
-
             });
-
-
   }
 
   public String getFormattedQRPercentile() {
-    calculateRankOfHighestQRScore();
     String formattedPercentile = String.format("%.2f", 100.0 - QRPercentileRank);
     String formattedMessage = String.format("Your highest scoring unique QR code is in the top %s%% in terms of points.", formattedPercentile);
     return formattedMessage;
