@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +27,7 @@ public class LeaderboardFragment extends BaseFragment {
 
   private String currentActiveTab;
   private Map<String, Leaderboard> cachedLeaderboards;
+  private SearchView playerSearchView;
 
   public LeaderboardFragment(GameController gameController) {
     super(gameController);
@@ -44,8 +46,10 @@ public class LeaderboardFragment extends BaseFragment {
     leaderboardEntries = new ArrayList<>();
     entryAdapter = new LeaderboardEntryAdapter(getContext(), leaderboardEntries);
     ((ListView) view.findViewById(R.id.leaderboard_list)).setAdapter(entryAdapter);
+    playerSearchView = view.findViewById(R.id.player_search);
 
     setupTabList(view);
+//    setUpPlayerSearch();
     return view;
   }
 
@@ -149,4 +153,19 @@ public class LeaderboardFragment extends BaseFragment {
   private void renderLeaderboard(Map<String, Leaderboard> leaderboardWithHeaders) {
     // TODO: when locations are implemented
   }
+
+//  private void setUpPlayerSearch() {
+//    playerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//      @Override
+//      public boolean onQueryTextSubmit(String query) {
+////        Toast.makeText(getContext(), query, Toast.LENGTH_SHORT).show();
+//        return true;
+//      }
+//
+//      @Override
+//      public boolean onQueryTextChange(String newText) {
+//        return false;
+//      }
+//    });
+//  }
 }
