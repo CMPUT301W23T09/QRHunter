@@ -199,9 +199,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
                                   .reduce(0, Integer::sum);
 
                           // Add an entry into our adapter with their score and player.
-                          for (int i = 0; i < 100; i++) {
-                            scansAdapter.add(new QRCodePlayerScansAdapter.Entry(player, score));
-                          }
+                          scansAdapter.add(new QRCodePlayerScansAdapter.Entry(player, score));
                         });
               });
     }
