@@ -2,7 +2,8 @@ package com.cmput301w23t09.qrhunter.leaderboard;
 
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 
-public class QRCodeLeaderboardEntry extends LeaderboardEntry<QRCode> {
+/** Represents the QR leaderboard entry this entry represents */
+public class QRCodeLeaderboardEntry extends LeaderboardEntry {
 
   private final QRCode qrCode;
 
@@ -18,6 +19,11 @@ public class QRCodeLeaderboardEntry extends LeaderboardEntry<QRCode> {
     this.qrCode = qrCode;
   }
 
+  /**
+   * Retrieve the QRCode for the entry this represents
+   *
+   * @return the qrcode
+   */
   public QRCode getQRCode() {
     return qrCode;
   }

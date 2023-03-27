@@ -2,8 +2,12 @@ package com.cmput301w23t09.qrhunter.leaderboard;
 
 import java.util.List;
 
-/** This class represents a leaderboard. */
-public class Leaderboard<T extends LeaderboardEntry<?>> {
+/**
+ * This class represents a leaderboard.
+ *
+ * @param <T> the leaderboard entry type this leaderboard will contain
+ */
+public class Leaderboard<T extends LeaderboardEntry> {
   /** All leaderboard entries within this leaderboard. */
   private final List<T> entries;
 

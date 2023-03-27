@@ -1,7 +1,7 @@
 package com.cmput301w23t09.qrhunter.leaderboard;
 
 /** Represents a leaderboard entry */
-public abstract class LeaderboardEntry<T> implements Comparable<LeaderboardEntry<T>> {
+public abstract class LeaderboardEntry implements Comparable<LeaderboardEntry> {
 
   /** Name to display for this leaderboard entry */
   private final String name;

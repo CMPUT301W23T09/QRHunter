@@ -23,7 +23,7 @@ public class LeaderboardFragment extends BaseFragment {
 
   private final LeaderboardController controller;
   private LeaderboardEntryAdapter entryAdapter;
-  private List<LeaderboardEntry<?>> leaderboardEntries;
+  private List<LeaderboardEntry> leaderboardEntries;
 
   private String currentActiveTab;
   private Map<String, Leaderboard<?>> cachedLeaderboards;
@@ -123,7 +123,7 @@ public class LeaderboardFragment extends BaseFragment {
         new AdapterView.OnItemClickListener() {
           @Override
           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            LeaderboardEntry<?> entry = leaderboardEntries.get(position);
+            LeaderboardEntry entry = leaderboardEntries.get(position);
 
             // What kind of entry is this?
             if (entry instanceof PlayerLeaderboardEntry) {
