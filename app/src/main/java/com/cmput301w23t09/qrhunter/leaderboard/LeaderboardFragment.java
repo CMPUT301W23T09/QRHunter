@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,6 +45,7 @@ public class LeaderboardFragment extends BaseFragment {
     leaderboardEntries = new ArrayList<>();
     entryAdapter = new LeaderboardEntryAdapter(getContext(), leaderboardEntries);
     ((ListView) view.findViewById(R.id.leaderboard_list)).setAdapter(entryAdapter);
+    playerSearchView = view.findViewById(R.id.player_search);
 
     setupTabList(view);
     return view;

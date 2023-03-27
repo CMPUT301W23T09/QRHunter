@@ -19,6 +19,7 @@ import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.util.DeviceUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 
 /** This is the fragment displaying the user's profile */
 public class ProfileFragment extends BaseFragment {
@@ -88,11 +89,11 @@ public class ProfileFragment extends BaseFragment {
     controller.setUpUsername(username);
     controller.setUpQRList(qrCodeList, totalPoints, totalCodes, topCodeScore, sortOrderSpinner);
     qrCodeList.setOnItemClickListener(controller.handleQRSelect());
-    handleProfileHeaderEstimates(view);
 
     // calculate qr code rankings
-    controller.calculateRankOfHighestQRScore();
+    handleProfileHeaderEstimates(view);
     controller.addUpdater();
+    controller.calculateRankOfHighestQRScore();
   }
 
   /** Sets the profile elements to a blank/default state */
@@ -168,14 +169,16 @@ public class ProfileFragment extends BaseFragment {
           @Override
           public void onClick(View v) {
             // TODO: If possible wait until calculation is complete before displaying the information
-            controller.calculateRankOfHighestQRScore();
-            String rankingsMessage = controller.getFormattedQRPercentile();
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setTitle("Your Rankings");
-            builder.setMessage(rankingsMessage);
-            builder.setPositiveButton("OK", null);
-            AlertDialog dialog = builder.create();
-            dialog.show();
+//            controller.calculateRankOfHighestQRScore();
+//            String rankingsMessage = controller.getFormattedQRPercentile();
+//            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+//            builder.setTitle("Your Rankings");
+//            builder.setMessage("Calculating rankings..."); // Set default message
+//            builder.setPositiveButton("OK", null);
+//            AlertDialog dialog = builder.create();
+//            dialog.show();
+
+              new CalculateRankingsTask(controller, getContext()).execute();
           }
         });
   }
