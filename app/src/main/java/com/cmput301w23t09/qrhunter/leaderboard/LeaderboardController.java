@@ -37,7 +37,7 @@ public class LeaderboardController {
                 // Fetch the QRCodes for each player and sum them up.
                 QRCodeDatabase.getInstance()
                     .getQRCodeHashes(
-                        player.getQrCodeHashes(),
+                        player.getQRCodeHashes(),
                         qrCodeHashesTask -> {
                           if (qrCodeHashesTask.isSuccessful()) {
                             long score =
@@ -85,7 +85,7 @@ public class LeaderboardController {
 
               List<LeaderboardEntry> entries = new ArrayList<>();
               for (Player player : task.getData()) {
-                long scans = player.getQrCodeHashes().size();
+                long scans = player.getQRCodeHashes().size();
                 entries.add(new LeaderboardEntry(player.getUsername(), scans, "codes"));
               }
 
