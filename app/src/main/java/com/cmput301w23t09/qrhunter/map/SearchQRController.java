@@ -1,7 +1,6 @@
 package com.cmput301w23t09.qrhunter.map;
 
-import static com.google.android.gms.tasks.Tasks.await;
-
+import android.annotation.SuppressLint;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -9,24 +8,26 @@ import android.widget.SearchView;
 import android.widget.Toast;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
+import com.google.android.gms.location.Priority;
 import com.google.android.gms.maps.model.LatLng;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class SearchQRController {
   private MapFragment fragment;
   private SearchView searchView;
 
+
   public SearchQRController(SearchView searchView, MapFragment fragment) {
     this.searchView = searchView;
     this.fragment = fragment;
-    searchView.setQueryHint("Enter location");
+    searchView.setQueryHint("Enter location here");
   }
 
   public SearchView.OnQueryTextListener handleSearch() {
     return new SearchView.OnQueryTextListener() {
+      @SuppressLint("MissingPermission")
       @Override
       public boolean onQueryTextSubmit(String query) {
         String locationInput = searchView.getQuery().toString().trim();
@@ -41,26 +42,29 @@ public class SearchQRController {
                   Toast.LENGTH_LONG).show();
           return true;
         }
-        // get location first if parseInput returns null
-        // code for once SearchQRController fuses with the MapController
-        // add an onFailureListener if available
-        // if (loc == null && locationPermissionsGranted()) {
-        //      fusedLocationClient
-        //          .getCurrentLocation(Priority.PRIORITY_BALANCED_POWER_ACCURACY, null)
-        //          .addOnSuccessListener(
-        //              fragment.getActivity(),
-        //              location -> {
-        //                if (location != null) {
-        //                  showNearbyQRCodes(LatLng(location.getLatitude(), location.getLongitude()));
-        //                } else {
-        //                  Toast.makeText(
-        //                  fragment.getContext(),
-        //                  "Could not query your current location",
-        //                  Toast.LENGTH_LONG).show();
-        //              });
-        //    }
-        // query for nearby qr codes (after fusion, put this in an else statement)
-        showNearbyQRCodes(loc);
+        // try to get location first if parseInput returns null
+        if (loc == null && fragment.getLocationPermissionGranted()) {
+          fragment.getFusedLocationProviderClient()
+                  .getCurrentLocation(Priority.PRIORITY_BALANCED_POWER_ACCURACY, null)
+                  .addOnSuccessListener(
+                          fragment.getActivity(),
+                          location -> {
+                            if (location != null) {
+                              showNearbyQRCodes(new LatLng(location.getLatitude(), location.getLongitude()));
+                            } else {
+                              Toast.makeText(
+                                      fragment.getContext(),
+                                      "Could not query your current location",
+                                      Toast.LENGTH_LONG).show();
+                            }
+                          });
+        } else if (loc == null && !fragment.getLocationPermissionGranted()) {
+          Toast.makeText(fragment.getContext(), "Location permission not granted", Toast.LENGTH_SHORT).show();
+        }
+        // otherwise get nearby qr codes directly
+        else {
+          showNearbyQRCodes(loc);
+        }
         return true;
       }
 

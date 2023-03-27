@@ -40,7 +40,6 @@
     <string name="contact_info_phone_no">Phone Number: %s</string>
     <string name="contact_info_email">Email: %s</string>
     <string name="contact_information">Contact Information</string>
-    <string name="search_hint">Enter Location Here</string>
     <string-array name="sort_options">
         <item>Points</item>
         <item>Date Taken</item>
