@@ -7,7 +7,7 @@ import java.util.UUID;
 public class OtherProfileFragment extends ProfileFragment {
 
   /** This is the UUID corresponding to the profile of this player */
-  private UUID deviceUUID;
+  private final UUID deviceUUID;
 
   /**
    * Initializes the fragment with the app controller
@@ -22,7 +22,7 @@ public class OtherProfileFragment extends ProfileFragment {
 
   @Override
   public ProfileController getProfileController() {
-    return new ProfileController(this, getGameController(), deviceUUID);
+    return new OtherProfileController(this, getGameController(), deviceUUID);
   }
 
   @Override

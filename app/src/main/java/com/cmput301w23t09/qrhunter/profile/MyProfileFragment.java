@@ -2,7 +2,6 @@ package com.cmput301w23t09.qrhunter.profile;
 
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
-import com.cmput301w23t09.qrhunter.util.DeviceUtils;
 
 public class MyProfileFragment extends ProfileFragment {
 
@@ -17,8 +16,7 @@ public class MyProfileFragment extends ProfileFragment {
 
   @Override
   public ProfileController getProfileController() {
-    return new ProfileController(
-        this, getGameController(), DeviceUtils.getDeviceUUID(getGameController().getActivity()));
+    return new MyProfileController(this, getGameController());
   }
 
   @Override
