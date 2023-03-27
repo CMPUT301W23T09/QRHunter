@@ -1,29 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:exported="true"
-    android:orientation="vertical">
+    android:exported="true">
 
     <TextView
         android:id="@+id/qrcode_player_scan_name"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Text"
-        android:gravity="center_vertical"
-        android:paddingStart="10sp"
-        android:textSize="25sp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:ellipsize="end"
+        android:gravity="center_vertical"
         android:maxLines="1"
-        android:layout_weight="1" />
+        android:paddingStart="10sp"
+        android:text="Text"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/qrcode_player_scan_points"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:text="Score"
+        android:layout_height="wrap_content"
         android:paddingStart="10sp"
-        android:textSize="18sp" />
+        android:text="Score"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/qrcode_player_scan_name" />
 
-</LinearLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:alpha="0.5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_play_arrow_24" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

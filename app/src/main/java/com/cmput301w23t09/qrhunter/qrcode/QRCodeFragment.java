@@ -136,7 +136,9 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     scansAdapter = new QRCodePlayerScansAdapter(getContext());
     setupPlayerScans();
 
-    listElement.setAdapter(scansAdapter);
+    listElement.setAdapter(
+        scansAdapter); // by default, the adapter should display the scanned players.
+
     layout.addOnTabSelectedListener(
         new TabLayout.OnTabSelectedListener() {
           @Override
@@ -157,6 +159,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
         });
   }
 
+  /** Fetch all players who scanned this QR and add it to the adapter. */
   private void setupPlayerScans() {
     // For each player who scanned the QR, fetch them and the score they have.
     // Upon fetching them, add them to our adapter.
@@ -196,7 +199,9 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
                                   .reduce(0, Integer::sum);
 
                           // Add an entry into our adapter with their score and player.
-                          scansAdapter.add(new QRCodePlayerScansAdapter.Entry(player, score));
+                          for (int i = 0; i < 100; i++) {
+                            scansAdapter.add(new QRCodePlayerScansAdapter.Entry(player, score));
+                          }
                         });
               });
     }
