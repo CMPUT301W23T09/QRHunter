@@ -12,13 +12,13 @@ import com.cmput301w23t09.qrhunter.R;
 import java.util.List;
 
 /** ArrayAdapter for leaderboard entries */
-public class LeaderboardEntryAdapter extends ArrayAdapter<LeaderboardEntry> {
+public class LeaderboardEntryAdapter extends ArrayAdapter<LeaderboardEntry<?>> {
   /** Leaderboard entries to use for this adapter */
-  private final List<LeaderboardEntry> entries;
+  private final List<LeaderboardEntry<?>> entries;
 
   private final Context context;
 
-  public LeaderboardEntryAdapter(Context context, List<LeaderboardEntry> entries) {
+  public LeaderboardEntryAdapter(Context context, List<LeaderboardEntry<?>> entries) {
     super(context, 0, entries);
     this.entries = entries;
     this.context = context;
@@ -33,7 +33,7 @@ public class LeaderboardEntryAdapter extends ArrayAdapter<LeaderboardEntry> {
     }
 
     // get leaderboard data
-    LeaderboardEntry entry = entries.get(position);
+    LeaderboardEntry<?> entry = entries.get(position);
 
     // set fields of view
     TextView name = view.findViewById(R.id.leaderboard_entry_text);

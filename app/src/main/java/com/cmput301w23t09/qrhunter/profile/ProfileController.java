@@ -16,6 +16,7 @@ import com.cmput301w23t09.qrhunter.qrcode.DeleteQRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeAdapter;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.ScoreComparator;
 import com.cmput301w23t09.qrhunter.util.DeviceUtils;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -235,8 +236,25 @@ public class ProfileController implements DatabaseChangeListener {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         QRCode qrCode = qrCodes.get(position);
-        DeleteQRCodeFragment.newInstance(qrCode, gameController.getActivePlayer())
-            .show(fragment.getParentFragmentManager(), "Show QR code information");
+
+        QRCodeDatabase.getInstance()
+            .playerHasQRCode(
+                gameController.getActivePlayer(),
+                qrCode,
+                task -> {
+                  if (task.isSuccessful()) {
+                    boolean playerHasQR = task.getData();
+
+                    if (playerHasQR) {
+                      gameController.setPopup(
+                          DeleteQRCodeFragment.newInstance(
+                              qrCode, gameController.getActivePlayer()));
+                    } else {
+                      gameController.setPopup(
+                          QRCodeFragment.newInstance(qrCode, gameController.getActivePlayer()));
+                    }
+                  }
+                });
       }
     };
   }
