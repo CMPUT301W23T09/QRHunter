@@ -3,7 +3,8 @@ package com.cmput301w23t09.qrhunter.leaderboard;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
-import com.cmput301w23t09.qrhunter.profile.ProfileFragment;
+import com.cmput301w23t09.qrhunter.profile.MyProfileFragment;
+import com.cmput301w23t09.qrhunter.profile.OtherProfileFragment;
 import com.cmput301w23t09.qrhunter.qrcode.DeleteQRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
@@ -132,7 +133,11 @@ public class LeaderboardController {
 
   public void handleEntryClick(PlayerLeaderboardEntry entry) {
     Player player = entry.getPlayer();
-    gameController.setBody(new ProfileFragment(gameController, player.getDeviceId()));
+    if (player.getDeviceId().equals(gameController.getActivePlayer().getDeviceId())) {
+      gameController.setBody(new MyProfileFragment(gameController));
+    } else {
+      gameController.setBody(new OtherProfileFragment(gameController, player.getDeviceId()));
+    }
   }
 
   public void handleEntryClick(QRCodeLeaderboardEntry entry) {
