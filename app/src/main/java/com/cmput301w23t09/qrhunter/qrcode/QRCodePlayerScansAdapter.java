@@ -10,18 +10,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.player.Player;
-import java.util.List;
 
 public class QRCodePlayerScansAdapter extends ArrayAdapter<QRCodePlayerScansAdapter.Entry> {
 
   private final Context context;
-  private final List<Entry> entries;
 
-  public QRCodePlayerScansAdapter(Context context, List<Entry> entries) {
+  public QRCodePlayerScansAdapter(Context context) {
     super(context, 0);
 
     this.context = context;
-    this.entries = entries;
   }
 
   @NonNull @Override
@@ -33,7 +30,7 @@ public class QRCodePlayerScansAdapter extends ArrayAdapter<QRCodePlayerScansAdap
     }
 
     // get player data
-    Entry entry = entries.get(position);
+    Entry entry = getItem(position);
 
     // set fields of view
     TextView name = view.findViewById(R.id.qrcode_player_scan_name);
@@ -42,7 +39,6 @@ public class QRCodePlayerScansAdapter extends ArrayAdapter<QRCodePlayerScansAdap
     TextView score = view.findViewById(R.id.qrcode_player_scan_points);
     score.setText(entry.getScore() + " PTS");
 
-    System.out.println(entry.getPlayer().getUsername());
     return view;
   }
 

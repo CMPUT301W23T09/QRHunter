@@ -72,8 +72,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/location_request"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/take_location_photo_btn" />
+        app:layout_constraintBottom_toTopOf="@+id/take_location_photo_btn"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addButton"
@@ -128,8 +128,11 @@
         android:id="@+id/qr_nav_items"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="48dp"
-        app:layout_constraintBottom_toBottomOf="@+id/location_request_box"
-        app:layout_constraintTop_toBottomOf="@+id/qr_nav" />
+        app:layout_constraintHeight_default="wrap"
+        app:layout_constraintBottom_toTopOf="@+id/location_request_box"
+        app:layout_constraintTop_toBottomOf="@+id/qr_nav"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

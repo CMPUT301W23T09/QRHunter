@@ -25,8 +25,6 @@ import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /** Displays information about a specific QRCode. It also lets the user: */
@@ -44,7 +42,6 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
 
   protected ListView listElement;
   protected QRCodePlayerScansAdapter scansAdapter;
-  private List<QRCodePlayerScansAdapter.Entry> playersWhoScanned;
 
   /**
    * Creates a new QRCodeFragment to display a specific QR Code
@@ -135,7 +132,11 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     layout.addTab(layout.newTab().setText(getText(R.string.comments_tab_title)));
 
     listElement = view.findViewById(R.id.qr_nav_items);
+
+    scansAdapter = new QRCodePlayerScansAdapter(getContext());
     setupPlayerScans();
+
+    listElement.setAdapter(scansAdapter);
     layout.addOnTabSelectedListener(
         new TabLayout.OnTabSelectedListener() {
           @Override
@@ -157,9 +158,8 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   }
 
   private void setupPlayerScans() {
-    playersWhoScanned = new ArrayList<>();
-    scansAdapter = new QRCodePlayerScansAdapter(getContext(), playersWhoScanned);
-
+    // For each player who scanned the QR, fetch them and the score they have.
+    // Upon fetching them, add them to our adapter.
     for (String documentId : qrCode.getPlayers()) {
       PlayerDatabase.getInstance()
           .getPlayerByDocumentId(
@@ -175,6 +175,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
                 }
                 Player player = task.getData();
 
+                // Retrieve all of the QRs the player has to get their total score.
                 QRCodeDatabase.getInstance()
                     .getQRCodeHashes(
                         player.getQRCodeHashes(),
@@ -188,12 +189,14 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
                             return;
                           }
 
+                          // Calculate the player's total score
                           int score =
                               qrsTask.getData().stream()
                                   .mapToInt(QRCode::getScore)
                                   .reduce(0, Integer::sum);
 
-                          playersWhoScanned.add(new QRCodePlayerScansAdapter.Entry(player, score));
+                          // Add an entry into our adapter with their score and player.
+                          scansAdapter.add(new QRCodePlayerScansAdapter.Entry(player, score));
                         });
               });
     }
