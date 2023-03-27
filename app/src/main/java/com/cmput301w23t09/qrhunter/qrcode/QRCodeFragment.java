@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,6 +38,10 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   protected FloatingActionButton deleteButton;
   protected FloatingActionButton loadingButton;
   protected QRCodeDatabase qrCodeDatabase;
+  protected TabLayout tabLayout;
+  protected EditText commentBox;
+  protected ListView listView;
+
 
   /**
    * Creates a new QRCodeFragment to display a specific QR Code
@@ -86,6 +92,9 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     addButton = view.findViewById(R.id.addButton);
     deleteButton = view.findViewById(R.id.deleteButton);
     loadingButton = view.findViewById(R.id.loadingButton);
+    tabLayout = view.findViewById(R.id.qr_nav);
+    commentBox = view.findViewById(R.id.comment_box);
+    listView = view.findViewById(R.id.qr_nav_items);
 
     // fill views with qr code information
     qrName.setText(qrCode.getName());

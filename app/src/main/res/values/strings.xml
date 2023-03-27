@@ -41,6 +41,7 @@
     <string name="contact_info_email">Email: %s</string>
     <string name="contact_information">Contact Information</string>
     <string name="search_hint">Enter Location Here</string>
+    <string name="comment_box_hint_text">Enter your comment here</string>
     <string-array name="sort_options">
         <item>Points</item>
         <item>Date Taken</item>

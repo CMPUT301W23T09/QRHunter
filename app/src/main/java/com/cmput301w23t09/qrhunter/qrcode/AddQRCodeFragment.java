@@ -1,16 +1,24 @@
 package com.cmput301w23t09.qrhunter.qrcode;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.map.LocationHandler;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoController;
 import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoFragment;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
+import com.google.android.material.tabs.TabLayout;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Displays information about a specific QRCode. It also lets the user:
@@ -30,6 +38,9 @@ public class AddQRCodeFragment extends QRCodeFragment {
    * @param activePlayer The player that scanned the given QR code
    * @return QRCodeFragment
    */
+
+  private int selectedTabIndex = 0;
+
   public static AddQRCodeFragment newInstance(QRCode qrCode, Player activePlayer) {
     Bundle args = new Bundle();
     args.putSerializable("qrcode", qrCode);
@@ -72,7 +83,56 @@ public class AddQRCodeFragment extends QRCodeFragment {
     updateAddButton();
     addButton.setOnClickListener(this::onAddQRClicked);
     updateLocationPhoto();
-  }
+
+      // implementing tabs for scanned by and comments
+      tabLayout.addTab(tabLayout.newTab().setText("Tab 1"));
+      tabLayout.addTab(tabLayout.newTab().setText("Comments"));
+
+      listView.setVisibility(View.GONE);
+      commentBox.setVisibility(View.GONE);
+
+      tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+          @Override
+          public void onTabSelected(TabLayout.Tab tab) {
+              selectedTabIndex = tab.getPosition();
+              if (selectedTabIndex == 1) {
+                  listView.setVisibility(View.VISIBLE);
+                  //Call playerHasQRCode to check if the active player has the QR code
+                  qrCodeDatabase.playerHasQRCode(activePlayer, qrCode, hasQRCodeResult -> {
+                      if (hasQRCodeResult.getData() != null && hasQRCodeResult.getData()) {
+                          commentBox.setVisibility(View.VISIBLE);}
+                      else{
+                          commentBox.setVisibility(View.GONE);
+                      }
+                  });
+              }
+
+                  /*
+                  if (qrCodeAdded) {
+                      // QR code has been added, show comment box
+                      commentBox.setVisibility(View.VISIBLE);
+                  } else {
+                      commentBox.setVisibility(View.GONE);
+                  }
+              }*/
+
+              else if (tab.getPosition() == 0) {
+                  listView.setVisibility(View.GONE);
+                  commentBox.setVisibility(View.GONE);
+              }
+          }
+          @Override
+          public void onTabUnselected(TabLayout.Tab tab) {}
+          @Override
+          public void onTabReselected(TabLayout.Tab tab) {
+          }
+      });
+
+      commentBox.setOnClickListener(this::onAddCommentInput);
+      commentBox.setOnTouchListener(this::onSendComment);
+
+
+}
 
   /**
    * Called when the add QR button is clicked
@@ -122,7 +182,12 @@ public class AddQRCodeFragment extends QRCodeFragment {
                 qrCode,
                 ignored -> {
                   loadingButton.setVisibility(View.GONE);
-                  this.dismiss();
+                    if (selectedTabIndex == 1) {
+                        commentBox.setVisibility(View.VISIBLE);
+                    } else {
+                        commentBox.setVisibility(View.GONE);
+                    }
+                  //this.dismiss();
                 });
           }
         });
@@ -195,4 +260,55 @@ public class AddQRCodeFragment extends QRCodeFragment {
   public LocationPhotoFragment getLocationPhotoFragment() {
     return locationPhotoFragment;
   }
+
+    public void onAddCommentInput(View view){
+        commentBox.setHint(""); // Remove hint text when clicked
+        //commentBox.setHeight(getResources().getDimensionPixelSize(R.dimen.comment_box_expanded_height));
+    }
+
+    private boolean onSendComment(View view, MotionEvent event) {
+        final int DRAWABLE_RIGHT = 2;
+        if(event.getAction() == MotionEvent.ACTION_UP) {
+            if(event.getRawX() >= (commentBox.getRight() - commentBox.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                // User clicked on the drawable icon
+                String commentText = commentBox.getText().toString().trim();
+                if (!commentText.isEmpty()) {
+                    saveCommentToDatabase(commentText);
+                    commentBox.setText("");
+                    commentBox.setHint(R.string.comment_box_hint_text);
+                } else {
+                    // Comment text is empty, show an error message
+                    Toast.makeText(getContext(), "Comment text is empty", Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void saveCommentToDatabase(String commentText) {
+        // Retrieve the active player object from the arguments bundle
+        Player activePlayer = (Player) getArguments().getSerializable("player");
+
+        Comment comment = new Comment(commentText, activePlayer);
+        qrCodeDatabase.getQRCodeByHash(qrCode.getHash(), qrCodeQueryResults -> {
+            if (qrCodeQueryResults.isSuccessful()) {
+                // Update the QRCode with the new comment
+                QRCode qrCodeToUpdate = qrCodeQueryResults.getData();
+                qrCodeToUpdate.addComment(comment);
+                qrCodeDatabase.updateQRCode(qrCodeToUpdate, updateResults -> {
+                    if (updateResults.isSuccessful()) {
+                        Log.d(TAG, "Comment added to QRCode with hash: " + qrCodeToUpdate.getHash());
+                    } else {
+                        Log.w(TAG, "Error updating QRCode with new comment", updateResults.getException());
+                    }
+                });
+            } else {
+                Log.w(TAG, "Error getting QRCode from database", qrCodeQueryResults.getException());
+            }
+        });
+
+    }
+
+
 }

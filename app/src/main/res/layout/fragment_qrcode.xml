@@ -128,10 +128,31 @@
 
     <ListView
         android:id="@+id/qr_nav_items"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="416dp"
+        android:layout_height="235dp"
         android:layout_marginBottom="48dp"
         app:layout_constraintBottom_toBottomOf="@+id/location_request_box"
         app:layout_constraintTop_toBottomOf="@+id/qr_nav" />
+
+
+    <EditText
+        android:id="@+id/comment_box"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/comment_box_border"
+        android:drawableEnd="@android:drawable/ic_menu_send"
+        android:drawableTint="#673AB7"
+        android:ems="10"
+        android:hint="@string/comment_box_hint_text"
+        android:imeOptions="actionSend"
+        android:inputType="textLongMessage"
+        android:maxLines="3"
+        android:minHeight="48dp"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/take_location_photo_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/qr_nav_items" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

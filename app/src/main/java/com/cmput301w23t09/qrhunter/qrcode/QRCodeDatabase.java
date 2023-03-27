@@ -418,6 +418,7 @@ public class QRCodeDatabase {
     values.put("latitude", qrCode.getLoc() != null ? qrCode.getLoc().getLatitude() : null);
     values.put("longitude", qrCode.getLoc() != null ? qrCode.getLoc().getLongitude() : null);
     values.put("players", qrCode.getPlayers());
+    values.put("comments", qrCode.getComments());
     return values;
   }
 
