@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cmput301w23t09.qrhunter.BaseFragment;
@@ -20,6 +21,7 @@ public class PlayerSearchFragment extends BaseFragment {
     private TextView playerSearchQuery;
     private ImageView backButton;
     private PlayerSearchFragmentController controller;
+    private ListView searchQueryList;
 
     public PlayerSearchFragment(GameController gameController) {
         super(gameController);
@@ -44,6 +46,7 @@ public class PlayerSearchFragment extends BaseFragment {
     private void setUpSearchFragment(View view) {
         playerSearchQuery = view.findViewById(R.id.search_query);
         backButton = view.findViewById(R.id.back_button);
+        searchQueryList = view.findViewById(R.id.search_query_list);
         backButton.setOnClickListener(v -> controller.handleBackButton());
         playerSearchQuery.setText(searchQuery);
     }
