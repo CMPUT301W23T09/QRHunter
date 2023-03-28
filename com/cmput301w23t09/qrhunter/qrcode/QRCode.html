@@ -270,14 +270,14 @@ implements java.io.Serializable</pre>
 </td>
 </tr>
 <tr id="i10" class="altColor">
-<td class="colFirst"><code>java.util.ArrayList&lt;<a href="../photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a>&gt;</code></td>
+<td class="colFirst"><code>java.util.List&lt;<a href="../photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPhotos()">getPhotos</a></span>()</code></th>
 <td class="colLast">
 <div class="block">This returns the photos taken of the QR code</div>
 </td>
 </tr>
 <tr id="i11" class="rowColor">
-<td class="colFirst"><code>java.util.ArrayList&lt;java.lang.String&gt;</code></td>
+<td class="colFirst"><code>java.util.List&lt;java.lang.String&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPlayers()">getPlayers</a></span>()</code></th>
 <td class="colLast">
 <div class="block">This returns the player who have scanned the QR code</div>
@@ -375,9 +375,7 @@ implements java.io.Serializable</pre>
               android.location.Location&nbsp;loc,
               java.util.ArrayList&lt;<a href="../photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a>&gt;&nbsp;photos,
               java.util.ArrayList&lt;<a href="../comment/Comment.html" title="class in com.cmput301w23t09.qrhunter.comment">Comment</a>&gt;&nbsp;comments,
-              java.util.ArrayList&lt;java.lang.String&gt;&nbsp;players)
-       throws java.util.concurrent.ExecutionException,
-              java.lang.InterruptedException</pre>
+              java.util.ArrayList&lt;java.lang.String&gt;&nbsp;players)</pre>
 <div class="block">This initializes a QR code with its hash, name, visual representation, score, location, photo,
  comments, and players who have scanned it</div>
 <dl>
@@ -389,9 +387,6 @@ implements java.io.Serializable</pre>
 <dd><code>photos</code> - This is the list of photos of the QR code</dd>
 <dd><code>comments</code> - This is the list of comments on the QR code</dd>
 <dd><code>players</code> - This is the list of players (documentIDs) that have scanned the QR code</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>java.util.concurrent.ExecutionException</code></dd>
-<dd><code>java.lang.InterruptedException</code></dd>
 </dl>
 </li>
 </ul>
@@ -461,8 +456,8 @@ implements java.io.Serializable</pre>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Return the visual representation of the QR code</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>java.lang.InterruptedException</code></dd>
-<dd><code>java.util.concurrent.ExecutionException</code></dd>
+<dd><code>java.lang.InterruptedException</code> - if failed to retrieve visual</dd>
+<dd><code>java.util.concurrent.ExecutionException</code> - if failed to retrieve visual</dd>
 </dl>
 </li>
 </ul>
@@ -500,7 +495,7 @@ implements java.io.Serializable</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getPhotos</h4>
-<pre class="methodSignature">public&nbsp;java.util.ArrayList&lt;<a href="../photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a>&gt;&nbsp;getPhotos()</pre>
+<pre class="methodSignature">public&nbsp;java.util.List&lt;<a href="../photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a>&gt;&nbsp;getPhotos()</pre>
 <div class="block">This returns the photos taken of the QR code</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -514,7 +509,7 @@ implements java.io.Serializable</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getPlayers</h4>
-<pre class="methodSignature">public&nbsp;java.util.ArrayList&lt;java.lang.String&gt;&nbsp;getPlayers()</pre>
+<pre class="methodSignature">public&nbsp;java.util.List&lt;java.lang.String&gt;&nbsp;getPlayers()</pre>
 <div class="block">This returns the player who have scanned the QR code</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>

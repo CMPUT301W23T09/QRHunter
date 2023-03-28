@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":9,"i4":10,"i5":10,"i6":9,"i7":10,"i8":10,"i9":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":9,"i5":10,"i6":10,"i7":9,"i8":10,"i9":10,"i10":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -158,6 +158,13 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addListener(com.cmput301w23t09.qrhunter.DatabaseChangeListener)">addListener</a></span>&#8203;(<a href="../DatabaseChangeListener.html" title="interface in com.cmput301w23t09.qrhunter">DatabaseChangeListener</a>&nbsp;listener)</code></th>
+<td class="colLast">
+<div class="block">Add snapshot listener to database</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addPlayerToQR(com.cmput301w23t09.qrhunter.player.Player,com.cmput301w23t09.qrhunter.qrcode.QRCode,com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">addPlayerToQR</a></span>&#8203;(<a href="../player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&nbsp;player,
              <a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&nbsp;qrCode,
              <a href="../database/DatabaseConsumer.html" title="interface in com.cmput301w23t09.qrhunter.database">DatabaseConsumer</a>&lt;java.lang.Void&gt;&nbsp;task)</code></th>
@@ -166,7 +173,7 @@ extends java.lang.Object</pre>
  players that have added it.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addQRCode(com.cmput301w23t09.qrhunter.qrcode.QRCode,com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">addQRCode</a></span>&#8203;(<a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&nbsp;qrCode,
          <a href="../database/DatabaseConsumer.html" title="interface in com.cmput301w23t09.qrhunter.database">DatabaseConsumer</a>&lt;java.lang.Void&gt;&nbsp;task)</code></th>
@@ -174,21 +181,21 @@ extends java.lang.Object</pre>
 <div class="block">Adds a never-before-scanned QRCode to the database</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getAllQRCodes(com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">getAllQRCodes</a></span>&#8203;(<a href="../database/DatabaseConsumer.html" title="interface in com.cmput301w23t09.qrhunter.database">DatabaseConsumer</a>&lt;java.util.List&lt;<a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&gt;&gt;&nbsp;callback)</code></th>
 <td class="colLast">
 <div class="block">Retrieve all QRCodes stored in the database.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>static <a href="QRCodeDatabase.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeDatabase</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getInstance()">getInstance</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Retrieves the QRCodeDatabase</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getQRCodeByHash(java.lang.String,com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">getQRCodeByHash</a></span>&#8203;(java.lang.String&nbsp;hash,
                <a href="../database/DatabaseConsumer.html" title="interface in com.cmput301w23t09.qrhunter.database">DatabaseConsumer</a>&lt;<a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&gt;&nbsp;callback)</code></th>
@@ -196,7 +203,7 @@ extends java.lang.Object</pre>
 <div class="block">Retrieve a QRCode by its has from the database</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getQRCodeHashes(java.util.List,com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">getQRCodeHashes</a></span>&#8203;(java.util.List&lt;java.lang.String&gt;&nbsp;hashes,
                <a href="../database/DatabaseConsumer.html" title="interface in com.cmput301w23t09.qrhunter.database">DatabaseConsumer</a>&lt;java.util.List&lt;<a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&gt;&gt;&nbsp;callback)</code></th>
@@ -204,14 +211,14 @@ extends java.lang.Object</pre>
 <div class="block">Retrieve a set of QRCodes by their hashes</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mockInstance(com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase)">mockInstance</a></span>&#8203;(<a href="QRCodeDatabase.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeDatabase</a>&nbsp;mockInstance)</code></th>
 <td class="colLast">
 <div class="block">Manually set QRCodeDatabase to some mocked instance for testing</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#playerHasQRCode(com.cmput301w23t09.qrhunter.player.Player,com.cmput301w23t09.qrhunter.qrcode.QRCode,com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">playerHasQRCode</a></span>&#8203;(<a href="../player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&nbsp;player,
                <a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&nbsp;qrCode,
@@ -220,7 +227,7 @@ extends java.lang.Object</pre>
 <div class="block">Checks if a player has already added a specific QRCode to their profile.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#removeQRCodeFromPlayer(com.cmput301w23t09.qrhunter.player.Player,com.cmput301w23t09.qrhunter.qrcode.QRCode,com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">removeQRCodeFromPlayer</a></span>&#8203;(<a href="../player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&nbsp;player,
                       <a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&nbsp;qrCode,
@@ -230,7 +237,7 @@ extends java.lang.Object</pre>
  of players that have added it.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateQRCode(com.cmput301w23t09.qrhunter.qrcode.QRCode,com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">updateQRCode</a></span>&#8203;(<a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&nbsp;qrCode,
             <a href="../database/DatabaseConsumer.html" title="interface in com.cmput301w23t09.qrhunter.database">DatabaseConsumer</a>&lt;java.lang.Void&gt;&nbsp;callback)</code></th>
@@ -382,6 +389,7 @@ extends java.lang.Object</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>qrCode</code> - The never-before-scanned QRCode to add</dd>
+<dd><code>task</code> - callback on database operation completion</dd>
 </dl>
 </li>
 </ul>
@@ -400,13 +408,14 @@ extends java.lang.Object</pre>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>player</code> - The player to add QRCode to.</dd>
 <dd><code>qrCode</code> - The QRCode to be added.</dd>
+<dd><code>task</code> - callback on database operation completion</dd>
 </dl>
 </li>
 </ul>
 <a id="removeQRCodeFromPlayer(com.cmput301w23t09.qrhunter.player.Player,com.cmput301w23t09.qrhunter.qrcode.QRCode,com.cmput301w23t09.qrhunter.database.DatabaseConsumer)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>removeQRCodeFromPlayer</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;removeQRCodeFromPlayer&#8203;(<a href="../player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&nbsp;player,
@@ -418,6 +427,21 @@ extends java.lang.Object</pre>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>player</code> - The player to remove QRCode from.</dd>
 <dd><code>qrCode</code> - The QRCode to be removed</dd>
+<dd><code>task</code> - callback on database operation completion</dd>
+</dl>
+</li>
+</ul>
+<a id="addListener(com.cmput301w23t09.qrhunter.DatabaseChangeListener)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>addListener</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;addListener&#8203;(<a href="../DatabaseChangeListener.html" title="interface in com.cmput301w23t09.qrhunter">DatabaseChangeListener</a>&nbsp;listener)</pre>
+<div class="block">Add snapshot listener to database</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>listener</code> - listener to call on updates to the qr code database</dd>
 </dl>
 </li>
 </ul>
