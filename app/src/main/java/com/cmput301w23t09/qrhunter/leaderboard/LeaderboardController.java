@@ -18,6 +18,10 @@ public class LeaderboardController {
     /** This is the game controller that controls the content on screen. */
     private final GameController gameController;
 
+    public LeaderboardController(GameController gameController) {
+        this.gameController = gameController;
+    }
+
   /**
    * Retrieve the total points leaderboard in descending order.
    *
