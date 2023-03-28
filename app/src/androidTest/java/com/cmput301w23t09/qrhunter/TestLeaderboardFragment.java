@@ -104,6 +104,7 @@ public class TestLeaderboardFragment extends BaseTest {
   @Test
   public void testTopPlayerPoints() {
     selectTab(0);
+    waitUntilListHasData();
 
     DataInteraction item =
         onData(anything()).inAdapterView(withId(R.id.leaderboard_list)).atPosition(0);
@@ -147,6 +148,8 @@ public class TestLeaderboardFragment extends BaseTest {
   /** Clicking on another player's profile should direct you to their profile. */
   @Test
   public void testClickOnOtherPlayerToProfile() {
+    waitUntilListHasData();
+
     onData(anything()).inAdapterView(withId(R.id.leaderboard_list)).atPosition(1).perform(click());
 
     await()
@@ -161,6 +164,8 @@ public class TestLeaderboardFragment extends BaseTest {
   /** Clicking on your profile should direct you to your profile. */
   @Test
   public void testClickOnOurPlayerToProfile() {
+    waitUntilListHasData();
+
     onData(anything()).inAdapterView(withId(R.id.leaderboard_list)).atPosition(0).perform(click());
 
     await()
