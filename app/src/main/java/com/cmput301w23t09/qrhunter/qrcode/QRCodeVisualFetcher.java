@@ -47,14 +47,14 @@ public class QRCodeVisualFetcher extends AsyncTask<String, Void, Bitmap> {
     }
   }
 
-  @Override
-  protected void onPostExecute(Bitmap result) {
-    if (result != null) {
-      qrCode.setVisualRepresentation(result);
-    } else {
-      Log.d("imageApiCall", "API call for DiceBear failed.");
-    }
-  }
+//  @Override
+//  protected void onPostExecute(Bitmap result) {
+//    if (result != null) {
+//      qrCode.setVisualRepresentation(result);
+//    } else {
+//      Log.d("imageApiCall", "API call for DiceBear failed.");
+//    }
+//  }
 
 
   public int getResponseCode() {
