@@ -133,7 +133,7 @@ public class LeaderboardController {
   }
 
   public void handleSearchQuery() {
-      PlayerSearchFragment searchFragment = new PlayerSearchFragment();
+      PlayerSearchFragment searchFragment = new PlayerSearchFragment(gameController);
       gameController.setBody(searchFragment);
   }
 
