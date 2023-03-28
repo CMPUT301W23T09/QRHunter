@@ -1,7 +1,6 @@
 package com.cmput301w23t09.qrhunter.qrcode;
 
 import android.graphics.Bitmap;
-import android.location.Location;
 import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.photo.Photo;
 import java.io.Serializable;
@@ -20,7 +19,7 @@ public class QRCode implements Serializable {
   /** This is the score of the QR code */
   private Integer score;
   /** This is the location of the QR code */
-  private Location loc;
+  private QRLocation loc;
   /** This is a list of photos that have been taken of the QR code */
   private ArrayList<Photo> photos;
   /** This is a list of comments on the QR code */
@@ -63,7 +62,7 @@ public class QRCode implements Serializable {
       String hash,
       String name,
       Integer score,
-      Location loc,
+      QRLocation loc,
       ArrayList<Photo> photos,
       ArrayList<Comment> comments,
       ArrayList<String> players) {
@@ -126,7 +125,7 @@ public class QRCode implements Serializable {
    *
    * @return Return the location of the QR code
    */
-  public Location getLoc() {
+  public QRLocation getLoc() {
     return loc;
   }
 
@@ -135,7 +134,7 @@ public class QRCode implements Serializable {
    *
    * @param loc This is the location to set to
    */
-  public void setLoc(Location loc) {
+  public void setLoc(QRLocation loc) {
     this.loc = loc;
   }
 

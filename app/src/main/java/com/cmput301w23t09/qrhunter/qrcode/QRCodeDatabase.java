@@ -1,6 +1,5 @@
 package com.cmput301w23t09.qrhunter.qrcode;
 
-import android.location.Location;
 import android.util.Log;
 import androidx.annotation.Nullable;
 import com.cmput301w23t09.qrhunter.DatabaseChangeListener;
@@ -391,10 +390,12 @@ public class QRCodeDatabase {
     String hash = snapshot.getId();
     String name = snapshot.getString("name");
     Integer score = (int) (long) snapshot.get("score");
-    Location location;
-    if (snapshot.get("latitude") == null || snapshot.get("longitude") == null) location = null;
-    else {
-      location = new Location("");
+    QRLocation location = null;
+    if (snapshot.get("latitude") != null
+        && snapshot.get("longitude") != null
+        && snapshot.get("city") != null) {
+      location = new QRLocation("");
+      location.setCity(snapshot.getString("city"));
       location.setLatitude((double) snapshot.get("latitude"));
       location.setLongitude((double) snapshot.get("longitude"));
     }
@@ -415,6 +416,7 @@ public class QRCodeDatabase {
     values.put("score", qrCode.getScore());
     values.put("latitude", qrCode.getLoc() != null ? qrCode.getLoc().getLatitude() : null);
     values.put("longitude", qrCode.getLoc() != null ? qrCode.getLoc().getLongitude() : null);
+    values.put("city", qrCode.getLoc() != null ? qrCode.getLoc().getCity() : null);
     values.put("players", qrCode.getPlayers());
     return values;
   }

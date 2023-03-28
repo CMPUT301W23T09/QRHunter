@@ -3,13 +3,19 @@ package com.cmput301w23t09.qrhunter.map;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.widget.Toast;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
+import com.cmput301w23t09.qrhunter.qrcode.QRLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
+import java.io.IOException;
+import java.util.Locale;
 
 /**
  * Handles location permissions and retrieving the location of the player's device. Used to set the
@@ -56,7 +62,39 @@ public class LocationHandler {
               fragment.getActivity(),
               location -> {
                 if (location != null) {
-                  qrCode.setLoc(location);
+                  Geocoder geoCoder = new Geocoder(fragment.getContext(), Locale.getDefault());
+                  try {
+                    Address address =
+                        geoCoder
+                            .getFromLocation(location.getLatitude(), location.getLongitude(), 1)
+                            .stream()
+                            .findAny()
+                            .orElse(null);
+
+                    if (address == null) {
+                      Toast.makeText(
+                              fragment.getContext(),
+                              "An exception occurred trying to fetch your location.",
+                              Toast.LENGTH_SHORT)
+                          .show();
+                      return;
+                    }
+
+                    String city = address.getLocality();
+
+                    QRLocation qrLocation = new QRLocation("");
+                    qrLocation.setCity(city);
+                    qrLocation.setLongitude(location.getLongitude());
+                    qrLocation.setLatitude(location.getLatitude());
+
+                    qrCode.setLoc(qrLocation);
+                  } catch (IOException e) {
+                    Toast.makeText(
+                            fragment.getContext(),
+                            "An exception occurred trying to fetch your location.",
+                            Toast.LENGTH_SHORT)
+                        .show();
+                  }
                 }
               });
     }
