@@ -52,33 +52,37 @@ public class DeleteQRCodeFragment extends QRCodeFragment {
     loadingButton.setVisibility(View.VISIBLE);
 
     // Remove QR from player
-    qrCodeDatabase.removeQRCodeFromPlayer(
-        activePlayer,
-        qrCode,
-        ignored2 -> {
-          loadingButton.setVisibility(View.GONE);
-          this.dismiss();
-        });
+    QRCodeDatabase.getInstance()
+        .removeQRCodeFromPlayer(
+            activePlayer,
+            qrCode,
+            ignored2 -> {
+              loadingButton.setVisibility(View.GONE);
+              this.dismiss();
+            });
   }
 
   /** Display the remove (x) QRCode button if the player has the QR code to their name. */
   private void updateDeleteButton() {
-    qrCodeDatabase.playerHasQRCode(
-        activePlayer,
-        qrCode,
-        results -> {
-          if (results.isSuccessful()) {
-            if (results.getData()) {
-              // QR code hash is already added to the player's account
-              // Thus, display delete button
-              deleteButton.setVisibility(View.VISIBLE);
-            }
-          } else {
-            Log.w("QRCodeFragment", "Error getting player by device ID.", results.getException());
-            Toast.makeText(getContext(), "Error getting player by device ID.", Toast.LENGTH_SHORT)
-                .show();
-          }
-        });
+    QRCodeDatabase.getInstance()
+        .playerHasQRCode(
+            activePlayer,
+            qrCode,
+            results -> {
+              if (results.isSuccessful()) {
+                if (results.getData()) {
+                  // QR code hash is already added to the player's account
+                  // Thus, display delete button
+                  deleteButton.setVisibility(View.VISIBLE);
+                }
+              } else {
+                Log.w(
+                    "QRCodeFragment", "Error getting player by device ID.", results.getException());
+                Toast.makeText(
+                        getContext(), "Error getting player by device ID.", Toast.LENGTH_SHORT)
+                    .show();
+              }
+            });
   }
 
   /** Show the location photo of the qr code */

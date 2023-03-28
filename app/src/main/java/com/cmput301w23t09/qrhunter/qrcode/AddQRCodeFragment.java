@@ -40,12 +40,6 @@ public class AddQRCodeFragment extends QRCodeFragment {
     return fragment;
   }
 
-  /**
-   * Creates a new QRCodeFragment to display a specific QR Code with adding capabilities
-   *
-   * @param view
-   * @return QRCodeFragment
-   */
   @Override
   protected void setUpButtons(View view) {
     addButton.setVisibility(View.VISIBLE);
@@ -97,47 +91,51 @@ public class AddQRCodeFragment extends QRCodeFragment {
 
     // Add QR to database, when the QR has been added, allow the deletion of the QRCode.
     // First check if the qr code exists.
-    qrCodeDatabase.getQRCodeByHash(
-        qrCode.getHash(),
-        qrCodeHash -> {
-          if (qrCodeHash.getException() != null) {
-            addButton.setVisibility(View.VISIBLE);
-            loadingButton.setVisibility(View.GONE);
-            return;
-          }
+    QRCodeDatabase.getInstance()
+        .getQRCodeByHash(
+            qrCode.getHash(),
+            qrCodeHash -> {
+              if (qrCodeHash.getException() != null) {
+                addButton.setVisibility(View.VISIBLE);
+                loadingButton.setVisibility(View.GONE);
+                return;
+              }
 
-          // If it doesn't exist, add the QR
-          if (qrCodeHash.getData() == null) {
-            qrCodeDatabase.addQRCode(
-                qrCode,
-                task -> {
-                  if (!task.isSuccessful()) {
-                    addButton.setVisibility(View.VISIBLE);
-                    loadingButton.setVisibility(View.GONE);
-                    return;
-                  }
+              // If it doesn't exist, add the QR
+              if (qrCodeHash.getData() == null) {
+                QRCodeDatabase.getInstance()
+                    .addQRCode(
+                        qrCode,
+                        task -> {
+                          if (!task.isSuccessful()) {
+                            addButton.setVisibility(View.VISIBLE);
+                            loadingButton.setVisibility(View.GONE);
+                            return;
+                          }
 
-                  // Add the player to the QR
-                  qrCodeDatabase.addPlayerToQR(
-                      activePlayer,
-                      qrCode,
-                      ignored -> {
-                        loadingButton.setVisibility(View.GONE);
-                        this.dismiss();
-                      });
-                });
+                          // Add the player to the QR
+                          QRCodeDatabase.getInstance()
+                              .addPlayerToQR(
+                                  activePlayer,
+                                  qrCode,
+                                  ignored -> {
+                                    loadingButton.setVisibility(View.GONE);
+                                    this.dismiss();
+                                  });
+                        });
 
-          } else {
-            // QRCode already exists, add player to the QR
-            qrCodeDatabase.addPlayerToQR(
-                activePlayer,
-                qrCode,
-                ignored -> {
-                  loadingButton.setVisibility(View.GONE);
-                  this.dismiss();
-                });
-          }
-        });
+              } else {
+                // QRCode already exists, add player to the QR
+                QRCodeDatabase.getInstance()
+                    .addPlayerToQR(
+                        activePlayer,
+                        qrCode,
+                        ignored -> {
+                          loadingButton.setVisibility(View.GONE);
+                          this.dismiss();
+                        });
+              }
+            });
   }
 
   /**
@@ -161,28 +159,31 @@ public class AddQRCodeFragment extends QRCodeFragment {
 
   /** Display the add (+) QRCode button if the player does not have the QRCode to their name */
   private void updateAddButton() {
-    qrCodeDatabase.playerHasQRCode(
-        activePlayer,
-        qrCode,
-        results -> {
-          if (results.isSuccessful()) {
-            if (results.getData()) {
-              // QR code hash is already added to the player's account
-              addButton.setVisibility(View.GONE);
-              DeleteQRCodeFragment.newInstance(qrCode, activePlayer)
-                  .show(getParentFragmentManager(), "Switch to delete QR code fragment");
-              this.dismiss();
-            } else {
-              // QR code hash is not yet added to the player's account
-              // Thus, display add button
-              addButton.setVisibility(View.VISIBLE);
-            }
-          } else {
-            Log.w("QRCodeFragment", "Error getting player by device ID.", results.getException());
-            Toast.makeText(getContext(), "Error getting player by device ID.", Toast.LENGTH_SHORT)
-                .show();
-          }
-        });
+    QRCodeDatabase.getInstance()
+        .playerHasQRCode(
+            activePlayer,
+            qrCode,
+            results -> {
+              if (results.isSuccessful()) {
+                if (results.getData()) {
+                  // QR code hash is already added to the player's account
+                  addButton.setVisibility(View.GONE);
+                  DeleteQRCodeFragment.newInstance(qrCode, activePlayer)
+                      .show(getParentFragmentManager(), "Switch to delete QR code fragment");
+                  this.dismiss();
+                } else {
+                  // QR code hash is not yet added to the player's account
+                  // Thus, display add button
+                  addButton.setVisibility(View.VISIBLE);
+                }
+              } else {
+                Log.w(
+                    "QRCodeFragment", "Error getting player by device ID.", results.getException());
+                Toast.makeText(
+                        getContext(), "Error getting player by device ID.", Toast.LENGTH_SHORT)
+                    .show();
+              }
+            });
   }
 
   /**
