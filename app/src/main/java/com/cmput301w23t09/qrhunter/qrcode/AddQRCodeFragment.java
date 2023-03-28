@@ -88,45 +88,22 @@ public class AddQRCodeFragment extends QRCodeFragment {
       tabLayout.addTab(tabLayout.newTab().setText("Tab 1"));
       tabLayout.addTab(tabLayout.newTab().setText("Comments"));
 
-      listView.setVisibility(View.GONE);
+
       commentBox.setVisibility(View.GONE);
 
-      tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-          @Override
-          public void onTabSelected(TabLayout.Tab tab) {
-              selectedTabIndex = tab.getPosition();
-              if (selectedTabIndex == 1) {
-                  listView.setVisibility(View.VISIBLE);
-                  //Call playerHasQRCode to check if the active player has the QR code
-                  qrCodeDatabase.playerHasQRCode(activePlayer, qrCode, hasQRCodeResult -> {
-                      if (hasQRCodeResult.getData() != null && hasQRCodeResult.getData()) {
-                          commentBox.setVisibility(View.VISIBLE);}
-                      else{
-                          commentBox.setVisibility(View.GONE);
-                      }
-                  });
-              }
-
-                  /*
-                  if (qrCodeAdded) {
-                      // QR code has been added, show comment box
-                      commentBox.setVisibility(View.VISIBLE);
-                  } else {
-                      commentBox.setVisibility(View.GONE);
-                  }
-              }*/
-
-              else if (tab.getPosition() == 0) {
-                  listView.setVisibility(View.GONE);
+      if (tabLayout.getSelectedTabPosition()==1){
+          listView.setVisibility(View.VISIBLE);
+          //Call playerHasQRCode to check if the active player has the QR code
+          qrCodeDatabase.playerHasQRCode(activePlayer, qrCode, hasQRCodeResult -> {
+              if (hasQRCodeResult.getData() != null && hasQRCodeResult.getData()) {
+                  commentBox.setVisibility(View.VISIBLE);}
+              else{
                   commentBox.setVisibility(View.GONE);
               }
-          }
-          @Override
-          public void onTabUnselected(TabLayout.Tab tab) {}
-          @Override
-          public void onTabReselected(TabLayout.Tab tab) {
-          }
-      });
+          });
+      }
+
+
 
       commentBox.setOnClickListener(this::onAddCommentInput);
       commentBox.setOnTouchListener(this::onSendComment);
@@ -305,6 +282,7 @@ public class AddQRCodeFragment extends QRCodeFragment {
                 // Update the QRCode with the new comment
                 QRCode qrCodeToUpdate = qrCodeQueryResults.getData();
                 qrCodeToUpdate.addComment(comment);
+
                 qrCodeDatabase.updateQRCode(qrCodeToUpdate, updateResults -> {
                     if (updateResults.isSuccessful()) {
                         Log.d(TAG, "Comment added to QRCode with hash: " + qrCodeToUpdate.getHash());
