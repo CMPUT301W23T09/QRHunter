@@ -6,7 +6,10 @@ import android.util.Log;
 import androidx.camera.core.ImageProxy;
 import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.player.Player;
+import com.cmput301w23t09.qrhunter.qrcode.AddQRCodeFragment;
+import com.cmput301w23t09.qrhunter.qrcode.DeleteQRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraController;
 import com.google.android.gms.tasks.Task;
@@ -18,7 +21,6 @@ import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Controls QR Code scanning using Google's MLKit Library
@@ -30,11 +32,11 @@ import java.util.concurrent.ExecutionException;
 public class ScannerController {
 
   private BarcodeScannerOptions options;
-  private BarcodeScanner scanner;
-  private BaseFragment fragment;
+  private final BarcodeScanner scanner;
+  private final BaseFragment fragment;
   private QRCodeFragment qrCodeFragment = null;
   private String pastHash = "";
-  private Player activePlayer;
+  private final Player activePlayer;
 
   /**
    * Creates a ScannerController
@@ -83,14 +85,32 @@ public class ScannerController {
                           && !pastHash.equals(currentHash)) {
                         pastHash = currentHash;
                         if (qrCodeFragment != null) qrCodeFragment.dismissNow();
-                        QRCode qrCode = null;
-                        try {
-                          qrCode = new QRCode(pastHash);
-                        } catch (ExecutionException | InterruptedException e) {
-                          throw new RuntimeException(e);
-                        }
-                        qrCodeFragment = QRCodeFragment.newInstance(qrCode, activePlayer);
-                        fragment.getGameController().setPopup(qrCodeFragment);
+
+                        // Fetch existing QR data or create new QR
+                        QRCodeDatabase.getInstance()
+                            .getQRCodeByHash(
+                                pastHash,
+                                task -> {
+                                  if (task.isSuccessful()) {
+                                    QRCode qrCode;
+                                    if (task.getData() != null) {
+                                      qrCode = task.getData();
+                                    } else {
+                                      qrCode = new QRCode(pastHash);
+                                    }
+
+                                    if (qrCode
+                                        .getPlayers()
+                                        .contains(activePlayer.getDocumentId())) {
+                                      qrCodeFragment =
+                                          DeleteQRCodeFragment.newInstance(qrCode, activePlayer);
+                                    } else {
+                                      qrCodeFragment =
+                                          AddQRCodeFragment.newInstance(qrCode, activePlayer);
+                                    }
+                                    fragment.getGameController().setPopup(qrCodeFragment);
+                                  }
+                                });
                       }
                     }
                   })

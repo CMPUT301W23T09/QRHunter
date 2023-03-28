@@ -85,14 +85,15 @@ public class ProfileFragment extends BaseFragment {
     controller.setUpUsername(username);
     controller.setUpQRList(qrCodeList, totalPoints, totalCodes, topCodeScore, sortOrderSpinner);
     qrCodeList.setOnItemClickListener(controller.handleQRSelect());
+    controller.addUpdater();
   }
 
   /** Sets the profile elements to a blank/default state */
   private void createDefaultProfile() {
     username.setText("");
-    totalPoints.setText(getString(R.string.total_points_txt, 0));
-    totalCodes.setText(getString(R.string.total_codes_txt, 0));
-    topCodeScore.setText(getString(R.string.top_code_txt, 0));
+    totalPoints.setText("");
+    totalCodes.setText("");
+    topCodeScore.setText("");
     createSpinner(sortOrderSpinner, R.array.order_options);
 
     setupContactButton();
@@ -164,7 +165,11 @@ public class ProfileFragment extends BaseFragment {
         });
   }
 
-  /** Gets the controller of the profile fragment, for UI testing only */
+  /**
+   * Gets the controller of the profile fragment
+   *
+   * @return Return the controller of the fragment
+   */
   public ProfileController getController() {
     return controller;
   }

@@ -21,7 +21,7 @@
     <string name="sort_spinner_desc">QR Code Sort Spinner</string>
     <string name="order_spinner_desc">QR Code Order Spinner</string>
     <string name="visual_representation_desc">Visual Representation of QR code</string>
-    <string name="total_points_txt">%d\nTotalPoints</string>
+    <string name="total_points_txt">%d\nTotal Points</string>
     <string name="total_codes_txt">%d\nCodes Scanned</string>
     <string name="top_code_txt">%d\nTop Code</string>
     <string name="search_for_player">Search For Player</string>
@@ -34,12 +34,13 @@
     <string name="settings_title">Settings</string>
     <string name="reset">Reset</string>
     <string name="save_changes">Save Changes</string>
-    <string name="sort_lbl">Sort By Score:</string>
+    <string name="sort_lbl">Sort</string>
     <string name="close">Close</string>
     <string name="leave_unsaved_changes">Are you sure you want to leave with unsaved changes?</string>
     <string name="contact_info_phone_no">Phone Number: %s</string>
     <string name="contact_info_email">Email: %s</string>
     <string name="contact_information">Contact Information</string>
+    <string name="search_hint">Enter Location Here</string>
     <string-array name="sort_options">
         <item>Points</item>
         <item>Date Taken</item>

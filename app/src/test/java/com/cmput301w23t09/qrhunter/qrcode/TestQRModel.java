@@ -2,52 +2,36 @@ package com.cmput301w23t09.qrhunter.qrcode;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import org.junit.jupiter.api.Test;
 
 public class TestQRModel {
   // create a mock hash
   private String mockHash() {
-    return "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
+    return "8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d";
   }
+
   // create a mock qr code
   private QRCode mockCode() {
-    return new QRCode(mockHash(), "mock", null, 10, null, null, null, null);
-  }
-  // create a mock qr code list
-  private ArrayList<QRCode> mockList() {
-    return new ArrayList<QRCode>();
+    return new QRCode(mockHash());
   }
 
   @Test
-  public void testGetHash() {
+  public void testGetCorrectHash() {
     assertEquals(mockCode().getHash(), mockHash());
   }
 
   @Test
-  public void testGetName() {
-    assertEquals(mockCode().getName(), "mock");
+  public void testGetCorrectName() {
+    assertEquals(mockCode().getName(), "RobaqinectTiger✿");
   }
 
   @Test
-  public void testGetScore() {
-    assertEquals((int) mockCode().getScore(), 10);
+  public void testGetCorrectScore() {
+    assertEquals((int) mockCode().getScore(), 32);
   }
 
   @Test
   public void testGetLoc() {
     assertEquals(mockCode().getLoc(), null);
-  }
-
-  @Test
-  public void testQRSort() {
-    ArrayList<QRCode> mockList = mockList();
-    mockList.add(mockCode());
-    // add another qr code with a higher score
-    Comparator<QRCode> comparator = new ScoreComparator();
-    mockList.sort(comparator);
-    // check if order is correct
-    // check with comparator.reversed()
   }
 }

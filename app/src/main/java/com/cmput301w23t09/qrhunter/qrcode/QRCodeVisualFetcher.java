@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
+
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -21,11 +22,6 @@ import java.net.URL;
  */
 public class QRCodeVisualFetcher extends AsyncTask<String, Void, Bitmap> {
   private int responseCode;
-  private QRCode qrCode;
-
-  public QRCodeVisualFetcher(QRCode qrCode) {
-    this.qrCode = qrCode;
-  }
 
   @Override
   protected Bitmap doInBackground(String... urls) {
@@ -44,6 +40,7 @@ public class QRCodeVisualFetcher extends AsyncTask<String, Void, Bitmap> {
 
       Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
       return bitmap;
+
     } catch (Exception e) {
       e.printStackTrace();
       return null;
@@ -58,6 +55,7 @@ public class QRCodeVisualFetcher extends AsyncTask<String, Void, Bitmap> {
       Log.d("imageApiCall", "API call for DiceBear failed.");
     }
   }
+
 
   public int getResponseCode() {
     return responseCode;

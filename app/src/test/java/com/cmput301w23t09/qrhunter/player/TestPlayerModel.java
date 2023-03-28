@@ -19,7 +19,7 @@ public class TestPlayerModel {
   private UUID mockPlayerUUID;
 
   @BeforeEach
-  private void setUp() {
+  public void setUp() {
     // Initial values don't matter as we'll be testing each getter/setter separately.
     mockPlayerUUID = UUID.randomUUID();
     mockPlayer =

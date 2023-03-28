@@ -28,7 +28,7 @@ jobs:
         run: echo "MAPS_API_KEY=$MAPS_API_KEY" >> local.properties
       - uses: actions/setup-java@v3
         with:
-          distribution: "adopt"
+          distribution: "temurin"
           java-version: "11"
           cache: "gradle"
         name: Setup Java JDK 11
@@ -47,7 +47,7 @@ jobs:
         run: echo "MAPS_API_KEY=$MAPS_API_KEY" >> local.properties
       - uses: actions/setup-java@v3
         with:
-          distribution: "adopt"
+          distribution: "temurin"
           java-version: "11"
           cache: "gradle"
         name: Setup Java JDK 11
@@ -72,7 +72,7 @@ jobs:
           target: google_apis
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated
-          disable-animations: false
+          disable-animations: true
           script: echo "Generated AVD snapshot for caching."
       - uses: reactivecircus/android-emulator-runner@v2
         with:
