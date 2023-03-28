@@ -54,23 +54,24 @@ public class TestDeleteQRCodeFragment extends BaseTest {
         .add(
             player,
             ignored -> {
-              dbTasks.countDown();
+              // Add QR to player
+
+              // Mock QRCode Info
+              // Actual Data: CMPUT301W23T09-QRHunter
+              // Hash: 8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d
+              // Name: RobaqinectTiger✿
+              // Score: 32 PTS
+              qrCode =
+                  new QRCode("8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d");
+              QRCodeDatabase.getInstance()
+                  .addPlayerToQR(
+                      player,
+                      qrCode,
+                      ignored2 -> {
+                        dbTasks.countDown();
+                      });
             });
     dbTasks.await();
-
-    // Mock QRCode Info
-    // Actual Data: CMPUT301W23T09-QRHunter
-    // Hash: 8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d
-    // Name: RobaqinectTiger✿
-    // Score: 32 PTS
-    qrCode = new QRCode("8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d");
-    QRCodeDatabase.getInstance()
-        .addPlayerToQR(
-            player,
-            qrCode,
-            ignored -> {
-              dbTasks.countDown();
-            });
 
     qrCodeFragment = DeleteQRCodeFragment.newInstance(qrCode, player);
     activityScenarioRule
