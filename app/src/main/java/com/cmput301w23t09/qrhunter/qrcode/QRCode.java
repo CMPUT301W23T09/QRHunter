@@ -66,8 +66,7 @@ public class QRCode implements Serializable {
       Location loc,
       ArrayList<Photo> photos,
       ArrayList<Comment> comments,
-      ArrayList<String> players)
-      throws ExecutionException, InterruptedException {
+      ArrayList<String> players) {
     this.hash = hash;
     this.name = name;
     this.score = score;
@@ -108,6 +107,8 @@ public class QRCode implements Serializable {
   /**
    * This returns the visual representation of the QR code
    *
+   * @throws InterruptedException if failed to retrieve visual
+   * @throws ExecutionException if failed to retrieve visual
    * @return Return the visual representation of the QR code
    */
   public Bitmap getVisualRepresentation() throws InterruptedException, ExecutionException {
