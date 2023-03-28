@@ -35,8 +35,8 @@ public class ScannerController {
   private final BarcodeScanner scanner;
   private final BaseFragment fragment;
   private QRCodeFragment qrCodeFragment = null;
-  private String pastHash = "";
   private final Player activePlayer;
+  private boolean currentlyScanning = false;
 
   /**
    * Creates a ScannerController
@@ -70,6 +70,8 @@ public class ScannerController {
                   barcodes -> {
                     if (barcodes.size() > 0) {
                       Barcode scannedCode = barcodes.get(0);
+                      if (currentlyScanning) return;
+                      currentlyScanning = true;
                       // TODO: Draw qrCode.getBoundingBox()
 
                       // Only deal with the code's hash (US 08.01.01)
@@ -82,11 +84,34 @@ public class ScannerController {
                               .toString();
 
                       if (fragment.getGameController().getPopup() == null) {
-                        QRCode qrCode = new QRCode(currentHash);
-                        qrCodeFragment = QRCodeFragment.newInstance(qrCode, activePlayer);
-                        fragment.getGameController().setPopup(qrCodeFragment);
+                        // Fetch existing QR data or create new QR
+                        QRCodeDatabase.getInstance()
+                            .getQRCodeByHash(
+                                currentHash,
+                                task -> {
+                                  if (task.isSuccessful()) {
+                                    QRCode qrCode;
+                                    if (task.getData() != null) {
+                                      qrCode = task.getData();
+                                    } else {
+                                      qrCode = new QRCode(currentHash);
+                                    }
+
+                                    if (qrCode
+                                        .getPlayers()
+                                        .contains(activePlayer.getDocumentId())) {
+                                      qrCodeFragment =
+                                          DeleteQRCodeFragment.newInstance(qrCode, activePlayer);
+                                    } else {
+                                      qrCodeFragment =
+                                          AddQRCodeFragment.newInstance(qrCode, activePlayer);
+                                    }
+                                    showQRCodeFragment();
+                                  }
+                                });
                       }
-                    }
+                    } else
+                      currentlyScanning = false;
                   })
               .addOnFailureListener(e -> Log.e("ERROR", e.toString()))
               .addOnCompleteListener(
@@ -95,5 +120,10 @@ public class ScannerController {
                     imgProxy.close();
                   });
     }
+  }
+
+  private void showQRCodeFragment() {
+    if (fragment.getGameController().getPopup() == null)
+      fragment.getGameController().setPopup(qrCodeFragment);
   }
 }

@@ -81,7 +81,7 @@ public class LocationPhotoController implements Serializable {
                   if (!isSuccessful)
                     Toast.makeText(
                         fragment.getContext(), "Image failed to upload!", Toast.LENGTH_LONG);
-                  fragment.getQRCodeFragment().updateLocationPhoto();
+                  fragment.getAddQRCodeFragment().updateLocationPhoto();
                 });
             image.close();
             fragment.dismiss();

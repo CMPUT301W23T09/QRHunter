@@ -96,7 +96,6 @@ public class TestQRCodeFragment extends BaseTest {
     Bitmap qrVisualBitmap = ((BitmapDrawable) qrVisualView.getDrawable()).getBitmap();
     assertTrue(qrVisualBitmap.sameAs(qrCode.getVisualRepresentation()));
   }
-<<<<<<< HEAD
 
   /** Checks if we can set the QRCode's location by checking the checkbox */
   @Test

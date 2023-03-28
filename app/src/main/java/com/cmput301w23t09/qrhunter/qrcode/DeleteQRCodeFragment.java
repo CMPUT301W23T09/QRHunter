@@ -39,7 +39,7 @@ public class DeleteQRCodeFragment extends QRCodeFragment {
     loadingButton.setVisibility(View.GONE);
     updateDeleteButton();
     deleteButton.setOnClickListener(this::onRemoveQRClicked);
-    showLocationPhoto();
+    updateLocationPhoto();
   }
 
   /**
@@ -83,10 +83,6 @@ public class DeleteQRCodeFragment extends QRCodeFragment {
 
   /** Show the location photo of the qr code */
   public void showLocationPhoto() {
-    if (qrCode.getPhotos() != null && qrCode.getPhotos().size() > 0) {
-      locationPhoto.setImageBitmap(qrCode.getPhotos().get(0).getPhoto());
-    } else {
-      locationPhoto.setImageResource(android.R.color.transparent);
-    }
+
   }
 }
