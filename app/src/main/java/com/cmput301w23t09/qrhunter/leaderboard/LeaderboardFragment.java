@@ -158,7 +158,7 @@ public class LeaderboardFragment extends BaseFragment {
       @Override
       public boolean onQueryTextSubmit(String query) {
         Toast.makeText(getContext(), query, Toast.LENGTH_SHORT).show();
-        controller.handleSearchQuery();
+        controller.handleSearchQuery(query);
         return true;
       }
 

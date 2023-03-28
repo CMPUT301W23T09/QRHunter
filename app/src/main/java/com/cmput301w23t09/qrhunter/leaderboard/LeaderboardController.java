@@ -1,5 +1,7 @@
 package com.cmput301w23t09.qrhunter.leaderboard;
 
+import android.os.Bundle;
+
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.profile.ProfileSettingsFragment;
@@ -132,8 +134,11 @@ public class LeaderboardController {
     // TODO: Implement after location recording is completed and fetch the region of the photo.
   }
 
-  public void handleSearchQuery() {
+  public void handleSearchQuery(String query) {
       PlayerSearchFragment searchFragment = new PlayerSearchFragment(gameController);
+      Bundle args = new Bundle();
+      args.putString("search_query", query);
+      searchFragment.setArguments(args);
       gameController.setBody(searchFragment);
   }
 
