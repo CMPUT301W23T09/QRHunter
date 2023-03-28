@@ -2,6 +2,7 @@ package com.cmput301w23t09.qrhunter.leaderboard;
 
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
+import com.cmput301w23t09.qrhunter.profile.ProfileSettingsFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import java.util.ArrayList;
@@ -11,8 +12,12 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
+import com.cmput301w23t09.qrhunter.GameController;
 
 public class LeaderboardController {
+    /** This is the game controller that controls the content on screen. */
+    private final GameController gameController;
+
   /**
    * Retrieve the total points leaderboard in descending order.
    *
@@ -122,4 +127,10 @@ public class LeaderboardController {
       BiConsumer<Exception, Map<String, Leaderboard>> callback) {
     // TODO: Implement after location recording is completed and fetch the region of the photo.
   }
+
+  public void handleSearchQuery() {
+      PlayerSearchFragment searchFragment = new PlayerSearchFragment();
+      gameController.setBody(searchFragment);
+  }
+
 }

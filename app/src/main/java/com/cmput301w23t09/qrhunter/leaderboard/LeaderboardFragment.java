@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.SearchView;
+import androidx.appcompat.widget.SearchView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,7 +49,7 @@ public class LeaderboardFragment extends BaseFragment {
     playerSearchView = view.findViewById(R.id.player_search);
 
     setupTabList(view);
-//    setUpPlayerSearch();
+    setUpPlayerSearch();
     return view;
   }
 
@@ -154,18 +154,19 @@ public class LeaderboardFragment extends BaseFragment {
     // TODO: when locations are implemented
   }
 
-//  private void setUpPlayerSearch() {
-//    playerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//      @Override
-//      public boolean onQueryTextSubmit(String query) {
-////        Toast.makeText(getContext(), query, Toast.LENGTH_SHORT).show();
-//        return true;
-//      }
-//
-//      @Override
-//      public boolean onQueryTextChange(String newText) {
-//        return false;
-//      }
-//    });
-//  }
+  private void setUpPlayerSearch() {
+    playerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+      @Override
+      public boolean onQueryTextSubmit(String query) {
+        Toast.makeText(getContext(), query, Toast.LENGTH_SHORT).show();
+        controller.handleSearchQuery();
+        return true;
+      }
+
+      @Override
+      public boolean onQueryTextChange(String newText) {
+        return false;
+      }
+    });
+  }
 }
