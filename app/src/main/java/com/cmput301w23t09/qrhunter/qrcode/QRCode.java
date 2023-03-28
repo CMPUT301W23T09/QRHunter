@@ -6,6 +6,7 @@ import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.photo.Photo;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /** This class defines a QR code */
@@ -137,11 +138,21 @@ public class QRCode implements Serializable {
   }
 
   /**
-   * This returns the player who have scanned the QR code
+   * This returns the photos taken of the QR code
+   *
+   * @return Return the photos taken of the QR code
+   */
+  public List<Photo> getPhotos() {
+    return photos;
+  }
+
+  /**
+   * >>>>>>> 5a577792c6d2d5e00a66356ebeb8b2313f1bd824 This returns the player who have scanned the
+   * QR code
    *
    * @return Return the player who have scanned the QR code
    */
-  public ArrayList<String> getPlayers() {
+  public List<String> getPlayers() {
     return players;
   }
 
@@ -206,15 +217,6 @@ public class QRCode implements Serializable {
    */
   public void deleteComment(Comment comment) {
     this.comments.remove(comment);
-  }
-
-  /**
-   * This returns the photos taken of the QR code
-   *
-   * @return Return the photos taken of the QR code
-   */
-  public ArrayList<Photo> getPhotos() {
-    return photos;
   }
 
   /**
