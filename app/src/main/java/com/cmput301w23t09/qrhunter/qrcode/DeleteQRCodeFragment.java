@@ -82,7 +82,5 @@ public class DeleteQRCodeFragment extends QRCodeFragment {
   }
 
   /** Show the location photo of the qr code */
-  public void showLocationPhoto() {
-
-  }
+  public void showLocationPhoto() {}
 }

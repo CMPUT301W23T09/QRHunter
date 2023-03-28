@@ -21,7 +21,6 @@ import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.smarteist.autoimageslider.SliderView;
-
 import java.io.Serializable;
 import java.util.concurrent.ExecutionException;
 

@@ -110,8 +110,7 @@ public class ScannerController {
                                   }
                                 });
                       }
-                    } else
-                      currentlyScanning = false;
+                    } else currentlyScanning = false;
                   })
               .addOnFailureListener(e -> Log.e("ERROR", e.toString()))
               .addOnCompleteListener(

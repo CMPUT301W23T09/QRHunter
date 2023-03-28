@@ -12,7 +12,6 @@ import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.qrcode.AddQRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
-import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
