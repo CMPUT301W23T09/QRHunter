@@ -1,5 +1,7 @@
 package com.cmput301w23t09.qrhunter.leaderboard;
 
+import android.os.Bundle;
+
 import com.cmput301w23t09.qrhunter.GameController;
 
 public class PlayerSearchFragmentController {
@@ -10,6 +12,7 @@ public class PlayerSearchFragmentController {
     }
 
     public void handleBackButton() {
-        // ...
+        LeaderboardFragment leaderboardFragment = new LeaderboardFragment(gameController);
+        gameController.setBody(leaderboardFragment);
     }
 }
