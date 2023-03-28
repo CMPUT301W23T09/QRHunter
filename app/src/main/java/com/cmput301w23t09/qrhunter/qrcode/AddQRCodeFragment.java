@@ -5,13 +5,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
-import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoAdapter;
 import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoController;
 import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoFragment;
-import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoStorage;
 import com.cmput301w23t09.qrhunter.map.LocationHandler;
 import com.cmput301w23t09.qrhunter.player.Player;
-import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
 
 /**
  * Displays information about a specific QRCode. It also lets the user:
@@ -55,7 +53,8 @@ public class AddQRCodeFragment extends QRCodeFragment {
     loadingButton.setVisibility(View.GONE);
     locationHandler = new LocationHandler(this);
     locationPhotoFragment = LocationPhotoFragment.newInstance(qrCode, this, activePlayer);
-    locationPhotoController = new LocationPhotoController(locationPhotoFragment, qrCode, activePlayer);
+    locationPhotoController =
+        new LocationPhotoController(locationPhotoFragment, qrCode, activePlayer);
     takeLocationPhotoBtn.setOnClickListener(
         v -> {
           locationPhotoStorage.playerHasLocationPhoto(
@@ -141,8 +140,6 @@ public class AddQRCodeFragment extends QRCodeFragment {
         });
   }
 
-
-
   /**
    * Disables the "Record QR Location" box if the user has not granted location permissions
    *
@@ -195,7 +192,17 @@ public class AddQRCodeFragment extends QRCodeFragment {
     return locationPhotoFragment;
   }
 
+  /**
+   * @return The location photo controller
+   */
   public LocationPhotoController getLocationPhotoController() {
     return locationPhotoController;
+  }
+
+  /**
+   * @return The location photo adapter
+   */
+  public LocationPhotoAdapter getLocationPhotoAdapter() {
+    return locationPhotoAdapter;
   }
 }
