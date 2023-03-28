@@ -112,6 +112,10 @@ public abstract class ProfileController implements DatabaseChangeListener {
     qrCodeAdapter = new QRCodeAdapter(gameController.getActivity(), qrCodes);
     qrCodeList.setAdapter(qrCodeAdapter);
 
+    updateQRList();
+  }
+
+  private void updateQRList() {
     // get current player
     PlayerDatabase.getInstance()
         .getPlayerByDeviceId(
@@ -237,7 +241,9 @@ public abstract class ProfileController implements DatabaseChangeListener {
 
   /** This refreshes the profile upon database change */
   public void onChange() {
-    setUpQRList(qrCodeList, totalPoints, totalCodes, topScore, orderSpinner);
+    if (qrCodeAdapter != null) {
+      updateQRList();
+    }
   }
 
   /** This sets up the listener for real-time database changes */

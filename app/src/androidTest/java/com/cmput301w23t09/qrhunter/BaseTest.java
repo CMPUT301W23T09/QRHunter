@@ -4,13 +4,17 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
+import android.content.SharedPreferences;
+import androidx.test.core.app.ApplicationProvider;
 import com.cmput301w23t09.qrhunter.database.DatabaseConnection;
+import com.cmput301w23t09.qrhunter.util.DeviceUtils;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import org.junit.After;
 import org.junit.BeforeClass;
@@ -50,6 +54,30 @@ public abstract class BaseTest {
 
       DatabaseConnection.mockInstance(testConnection);
     }
+  }
+
+  /**
+   * Utility method to retrieve the UUID assigned to this device. If no UUID exists, one is created.
+   *
+   * @return UUID
+   */
+  protected static UUID getDeviceUUID() {
+    // Retrieve our UUID
+    SharedPreferences preferences =
+        ApplicationProvider.getApplicationContext()
+            .getSharedPreferences(DeviceUtils.DEVICE_UUID_FILE, 0);
+    String existingUUIDField = preferences.getString(DeviceUtils.DEVICE_UUID_FILE_FIELD, null);
+
+    // If our UUID doesn't exist yet, create one.
+    if (existingUUIDField == null) {
+      existingUUIDField = UUID.randomUUID().toString();
+    }
+
+    // Overwrite UUID with fetched UUID
+    UUID playerUUID = UUID.fromString(existingUUIDField);
+    preferences.edit().putString(DeviceUtils.DEVICE_UUID_FILE_FIELD, existingUUIDField).commit();
+
+    return playerUUID;
   }
 
   @After
