@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
+import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoStorage;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.AddQRCodeFragment;
@@ -114,26 +115,66 @@ public class TestAddQRCodeFragment extends BaseTest {
     await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getLoc() == null);
   }
 
-  /** Test if we can take a location photo and if the player that took it is correctly logged */
+  /**
+   * Test if we can take a location photo and if the player that took it is correctly logged and
+   * stored in the database
+   */
   @Test
   public void testSnapLocationPhoto() {
     onView(withId(R.id.take_location_photo_btn)).inRoot(isDialog()).perform(click());
-    await().until(() -> qrCodeFragment.getLocationPhotoFragment().getDialog().isShowing());
+    await()
+        .until(
+            () ->
+                qrCodeFragment.getLocationPhotoFragment().getDialog() != null
+                    && qrCodeFragment.getLocationPhotoFragment().getDialog().isShowing());
     onView(withId(R.id.location_photo_shutter)).inRoot(isDialog()).perform(click());
     await().until(() -> qrCodeFragment.getLocationPhotoFragment().getDialog() == null);
     await().until(() -> qrCodeFragment.getLocationPhotoAdapter().getCount() == 1);
+    AtomicReference<Boolean> updatedHasPhoto = new AtomicReference<>();
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              Boolean hasPhoto = updatedHasPhoto.get();
+              if (hasPhoto != null && hasPhoto) return true;
+
+              LocationPhotoStorage.getInstance()
+                  .playerHasLocationPhoto(
+                      qrCode,
+                      player,
+                      result -> {
+                        updatedHasPhoto.set(result);
+                      });
+              return false;
+            });
   }
 
-  /** Test if after we take a location photo, we can remove it using the same button */
+  /**
+   * Test if after we take a location photo, we can remove it using the same button and if the
+   * location photo is no longer stored in the database
+   */
   @Test
   public void testRemoveLocationPhoto() {
-    onView(withId(R.id.take_location_photo_btn)).inRoot(isDialog()).perform(click());
-    await().until(() -> qrCodeFragment.getLocationPhotoFragment().getDialog().isShowing());
-    onView(withId(R.id.location_photo_shutter)).inRoot(isDialog()).perform(click());
-    await().until(() -> qrCodeFragment.getLocationPhotoFragment().getDialog() == null);
-    await().until(() -> qrCodeFragment.getLocationPhotoAdapter().getCount() == 1);
+    testSnapLocationPhoto();
     onView(withId(R.id.take_location_photo_btn)).inRoot(isDialog()).perform(click());
     await().until(() -> qrCodeFragment.getLocationPhotoAdapter().getCount() == 0);
+    AtomicReference<Boolean> updatedHasPhoto = new AtomicReference<>();
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              Boolean hasPhoto = updatedHasPhoto.get();
+              if (hasPhoto != null && !hasPhoto) return true;
+
+              LocationPhotoStorage.getInstance()
+                  .playerHasLocationPhoto(
+                      qrCode,
+                      player,
+                      result -> {
+                        updatedHasPhoto.set(result);
+                      });
+              return false;
+            });
   }
 
   /** Test to see that QRCodes are successfully added to the player's account */
