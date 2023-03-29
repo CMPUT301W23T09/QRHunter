@@ -16,6 +16,7 @@ import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -42,8 +43,17 @@ public class PlayerSearchFragment extends BaseFragment {
         Bundle args = getArguments();
         if (args != null) { searchQuery = args.getString("search_query"); }
         View view = inflater.inflate(R.layout.fragment_player_search, container, false);
+
         controller = new PlayerSearchFragmentController(getGameController());
+        searchQueryEntries = new ArrayList<>();
+        entryAdapter = new SearchQueryEntryAdapter(getContext(), searchQueryEntries);
+        ((ListView) view.findViewById(R.id.search_query_list)).setAdapter(entryAdapter);
+        searchQueryEntries.add(new SearchQueryEntry("Joe"));
+        searchQueryEntries.add(new SearchQueryEntry("Hank"));
+        searchQueryEntries.add(new SearchQueryEntry("Bob"));
+        entryAdapter.notifyDataSetChanged();
         setUpSearchFragment(view);
+
         return view;
     }
 
