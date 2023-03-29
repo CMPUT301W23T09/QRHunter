@@ -23,4 +23,8 @@ public class PlayerSearchController {
         searchFragment.setArguments(args);
         gameController.setBody(searchFragment);
     }
+
+    public void getSearchQueryData(String query) {
+
+    }
 }
