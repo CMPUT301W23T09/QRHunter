@@ -143,6 +143,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     locationCheckbox.setVisibility(View.GONE);
     addButton.setVisibility(View.GONE);
     loadingButton.setVisibility(View.VISIBLE);
+
   }
 
   /**
@@ -155,6 +156,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     layout.addTab(layout.newTab().setText(getText(R.string.players_who_scanned_tab_title)));
     layout.addTab(layout.newTab().setText(getText(R.string.comments_tab_title)));
 
+
     listElement = view.findViewById(R.id.qr_nav_items);
 
     scansAdapter = new QRCodePlayerScansAdapter(getContext());
@@ -163,17 +165,14 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     commentsAdapter = new CommentAdapter(getContext(), comments);
     setupPlayerComments();
 
-    listElement.setAdapter(
-        scansAdapter); // by default, the adapter should display the scanned players.
+    listElement.setAdapter(scansAdapter); // by default, the adapter should display the scanned players.
 
     layout.addOnTabSelectedListener(
         new TabLayout.OnTabSelectedListener() {
+
           @Override
           public void onTabSelected(TabLayout.Tab tab) {
             if (tab.getText().equals(getText(R.string.players_who_scanned_tab_title))) {
-              if (scansAdapter.getItem(0) == null){
-                setupPlayerScans();
-              }
               // Who scanned the QR
               listElement.setAdapter(scansAdapter);
             } else {
@@ -181,8 +180,11 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
                 listElement.setAdapter(null); // set adapter to null if comments is empty
               } else {
                 listElement.setAdapter(commentsAdapter);
+
               }
+
             }
+
           }
 
           @Override

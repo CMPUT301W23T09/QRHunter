@@ -39,7 +39,6 @@ public class AddQRCodeFragment extends QRCodeFragment {
    * @return QRCodeFragment
    */
 
-  private int selectedTabIndex = 0;
 
   public static AddQRCodeFragment newInstance(QRCode qrCode, Player activePlayer) {
     Bundle args = new Bundle();
@@ -80,34 +79,32 @@ public class AddQRCodeFragment extends QRCodeFragment {
             qrCode.setLoc(null);
           }
         });
+
+
+    commentBox.setVisibility(View.GONE);
+
     updateAddButton();
     addButton.setOnClickListener(this::onAddQRClicked);
     updateLocationPhoto();
 
-      // implementing tabs for scanned by and comments
-      tabLayout.addTab(tabLayout.newTab().setText("Tab 1"));
-      tabLayout.addTab(tabLayout.newTab().setText("Comments"));
 
-
-      commentBox.setVisibility(View.GONE);
-
-      if (tabLayout.getSelectedTabPosition()==1){
-          listView.setVisibility(View.VISIBLE);
-          //Call playerHasQRCode to check if the active player has the QR code
-          qrCodeDatabase.playerHasQRCode(activePlayer, qrCode, hasQRCodeResult -> {
-              if (hasQRCodeResult.getData() != null && hasQRCodeResult.getData()) {
-                  commentBox.setVisibility(View.VISIBLE);}
+    if (tabLayout.getSelectedTabPosition()==1) {
+        listView.setVisibility(View.VISIBLE);
+        //Call playerHasQRCode to check if the active player has the QR code
+        qrCodeDatabase.playerHasQRCode(activePlayer, qrCode, hasQRCodeResult -> {
+            if (hasQRCodeResult.getData() != null && hasQRCodeResult.getData()) {
+                commentBox.setVisibility(View.VISIBLE);
+                // allows user enter a comment
+                commentBox.setOnClickListener(this::onAddCommentInput);
+                // allows user to click send and store comment in the database
+                commentBox.setOnTouchListener(this::onSendComment);
+            }
               else{
-                  commentBox.setVisibility(View.GONE);
-              }
-          });
-      }
+                    commentBox.setVisibility(View.GONE);
+                }
 
-
-
-      commentBox.setOnClickListener(this::onAddCommentInput);
-      commentBox.setOnTouchListener(this::onSendComment);
-
+        });
+    }
 
 }
 
@@ -118,6 +115,7 @@ public class AddQRCodeFragment extends QRCodeFragment {
    */
   private void onAddQRClicked(View view) {
     addButton.setVisibility(View.GONE);
+
     loadingButton.setVisibility(View.VISIBLE);
 
     // Add QR to database, when the QR has been added, allow the deletion of the QRCode.
@@ -144,15 +142,6 @@ public class AddQRCodeFragment extends QRCodeFragment {
                             return;
                           }
 
-                          // Add the player to the QR
-                          QRCodeDatabase.getInstance()
-                              .addPlayerToQR(
-                                  activePlayer,
-                                  qrCode,
-                                  ignored -> {
-                                    loadingButton.setVisibility(View.GONE);
-                                    this.dismiss();
-                                  });
                         });
 
               } else {
@@ -162,14 +151,9 @@ public class AddQRCodeFragment extends QRCodeFragment {
                         activePlayer,
                         qrCode,
                         ignored -> {
-                          loadingButton.setVisibility(View.GONE);
                             loadingButton.setVisibility(View.GONE);
-                            if (selectedTabIndex == 1) {
-                                commentBox.setVisibility(View.VISIBLE);
-                            } else {
-                                commentBox.setVisibility(View.GONE);
-                            }
-                          this.dismiss();
+
+                         this.dismiss();
                         });
               }
             });
@@ -247,12 +231,10 @@ public class AddQRCodeFragment extends QRCodeFragment {
     return locationPhotoFragment;
   }
 
-    public void onAddCommentInput(View view){
-        commentBox.setHint(""); // Remove hint text when clicked
-        //commentBox.setHeight(getResources().getDimensionPixelSize(R.dimen.comment_box_expanded_height));
-    }
+    public void onAddCommentInput(View view){commentBox.setHint("");} // Remove hint text when clicked
 
     private boolean onSendComment(View view, MotionEvent event) {
+        Log.d("AddQRCodeFragment", "onSendComment called");
         final int DRAWABLE_RIGHT = 2;
         if(event.getAction() == MotionEvent.ACTION_UP) {
             if(event.getRawX() >= (commentBox.getRight() - commentBox.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
@@ -294,6 +276,7 @@ public class AddQRCodeFragment extends QRCodeFragment {
                 Log.w(TAG, "Error getting QRCode from database", qrCodeQueryResults.getException());
             }
         });
+        Log.d("AddQRCodeFragment", "Comment saved to database");
 
     }
 
