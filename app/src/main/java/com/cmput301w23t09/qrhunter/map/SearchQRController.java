@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.util.Log;
 import android.widget.SearchView;
 import android.widget.Toast;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
