@@ -71,8 +71,10 @@ public class AddQRCodeFragment extends QRCodeFragment {
         (buttonView, isChecked) -> {
           if (isChecked) {
             locationHandler.setQrToLastLocation(qrCode);
+            locationHandler.addLocation(qrCode);
           } else {
             qrCode.setLoc(null);
+            locationHandler.removeLastAddedLocation(qrCode);
           }
         });
     updateAddButton();

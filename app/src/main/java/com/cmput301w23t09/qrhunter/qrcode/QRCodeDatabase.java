@@ -291,6 +291,7 @@ public class QRCodeDatabase {
                     QRCode updatedQRCode = qrHashTask.getData();
                     updatedQRCode.addPlayer(player.getDocumentId());
                     updatedQRCode.setLoc(qrCode.getLoc());
+                    updatedQRCode.setLocations(qrCode.getLocations());
                     updateQRCode(
                         updatedQRCode,
                         updateResult -> {
@@ -402,7 +403,8 @@ public class QRCodeDatabase {
     ArrayList<String> players = (ArrayList<String>) snapshot.get("players");
     ArrayList<String> locationsStr = (ArrayList<String>) snapshot.get("locations");
     ArrayList<QRLocation> locations = new ArrayList<>();
-    for (String locStr : locationsStr) locations.add(new QRLocation("", locStr));
+    if (locationsStr != null)
+      for (String locStr : locationsStr) locations.add(new QRLocation(locStr));
     return new QRCode(
         hash, name, score, location, locations, new ArrayList<>(), new ArrayList<>(), players);
   }

@@ -154,6 +154,35 @@ public class QRCode implements Serializable {
   }
 
   /**
+   * Sets the locations of the QR code
+   *
+   * @param locations The locations of the QRCode
+   */
+  public void setLocations(ArrayList<QRLocation> locations) {
+    this.locations = locations;
+  }
+
+  /**
+   * Adds a new location to the list of locations, as long as it's farther than 100m from any
+   * existing location.
+   *
+   * @param loc New location to add
+   */
+  public void addLocation(QRLocation loc) {
+    for (QRLocation pastLoc : locations) if (loc.distanceTo(pastLoc) <= 100f) return;
+    locations.add(loc);
+  }
+
+  /**
+   * Removes a location from the list of locations.
+   *
+   * @param loc Location to remove
+   */
+  public void removeLocation(QRLocation loc) {
+    locations.remove(loc);
+  }
+
+  /**
    * This returns the photos taken of the QR code
    *
    * @return Return the photos taken of the QR code
