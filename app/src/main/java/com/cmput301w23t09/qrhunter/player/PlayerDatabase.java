@@ -5,6 +5,7 @@ import com.cmput301w23t09.qrhunter.database.DatabaseConnection;
 import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
 import com.cmput301w23t09.qrhunter.database.DatabaseQueryResults;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -184,6 +185,28 @@ public class PlayerDatabase {
             });
   }
 
+  public void getPlayerByDocumentId(String documentId, DatabaseConsumer<Player> callback) {
+    collection
+        .document(documentId)
+        .get()
+        .addOnCompleteListener(
+            task -> {
+              if (!task.isSuccessful()) {
+                callback.accept(new DatabaseQueryResults<>(null, task.getException()));
+                return;
+              }
+
+              // Return found player if any.
+              if (task.getResult() != null) {
+                callback.accept(new DatabaseQueryResults<>(snapshotToPlayer(task.getResult())));
+                return;
+              }
+
+              // No player by the device id exists.
+              callback.accept(new DatabaseQueryResults<>(null));
+            });
+  }
+
   /**
    * Retrieve a player by their username from the database
    *
@@ -244,7 +267,7 @@ public class PlayerDatabase {
    * @param snapshot database snapshot
    * @return Player object
    */
-  private Player snapshotToPlayer(QueryDocumentSnapshot snapshot) {
+  private Player snapshotToPlayer(DocumentSnapshot snapshot) {
     String documentId = snapshot.getId();
     UUID deviceUUID = UUID.fromString(snapshot.getString("deviceUUID"));
     String username = snapshot.getString("username");

@@ -40,8 +40,6 @@ public class CameraLocationPhotoController extends CameraController {
    * Enables the camera to take photos using the ImageCapture use case
    *
    * @param cameraProviderFuture The camera's provider object
-   * @throws ExecutionException
-   * @throws InterruptedException
    */
   @Override
   protected void setupCamera(ListenableFuture<ProcessCameraProvider> cameraProviderFuture)
