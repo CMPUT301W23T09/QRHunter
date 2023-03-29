@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.util.Log;
 import android.widget.SearchView;
 import android.widget.Toast;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
@@ -30,16 +31,8 @@ public class SearchQRController {
       @Override
       public boolean onQueryTextSubmit(String query) {
         String locationInput = searchView.getQuery().toString().trim();
-        // parse location input
-        LatLng loc;
-        try {
-          loc = parseInput(locationInput);
-        } catch (Exception err) {
-          Toast.makeText(fragment.getContext(), err.toString(), Toast.LENGTH_LONG).show();
-          return true;
-        }
-        // try to get location first if parseInput returns null
-        if (loc == null && fragment.getLocationPermissionGranted()) {
+        // check if user wants to search from the current location
+        if (locationInput.equalsIgnoreCase("here") && fragment.getLocationPermissionGranted()) {
           fragment
               .getFusedLocationProviderClient()
               .getCurrentLocation(Priority.PRIORITY_BALANCED_POWER_ACCURACY, null)
@@ -57,13 +50,21 @@ public class SearchQRController {
                           .show();
                     }
                   });
-        } else if (loc == null && !fragment.getLocationPermissionGranted()) {
+        } else if (locationInput.equalsIgnoreCase("here")
+            && !fragment.getLocationPermissionGranted()) {
           Toast.makeText(
                   fragment.getContext(), "Location permission not granted", Toast.LENGTH_SHORT)
               .show();
-        }
-        // otherwise get nearby qr codes directly
-        else {
+        } else {
+          // parse location input
+          LatLng loc;
+          try {
+            loc = parseInput(locationInput);
+          } catch (Exception err) {
+            Toast.makeText(fragment.getContext(), err.toString(), Toast.LENGTH_LONG).show();
+            return true;
+          }
+          // otherwise get nearby qr codes directly
           showNearbyQRCodes(loc);
         }
         return true;
@@ -82,15 +83,6 @@ public class SearchQRController {
       throw new Exception("Please enter a location");
     }
 
-    // check if input is "here"
-    if (locationInput.equalsIgnoreCase("here")) {
-      // code for once SearchQRController fuses with the MapController
-      // if (!locationPermissionsGranted()) {
-      //    throw("Location permissions not granted");
-      // }
-      return null;
-    }
-
     // check if a location coordinate was given
     if (locationInput.matches(".*\\d.*")) {
       String[] coords = {};
@@ -100,18 +92,13 @@ public class SearchQRController {
         coords = locationInput.split(" ");
       }
       // check input format
-      if (coords.length != 2) {
-        throw new Exception(
-            "Invalid format, enter \"Here\", geolocation coordinates, or an address");
-      }
-      // get location coordinates
-      Double latitude = parseDoubleInput(coords[0]);
-      Double longitude = parseDoubleInput(coords[1]);
-      if (latitude != null && longitude != null) {
-        return new LatLng(latitude, longitude);
-      } else {
-        throw new Exception(
-            "Invalid format, enter \"Here\", geolocation coordinates, or an address");
+      if (coords.length == 2) {
+        // get location coordinates
+        Double latitude = parseDoubleInput(coords[0]);
+        Double longitude = parseDoubleInput(coords[1]);
+        if (latitude != null && longitude != null) {
+          return new LatLng(latitude, longitude);
+        }
       }
     }
 

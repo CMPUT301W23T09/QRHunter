@@ -122,7 +122,8 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     takeLocationPhotoBtn.setVisibility(View.GONE);
     locationCheckbox.setVisibility(View.GONE);
     addButton.setVisibility(View.GONE);
-    loadingButton.setVisibility(View.VISIBLE);
+    deleteButton.setVisibility(View.GONE);
+    loadingButton.setVisibility(View.GONE);
   }
 
   /**
