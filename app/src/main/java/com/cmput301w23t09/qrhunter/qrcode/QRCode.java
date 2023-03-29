@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.locationphoto.LocationPhoto;
+import com.cmput301w23t09.qrhunter.map.QRLocation;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,8 @@ public class QRCode implements Serializable {
   private Integer score;
   /** This is the location of the QR code */
   private Location loc;
+  /** This is a list of locations that the QR code has been found in */
+  private ArrayList<QRLocation> locations;
   /** This is a list of photos that have been taken of the QR code */
   private ArrayList<LocationPhoto> locationPhotos;
   /** This is a list of comments on the QR code */
@@ -64,6 +67,7 @@ public class QRCode implements Serializable {
       String name,
       Integer score,
       Location loc,
+      ArrayList<QRLocation> locations,
       ArrayList<LocationPhoto> locationPhotos,
       ArrayList<Comment> comments,
       ArrayList<String> players) {
@@ -71,6 +75,7 @@ public class QRCode implements Serializable {
     this.name = name;
     this.score = score;
     this.loc = loc;
+    this.locations = locations;
     this.locationPhotos = locationPhotos;
     this.comments = comments;
     this.players = players;
@@ -137,6 +142,15 @@ public class QRCode implements Serializable {
    */
   public void setLoc(Location loc) {
     this.loc = loc;
+  }
+
+  /**
+   * Returns all locations of the QR code
+   *
+   * @return An ArrayList of this QR code's locations
+   */
+  public ArrayList<QRLocation> getLocations() {
+    return locations;
   }
 
   /**
