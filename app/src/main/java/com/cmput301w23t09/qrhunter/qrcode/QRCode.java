@@ -45,6 +45,7 @@ public class QRCode implements Serializable {
     this.visualRepresentation = null;
 
     this.loc = null;
+    this.locations = new ArrayList<>();
     this.locationPhotos = new ArrayList<>();
     this.comments = new ArrayList<>();
     this.players = new ArrayList<>();
@@ -169,7 +170,7 @@ public class QRCode implements Serializable {
    * @param loc New location to add
    */
   public void addLocation(QRLocation loc) {
-    for (QRLocation pastLoc : locations) if (loc.distanceTo(pastLoc) <= 100f) return;
+    for (QRLocation pastLoc : locations) if (loc.distanceTo(pastLoc) <= 100) return;
     locations.add(loc);
   }
 

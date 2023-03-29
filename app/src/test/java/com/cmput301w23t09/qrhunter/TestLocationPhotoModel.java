@@ -1,9 +1,10 @@
-package com.cmput301w23t09.qrhunter.locationphoto;
+package com.cmput301w23t09.qrhunter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import android.graphics.Bitmap;
+import com.cmput301w23t09.qrhunter.locationphoto.LocationPhoto;
 import com.cmput301w23t09.qrhunter.player.Player;
 import java.util.ArrayList;
 import java.util.UUID;
