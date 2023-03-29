@@ -134,12 +134,4 @@ public class LeaderboardController {
     // TODO: Implement after location recording is completed and fetch the region of the photo.
   }
 
-  public void handleSearchQuery(String query) {
-      PlayerSearchFragment searchFragment = new PlayerSearchFragment(gameController);
-      Bundle args = new Bundle();
-      args.putString("search_query", query);
-      searchFragment.setArguments(args);
-      gameController.setBody(searchFragment);
-  }
-
 }

@@ -22,6 +22,7 @@ import java.util.Map;
 public class LeaderboardFragment extends BaseFragment {
 
   private final LeaderboardController controller;
+  private final PlayerSearchController searchController;
   private LeaderboardEntryAdapter entryAdapter;
   private List<LeaderboardEntry> leaderboardEntries;
 
@@ -32,6 +33,7 @@ public class LeaderboardFragment extends BaseFragment {
   public LeaderboardFragment(GameController gameController) {
     super(gameController);
     controller = new LeaderboardController(getGameController());
+    searchController = new PlayerSearchController(getGameController());
   }
 
   @Override
@@ -158,7 +160,7 @@ public class LeaderboardFragment extends BaseFragment {
       @Override
       public boolean onQueryTextSubmit(String query) {
         Toast.makeText(getContext(), query, Toast.LENGTH_SHORT).show();
-        controller.handleSearchQuery(query);
+        searchController.handleSearchQuery(query);
         return true;
       }
 

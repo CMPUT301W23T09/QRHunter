@@ -2,9 +2,6 @@ package com.cmput301w23t09.qrhunter.leaderboard;
 
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +21,7 @@ public class PlayerSearchFragment extends BaseFragment {
     private String searchQuery;
     private TextView playerSearchQuery;
     private ImageView backButton;
-    private PlayerSearchFragmentController controller;
+    private PlayerSearchController controller;
     private ListView searchQueryList;
     private SearchQueryEntryAdapter entryAdapter;
     private List<SearchQueryEntry> searchQueryEntries;
@@ -44,14 +41,16 @@ public class PlayerSearchFragment extends BaseFragment {
         if (args != null) { searchQuery = args.getString("search_query"); }
         View view = inflater.inflate(R.layout.fragment_player_search, container, false);
 
-        controller = new PlayerSearchFragmentController(getGameController());
+        controller = new PlayerSearchController(getGameController());
         searchQueryEntries = new ArrayList<>();
         entryAdapter = new SearchQueryEntryAdapter(getContext(), searchQueryEntries);
         ((ListView) view.findViewById(R.id.search_query_list)).setAdapter(entryAdapter);
-        searchQueryEntries.add(new SearchQueryEntry("Joe"));
-        searchQueryEntries.add(new SearchQueryEntry("Hank"));
-        searchQueryEntries.add(new SearchQueryEntry("Bob"));
-        entryAdapter.notifyDataSetChanged();
+
+//        searchQueryEntries.add(new SearchQueryEntry("Joe"));
+//        searchQueryEntries.add(new SearchQueryEntry("Hank"));
+//        searchQueryEntries.add(new SearchQueryEntry("Bob"));
+//        entryAdapter.notifyDataSetChanged();
+
         setUpSearchFragment(view);
 
         return view;
