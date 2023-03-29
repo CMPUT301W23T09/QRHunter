@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,6 @@ public class PlayerSearchFragment extends BaseFragment {
         if (args != null) { searchQuery = args.getString("search_query"); }
         View view = inflater.inflate(R.layout.fragment_player_search, container, false);
         controller = new PlayerSearchFragmentController(getGameController());
-
         setUpSearchFragment(view);
         return view;
     }
@@ -46,7 +46,7 @@ public class PlayerSearchFragment extends BaseFragment {
     private void setUpSearchFragment(View view) {
         playerSearchQuery = view.findViewById(R.id.search_query);
         backButton = view.findViewById(R.id.back_button);
-        searchQueryList = view.findViewById(R.id.search_query_list);
+//        searchQueryList = view.findViewById(R.id.search_query_list);
         backButton.setOnClickListener(v -> controller.handleBackButton());
         playerSearchQuery.setText(searchQuery);
     }

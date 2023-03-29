@@ -1,6 +1,7 @@
 package com.cmput301w23t09.qrhunter.leaderboard;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.cmput301w23t09.qrhunter.GameController;
 
