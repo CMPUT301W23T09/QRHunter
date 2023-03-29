@@ -1,11 +1,8 @@
 package com.cmput301w23t09.qrhunter.qrcode;
 
-import static android.content.ContentValues.TAG;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +28,7 @@ import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -46,18 +44,14 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   protected FloatingActionButton addButton;
   protected FloatingActionButton deleteButton;
   protected FloatingActionButton loadingButton;
-
-  protected QRCodeDatabase qrCodeDatabase;
   protected TabLayout tabLayout;
   protected EditText commentBox;
   protected ListView listView;
   protected List<Comment> comments;
   protected CommentAdapter commentsAdapter;
 
-
   protected ListView listElement;
   protected QRCodePlayerScansAdapter scansAdapter;
-
 
   /**
    * Creates a new QRCodeFragment to display a specific QR Code
@@ -81,16 +75,12 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     qrCode = (QRCode) getArguments().getSerializable("qrcode");
     activePlayer = (Player) getArguments().getSerializable("player");
 
-
     try {
       setupViews(view);
     } catch (ExecutionException | InterruptedException e) {
       throw new RuntimeException(e);
     }
     return createAlertDialog(view);
-
-
-
   }
 
   @Override
@@ -133,7 +123,6 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
 
     // set up buttons
     setUpButtons(view);
-
   }
 
   /** Enable and disable buttons of QRCodeFragment */
@@ -143,7 +132,6 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     locationCheckbox.setVisibility(View.GONE);
     addButton.setVisibility(View.GONE);
     loadingButton.setVisibility(View.VISIBLE);
-
   }
 
   /**
@@ -156,16 +144,17 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     layout.addTab(layout.newTab().setText(getText(R.string.players_who_scanned_tab_title)));
     layout.addTab(layout.newTab().setText(getText(R.string.comments_tab_title)));
 
-
     listElement = view.findViewById(R.id.qr_nav_items);
 
     scansAdapter = new QRCodePlayerScansAdapter(getContext());
     setupPlayerScans();
 
+    comments = new ArrayList<>();
     commentsAdapter = new CommentAdapter(getContext(), comments);
     setupPlayerComments();
 
-    listElement.setAdapter(scansAdapter); // by default, the adapter should display the scanned players.
+    listElement.setAdapter(
+        scansAdapter); // by default, the adapter should display the scanned players.
 
     layout.addOnTabSelectedListener(
         new TabLayout.OnTabSelectedListener() {
@@ -176,15 +165,8 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
               // Who scanned the QR
               listElement.setAdapter(scansAdapter);
             } else {
-              if (comments.isEmpty()) {
-                listElement.setAdapter(null); // set adapter to null if comments is empty
-              } else {
-                listElement.setAdapter(commentsAdapter);
-
-              }
-
+              listElement.setAdapter(commentsAdapter);
             }
-
           }
 
           @Override
@@ -241,23 +223,10 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     }
   }
 
-  public void setupPlayerComments() {
-    qrCodeDatabase = QRCodeDatabase.getInstance();
-    qrCodeDatabase.getQRCodeByHash(qrCode.getHash(), qrCodeQueryResults -> {
-      if (qrCodeQueryResults.isSuccessful()) {
-        QRCode qrCode = qrCodeQueryResults.getData();
-        comments = qrCode.getComments();
-        commentsAdapter = new CommentAdapter(getContext(), comments);
-        if (comments.isEmpty()) {
-          listElement.setAdapter(null); // set adapter to null if comments is empty
-        } else {
-          commentsAdapter.notifyDataSetChanged();
-          listElement.setAdapter(commentsAdapter);
-        }
-      } else {
-        Log.w(TAG, "Error getting QRCode from database", qrCodeQueryResults.getException());
-      }
-    });
+  private void setupPlayerComments() {
+    comments.clear();
+    comments.addAll(qrCode.getComments());
+    commentsAdapter.notifyDataSetChanged();
   }
 
   /**
@@ -270,5 +239,4 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
     return builder.setView(view).setPositiveButton("Close", null).create();
   }
-
 }
