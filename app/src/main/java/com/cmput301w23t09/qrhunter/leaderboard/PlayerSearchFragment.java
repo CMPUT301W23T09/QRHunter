@@ -16,6 +16,8 @@ import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
 
+import java.util.List;
+
 
 public class PlayerSearchFragment extends BaseFragment {
     private String searchQuery;
@@ -23,6 +25,8 @@ public class PlayerSearchFragment extends BaseFragment {
     private ImageView backButton;
     private PlayerSearchFragmentController controller;
     private ListView searchQueryList;
+    private SearchQueryEntryAdapter entryAdapter;
+    private List<SearchQueryEntry> searchQueryEntries;
 
     public PlayerSearchFragment(GameController gameController) {
         super(gameController);
@@ -46,8 +50,8 @@ public class PlayerSearchFragment extends BaseFragment {
     private void setUpSearchFragment(View view) {
         playerSearchQuery = view.findViewById(R.id.search_query);
         backButton = view.findViewById(R.id.back_button);
-//        searchQueryList = view.findViewById(R.id.search_query_list);
+        searchQueryList = view.findViewById(R.id.search_query_list);
         backButton.setOnClickListener(v -> controller.handleBackButton());
-        playerSearchQuery.setText(searchQuery);
+        playerSearchQuery.setText("Search query: " + searchQuery);
     }
 }

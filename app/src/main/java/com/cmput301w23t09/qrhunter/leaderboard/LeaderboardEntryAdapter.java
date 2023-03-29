@@ -36,7 +36,7 @@ public class LeaderboardEntryAdapter extends ArrayAdapter<LeaderboardEntry> {
     LeaderboardEntry entry = entries.get(position);
 
     // set fields of view
-    TextView name = view.findViewById(R.id.search_query_entry_text);
+    TextView name = view.findViewById(R.id.leaderboard_entry_text);
     name.setText(entry.getName());
 
     TextView score = view.findViewById(R.id.leaderboard_entry_score);

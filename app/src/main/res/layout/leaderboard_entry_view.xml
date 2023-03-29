@@ -13,7 +13,7 @@
         app:srcCompat="@drawable/ic_launcher_background" />
 
     <TextView
-        android:id="@+id/search_query_entry_text"
+        android:id="@+id/leaderboard_entry_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="Text"
