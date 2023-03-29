@@ -112,7 +112,11 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     setUpButtons(view);
   }
 
-  /** Enable and disable buttons of QRCodeFragment */
+  /**
+   * Enable and disable buttons of QRCodeFragment
+   *
+   * @param view the view
+   */
   protected void setUpButtons(View view) {
     locationPhoto.setVisibility(View.GONE);
     takeLocationPhotoBtn.setVisibility(View.GONE);

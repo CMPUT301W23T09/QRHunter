@@ -39,12 +39,6 @@ public class AddQRCodeFragment extends QRCodeFragment {
     return fragment;
   }
 
-  /**
-   * Creates a new QRCodeFragment to display a specific QR Code with adding capabilities
-   *
-   * @param view
-   * @return QRCodeFragment
-   */
   @Override
   protected void setUpButtons(View view) {
     addButton.setVisibility(View.VISIBLE);
