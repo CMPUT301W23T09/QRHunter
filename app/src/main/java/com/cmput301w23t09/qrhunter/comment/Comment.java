@@ -38,6 +38,11 @@ public class Comment {
     return playerId;
   }
 
+  /**
+   * This returns the player username attribute
+   *
+   * @return Return the username of player that made the comment
+   */
   public String getUsername() {
     return username;
   }

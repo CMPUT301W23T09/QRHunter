@@ -59,7 +59,6 @@ public class DeleteQRCodeFragment extends QRCodeFragment {
           @Override
           public void onTabSelected(TabLayout.Tab tab) {
             if (tab.getPosition() == 1) {
-              // Call playerHasQRCode to check if the active player has the QR code
               commentBox.setVisibility(View.VISIBLE);
             } else {
               // Hide the comment box
@@ -74,7 +73,7 @@ public class DeleteQRCodeFragment extends QRCodeFragment {
           public void onTabReselected(TabLayout.Tab tab) {}
         });
 
-    // allows user enter a comment
+    // allows user to enter a comment
     commentBox.setOnClickListener(this::onAddCommentInput);
     // allows user to click send and store comment in the database
     commentBox.setOnTouchListener(this::onSendComment);
@@ -132,10 +131,21 @@ public class DeleteQRCodeFragment extends QRCodeFragment {
     }
   }
 
+    /**
+     * Removes hint text when clicked*
+     * @param view view
+     */
   public void onAddCommentInput(View view) {
     commentBox.setHint("");
-  } // Remove hint text when clicked
+  }
 
+    /**
+     * Handles sending a comment when the send icon is clicked.
+     * Changes the color of the send icon depending on the state.
+     * @param view View
+     * @param event The motion event
+     * @return True if the event is handled. otherwise, false.
+     */
   private boolean onSendComment(View view, MotionEvent event) {
     final int DRAWABLE_RIGHT = 2;
 
@@ -172,7 +182,12 @@ public class DeleteQRCodeFragment extends QRCodeFragment {
       return false;
   }
 
-
+    /**
+     * Adds a comment to the comments list
+     * updates the comments adapter
+     * saves the comment to the database.
+     * @param commentText The comment text to be added to database
+     */
   private void addComment(String commentText) {
     Comment comment =
         new Comment(activePlayer.getDocumentId(), activePlayer.getUsername(), commentText);

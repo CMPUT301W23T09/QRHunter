@@ -14,18 +14,32 @@ import androidx.annotation.Nullable;
 import com.cmput301w23t09.qrhunter.R;
 import java.util.List;
 
+/**The CommentAdapter is responsible for managing and creating view for each comment object*/
 public class CommentAdapter extends ArrayAdapter<Comment> {
-
+  /** This is the context for the adapter */
   private final Context context;
+  /**This is the list of player comment objects the adapter converts to views*/
   private List<Comment> playerComments;
 
+
+  /**
+   *
+   * @param context  This is the context of the adapter
+   * @param playerComments This is the list of comments made by players to be displayed in Listview
+   */
   public CommentAdapter(Context context, List<Comment> playerComments) {
     super(context, 0, playerComments);
-
     this.context = context;
     this.playerComments = playerComments;
   }
 
+  /**
+   * Returns view for each row in the listview
+   * @param position The position of the current item in the listview
+   * @param convertView The view to be converted
+   * @param parent The parent View group
+   * @return return the view for each row in the list view
+   */
   @NonNull
   @Override
   public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -51,17 +65,20 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
     }
     comment.setText(commentText);
 
-// set onClickListener to show full comment when clicked
-    comment.setOnClickListener(view1 -> {
+    // set onClickListener to show full comment when clicked
+    view.setOnClickListener(view1 -> {
       showCommentDialog(currentComment.getUsername(), currentComment.getComment());
     });
 
-    player_name.setOnClickListener(view1 -> {
-      showCommentDialog(currentComment.getUsername(), currentComment.getComment());
-    });
 
     return view;
   }
+
+  /**
+   *Displays a dialog with the full comment when a comment text is clicked on
+   * @param playerName The name of the player who wrote the comment
+   * @param commentText The full text of the comment
+   */
 
   private void showCommentDialog(String playerName, String commentText) {
     // create dialog

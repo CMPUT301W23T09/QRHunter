@@ -70,6 +70,7 @@ public class AddQRCodeFragment extends QRCodeFragment {
           }
         });
 
+    //hides comment box
     commentBox.setVisibility(View.GONE);
 
     updateAddButton();

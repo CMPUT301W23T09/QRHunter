@@ -9,5 +9,4 @@
     <!-- Border corner radius -->
     <corners android:radius="8dp" />
 
-
 </shape>

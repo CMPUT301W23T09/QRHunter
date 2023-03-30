@@ -173,7 +173,6 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
 
           @Override
           public void onTabUnselected(TabLayout.Tab tab) {}
-
           @Override
           public void onTabReselected(TabLayout.Tab tab) {}
         });
@@ -225,6 +224,11 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     }
   }
 
+  /**
+   * Sets up the player comments for the current QR code.
+   * Adds all the comments for the current QR code to the list
+   * Notifies Adapter of data change
+   */
   private void setupPlayerComments() {
     comments.clear();
     comments.addAll(qrCode.getComments());

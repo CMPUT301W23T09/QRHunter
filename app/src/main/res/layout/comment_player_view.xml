@@ -41,8 +41,4 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/baseline_chat_icon_24" />
 
-
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
