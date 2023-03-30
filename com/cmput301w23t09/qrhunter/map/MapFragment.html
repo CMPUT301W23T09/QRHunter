@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -224,18 +224,28 @@ implements com.google.android.gms.maps.OnMapReadyCallback</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>com.google.android.gms.location.FusedLocationProviderClient</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getFusedLocationProviderClient()">getFusedLocationProviderClient</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLocationPermissionGranted()">getLocationPermissionGranted</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>android.view.View</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle)">onCreateView</a></span>&#8203;(android.view.LayoutInflater&nbsp;inflater,
             android.view.ViewGroup&nbsp;container,
             android.os.Bundle&nbsp;savedInstanceState)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onMapReady(com.google.android.gms.maps.GoogleMap)">onMapReady</a></span>&#8203;(com.google.android.gms.maps.GoogleMap&nbsp;map)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onRequestPermissionsResult(int,java.lang.String%5B%5D,int%5B%5D)">onRequestPermissionsResult</a></span>&#8203;(int&nbsp;requestCode,
                           java.lang.String[]&nbsp;permissions,
@@ -244,7 +254,7 @@ implements com.google.android.gms.maps.OnMapReadyCallback</pre>
 <div class="block">Handles the users response to permission dialogue box popup</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onViewCreated(android.view.View,android.os.Bundle)">onViewCreated</a></span>&#8203;(android.view.View&nbsp;view,
              android.os.Bundle&nbsp;savedInstanceState)</code></th>
@@ -373,7 +383,7 @@ implements com.google.android.gms.maps.OnMapReadyCallback</pre>
 <a id="onMapReady(com.google.android.gms.maps.GoogleMap)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>onMapReady</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;onMapReady&#8203;(com.google.android.gms.maps.GoogleMap&nbsp;map)</pre>
@@ -383,6 +393,24 @@ implements com.google.android.gms.maps.OnMapReadyCallback</pre>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>map</code> - the Google maps</dd>
 </dl>
+</li>
+</ul>
+<a id="getLocationPermissionGranted()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getLocationPermissionGranted</h4>
+<pre class="methodSignature">public&nbsp;boolean&nbsp;getLocationPermissionGranted()</pre>
+</li>
+</ul>
+<a id="getFusedLocationProviderClient()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getFusedLocationProviderClient</h4>
+<pre class="methodSignature">public&nbsp;com.google.android.gms.location.FusedLocationProviderClient&nbsp;getFusedLocationProviderClient()</pre>
 </li>
 </ul>
 </li>
