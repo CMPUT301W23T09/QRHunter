@@ -195,6 +195,10 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
             mMap.addMarker(new MarkerOptions().position(latLng).title(qrCode.getName()));
             Log.d(TAG, "Marker added for QR code: " + qrCode.getName() + " at " + latLng.toString());
           }
+        }
+      }
+    });
+  }
 
 //  public void getTopQRCodesLeaderboard(BiConsumer<Exception, Leaderboard> callback) {
 //    QRCodeDatabase.getInstance()
@@ -216,43 +220,43 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 //  }
 
 
-  /**
-   * @param inflater The LayoutInflater object that can be used to inflate any views in the
-   *     fragment,
-   * @param container If non-null, this is the parent view that the fragment's UI should be attached
-   *     to. The fragment should not add the view itself, but this can be used to generate the
-   *     LayoutParams of the view.
-   * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous
-   *     saved state as given here.
-   * @return View the view which is inflated displaying the the R.layout.map xml file
-   */
-  @Override
-  public View onCreateView(
-      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    Places.initialize(
-        getContext().getApplicationContext(), "AIzaSyDniTKVk4HDVsQVG-uDxQ-eFV4nCWeM-gU");
+          /**
+           * @param inflater The LayoutInflater object that can be used to inflate any views in the
+           *     fragment,
+           * @param container If non-null, this is the parent view that the fragment's UI should be attached
+           *     to. The fragment should not add the view itself, but this can be used to generate the
+           *     LayoutParams of the view.
+           * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous
+           *     saved state as given here.
+           * @return View the view which is inflated displaying the the R.layout.map xml file
+           */
+          @Override
+          public View onCreateView (
+                  LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+            Places.initialize(
+                    getContext().getApplicationContext(), "AIzaSyDniTKVk4HDVsQVG-uDxQ-eFV4nCWeM-gU");
 
 
-    View view = inflater.inflate(R.layout.fragment_map, container, false);
+            View view = inflater.inflate(R.layout.fragment_map, container, false);
 
-    SupportMapFragment mapFragment =
-            (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-    // Checks if support map fragment is found, if so pass current fragment as callback
-    if (mapFragment != null) {
-      // Gets a googleMap object
-      mapFragment.getMapAsync(this);
-    }
+            SupportMapFragment mapFragment =
+                    (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+            // Checks if support map fragment is found, if so pass current fragment as callback
+            if (mapFragment != null) {
+              // Gets a googleMap object
+              mapFragment.getMapAsync(this);
+            }
 
-    fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
 
-    // create search view
-    qrSearcher = view.findViewById(R.id.qr_searcher);
-    searchController = new SearchQRController(qrSearcher, this);
-    qrSearcher.setOnQueryTextListener(searchController.handleSearch());
+            // create search view
+            qrSearcher = view.findViewById(R.id.qr_searcher);
+            searchController = new SearchQRController(qrSearcher, this);
+            qrSearcher.setOnQueryTextListener(searchController.handleSearch());
 
-    return view;
-  }
+            return view;
+          }
 
 //  /**
 //   * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
@@ -265,30 +269,28 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 //
 //  }
 
-  /**
-   * @param map the Google maps
-   */
-  @Override
-  public void onMapReady(GoogleMap googleMap) {
-    this.map = map;
-    // Turn on the My Location layer and the related control on the map.
-    updateLocationUI();
+          /**
+           * @param googleMap the Google maps
+           */
+          @Override
+          public void onMapReady (GoogleMap googleMap){
+            this.map = map;
+            // Turn on the My Location layer and the related control on the map.
+            updateLocationUI();
 
-    // Get the current location of the device and set the position of the map.
-    getDeviceLocation();
+            // Get the current location of the device and set the position of the map.
+            getDeviceLocation();
 
-    if (this.map != null) {
-      displayQRCodeMarkersOnMap(map);
-    }
-    //loop through arraylist
+            if (this.map != null) {
+              displayQRCodeMarkersOnMap(map);
+            }
+            //loop through arraylist
 //    getQRFromDB(latLngList -> {
 //      for (LatLng latLng : latLngsList) {
 //        // add a marker for each LatLng on the map
 //        map.addMarker(new MarkerOptions().position(latLng));
 //      }
 //    });
-
-
 
 
 //    placeholderQR =
@@ -303,16 +305,16 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 //    //replace with listQR
 //    for (LatLng location : placeholderQR) {
 //      map.addMarker(new MarkerOptions().position(location));
-    }
+          }
 
-  public boolean getLocationPermissionGranted() {
-    return locationPermissionGranted;
-  }
+          public boolean getLocationPermissionGranted () {
+            return locationPermissionGranted;
+          }
 
-  public FusedLocationProviderClient getFusedLocationProviderClient() {
-    return fusedLocationProviderClient;
-  }
+          public FusedLocationProviderClient getFusedLocationProviderClient () {
+            return fusedLocationProviderClient;
+          }
 
 
-}
+        }
 
