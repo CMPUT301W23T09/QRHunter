@@ -7,6 +7,7 @@ import com.cmput301w23t09.qrhunter.DatabaseChangeListener;
 import com.cmput301w23t09.qrhunter.database.DatabaseConnection;
 import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
 import com.cmput301w23t09.qrhunter.database.DatabaseQueryResults;
+import com.cmput301w23t09.qrhunter.map.QRLocation;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.google.firebase.firestore.CollectionReference;
@@ -290,6 +291,7 @@ public class QRCodeDatabase {
                     QRCode updatedQRCode = qrHashTask.getData();
                     updatedQRCode.addPlayer(player.getDocumentId());
                     updatedQRCode.setLoc(qrCode.getLoc());
+                    updatedQRCode.setLocations(qrCode.getLocations());
                     updateQRCode(
                         updatedQRCode,
                         updateResult -> {
@@ -399,7 +401,12 @@ public class QRCodeDatabase {
       location.setLongitude((double) snapshot.get("longitude"));
     }
     ArrayList<String> players = (ArrayList<String>) snapshot.get("players");
-    return new QRCode(hash, name, score, location, new ArrayList<>(), new ArrayList<>(), players);
+    ArrayList<String> locationsStr = (ArrayList<String>) snapshot.get("locations");
+    ArrayList<QRLocation> locations = new ArrayList<>();
+    if (locationsStr != null)
+      for (String locStr : locationsStr) locations.add(new QRLocation(locStr));
+    return new QRCode(
+        hash, name, score, location, locations, new ArrayList<>(), new ArrayList<>(), players);
   }
 
   /**
@@ -416,6 +423,9 @@ public class QRCodeDatabase {
     values.put("latitude", qrCode.getLoc() != null ? qrCode.getLoc().getLatitude() : null);
     values.put("longitude", qrCode.getLoc() != null ? qrCode.getLoc().getLongitude() : null);
     values.put("players", qrCode.getPlayers());
+    ArrayList<String> locationsStr = new ArrayList<>();
+    for (QRLocation loc : qrCode.getLocations()) locationsStr.add(loc.getLocationString());
+    values.put("locations", locationsStr);
     return values;
   }
 
