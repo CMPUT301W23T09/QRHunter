@@ -1,4 +1,4 @@
-package com.cmput301w23t09.qrhunter.photo;
+package com.cmput301w23t09.qrhunter.locationphoto;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,7 +14,7 @@ import java.nio.ByteBuffer;
  * @author John Mabanta
  * @version 1.1
  */
-public class Photo {
+public class LocationPhoto {
   /** Stores image */
   private Bitmap photo;
   /** This is the player that took the photo */
@@ -26,7 +26,7 @@ public class Photo {
    * @param bitmap The location image of the QRCode, as a Bitmap type
    * @param player This is the player that took the photo
    */
-  public Photo(Bitmap bitmap, Player player) {
+  public LocationPhoto(Bitmap bitmap, Player player) {
     photo = bitmap;
     this.player = player;
   }
@@ -37,7 +37,7 @@ public class Photo {
    * @param image The location image of the QR Code, as an ImageProxy type
    * @param player This is the player that took the photo
    */
-  public Photo(ImageProxy image, Player player) {
+  public LocationPhoto(ImageProxy image, Player player) {
     setPhoto(image);
     this.player = player;
   }

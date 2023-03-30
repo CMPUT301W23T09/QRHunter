@@ -15,14 +15,10 @@ import androidx.annotation.Nullable;
 import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
-import com.cmput301w23t09.qrhunter.util.DeviceUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import java.util.UUID;
 
 /** This is the fragment displaying the user's profile */
-public class ProfileFragment extends BaseFragment {
-  /** This is the UUID corresponding to the profile of this player */
-  private UUID deviceUUID;
+public abstract class ProfileFragment extends BaseFragment {
   /** This is the controller that manages the fragment */
   private ProfileController controller;
   /** This is the view displaying the user's username */
@@ -38,18 +34,18 @@ public class ProfileFragment extends BaseFragment {
   /** This is the view displaying the list of codes the user has */
   private GridView qrCodeList;
   /** This is the view displaying the settings button */
-  private FloatingActionButton contactButton;
+  protected FloatingActionButton contactButton;
 
   /**
    * Initializes the fragment with the app controller
    *
    * @param gameController This is the app controller
-   * @param playerDeviceId The device ID of the player this profile represents
    */
-  public ProfileFragment(GameController gameController, UUID playerDeviceId) {
+  public ProfileFragment(GameController gameController) {
     super(gameController);
-    deviceUUID = playerDeviceId;
   }
+
+  protected abstract ProfileController getProfileController();
 
   @Override
   public View onCreateView(
@@ -58,7 +54,7 @@ public class ProfileFragment extends BaseFragment {
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.profile_activity, container, false);
 
-    controller = new ProfileController(this, getGameController(), deviceUUID);
+    controller = getProfileController();
     createProfile(view);
     handleProfileHeaderEstimates(view);
     return view;
@@ -98,18 +94,11 @@ public class ProfileFragment extends BaseFragment {
     createSpinner(sortOrderSpinner, R.array.order_options);
 
     setupContactButton();
+    contactButton.setOnClickListener(v -> controller.handleContactButtonClick());
   }
 
   /** Sets the image of the profile settings button and handler. */
-  private void setupContactButton() {
-    if (deviceUUID.equals(DeviceUtils.getDeviceUUID(getGameController().getActivity()))) {
-      contactButton.setImageResource(R.drawable.baseline_settings_24);
-    } else {
-      contactButton.setImageResource(R.drawable.info_button);
-    }
-
-    contactButton.setOnClickListener(v -> controller.handleContactButtonClick());
-  }
+  protected abstract void setupContactButton();
 
   /**
    * Display a prompt showcasing the contact information for this profile.

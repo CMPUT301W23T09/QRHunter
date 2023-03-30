@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -27,11 +28,12 @@ public class LeaderboardFragment extends BaseFragment {
   private Map<String, List<Leaderboard>> cachedLeaderboardsByTab;
   private List<LeaderboardAdapterItem<?>> leaderboardAdapterItems;
   private LeaderboardEntryAdapter leaderboardAdapter;
+  private Map<String, Leaderboard<?>> cachedLeaderboards;
 
   public LeaderboardFragment(GameController gameController) {
     super(gameController);
 
-    controller = new LeaderboardController();
+    controller = new LeaderboardController(gameController);
   }
 
   @Override
@@ -49,6 +51,7 @@ public class LeaderboardFragment extends BaseFragment {
     leaderboardListView.setAdapter(leaderboardAdapter);
 
     setupTabList(view);
+    setupListView(view);
     return view;
   }
 
@@ -124,8 +127,28 @@ public class LeaderboardFragment extends BaseFragment {
     }
   }
 
+  private void setupListView(View view) {
+    ListView leaderboardListView = view.findViewById(R.id.leaderboard_list);
+    leaderboardListView.setOnItemClickListener(
+        new AdapterView.OnItemClickListener() {
+          @Override
+          public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            LeaderboardAdapterItem<?> entry = leaderboardAdapterItems.get(position);
+
+            // What kind of entry is this?
+            if (entry instanceof PlayerLeaderboardEntry) {
+              // Player leaderboard item, display their profile.
+              controller.handleEntryClick((PlayerLeaderboardEntry) entry);
+            } else if (entry instanceof QRCodeLeaderboardEntry) {
+              // QR leaderboard item, display the QR fragment.
+              controller.handleEntryClick((QRCodeLeaderboardEntry) entry);
+            }
+          }
+        });
+  }
+
   private void onLeaderboardCallback(
-      String tabName, Exception exception, List<Leaderboard> leaderboard) {
+      String tabName, Exception exception, List<Leaderboard> leaderboards) {
     if (exception != null) {
       Log.e(getClass().getName(), exception.getLocalizedMessage());
       Toast.makeText(
@@ -137,10 +160,10 @@ public class LeaderboardFragment extends BaseFragment {
     }
 
     // Store leaderboard in cache to "reduce" empty leaderboard page time when flipping between
-    cachedLeaderboardsByTab.put(tabName, leaderboard);
+    cachedLeaderboardsByTab.put(tabName, leaderboards);
 
     if (currentActiveTab.equals(tabName)) {
-      renderLeaderboards(leaderboard);
+      renderLeaderboards(leaderboards);
     }
   }
 

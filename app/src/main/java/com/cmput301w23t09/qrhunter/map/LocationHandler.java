@@ -10,7 +10,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
-import com.cmput301w23t09.qrhunter.qrcode.QRLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
@@ -28,6 +27,7 @@ public class LocationHandler {
 
   private Fragment fragment;
   private FusedLocationProviderClient fusedLocationClient;
+  private QRLocation lastAddedLocation = null;
 
   public static final int REQUEST_CODE_PERMISSIONS = 20;
   public static final String[] LOCATION_PERMISSIONS =
@@ -82,11 +82,8 @@ public class LocationHandler {
 
                     String city = address.getLocality();
 
-                    QRLocation qrLocation = new QRLocation("");
-                    qrLocation.setCity(city);
-                    qrLocation.setLongitude(location.getLongitude());
-                    qrLocation.setLatitude(location.getLatitude());
-
+                    QRLocation qrLocation =
+                        new QRLocation(city, location.getLatitude(), location.getLongitude());
                     qrCode.setLoc(qrLocation);
                   } catch (IOException e) {
                     Toast.makeText(
@@ -98,6 +95,65 @@ public class LocationHandler {
                 }
               });
     }
+  }
+
+  /**
+   * Adds current location to the list of QR Codes.
+   *
+   * @param qrCode The QRCode to add current location to.
+   */
+  @SuppressLint("MissingPermission") // Checked by locationPermissionsGranted()
+  public void addLocation(QRCode qrCode) {
+    if (locationPermissionsGranted()) {
+      fusedLocationClient
+          .getCurrentLocation(Priority.PRIORITY_BALANCED_POWER_ACCURACY, null)
+          .addOnSuccessListener(
+              fragment.getActivity(),
+              location -> {
+                if (location != null) {
+                  Geocoder geoCoder = new Geocoder(fragment.getContext(), Locale.getDefault());
+                  try {
+                    Address address =
+                        geoCoder
+                            .getFromLocation(location.getLatitude(), location.getLongitude(), 1)
+                            .stream()
+                            .findAny()
+                            .orElse(null);
+
+                    if (address == null) {
+                      Toast.makeText(
+                              fragment.getContext(),
+                              "An exception occurred trying to fetch your location.",
+                              Toast.LENGTH_SHORT)
+                          .show();
+                      return;
+                    }
+
+                    String city = address.getLocality();
+
+                    QRLocation qrLocation =
+                        new QRLocation(city, location.getLatitude(), location.getLongitude());
+                    qrCode.addLocation(qrLocation);
+                  } catch (IOException e) {
+                    Toast.makeText(
+                            fragment.getContext(),
+                            "An exception occurred trying to fetch your location.",
+                            Toast.LENGTH_SHORT)
+                        .show();
+                  }
+                }
+              });
+    }
+  }
+
+  /**
+   * Removes the most-recently added location from the QR code
+   *
+   * @param qrCode The QRCode to remove location from
+   */
+  public void removeLastAddedLocation(QRCode qrCode) {
+    qrCode.removeLocation(lastAddedLocation);
+    lastAddedLocation = null;
   }
 
   /**
