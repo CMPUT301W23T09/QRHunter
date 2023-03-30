@@ -133,6 +133,46 @@ public class LeaderboardController {
             });
   }
 
+  /**
+   * Retrieve the top QRCode points value leaderboard by region in descending order.
+   *
+   * @param callback callback to call with the leaderboards mapped by their city.
+   */
+  public void getTopQRCodesByRegionLeaderboard(
+      BiConsumer<Exception, List<Leaderboard<QRCodeLeaderboardEntry>>> callback) {
+    QRCodeDatabase.getInstance()
+        .getAllQRCodes(
+            task -> {
+              if (!task.isSuccessful()) {
+                callback.accept(task.getException(), null);
+                return;
+              }
+
+              Map<String, List<QRCodeLeaderboardEntry>> leaderboardEntriesByRegion =
+                  new HashMap<>();
+              for (QRCode qrCode : task.getData()) {
+                for (QRLocation qrLocation : qrCode.getLocations()) {
+                  if (qrLocation != null) {
+                    leaderboardEntriesByRegion.putIfAbsent(qrLocation.getCity(), new ArrayList<>());
+                    leaderboardEntriesByRegion
+                        .get(qrLocation.getCity())
+                        .add(new QRCodeLeaderboardEntry(qrCode, qrCode.getScore(), "points"));
+                  }
+                }
+              }
+
+              List<Leaderboard<QRCodeLeaderboardEntry>> leaderboards = new ArrayList<>();
+              for (String city : leaderboardEntriesByRegion.keySet()) {
+                List<QRCodeLeaderboardEntry> entries = leaderboardEntriesByRegion.get(city);
+                Collections.sort(entries);
+
+                leaderboards.add(new Leaderboard<>(city, entries));
+              }
+
+              callback.accept(null, leaderboards);
+            });
+  }
+
   public void handleEntryClick(PlayerLeaderboardEntry entry) {
     Player player = entry.getPlayer();
     if (player.getDeviceId().equals(gameController.getActivePlayer().getDeviceId())) {
@@ -163,43 +203,6 @@ public class LeaderboardController {
                 }
                 gameController.setPopup(fragment);
               }
-            });
-  }
-
-  /**
-   * Retrieve the top QRCode points value leaderboard by region in descending order.
-   *
-   * @param callback callback to call with the leaderboards mapped by their city.
-   */
-  public void getTopQRCodesByRegionLeaderboard(BiConsumer<Exception, List<Leaderboard>> callback) {
-    QRCodeDatabase.getInstance()
-        .getAllQRCodes(
-            task -> {
-              if (!task.isSuccessful()) {
-                callback.accept(task.getException(), null);
-                return;
-              }
-
-              Map<String, List<LeaderboardEntry>> leaderboardEntriesByRegion = new HashMap<>();
-              for (QRCode qrCode : task.getData()) {
-                QRLocation qrLocation = qrCode.getLoc();
-                if (qrLocation != null) {
-                  leaderboardEntriesByRegion.putIfAbsent(qrLocation.getCity(), new ArrayList<>());
-                  leaderboardEntriesByRegion
-                      .get(qrLocation.getCity())
-                      .add(new LeaderboardEntry(qrCode.getName(), qrCode.getScore(), "points"));
-                }
-              }
-
-              List<Leaderboard> leaderboards = new ArrayList<>();
-              for (String city : leaderboardEntriesByRegion.keySet()) {
-                List<LeaderboardEntry> entries = leaderboardEntriesByRegion.get(city);
-                Collections.sort(entries);
-
-                leaderboards.add(new Leaderboard(city, entries));
-              }
-
-              callback.accept(null, leaderboards);
             });
   }
 }

@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.cmput301w23t09.qrhunter.R;
 
 /** Represents a leaderboard entry */
-public class LeaderboardEntry
+public abstract class LeaderboardEntry
     implements Comparable<LeaderboardEntry>, LeaderboardAdapterItem<LeaderboardEntry> {
 
   /** Name to display for this leaderboard entry */

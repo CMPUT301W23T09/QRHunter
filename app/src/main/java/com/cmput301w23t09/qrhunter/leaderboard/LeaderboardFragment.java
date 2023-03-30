@@ -25,10 +25,9 @@ public class LeaderboardFragment extends BaseFragment {
   private final LeaderboardController controller;
 
   private String currentActiveTab;
-  private Map<String, List<Leaderboard>> cachedLeaderboardsByTab;
+  private Map<String, List<Leaderboard<?>>> cachedLeaderboardsByTab;
   private List<LeaderboardAdapterItem<?>> leaderboardAdapterItems;
   private LeaderboardEntryAdapter leaderboardAdapter;
-  private Map<String, Leaderboard<?>> cachedLeaderboards;
 
   public LeaderboardFragment(GameController gameController) {
     super(gameController);
@@ -60,6 +59,7 @@ public class LeaderboardFragment extends BaseFragment {
    *
    * @param view the view of the fragment
    */
+  @SuppressWarnings("unchecked")
   private void setupTabList(View view) {
     TabLayout tabNavigation = view.findViewById(R.id.leaderboard_navigation);
     tabNavigation.addOnTabSelectedListener(
@@ -71,7 +71,7 @@ public class LeaderboardFragment extends BaseFragment {
             currentActiveTab = tabText;
 
             // Render cached leaderboard data if any exists.
-            List<Leaderboard> cachedLeaderboards =
+            List<Leaderboard<?>> cachedLeaderboards =
                 cachedLeaderboardsByTab.getOrDefault(tabText, null);
             if (cachedLeaderboards != null) {
               renderLeaderboards(cachedLeaderboards);
@@ -101,7 +101,10 @@ public class LeaderboardFragment extends BaseFragment {
               case "Top Codes (By Region)":
                 controller.getTopQRCodesByRegionLeaderboard(
                     (exception, leaderboardsByRegion) ->
-                        onLeaderboardCallback(tabText, exception, leaderboardsByRegion));
+                        onLeaderboardCallback(
+                            tabText,
+                            exception,
+                            (List<Leaderboard<?>>) (Object) leaderboardsByRegion));
                 break;
               default:
                 throw new UnsupportedOperationException(
@@ -148,7 +151,7 @@ public class LeaderboardFragment extends BaseFragment {
   }
 
   private void onLeaderboardCallback(
-      String tabName, Exception exception, List<Leaderboard> leaderboards) {
+      String tabName, Exception exception, List<Leaderboard<?>> leaderboards) {
     if (exception != null) {
       Log.e(getClass().getName(), exception.getLocalizedMessage());
       Toast.makeText(
@@ -172,10 +175,10 @@ public class LeaderboardFragment extends BaseFragment {
     leaderboardAdapter.notifyDataSetChanged();
   }
 
-  private void renderLeaderboards(List<Leaderboard> leaderboards) {
+  private void renderLeaderboards(List<Leaderboard<?>> leaderboards) {
     clearLeaderboards();
 
-    for (Leaderboard leaderboard : leaderboards) {
+    for (Leaderboard<?> leaderboard : leaderboards) {
       if (leaderboard.getName() != null) {
         // Add title element
         leaderboardAdapterItems.add(new LeaderboardEntryTitle(leaderboard.getName()));
