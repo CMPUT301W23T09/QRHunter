@@ -7,7 +7,7 @@ public class QRLocation {
   private String locationString = "";
   private double latitude;
   private double longitude;
-  private String city;
+  private String region;
 
   /**
    * Creates a QRLocation object based on a location string
@@ -19,11 +19,11 @@ public class QRLocation {
     this.locationString = locStr;
     Double lat = Double.parseDouble(parts[0]);
     Double lon = Double.parseDouble(parts[1]);
-    String city = parts[2];
+    String region = parts[2];
 
     latitude = lat;
     longitude = lon;
-    this.city = city;
+    this.region = region;
   }
 
   /**
@@ -31,23 +31,24 @@ public class QRLocation {
    *
    * @param location Location object
    */
-  public QRLocation(String city, Location location) {
+  public QRLocation(String region, Location location) {
     latitude = location.getLatitude();
     longitude = location.getLongitude();
-    locationString = "" + latitude + ";" + longitude + ";" + city;
+    locationString = "" + latitude + ";" + longitude + ";" + region;
   }
 
   /**
    * Creates a QRLocation object from a set of coordinates.
    *
+   * @param region region
    * @param lat Latitude
    * @param lon Longitude
    */
-  public QRLocation(String city, double lat, double lon) {
-    this.city = city;
+  public QRLocation(String region, double lat, double lon) {
+    this.region = region;
     latitude = lat;
     longitude = lon;
-    locationString = "" + lat + ";" + lon + ";" + city;
+    locationString = "" + lat + ";" + lon + ";" + region;
   }
 
   /**
@@ -73,8 +74,8 @@ public class QRLocation {
     return longitude;
   }
 
-  public String getCity() {
-    return city;
+  public String getRegion() {
+    return region;
   }
 
   /**

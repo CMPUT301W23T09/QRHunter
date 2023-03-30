@@ -78,10 +78,11 @@ public class LocationHandler {
 
                         // Now that we have the address, get the city and add the location to the
                         // QR.
-                        String city = address.getLocality();
-                        if (city != null) {
+                        String region = address.getThoroughfare();
+                        if (region != null) {
                           QRLocation qrLocation =
-                              new QRLocation(city, location.getLatitude(), location.getLongitude());
+                              new QRLocation(
+                                  region, location.getLatitude(), location.getLongitude());
                           qrCode.setLoc(qrLocation);
                         }
                       });
@@ -119,10 +120,11 @@ public class LocationHandler {
 
                         // Now that we have the address, get the city and add the location to the
                         // QR.
-                        String city = address.getLocality();
-                        if (city != null) {
+                        String region = address.getThoroughfare();
+                        if (region != null) {
                           lastAddedLocation =
-                              new QRLocation(city, location.getLatitude(), location.getLongitude());
+                              new QRLocation(
+                                  region, location.getLatitude(), location.getLongitude());
                           qrCode.addLocation(lastAddedLocation);
                         }
                       });

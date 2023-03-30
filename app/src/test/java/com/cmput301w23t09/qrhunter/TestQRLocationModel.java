@@ -14,7 +14,7 @@ public class TestQRLocationModel {
     QRLocation location = new QRLocation(locationString);
     assertEquals(53.52678, location.getLatitude());
     assertEquals(-113.52708, location.getLongitude());
-    assertEquals("Edmonton", location.getCity());
+    assertEquals("Edmonton", location.getRegion());
   }
 
   // Test if we can construct QRLocation from a pair of latitude and longitude coordinates

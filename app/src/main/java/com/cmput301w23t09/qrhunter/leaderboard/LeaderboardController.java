@@ -160,19 +160,20 @@ public class LeaderboardController {
                 // For each QR, add it to each of the locations the QR was found in
                 for (QRLocation qrLocation : qrCode.getLocations()) {
                   if (qrLocation != null) {
-                    leaderboardEntriesByRegion.putIfAbsent(qrLocation.getCity(), new ArrayList<>());
+                    leaderboardEntriesByRegion.putIfAbsent(
+                        qrLocation.getRegion(), new ArrayList<>());
                     leaderboardHashesAddedByRegion.putIfAbsent(
-                        qrLocation.getCity(), new HashSet<>());
+                        qrLocation.getRegion(), new HashSet<>());
 
                     // Check that we haven't added this QR to this location already (if we haven't,
                     // add it!)
                     boolean tryAddingQRToLocation =
                         leaderboardHashesAddedByRegion
-                            .get(qrLocation.getCity())
+                            .get(qrLocation.getRegion())
                             .add(qrCode.getHash());
                     if (tryAddingQRToLocation) {
                       leaderboardEntriesByRegion
-                          .get(qrLocation.getCity())
+                          .get(qrLocation.getRegion())
                           .add(new QRCodeLeaderboardEntry(qrCode, qrCode.getScore(), "points"));
                     }
                   }
