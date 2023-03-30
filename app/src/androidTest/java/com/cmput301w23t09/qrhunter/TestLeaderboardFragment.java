@@ -3,7 +3,11 @@ package com.cmput301w23t09.qrhunter;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.pressKey;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.awaitility.Awaitility.await;
@@ -11,6 +15,8 @@ import static org.hamcrest.CoreMatchers.anything;
 
 import android.Manifest;
 import android.content.Intent;
+import android.view.KeyEvent;
+import android.widget.EditText;
 import android.widget.ListView;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.DataInteraction;
@@ -193,6 +199,15 @@ public class TestLeaderboardFragment extends BaseTest {
               GameActivity gameActivity = (GameActivity) solo.getCurrentActivity();
               return !(gameActivity.getController().getPopup() instanceof DeleteQRCodeFragment);
             });
+  }
+
+  @Test
+  public void testSearchTransitionsToPlayerSearchFragment() {
+    onView(withId(R.id.player_search)).perform(click());
+    onView(isAssignableFrom(EditText.class)).perform(typeText("Joe"), pressKey(KeyEvent.KEYCODE_ENTER));
+
+    onView(withId(R.id.search_linear_layout))
+            .check(matches(isDisplayed()));
   }
 
   /** Clicking on a QR you own should show the DeleteQRFragment. */
