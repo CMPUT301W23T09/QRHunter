@@ -20,7 +20,7 @@ public class TestQRModel {
   }
 
   private QRLocation mockLoc() {
-    return new QRLocation("");
+    return new QRLocation("0;0;City");
   }
 
   // create a mock qr code
