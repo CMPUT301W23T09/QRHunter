@@ -180,26 +180,21 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 //        }
 //      });
 //    }
-  public void getQRFromDB(DatabaseConsumer<List<LatLng>> callback) {
-    QRCodeDatabase.getInstance().getAllQRCodes(task -> {
-      if (!task.isSuccessful()) {
-        // do error handling here as database query failed
-        return;
-      }
+  public void displayQRCodeMarkersOnMap(GoogleMap mMap) {
+    QRCodeDatabase.getInstance().getAllQRCodes(qrCodes -> {
+      if (qrCodes.isSuccessful()) {
+        // Get the list of QRCode objects from the callback result
+        List<QRCode> qrCodeList = qrCodes.getData();
+        Log.d(TAG, "Query successful. Result count: " + qrCodes.getData().size());
 
-      latLngsList = new ArrayList<>();
-      if (task.isSuccessful()) {
-        for (QRCode qrCode : task.getData()) {
+        // Loop through the list of QRCode objects and add markers to the Google Map
+        for (QRCode qrCode : qrCodeList) {
           Location loc = qrCode.getLoc();
-          double latitude = loc.getLatitude();
-          double longitude = loc.getLongitude();
-          LatLng latLng = new LatLng(latitude, longitude);
-          latLngsList.add(latLng);
-        }
-      }
-      callback.accept(new DatabaseQueryResults<>(latLngsList));
-    });
-  }
+          if (loc != null) {
+            LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(latLng).title(qrCode.getName()));
+            Log.d(TAG, "Marker added for QR code: " + qrCode.getName() + " at " + latLng.toString());
+          }
 
 //  public void getTopQRCodesLeaderboard(BiConsumer<Exception, Leaderboard> callback) {
 //    QRCodeDatabase.getInstance()
@@ -274,20 +269,24 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
    * @param map the Google maps
    */
   @Override
-  public void onMapReady(GoogleMap map) {
+  public void onMapReady(GoogleMap googleMap) {
     this.map = map;
     // Turn on the My Location layer and the related control on the map.
     updateLocationUI();
 
     // Get the current location of the device and set the position of the map.
     getDeviceLocation();
+
+    if (this.map != null) {
+      displayQRCodeMarkersOnMap(map);
+    }
     //loop through arraylist
-    getQRFromDB(latLngList -> {
-      for (LatLng latLng : latLngsList) {
-        // add a marker for each LatLng on the map
-        map.addMarker(new MarkerOptions().position(latLng));
-      }
-    });
+//    getQRFromDB(latLngList -> {
+//      for (LatLng latLng : latLngsList) {
+//        // add a marker for each LatLng on the map
+//        map.addMarker(new MarkerOptions().position(latLng));
+//      }
+//    });
 
 
 
