@@ -3,7 +3,6 @@ package com.cmput301w23t09.qrhunter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
-
 import android.graphics.Bitmap;
 import com.cmput301w23t09.qrhunter.locationphoto.LocationPhoto;
 import com.cmput301w23t09.qrhunter.player.Player;
@@ -32,7 +31,7 @@ public class TestLocationPhotoModel {
   public void testGetPlayer() {
     UUID mockUUID = UUID.randomUUID();
     Player player =
-        new Player(mockUUID, "Username", "587-998-1206", "mock-email@gmail.com", new ArrayList());
+        new Player(mockUUID, "Username", "587-998-1206", "mock-email@gmail.com", new ArrayList<>());
     LocationPhoto photo = new LocationPhoto((Bitmap) null, player);
     assertEquals(photo.getPlayer(), player);
   }

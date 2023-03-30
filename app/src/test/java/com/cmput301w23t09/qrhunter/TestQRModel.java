@@ -4,7 +4,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import android.graphics.Bitmap;
 import android.location.Location;
 import com.cmput301w23t09.qrhunter.comment.Comment;
@@ -24,8 +23,8 @@ public class TestQRModel {
   // create a mock hash
   private String mockHash = "8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d";
 
-  // create a mock location
-  @Mock private Location mockLoc = new Location("");
+  @Mock
+  private Location mockLoc = new Location("");
 
   // create a mock qr code
   private QRCode mockCode() {
@@ -76,7 +75,8 @@ public class TestQRModel {
     QRCode qr = new QRCode(mockHash, "RobaqinectTiger✿", 32, mockLoc, null, null, null, null);
     Location loc = qr.getLoc();
     assertEquals(loc.getClass().toString(), "class android.location.Location");
-    assertEquals(System.identityHashCode(loc), System.identityHashCode(mockLoc));
+    assertEquals(loc.getLatitude(), mockLoc.getLatitude());
+    assertEquals(loc.getLongitude(), mockLoc.getLongitude());
   }
 
   @Test
@@ -85,7 +85,8 @@ public class TestQRModel {
     qr.setLoc(mockLoc);
     Location loc = qr.getLoc();
     assertEquals(loc.getClass().toString(), "class android.location.Location");
-    assertEquals(System.identityHashCode(loc), System.identityHashCode(mockLoc));
+    assertEquals(loc.getLatitude(), mockLoc.getLatitude());
+    assertEquals(loc.getLongitude(), mockLoc.getLongitude());
   }
 
   @Test
