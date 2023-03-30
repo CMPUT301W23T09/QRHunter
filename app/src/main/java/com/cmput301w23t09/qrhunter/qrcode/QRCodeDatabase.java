@@ -406,7 +406,7 @@ public class QRCodeDatabase {
       commentsData = new ArrayList<>();
     }
     for (Map<String, String> data : commentsData) {
-      comments.add(new Comment(data.get("comment"), data.get("playerId"), data.get("username")));
+      comments.add(new Comment(data.get("playerId"), data.get("username"), data.get("comment")));
     }
 
     try {

@@ -14,7 +14,7 @@ public class Comment {
    *
    * @param comment This is the comment made by the player
    */
-  public Comment(String comment, String playerId, String username) {
+  public Comment(String playerId, String username, String comment) {
     this.comment = comment;
     this.playerId = playerId;
     this.username = username;

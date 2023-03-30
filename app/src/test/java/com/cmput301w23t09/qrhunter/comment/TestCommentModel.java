@@ -8,7 +8,7 @@ public class TestCommentModel {
 
   // create a mock comment
   private Comment mockComment() {
-    return new Comment("This is a comment", "player_id", "User");
+    return new Comment("player_id", "User", "This is a comment");
   }
 
   // test getting the comment from a comment

@@ -54,7 +54,6 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   protected QRCodePlayerScansAdapter scansAdapter;
   protected int selectedTabIndex = 0;
 
-
   /**
    * Creates a new QRCodeFragment to display a specific QR Code
    *
@@ -169,7 +168,6 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
 
             } else {
               listElement.setAdapter(commentsAdapter);
-
             }
           }
 

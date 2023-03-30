@@ -156,9 +156,10 @@ public class DeleteQRCodeFragment extends QRCodeFragment {
 
   private void addComment(String commentText) {
     Comment comment =
-        new Comment(commentText, activePlayer.getDocumentId(), activePlayer.getUsername());
+        new Comment(activePlayer.getDocumentId(), activePlayer.getUsername(), commentText);
     comments.add(comment);
     commentsAdapter.notifyDataSetChanged();
+    listElement.setSelection(commentsAdapter.getCount() - 1);
 
     QRCodeDatabase.getInstance()
         .getQRCodeByHash(

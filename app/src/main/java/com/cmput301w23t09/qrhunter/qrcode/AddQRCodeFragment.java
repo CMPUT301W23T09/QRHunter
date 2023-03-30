@@ -1,15 +1,11 @@
 package com.cmput301w23t09.qrhunter.qrcode;
 
-import static android.content.ContentValues.TAG;
-
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import com.cmput301w23t09.qrhunter.R;
-import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.map.LocationHandler;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoController;
@@ -51,34 +47,34 @@ public class AddQRCodeFragment extends QRCodeFragment {
    */
   @Override
   protected void setUpButtons(View view) {
-      addButton.setVisibility(View.VISIBLE);
-      deleteButton.setVisibility(View.GONE);
-      loadingButton.setVisibility(View.GONE);
-      locationHandler = new LocationHandler(this);
-      takeLocationPhotoBtn.setOnClickListener(
-              v -> {
-                  if (qrCode.getPhotos().size() > 0) {
-                      qrCode.deletePhoto(qrCode.getPhotos().get(0));
-                      updateLocationPhoto();
-                  } else {
-                      locationPhotoFragment = LocationPhotoFragment.newInstance(qrCode, this, activePlayer);
-                      locationPhotoFragment.show(getParentFragmentManager(), "Take Location Photo");
-                  }
-              });
-      locationCheckbox.setOnCheckedChangeListener(
-              (buttonView, isChecked) -> {
-                  if (isChecked) {
-                      locationHandler.setQrToLastLocation(qrCode);
-                  } else {
-                      qrCode.setLoc(null);
-                  }
-              });
+    addButton.setVisibility(View.VISIBLE);
+    deleteButton.setVisibility(View.GONE);
+    loadingButton.setVisibility(View.GONE);
+    locationHandler = new LocationHandler(this);
+    takeLocationPhotoBtn.setOnClickListener(
+        v -> {
+          if (qrCode.getPhotos().size() > 0) {
+            qrCode.deletePhoto(qrCode.getPhotos().get(0));
+            updateLocationPhoto();
+          } else {
+            locationPhotoFragment = LocationPhotoFragment.newInstance(qrCode, this, activePlayer);
+            locationPhotoFragment.show(getParentFragmentManager(), "Take Location Photo");
+          }
+        });
+    locationCheckbox.setOnCheckedChangeListener(
+        (buttonView, isChecked) -> {
+          if (isChecked) {
+            locationHandler.setQrToLastLocation(qrCode);
+          } else {
+            qrCode.setLoc(null);
+          }
+        });
 
-     commentBox.setVisibility(View.GONE);
+    commentBox.setVisibility(View.GONE);
 
-      updateAddButton();
-      addButton.setOnClickListener(this::onAddQRClicked);
-      updateLocationPhoto();
+    updateAddButton();
+    addButton.setOnClickListener(this::onAddQRClicked);
+    updateLocationPhoto();
   }
 
   /**
@@ -201,6 +197,4 @@ public class AddQRCodeFragment extends QRCodeFragment {
   public LocationPhotoFragment getLocationPhotoFragment() {
     return locationPhotoFragment;
   }
-
-
 }
