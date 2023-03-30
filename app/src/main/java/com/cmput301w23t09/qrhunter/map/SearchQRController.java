@@ -149,14 +149,18 @@ public class SearchQRController {
             if (qrCode.getLoc() != null) {
               // get the qr code's distance from the given location
               float[] distance = new float[1];
-              Location.distanceBetween(
-                  loc.latitude,
-                  loc.longitude,
-                  qrCode.getLoc().getLatitude(),
-                  qrCode.getLoc().getLongitude(),
-                  distance);
-              if (distance[0] < 100) {
-                nearbyCodes.add(qrCode);
+              for (QRLocation qrLocation : qrCode.getLocations()) {
+                Location.distanceBetween(
+                    loc.latitude,
+                    loc.longitude,
+                    qrLocation.getLatitude(),
+                    qrLocation.getLongitude(),
+                    distance);
+                // add the qr code if one of its locations is nearby
+                if (distance[0] < 100) {
+                  nearbyCodes.add(qrCode);
+                  break;
+                }
               }
             }
           }
