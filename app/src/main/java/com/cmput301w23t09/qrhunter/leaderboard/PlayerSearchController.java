@@ -66,7 +66,10 @@ public class PlayerSearchController {
 
                             // filters the set of all players leaving only those containing the query as a substring
                             Set<Player> relatedUsernamePlayers = allPlayers.getData().stream()
-                                    .filter(obj -> obj.getUsername().contains(usernameQuery))
+                                    .filter(obj -> obj
+                                            .getUsername()
+                                            .toLowerCase()
+                                            .contains(usernameQuery.toLowerCase()))
                                     .collect(Collectors.toSet());
 
                             for (Player relatedPlayer : relatedUsernamePlayers) {

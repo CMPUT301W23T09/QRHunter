@@ -15,7 +15,6 @@ import com.cmput301w23t09.qrhunter.R;
 import java.util.List;
 
 public class SearchQueryEntryAdapter extends ArrayAdapter<SearchQueryEntry> {
-    /** Leaderboard entries to use for this adapter */
     private final List<SearchQueryEntry> entries;
 
     private final Context context;
