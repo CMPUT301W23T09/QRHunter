@@ -52,6 +52,8 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
 
   protected ListView listElement;
   protected QRCodePlayerScansAdapter scansAdapter;
+  protected int selectedTabIndex = 0;
+
 
   /**
    * Creates a new QRCodeFragment to display a specific QR Code
@@ -164,8 +166,10 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
             if (tab.getText().equals(getText(R.string.players_who_scanned_tab_title))) {
               // Who scanned the QR
               listElement.setAdapter(scansAdapter);
+
             } else {
               listElement.setAdapter(commentsAdapter);
+
             }
           }
 

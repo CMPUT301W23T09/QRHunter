@@ -51,54 +51,34 @@ public class AddQRCodeFragment extends QRCodeFragment {
    */
   @Override
   protected void setUpButtons(View view) {
-    addButton.setVisibility(View.VISIBLE);
-    deleteButton.setVisibility(View.GONE);
-    loadingButton.setVisibility(View.GONE);
-    locationHandler = new LocationHandler(this);
-    takeLocationPhotoBtn.setOnClickListener(
-        v -> {
-          if (qrCode.getPhotos().size() > 0) {
-            qrCode.deletePhoto(qrCode.getPhotos().get(0));
-            updateLocationPhoto();
-          } else {
-            locationPhotoFragment = LocationPhotoFragment.newInstance(qrCode, this, activePlayer);
-            locationPhotoFragment.show(getParentFragmentManager(), "Take Location Photo");
-          }
-        });
-    locationCheckbox.setOnCheckedChangeListener(
-        (buttonView, isChecked) -> {
-          if (isChecked) {
-            locationHandler.setQrToLastLocation(qrCode);
-          } else {
-            qrCode.setLoc(null);
-          }
-        });
-
-    commentBox.setVisibility(View.GONE);
-
-    updateAddButton();
-    addButton.setOnClickListener(this::onAddQRClicked);
-    updateLocationPhoto();
-
-    if (tabLayout.getSelectedTabPosition() == 1) {
-      listView.setVisibility(View.VISIBLE);
-      // Call playerHasQRCode to check if the active player has the QR code
-      QRCodeDatabase.getInstance()
-          .playerHasQRCode(
-              activePlayer,
-              qrCode,
-              hasQRCodeResult -> {
-                if (hasQRCodeResult.getData() != null && hasQRCodeResult.getData()) {
-                  commentBox.setVisibility(View.VISIBLE);
-                  // allows user enter a comment
-                  commentBox.setOnClickListener(this::onAddCommentInput);
-                  // allows user to click send and store comment in the database
-                  commentBox.setOnTouchListener(this::onSendComment);
-                } else {
-                  commentBox.setVisibility(View.GONE);
-                }
+      addButton.setVisibility(View.VISIBLE);
+      deleteButton.setVisibility(View.GONE);
+      loadingButton.setVisibility(View.GONE);
+      locationHandler = new LocationHandler(this);
+      takeLocationPhotoBtn.setOnClickListener(
+              v -> {
+                  if (qrCode.getPhotos().size() > 0) {
+                      qrCode.deletePhoto(qrCode.getPhotos().get(0));
+                      updateLocationPhoto();
+                  } else {
+                      locationPhotoFragment = LocationPhotoFragment.newInstance(qrCode, this, activePlayer);
+                      locationPhotoFragment.show(getParentFragmentManager(), "Take Location Photo");
+                  }
               });
-    }
+      locationCheckbox.setOnCheckedChangeListener(
+              (buttonView, isChecked) -> {
+                  if (isChecked) {
+                      locationHandler.setQrToLastLocation(qrCode);
+                  } else {
+                      qrCode.setLoc(null);
+                  }
+              });
+
+     commentBox.setVisibility(View.GONE);
+
+      updateAddButton();
+      addButton.setOnClickListener(this::onAddQRClicked);
+      updateLocationPhoto();
   }
 
   /**
@@ -222,66 +202,5 @@ public class AddQRCodeFragment extends QRCodeFragment {
     return locationPhotoFragment;
   }
 
-  public void onAddCommentInput(View view) {
-    commentBox.setHint("");
-  } // Remove hint text when clicked
 
-  private boolean onSendComment(View view, MotionEvent event) {
-    Log.d("AddQRCodeFragment", "onSendComment called");
-    final int DRAWABLE_RIGHT = 2;
-    if (event.getAction() == MotionEvent.ACTION_UP) {
-      if (event.getRawX()
-          >= (commentBox.getRight()
-              - commentBox.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-        // User clicked on the drawable icon
-        String commentText = commentBox.getText().toString().trim();
-        if (!commentText.isEmpty()) {
-          saveCommentToDatabase(commentText);
-          commentBox.setText("");
-          commentBox.setHint(R.string.comment_box_hint_text);
-        } else {
-          // Comment text is empty, show an error message
-          Toast.makeText(getContext(), "Comment text is empty", Toast.LENGTH_SHORT).show();
-        }
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private void saveCommentToDatabase(String commentText) {
-    // Retrieve the active player object from the arguments bundle
-    Player activePlayer = (Player) getArguments().getSerializable("player");
-
-    Comment comment = new Comment(commentText, activePlayer);
-    QRCodeDatabase.getInstance()
-        .getQRCodeByHash(
-            qrCode.getHash(),
-            qrCodeQueryResults -> {
-              if (qrCodeQueryResults.isSuccessful()) {
-                // Update the QRCode with the new comment
-                QRCode qrCodeToUpdate = qrCodeQueryResults.getData();
-                qrCodeToUpdate.addComment(comment);
-
-                QRCodeDatabase.getInstance()
-                    .updateQRCode(
-                        qrCodeToUpdate,
-                        updateResults -> {
-                          if (updateResults.isSuccessful()) {
-                            Log.d(
-                                TAG,
-                                "Comment added to QRCode with hash: " + qrCodeToUpdate.getHash());
-                          } else {
-                            Log.w(
-                                TAG,
-                                "Error updating QRCode with new comment",
-                                updateResults.getException());
-                          }
-                        });
-              } else {
-                Log.w(TAG, "Error getting QRCode from database", qrCodeQueryResults.getException());
-              }
-            });
-    Log.d("AddQRCodeFragment", "Comment saved to database");
-  }
 }
