@@ -127,7 +127,7 @@ public class SearchQRController {
   }
 
   /**
-   * Return qr codes near given location
+   * Show qr codes near given location
    *
    * @param loc Location to find nearby qr codes from
    */
