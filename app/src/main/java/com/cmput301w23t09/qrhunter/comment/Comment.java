@@ -9,16 +9,20 @@ public class Comment {
   /** This is the player that made the comment */
   private Player player;
 
+  private String playerId;
+
   /**
    * This initializes a Comment with a comment and the player who made it
    *
    * @param comment This is the comment made by the player
    * @param player This is the player that made the comment
    */
-  public Comment(String comment, Player player) {
+  public Comment(String comment, Player player,  String playerId) {
     this.comment = comment;
     this.player = player;
+    this.playerId = playerId;
   }
+
 
   /**
    * This returns the comment attribute
@@ -36,6 +40,16 @@ public class Comment {
    */
   public Player getPlayer() {
     return player;
+  }
+
+
+  /**
+   * This returns the player ID attribute
+   *
+   * @return Return the ID of the player that made the comment
+   */
+  public String getPlayerId() {
+    return playerId;
   }
 
   /**

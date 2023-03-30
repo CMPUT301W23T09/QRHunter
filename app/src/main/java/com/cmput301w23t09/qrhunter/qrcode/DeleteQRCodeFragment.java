@@ -176,7 +176,7 @@ public class DeleteQRCodeFragment extends QRCodeFragment {
     // Retrieve the active player object from the arguments bundle
     Player activePlayer = (Player) getArguments().getSerializable("player");
 
-    Comment comment = new Comment(commentText, activePlayer);
+    Comment comment = new Comment(commentText, activePlayer, activePlayer.getDocumentId());
     QRCodeDatabase.getInstance()
             .getQRCodeByHash(
                     qrCode.getHash(),
