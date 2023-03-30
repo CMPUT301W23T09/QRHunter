@@ -56,7 +56,7 @@ public class ProfileSettingsController {
 
   /** Returns to the profile fragment */
   public void returnToProfile() {
-    gameController.setBody(new ProfileFragment(gameController, deviceUUID));
+    gameController.setBody(new MyProfileFragment(gameController));
   }
 
   /**

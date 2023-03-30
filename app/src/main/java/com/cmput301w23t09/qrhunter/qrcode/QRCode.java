@@ -59,6 +59,7 @@ public class QRCode implements Serializable {
    * @param name This is the name of the QR code
    * @param score This is the score of the QR code
    * @param loc This is the location of the QR code
+   * @param locations This is the list of locations the QR was found in
    * @param locationPhotos This is the list of photos of the QR code
    * @param comments This is the list of comments on the QR code
    * @param players This is the list of players (documentIDs) that have scanned the QR code

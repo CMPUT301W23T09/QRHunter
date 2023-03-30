@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import com.cmput301w23t09.qrhunter.GameActivity;
+import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoAdapter;
 import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoController;
@@ -24,6 +27,9 @@ import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoStorage;
 import com.cmput301w23t09.qrhunter.map.LocationHandler;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
+import com.cmput301w23t09.qrhunter.profile.MyProfileFragment;
+import com.cmput301w23t09.qrhunter.profile.OtherProfileFragment;
+import com.cmput301w23t09.qrhunter.profile.ProfileFragment;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
@@ -42,6 +48,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   protected FloatingActionButton deleteButton;
   protected FloatingActionButton loadingButton;
 
+  protected TabLayout tabLayout;
   protected QRCodeDatabase qrCodeDatabase;
   protected SliderView locationPhotoSlider;
   protected LocationPhotoAdapter locationPhotoAdapter;
@@ -144,11 +151,12 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
    * @param view dialog
    */
   private void setupTab(View view) {
-    TabLayout layout = view.findViewById(R.id.qr_nav);
-    layout.addTab(layout.newTab().setText(getText(R.string.players_who_scanned_tab_title)));
-    layout.addTab(layout.newTab().setText(getText(R.string.comments_tab_title)));
+    tabLayout = view.findViewById(R.id.qr_nav);
+    tabLayout.addTab(tabLayout.newTab().setText(getText(R.string.players_who_scanned_tab_title)));
+    tabLayout.addTab(tabLayout.newTab().setText(getText(R.string.comments_tab_title)));
 
     listElement = view.findViewById(R.id.qr_nav_items);
+    setupListListener();
 
     scansAdapter = new QRCodePlayerScansAdapter(getContext());
     setupPlayerScans();
@@ -156,7 +164,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     listElement.setAdapter(
         scansAdapter); // by default, the adapter should display the scanned players.
 
-    layout.addOnTabSelectedListener(
+    tabLayout.addOnTabSelectedListener(
         new TabLayout.OnTabSelectedListener() {
           @Override
           public void onTabSelected(TabLayout.Tab tab) {
@@ -220,6 +228,37 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
                         });
               });
     }
+  }
+
+  private void setupListListener() {
+    listElement.setOnItemClickListener(
+        new AdapterView.OnItemClickListener() {
+          @Override
+          public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            boolean isPlayerScansSelected = tabLayout.getSelectedTabPosition() == 0;
+
+            if (isPlayerScansSelected) {
+              QRPlayerScanEntry scanEntry = scansAdapter.getItem(position);
+
+              // Navigate to their profile.
+              GameController gameController = ((GameActivity) getActivity()).getController();
+              ProfileFragment profileFragment;
+              boolean isOurProfile =
+                  scanEntry.getPlayer().getDeviceId().equals(activePlayer.getDeviceId());
+              if (isOurProfile) {
+                profileFragment = new MyProfileFragment(gameController);
+              } else {
+                profileFragment =
+                    new OtherProfileFragment(gameController, scanEntry.getPlayer().getDeviceId());
+              }
+              gameController.setBody(profileFragment);
+              QRCodeFragment.this.dismiss();
+
+            } else {
+
+            }
+          }
+        });
   }
 
   /**
