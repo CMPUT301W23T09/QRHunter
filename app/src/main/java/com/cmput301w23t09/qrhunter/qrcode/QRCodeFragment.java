@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,6 +22,8 @@ import androidx.fragment.app.DialogFragment;
 import com.cmput301w23t09.qrhunter.GameActivity;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.comment.Comment;
+import com.cmput301w23t09.qrhunter.comment.CommentAdapter;
 import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoAdapter;
 import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoController;
 import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoStorage;
@@ -35,6 +38,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.smarteist.autoimageslider.SliderView;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /** Displays information about a specific QRCode. It also lets the user: */
@@ -47,9 +52,11 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   protected FloatingActionButton addButton;
   protected FloatingActionButton deleteButton;
   protected FloatingActionButton loadingButton;
-
   protected TabLayout tabLayout;
-  protected QRCodeDatabase qrCodeDatabase;
+  protected EditText commentBox;
+  protected ListView listView;
+  protected List<Comment> comments;
+  protected CommentAdapter commentsAdapter;
   protected SliderView locationPhotoSlider;
   protected LocationPhotoAdapter locationPhotoAdapter;
   protected LocationPhotoStorage locationPhotoStorage;
@@ -78,7 +85,6 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_qrcode, null);
     qrCode = (QRCode) getArguments().getSerializable("qrcode");
     activePlayer = (Player) getArguments().getSerializable("player");
-    qrCodeDatabase = QRCodeDatabase.getInstance();
     locationPhotoStorage = LocationPhotoStorage.getInstance();
 
     try {
@@ -117,6 +123,9 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     addButton = view.findViewById(R.id.addButton);
     deleteButton = view.findViewById(R.id.deleteButton);
     loadingButton = view.findViewById(R.id.loadingButton);
+    tabLayout = view.findViewById(R.id.qr_nav);
+    commentBox = view.findViewById(R.id.comment_box);
+    listView = view.findViewById(R.id.qr_nav_items);
 
     // setup location photos
     locationPhotoSlider = view.findViewById(R.id.location_photos);
@@ -143,6 +152,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     addButton.setVisibility(View.GONE);
     deleteButton.setVisibility(View.GONE);
     loadingButton.setVisibility(View.GONE);
+    commentBox.setVisibility(View.GONE);
   }
 
   /**
@@ -161,18 +171,24 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     scansAdapter = new QRCodePlayerScansAdapter(getContext());
     setupPlayerScans();
 
+    comments = new ArrayList<>();
+    commentsAdapter = new CommentAdapter(getContext(), comments);
+    setupPlayerComments();
+
     listElement.setAdapter(
         scansAdapter); // by default, the adapter should display the scanned players.
 
     tabLayout.addOnTabSelectedListener(
         new TabLayout.OnTabSelectedListener() {
+
           @Override
           public void onTabSelected(TabLayout.Tab tab) {
             if (tab.getText().equals(getText(R.string.players_who_scanned_tab_title))) {
               // Who scanned the QR
               listElement.setAdapter(scansAdapter);
+
             } else {
-              // Comments
+              listElement.setAdapter(commentsAdapter);
             }
           }
 
@@ -253,9 +269,6 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
               }
               gameController.setBody(profileFragment);
               QRCodeFragment.this.dismiss();
-
-            } else {
-
             }
           }
         });
@@ -283,6 +296,16 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
           if (photos.size() == 0) locationPhotoSlider.setVisibility(View.GONE);
           else locationPhotoSlider.setVisibility(View.VISIBLE);
         });
+  }
+
+  /**
+   * Sets up the player comments for the current QR code. Adds all the comments for the current QR
+   * code to the list Notifies Adapter of data change
+   */
+  private void setupPlayerComments() {
+    comments.clear();
+    comments.addAll(qrCode.getComments());
+    commentsAdapter.notifyDataSetChanged();
   }
 
   /**

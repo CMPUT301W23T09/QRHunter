@@ -42,7 +42,7 @@ public class TestQRModel {
   // create a mock list of comments
   private ArrayList<Comment> mockComments() {
     ArrayList<Comment> comments = new ArrayList<>();
-    Comment comment = new Comment("MockComment", null);
+    Comment comment = new Comment("UserId", "Username", "MockComment");
     comments.add(comment);
     return comments;
   }
