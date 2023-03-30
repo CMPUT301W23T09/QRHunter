@@ -13,8 +13,10 @@ import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
@@ -148,19 +150,36 @@ public class LeaderboardController {
                 return;
               }
 
+              // Store the leaderboard entries by location and keep track of what hashes were added
+              // to what locations
               Map<String, List<QRCodeLeaderboardEntry>> leaderboardEntriesByRegion =
                   new HashMap<>();
+              Map<String, Set<String>> leaderboardHashesAddedByRegion = new HashMap<>();
+
               for (QRCode qrCode : task.getData()) {
+                // For each QR, add it to each of the locations the QR was found in
                 for (QRLocation qrLocation : qrCode.getLocations()) {
                   if (qrLocation != null) {
                     leaderboardEntriesByRegion.putIfAbsent(qrLocation.getCity(), new ArrayList<>());
-                    leaderboardEntriesByRegion
-                        .get(qrLocation.getCity())
-                        .add(new QRCodeLeaderboardEntry(qrCode, qrCode.getScore(), "points"));
+                    leaderboardHashesAddedByRegion.putIfAbsent(
+                        qrLocation.getCity(), new HashSet<>());
+
+                    // Check that we haven't added this QR to this location already (if we haven't,
+                    // add it!)
+                    boolean tryAddingQRToLocation =
+                        leaderboardHashesAddedByRegion
+                            .get(qrLocation.getCity())
+                            .add(qrCode.getHash());
+                    if (tryAddingQRToLocation) {
+                      leaderboardEntriesByRegion
+                          .get(qrLocation.getCity())
+                          .add(new QRCodeLeaderboardEntry(qrCode, qrCode.getScore(), "points"));
+                    }
                   }
                 }
               }
 
+              // Sort all of the leaderboards
               List<Leaderboard<QRCodeLeaderboardEntry>> leaderboards = new ArrayList<>();
               for (String city : leaderboardEntriesByRegion.keySet()) {
                 List<QRCodeLeaderboardEntry> entries = leaderboardEntriesByRegion.get(city);
@@ -169,6 +188,7 @@ public class LeaderboardController {
                 leaderboards.add(new Leaderboard<>(city, entries));
               }
 
+              // Return leaderboards
               callback.accept(null, leaderboards);
             });
   }

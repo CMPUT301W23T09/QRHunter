@@ -15,6 +15,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.function.BiConsumer;
 
 /**
  * Handles location permissions and retrieving the location of the player's device. Used to set the
@@ -62,36 +63,26 @@ public class LocationHandler {
               fragment.getActivity(),
               location -> {
                 if (location != null) {
-                  Geocoder geoCoder = new Geocoder(fragment.getContext(), Locale.getDefault());
-                  try {
-                    Address address =
-                        geoCoder
-                            .getFromLocation(location.getLatitude(), location.getLongitude(), 1)
-                            .stream()
-                            .findAny()
-                            .orElse(null);
+                  getAddressFromCoords(
+                      location.getLatitude(),
+                      location.getLongitude(),
+                      (exception, address) -> {
+                        if (exception != null) {
+                          Toast.makeText(
+                                  fragment.getContext(),
+                                  "An exception occurred while fetching your location.",
+                                  Toast.LENGTH_SHORT)
+                              .show();
+                          return;
+                        }
 
-                    if (address == null) {
-                      Toast.makeText(
-                              fragment.getContext(),
-                              "An exception occurred trying to fetch your location.",
-                              Toast.LENGTH_SHORT)
-                          .show();
-                      return;
-                    }
-
-                    String city = address.getLocality();
-
-                    QRLocation qrLocation =
-                        new QRLocation(city, location.getLatitude(), location.getLongitude());
-                    qrCode.setLoc(qrLocation);
-                  } catch (IOException e) {
-                    Toast.makeText(
-                            fragment.getContext(),
-                            "An exception occurred trying to fetch your location.",
-                            Toast.LENGTH_SHORT)
-                        .show();
-                  }
+                        // Now that we have the address, get the city and add the location to the
+                        // QR.
+                        String city = address.getLocality();
+                        QRLocation qrLocation =
+                            new QRLocation(city, location.getLatitude(), location.getLongitude());
+                        qrCode.setLoc(qrLocation);
+                      });
                 }
               });
     }
@@ -111,36 +102,26 @@ public class LocationHandler {
               fragment.getActivity(),
               location -> {
                 if (location != null) {
-                  Geocoder geoCoder = new Geocoder(fragment.getContext(), Locale.getDefault());
-                  try {
-                    Address address =
-                        geoCoder
-                            .getFromLocation(location.getLatitude(), location.getLongitude(), 1)
-                            .stream()
-                            .findAny()
-                            .orElse(null);
+                  getAddressFromCoords(
+                      location.getLatitude(),
+                      location.getLongitude(),
+                      (exception, address) -> {
+                        if (exception != null) {
+                          Toast.makeText(
+                                  fragment.getContext(),
+                                  "An exception occurred while fetching your location.",
+                                  Toast.LENGTH_SHORT)
+                              .show();
+                          return;
+                        }
 
-                    if (address == null) {
-                      Toast.makeText(
-                              fragment.getContext(),
-                              "An exception occurred trying to fetch your location.",
-                              Toast.LENGTH_SHORT)
-                          .show();
-                      return;
-                    }
-
-                    String city = address.getLocality();
-
-                    QRLocation qrLocation =
-                        new QRLocation(city, location.getLatitude(), location.getLongitude());
-                    qrCode.addLocation(qrLocation);
-                  } catch (IOException e) {
-                    Toast.makeText(
-                            fragment.getContext(),
-                            "An exception occurred trying to fetch your location.",
-                            Toast.LENGTH_SHORT)
-                        .show();
-                  }
+                        // Now that we have the address, get the city and add the location to the
+                        // QR.
+                        String city = address.getLocality();
+                        lastAddedLocation =
+                            new QRLocation(city, location.getLatitude(), location.getLongitude());
+                        qrCode.addLocation(lastAddedLocation);
+                      });
                 }
               });
     }
@@ -154,6 +135,23 @@ public class LocationHandler {
   public void removeLastAddedLocation(QRCode qrCode) {
     qrCode.removeLocation(lastAddedLocation);
     lastAddedLocation = null;
+  }
+
+  private void getAddressFromCoords(
+      double lat, double lon, BiConsumer<Exception, Address> callback) {
+    Geocoder geoCoder = new Geocoder(fragment.getContext(), Locale.getDefault());
+    try {
+      Address address = geoCoder.getFromLocation(lat, lon, 1).stream().findAny().orElse(null);
+
+      if (address == null) {
+        callback.accept(new IllegalStateException("No address found."), null);
+        return;
+      }
+
+      callback.accept(null, address);
+    } catch (IOException e) {
+      callback.accept(e, null);
+    }
   }
 
   /**
