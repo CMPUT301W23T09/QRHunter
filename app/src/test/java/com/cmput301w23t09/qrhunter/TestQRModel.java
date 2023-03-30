@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import android.graphics.Bitmap;
-import android.location.Location;
 import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.locationphoto.LocationPhoto;
 import com.cmput301w23t09.qrhunter.map.QRLocation;
@@ -20,8 +19,8 @@ public class TestQRModel {
     return "8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d";
   }
 
-  private Location mockLoc() {
-    return new Location("");
+  private QRLocation mockLoc() {
+    return new QRLocation("");
   }
 
   // create a mock qr code
@@ -71,7 +70,7 @@ public class TestQRModel {
   @Test
   public void testGetLoc() {
     QRCode qr = new QRCode(mockHash(), "RobaqinectTiger✿", 32, mockLoc(), null, null, null, null);
-    Location loc = qr.getLoc();
+    QRLocation loc = qr.getLoc();
     assertEquals(loc.getClass().toString(), "class android.location.Location");
     assertEquals(loc.getLatitude(), mockLoc().getLatitude());
     assertEquals(loc.getLongitude(), mockLoc().getLongitude());
@@ -81,7 +80,7 @@ public class TestQRModel {
   public void testSetLoc() {
     QRCode qr = mockCode();
     qr.setLoc(mockLoc());
-    Location loc = qr.getLoc();
+    QRLocation loc = qr.getLoc();
     assertEquals(loc.getClass().toString(), "class android.location.Location");
     assertEquals(loc.getLatitude(), mockLoc().getLatitude());
     assertEquals(loc.getLongitude(), mockLoc().getLongitude());
