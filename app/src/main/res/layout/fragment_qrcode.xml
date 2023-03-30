@@ -132,7 +132,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/comment_box_border"
         android:drawableEnd="@android:drawable/ic_menu_send"
-        android:drawableTint="#673AB7"
+        android:drawableTint="@color/purple_500"
         android:ems="10"
         android:hint="@string/comment_box_hint_text"
         android:imeOptions="actionSend"
