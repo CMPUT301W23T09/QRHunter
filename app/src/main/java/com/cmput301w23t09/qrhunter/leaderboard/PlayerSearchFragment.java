@@ -60,16 +60,16 @@ public class PlayerSearchFragment extends BaseFragment {
         playerSearchQuery = view.findViewById(R.id.search_query);
         backButton = view.findViewById(R.id.back_button);
         searchQueryList = view.findViewById(R.id.search_query_list);
+
         backButton.setOnClickListener(v -> controller.handleBackButton());
+        searchQueryList.setOnItemClickListener((parent, v, position, id) -> {
+            SearchQueryEntry entry = searchQueryEntries.get(position);
+//            controller.handleSearchQueryListClick(entry);
+        });
+
         playerSearchQuery.setText("Search query: " + searchQuery);
-        // displaySearchQueryData();
         controller.displaySearchQueryData(searchQuery, searchQueryEntries, entryAdapter);
     }
 
-    private void displaySearchQueryData() {
-        // Get all the search queries entries as a list controller.getSearchQueryData()
-        // Add it to the searchQueryEntries
-        // Notify changed
-    }
 
 }

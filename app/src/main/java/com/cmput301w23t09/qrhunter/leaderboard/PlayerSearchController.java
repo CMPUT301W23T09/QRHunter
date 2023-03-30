@@ -64,20 +64,21 @@ public class PlayerSearchController {
                                 return;
                             }
 
-                            for (Player player : allPlayers.getData()) {
-                                Log.d("AllPlayers", player.getUsername());
-                            }
-
+                            // filters the set of all players leaving only those containing the query as a substring
                             Set<Player> relatedUsernamePlayers = allPlayers.getData().stream()
                                     .filter(obj -> obj.getUsername().contains(usernameQuery))
                                     .collect(Collectors.toSet());
 
                             for (Player relatedPlayer : relatedUsernamePlayers) {
-                                Log.d("RelatedPlayer", relatedPlayer.getUsername());
-                                searchQueryEntries.add(new SearchQueryEntry(relatedPlayer.getUsername()));
+                                searchQueryEntries.add(new SearchQueryEntry(relatedPlayer.getUsername(), relatedPlayer.getDeviceId()));
                             }
                             entryAdapter.notifyDataSetChanged();
                         }
                 );
     }
+
+//    public void handleSearchQueryListClick(SearchQueryEntry entry) {
+//        gameController.setBody(new OtherProfileFragment(gameController, entry.getDeviceId()));
+//        }
+//    }
 }
