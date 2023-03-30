@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -153,7 +153,7 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E()">LeaderboardController</a></span>()</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.cmput301w23t09.qrhunter.GameController)">LeaderboardController</a></span>&#8203;(<a href="../GameController.html" title="class in com.cmput301w23t09.qrhunter">GameController</a>&nbsp;gameController)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </table>
@@ -176,29 +176,39 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTopQRCodesByRegionLeaderboard(java.util.function.BiConsumer)">getTopQRCodesByRegionLeaderboard</a></span>&#8203;(java.util.function.BiConsumer&lt;java.lang.Exception,&#8203;java.util.Map&lt;java.lang.String,&#8203;<a href="Leaderboard.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">Leaderboard</a>&gt;&gt;&nbsp;callback)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTopQRCodesByRegionLeaderboard(java.util.function.BiConsumer)">getTopQRCodesByRegionLeaderboard</a></span>&#8203;(java.util.function.BiConsumer&lt;java.lang.Exception,&#8203;java.util.Map&lt;java.lang.String,&#8203;<a href="Leaderboard.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">Leaderboard</a>&lt;<a href="QRCodeLeaderboardEntry.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">QRCodeLeaderboardEntry</a>&gt;&gt;&gt;&nbsp;callback)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTopQRCodesLeaderboard(java.util.function.BiConsumer)">getTopQRCodesLeaderboard</a></span>&#8203;(java.util.function.BiConsumer&lt;java.lang.Exception,&#8203;<a href="Leaderboard.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">Leaderboard</a>&gt;&nbsp;callback)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTopQRCodesLeaderboard(java.util.function.BiConsumer)">getTopQRCodesLeaderboard</a></span>&#8203;(java.util.function.BiConsumer&lt;java.lang.Exception,&#8203;<a href="Leaderboard.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">Leaderboard</a>&lt;<a href="QRCodeLeaderboardEntry.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">QRCodeLeaderboardEntry</a>&gt;&gt;&nbsp;callback)</code></th>
 <td class="colLast">
 <div class="block">Retrieve the top QRCodes points value leaderboard in descending order.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTopScansLeaderboard(java.util.function.BiConsumer)">getTopScansLeaderboard</a></span>&#8203;(java.util.function.BiConsumer&lt;java.lang.Exception,&#8203;<a href="Leaderboard.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">Leaderboard</a>&gt;&nbsp;callback)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTopScansLeaderboard(java.util.function.BiConsumer)">getTopScansLeaderboard</a></span>&#8203;(java.util.function.BiConsumer&lt;java.lang.Exception,&#8203;<a href="Leaderboard.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">Leaderboard</a>&lt;<a href="PlayerLeaderboardEntry.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">PlayerLeaderboardEntry</a>&gt;&gt;&nbsp;callback)</code></th>
 <td class="colLast">
 <div class="block">Retrieve the top scans leaderboard in descending order.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTotalPointsLeaderboard(java.util.function.BiConsumer)">getTotalPointsLeaderboard</a></span>&#8203;(java.util.function.BiConsumer&lt;java.lang.Exception,&#8203;<a href="Leaderboard.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">Leaderboard</a>&gt;&nbsp;callback)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTotalPointsLeaderboard(java.util.function.BiConsumer)">getTotalPointsLeaderboard</a></span>&#8203;(java.util.function.BiConsumer&lt;java.lang.Exception,&#8203;<a href="Leaderboard.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">Leaderboard</a>&lt;<a href="PlayerLeaderboardEntry.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">PlayerLeaderboardEntry</a>&gt;&gt;&nbsp;callback)</code></th>
 <td class="colLast">
 <div class="block">Retrieve the total points leaderboard in descending order.</div>
 </td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#handleEntryClick(com.cmput301w23t09.qrhunter.leaderboard.PlayerLeaderboardEntry)">handleEntryClick</a></span>&#8203;(<a href="PlayerLeaderboardEntry.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">PlayerLeaderboardEntry</a>&nbsp;entry)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#handleEntryClick(com.cmput301w23t09.qrhunter.leaderboard.QRCodeLeaderboardEntry)">handleEntryClick</a></span>&#8203;(<a href="QRCodeLeaderboardEntry.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">QRCodeLeaderboardEntry</a>&nbsp;entry)</code></th>
+<td class="colLast">&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -224,13 +234,13 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;()">
+<a id="&lt;init&gt;(com.cmput301w23t09.qrhunter.GameController)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>LeaderboardController</h4>
-<pre>public&nbsp;LeaderboardController()</pre>
+<pre>public&nbsp;LeaderboardController&#8203;(<a href="../GameController.html" title="class in com.cmput301w23t09.qrhunter">GameController</a>&nbsp;gameController)</pre>
 </li>
 </ul>
 </li>
@@ -249,7 +259,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getTotalPointsLeaderboard</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;getTotalPointsLeaderboard&#8203;(java.util.function.BiConsumer&lt;java.lang.Exception,&#8203;<a href="Leaderboard.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">Leaderboard</a>&gt;&nbsp;callback)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;getTotalPointsLeaderboard&#8203;(java.util.function.BiConsumer&lt;java.lang.Exception,&#8203;<a href="Leaderboard.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">Leaderboard</a>&lt;<a href="PlayerLeaderboardEntry.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">PlayerLeaderboardEntry</a>&gt;&gt;&nbsp;callback)</pre>
 <div class="block">Retrieve the total points leaderboard in descending order.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -263,7 +273,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getTopScansLeaderboard</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;getTopScansLeaderboard&#8203;(java.util.function.BiConsumer&lt;java.lang.Exception,&#8203;<a href="Leaderboard.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">Leaderboard</a>&gt;&nbsp;callback)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;getTopScansLeaderboard&#8203;(java.util.function.BiConsumer&lt;java.lang.Exception,&#8203;<a href="Leaderboard.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">Leaderboard</a>&lt;<a href="PlayerLeaderboardEntry.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">PlayerLeaderboardEntry</a>&gt;&gt;&nbsp;callback)</pre>
 <div class="block">Retrieve the top scans leaderboard in descending order.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -277,12 +287,30 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getTopQRCodesLeaderboard</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;getTopQRCodesLeaderboard&#8203;(java.util.function.BiConsumer&lt;java.lang.Exception,&#8203;<a href="Leaderboard.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">Leaderboard</a>&gt;&nbsp;callback)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;getTopQRCodesLeaderboard&#8203;(java.util.function.BiConsumer&lt;java.lang.Exception,&#8203;<a href="Leaderboard.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">Leaderboard</a>&lt;<a href="QRCodeLeaderboardEntry.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">QRCodeLeaderboardEntry</a>&gt;&gt;&nbsp;callback)</pre>
 <div class="block">Retrieve the top QRCodes points value leaderboard in descending order.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>callback</code> - callback to call with leaderboard</dd>
 </dl>
+</li>
+</ul>
+<a id="handleEntryClick(com.cmput301w23t09.qrhunter.leaderboard.PlayerLeaderboardEntry)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>handleEntryClick</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;handleEntryClick&#8203;(<a href="PlayerLeaderboardEntry.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">PlayerLeaderboardEntry</a>&nbsp;entry)</pre>
+</li>
+</ul>
+<a id="handleEntryClick(com.cmput301w23t09.qrhunter.leaderboard.QRCodeLeaderboardEntry)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>handleEntryClick</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;handleEntryClick&#8203;(<a href="QRCodeLeaderboardEntry.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">QRCodeLeaderboardEntry</a>&nbsp;entry)</pre>
 </li>
 </ul>
 <a id="getTopQRCodesByRegionLeaderboard(java.util.function.BiConsumer)">
@@ -291,7 +319,7 @@ extends java.lang.Object</pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getTopQRCodesByRegionLeaderboard</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;getTopQRCodesByRegionLeaderboard&#8203;(java.util.function.BiConsumer&lt;java.lang.Exception,&#8203;java.util.Map&lt;java.lang.String,&#8203;<a href="Leaderboard.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">Leaderboard</a>&gt;&gt;&nbsp;callback)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;getTopQRCodesByRegionLeaderboard&#8203;(java.util.function.BiConsumer&lt;java.lang.Exception,&#8203;java.util.Map&lt;java.lang.String,&#8203;<a href="Leaderboard.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">Leaderboard</a>&lt;<a href="QRCodeLeaderboardEntry.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">QRCodeLeaderboardEntry</a>&gt;&gt;&gt;&nbsp;callback)</pre>
 </li>
 </ul>
 </li>

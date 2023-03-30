@@ -27,8 +27,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":6,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -89,13 +89,13 @@ loadScripts(document, 'script');</script>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
@@ -134,8 +134,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt>All Implemented Interfaces:</dt>
 <dd><code><a href="../DatabaseChangeListener.html" title="interface in com.cmput301w23t09.qrhunter">DatabaseChangeListener</a></code></dd>
 </dl>
+<dl>
+<dt>Direct Known Subclasses:</dt>
+<dd><code><a href="MyProfileController.html" title="class in com.cmput301w23t09.qrhunter.profile">MyProfileController</a></code>, <code><a href="OtherProfileController.html" title="class in com.cmput301w23t09.qrhunter.profile">OtherProfileController</a></code></dd>
+</dl>
 <hr>
-<pre>public class <span class="typeNameLabel">ProfileController</span>
+<pre>public abstract class <span class="typeNameLabel">ProfileController</span>
 extends java.lang.Object
 implements <a href="../DatabaseChangeListener.html" title="interface in com.cmput301w23t09.qrhunter">DatabaseChangeListener</a></pre>
 <div class="block">This is the controller for the profile fragment of the app</div>
@@ -145,6 +149,45 @@ implements <a href="../DatabaseChangeListener.html" title="interface in com.cmpu
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
+<!-- =========== FIELD SUMMARY =========== -->
+<section>
+<ul class="blockList">
+<li class="blockList"><a id="field.summary">
+<!--   -->
+</a>
+<h3>Field Summary</h3>
+<table class="memberSummary">
+<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Field</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected java.util.UUID</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#deviceUUID">deviceUUID</a></span></code></th>
+<td class="colLast">
+<div class="block">Device UUID of the profile</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected <a href="ProfileFragment.html" title="class in com.cmput301w23t09.qrhunter.profile">ProfileFragment</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fragment">fragment</a></span></code></th>
+<td class="colLast">
+<div class="block">This is the profile fragment the controller handles</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected <a href="../GameController.html" title="class in com.cmput301w23t09.qrhunter">GameController</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#gameController">gameController</a></span></code></th>
+<td class="colLast">
+<div class="block">This is the game controller that controls the content on screen.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+</section>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <section>
 <ul class="blockList">
@@ -178,7 +221,7 @@ implements <a href="../DatabaseChangeListener.html" title="interface in com.cmpu
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -213,7 +256,7 @@ implements <a href="../DatabaseChangeListener.html" title="interface in com.cmpu
 </td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code>void</code></td>
+<td class="colFirst"><code>abstract void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#handleContactButtonClick()">handleContactButtonClick</a></span>()</code></th>
 <td class="colLast">
 <div class="block">This handles the action to take when the contact info button is clicked.</div>
@@ -258,6 +301,13 @@ implements <a href="../DatabaseChangeListener.html" title="interface in com.cmpu
 <div class="block">This sets up the username view of the fragment</div>
 </td>
 </tr>
+<tr id="i10" class="altColor">
+<td class="colFirst"><code>protected void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#showMsg(java.lang.String)">showMsg</a></span>&#8203;(java.lang.String&nbsp;msg)</code></th>
+<td class="colLast">
+<div class="block">This displays a Toast message</div>
+</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
@@ -275,6 +325,46 @@ implements <a href="../DatabaseChangeListener.html" title="interface in com.cmpu
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
+<!-- ============ FIELD DETAIL =========== -->
+<section>
+<ul class="blockList">
+<li class="blockList"><a id="field.detail">
+<!--   -->
+</a>
+<h3>Field Detail</h3>
+<a id="gameController">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>gameController</h4>
+<pre>protected final&nbsp;<a href="../GameController.html" title="class in com.cmput301w23t09.qrhunter">GameController</a> gameController</pre>
+<div class="block">This is the game controller that controls the content on screen.</div>
+</li>
+</ul>
+<a id="fragment">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>fragment</h4>
+<pre>protected final&nbsp;<a href="ProfileFragment.html" title="class in com.cmput301w23t09.qrhunter.profile">ProfileFragment</a> fragment</pre>
+<div class="block">This is the profile fragment the controller handles</div>
+</li>
+</ul>
+<a id="deviceUUID">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>deviceUUID</h4>
+<pre>protected final&nbsp;java.util.UUID deviceUUID</pre>
+<div class="block">Device UUID of the profile</div>
+</li>
+</ul>
+</li>
+</ul>
+</section>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <section>
 <ul class="blockList">
@@ -368,7 +458,7 @@ implements <a href="../DatabaseChangeListener.html" title="interface in com.cmpu
 <ul class="blockList">
 <li class="blockList">
 <h4>handleContactButtonClick</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;handleContactButtonClick()</pre>
+<pre class="methodSignature">public abstract&nbsp;void&nbsp;handleContactButtonClick()</pre>
 <div class="block">This handles the action to take when the contact info button is clicked. Either displaying the
  contact information or rendering the edit details fragment.</div>
 </li>
@@ -439,6 +529,20 @@ implements <a href="../DatabaseChangeListener.html" title="interface in com.cmpu
 </dl>
 </li>
 </ul>
+<a id="showMsg(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>showMsg</h4>
+<pre class="methodSignature">protected&nbsp;void&nbsp;showMsg&#8203;(java.lang.String&nbsp;msg)</pre>
+<div class="block">This displays a Toast message</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>msg</code> - The message to display</dd>
+</dl>
+</li>
+</ul>
 <a id="calculateRankOfHighestQRScore()">
 <!--   -->
 </a>
@@ -501,13 +605,13 @@ implements <a href="../DatabaseChangeListener.html" title="interface in com.cmpu
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
