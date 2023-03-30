@@ -14,6 +14,7 @@ public class QRLocation {
    * @param locStr Location string
    */
   public QRLocation(String locStr) {
+    System.out.println(locStr);
     this.locationString = locStr;
     int splitPoint = locStr.indexOf(';');
     Double lat = Double.parseDouble(locStr.substring(0, splitPoint));
