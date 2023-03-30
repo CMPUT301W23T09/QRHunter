@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ public class PlayerSearchFragment extends BaseFragment {
     private ListView searchQueryList;
     private SearchQueryEntryAdapter entryAdapter;
     private List<SearchQueryEntry> searchQueryEntries;
+    private LinearLayout searchLinearLayout;
 
     public PlayerSearchFragment(GameController gameController) {
         super(gameController);
@@ -60,6 +62,7 @@ public class PlayerSearchFragment extends BaseFragment {
         playerSearchQuery = view.findViewById(R.id.search_query);
         backButton = view.findViewById(R.id.back_button);
         searchQueryList = view.findViewById(R.id.search_query_list);
+        searchLinearLayout = view.findViewById(R.id.search_linear_layout);
 
         backButton.setOnClickListener(v -> controller.handleBackButton());
         searchQueryList.setOnItemClickListener((parent, v, position, id) -> {
@@ -68,7 +71,7 @@ public class PlayerSearchFragment extends BaseFragment {
         });
 
         playerSearchQuery.setText("Search query: " + searchQuery);
-        controller.displaySearchQueryData(searchQuery, searchQueryEntries, entryAdapter);
+        controller.displaySearchQueryData(searchQuery, searchQueryEntries, entryAdapter, searchLinearLayout, getContext());
     }
 
 

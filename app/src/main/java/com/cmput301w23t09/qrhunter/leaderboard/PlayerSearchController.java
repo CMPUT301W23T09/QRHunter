@@ -1,8 +1,11 @@
 package com.cmput301w23t09.qrhunter.leaderboard;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cmput301w23t09.qrhunter.GameController;
@@ -52,7 +55,12 @@ public class PlayerSearchController {
 //                        }
 //                );
 //    }
-    public void displaySearchQueryData(String usernameQuery, List<SearchQueryEntry> searchQueryEntries, SearchQueryEntryAdapter entryAdapter) {
+    public void displaySearchQueryData(
+            String usernameQuery,
+            List<SearchQueryEntry> searchQueryEntries,
+            SearchQueryEntryAdapter entryAdapter,
+            LinearLayout searchLinearLayout,
+            Context context) {
         PlayerDatabase.getInstance()
                 .getAllPlayers(
                         allPlayers -> {
@@ -71,6 +79,14 @@ public class PlayerSearchController {
                                             .toLowerCase()
                                             .contains(usernameQuery.toLowerCase()))
                                     .collect(Collectors.toSet());
+
+                            // if no players are found display Player Not Found message
+                            if (relatedUsernamePlayers.size() == 0) {
+                                TextView noPlayersFoundMessage = new TextView(context);
+                                noPlayersFoundMessage.setText("Player Not Found.");
+                                searchLinearLayout.addView(noPlayersFoundMessage);
+
+                            }
 
                             for (Player relatedPlayer : relatedUsernamePlayers) {
                                 searchQueryEntries.add(new SearchQueryEntry(relatedPlayer.getUsername(), relatedPlayer.getDeviceId()));
