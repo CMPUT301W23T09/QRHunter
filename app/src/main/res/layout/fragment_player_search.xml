@@ -14,17 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="72dp">
 
-        <TextView
-            android:id="@+id/search_query"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="24dp"
-            android:text="Search Fragment"
-            android:textSize="16dp"
-            app:layout_constraintStart_toEndOf="@+id/back_button"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <ImageView
             android:id="@+id/back_button"
             android:layout_width="wrap_content"

@@ -20,7 +20,6 @@ import java.util.List;
 
 public class PlayerSearchFragment extends BaseFragment {
     private String searchQuery;
-    private TextView playerSearchQuery;
     private ImageView backButton;
     private PlayerSearchController controller;
     private ListView searchQueryList;
@@ -59,7 +58,6 @@ public class PlayerSearchFragment extends BaseFragment {
     }
 
     private void setUpSearchFragment(View view) {
-        playerSearchQuery = view.findViewById(R.id.search_query);
         backButton = view.findViewById(R.id.back_button);
         searchQueryList = view.findViewById(R.id.search_query_list);
         searchLinearLayout = view.findViewById(R.id.search_linear_layout);
@@ -70,7 +68,6 @@ public class PlayerSearchFragment extends BaseFragment {
             controller.handleSearchQueryListClick(entry);
         });
 
-        playerSearchQuery.setText("Search query: " + searchQuery);
         controller.displaySearchQueryData(searchQuery, searchQueryEntries, entryAdapter, searchLinearLayout, getContext());
     }
 
