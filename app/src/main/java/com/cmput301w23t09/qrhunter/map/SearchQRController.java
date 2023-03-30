@@ -1,7 +1,5 @@
 package com.cmput301w23t09.qrhunter.map;
 
-import static com.google.android.gms.tasks.Tasks.await;
-
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -13,7 +11,6 @@ import com.google.android.gms.maps.model.LatLng;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class SearchQRController {
   private MapFragment fragment;
@@ -35,10 +32,7 @@ public class SearchQRController {
         try {
           loc = parseInput(locationInput);
         } catch (Exception err) {
-          Toast.makeText(
-                  fragment.getContext(),
-                  err.toString(),
-                  Toast.LENGTH_LONG).show();
+          Toast.makeText(fragment.getContext(), err.toString(), Toast.LENGTH_LONG).show();
           return true;
         }
         // get location first if parseInput returns null
@@ -51,7 +45,8 @@ public class SearchQRController {
         //              fragment.getActivity(),
         //              location -> {
         //                if (location != null) {
-        //                  showNearbyQRCodes(LatLng(location.getLatitude(), location.getLongitude()));
+        //                  showNearbyQRCodes(LatLng(location.getLatitude(),
+        // location.getLongitude()));
         //                } else {
         //                  Toast.makeText(
         //                  fragment.getContext(),
@@ -71,7 +66,7 @@ public class SearchQRController {
     };
   }
 
-  private LatLng parseInput(String locationInput) throws Exception{
+  private LatLng parseInput(String locationInput) throws Exception {
     // check if input is blank
     if (locationInput.equals("")) {
       throw new Exception("Please enter a location");
@@ -96,7 +91,8 @@ public class SearchQRController {
       }
       // check input format
       if (coords.length != 2) {
-        throw new Exception("Invalid format, enter \"Here\", geolocation coordinates, or an address");
+        throw new Exception(
+            "Invalid format, enter \"Here\", geolocation coordinates, or an address");
       }
       // get location coordinates
       Double latitude = parseDoubleInput(coords[0]);
@@ -104,7 +100,8 @@ public class SearchQRController {
       if (latitude != null && longitude != null) {
         return new LatLng(latitude, longitude);
       } else {
-        throw new Exception("Invalid format, enter \"Here\", geolocation coordinates, or an address");
+        throw new Exception(
+            "Invalid format, enter \"Here\", geolocation coordinates, or an address");
       }
     }
 

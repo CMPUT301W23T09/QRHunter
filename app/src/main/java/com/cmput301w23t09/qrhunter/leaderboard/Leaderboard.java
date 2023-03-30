@@ -1,7 +1,5 @@
 package com.cmput301w23t09.qrhunter.leaderboard;
 
-import android.widget.SearchView;
-
 import java.util.List;
 
 /** This class represents a leaderboard. */

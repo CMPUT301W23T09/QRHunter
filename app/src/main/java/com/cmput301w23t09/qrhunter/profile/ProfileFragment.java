@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.ArrayRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,7 +20,6 @@ import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.util.DeviceUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
 
 /** This is the fragment displaying the user's profile */
 public class ProfileFragment extends BaseFragment {
@@ -93,7 +93,6 @@ public class ProfileFragment extends BaseFragment {
     // calculate qr code rankings
     handleProfileHeaderEstimates(view);
     controller.addUpdater();
-    controller.calculateRankOfHighestQRScore();
   }
 
   /** Sets the profile elements to a blank/default state */
@@ -168,17 +167,34 @@ public class ProfileFragment extends BaseFragment {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            // TODO: If possible wait until calculation is complete before displaying the information
-//            controller.calculateRankOfHighestQRScore();
-//            String rankingsMessage = controller.getFormattedQRPercentile();
-//            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-//            builder.setTitle("Your Rankings");
-//            builder.setMessage("Calculating rankings..."); // Set default message
-//            builder.setPositiveButton("OK", null);
-//            AlertDialog dialog = builder.create();
-//            dialog.show();
+            AlertDialog loadingDialog =
+                new AlertDialog.Builder(getContext())
+                    .setTitle("Rankings")
+                    .setMessage("Calculating rankings...")
+                    .setPositiveButton("OK", null)
+                    .create();
+            loadingDialog.show();
 
-              new CalculateRankingsTask(controller, getContext()).execute();
+            controller.retrievePercentile(
+                (exception, percentile) -> {
+                  loadingDialog.dismiss();
+                  if (exception != null) {
+                    Toast.makeText(
+                            getContext(),
+                            "An exception occurred while fetching the ranking..",
+                            Toast.LENGTH_SHORT)
+                        .show();
+                    return;
+                  }
+
+                  String formattedMessage = getString(R.string.ranking_message, percentile);
+                  new AlertDialog.Builder(getContext())
+                      .setTitle("Rankings")
+                      .setMessage(formattedMessage)
+                      .setPositiveButton("OK", null)
+                      .create()
+                      .show();
+                });
           }
         });
   }
