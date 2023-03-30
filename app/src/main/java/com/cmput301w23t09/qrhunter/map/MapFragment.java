@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -15,6 +17,9 @@ import androidx.core.content.ContextCompat;
 import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.qrcode.QRCode;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -22,12 +27,18 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 
-public class MapFragment extends BaseFragment implements OnMapReadyCallback {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+public class MapFragment extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
   private boolean locationPermissionGranted;
   private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
   private GoogleMap map;
@@ -42,9 +53,11 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
   private SearchView qrSearcher;
   private SearchQRController searchController;
+  private MapController controller;
 
   public MapFragment(GameController gameController) {
     super(gameController);
+    this.controller = new MapController(this);
   }
 
   private void getLocationPermission() {
@@ -91,6 +104,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
                     map.animateCamera(
                         CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM));
                     map.addMarker(new MarkerOptions().position(currentLocation).title("YOU"));
+                    placeNearbyQRCodes();
                   }
                 } else {
                   // Sets the map camera to the a set default location if lastKnownLocation is null
@@ -201,7 +215,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
     // Get the current location of the device and set the position of the map.
     getDeviceLocation();
-    placeholderQR =
+    /*placeholderQR =
         new LatLng[] {
           new LatLng(53.52748572137864, -113.52965526862573), // Engineering Physics Club
           new LatLng(53.52644615688437, -113.52453761405557), // CAB
@@ -213,7 +227,65 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
     for (LatLng location : placeholderQR) {
       map.addMarker(new MarkerOptions().position(location));
-    }
+    }*/
+  }
+
+  private void placeNearbyQRCodes() {
+    HashMap<QRCode, QRLocation> nearbyCodes = new HashMap<>();
+    QRCodeDatabase qrDatabase = QRCodeDatabase.getInstance();
+    qrDatabase.getAllQRCodes(
+            result -> {
+              // check if error occurred
+              if (result.getException() != null) {
+                Toast.makeText(
+                                this.getContext(),
+                                "An error occurred querying for nearby QR codes",
+                                Toast.LENGTH_SHORT)
+                        .show();
+              }
+              // if query was successful
+              for (QRCode qrCode : result.getData()) {
+                if (qrCode.getLoc() != null) {
+                  // get the qr code's distance from the given location
+                  float[] distance = new float[1];
+                  for (QRLocation qrLocation : qrCode.getLocations()) {
+                    Location.distanceBetween(
+                            currentLocation.latitude,
+                            currentLocation.longitude,
+                            qrLocation.getLatitude(),
+                            qrLocation.getLongitude(),
+                            distance);
+                    // add the qr code if one of its locations is nearby
+                    if (distance[0] < 100) {
+                      nearbyCodes.put(qrCode, qrLocation);
+                      break;
+                    }
+                  }
+                }
+              }
+              // add map markers for each nearby qr code
+              for (Map.Entry<QRCode, QRLocation> nearbyCode: nearbyCodes.entrySet()) {
+                QRLocation loc = nearbyCode.getValue();
+                MarkerOptions marker = new MarkerOptions().position(new LatLng(loc.getLatitude(), loc.getLongitude()));
+                map.addMarker(marker).setTag(nearbyCode.getValue());
+              }
+            });
+  }
+
+  @Override
+  public boolean onMarkerClick(final Marker marker) {
+
+    // Retrieve the data from the marker.
+    QRCode codeData = (QRCode) marker.getTag();
+
+    // show qr code data
+    QRCodeFragment.newInstance(codeData, null)
+            .show(this.getParentFragmentManager(), "Show marker's QR code information");
+
+    // Return false to indicate that we have not consumed the event and that we wish
+    // for the default behavior to occur (which is for the camera to move such that the
+    // marker is centered and for the marker's info window to open, if it has one).
+    return false;
   }
 
   public boolean getLocationPermissionGranted() {
