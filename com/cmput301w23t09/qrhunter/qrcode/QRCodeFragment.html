@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":10,"i2":10,"i3":10};
+var data = {"i0":9,"i1":10,"i2":10,"i3":10,"i4":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -230,18 +230,28 @@ implements java.io.Serializable</pre>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>protected android.widget.ImageView</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#locationPhoto">locationPhoto</a></span></code></th>
+<td class="colFirst"><code>protected <a href="../locationphoto/LocationPhotoAdapter.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhotoAdapter</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#locationPhotoAdapter">locationPhotoAdapter</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>protected <a href="../scanqr/LocationPhotoFragment.html" title="class in com.cmput301w23t09.qrhunter.scanqr">LocationPhotoFragment</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#locationPhotoFragment">locationPhotoFragment</a></span></code></th>
+<td class="colFirst"><code>protected com.smarteist.autoimageslider.SliderView</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#locationPhotoSlider">locationPhotoSlider</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>protected <a href="../locationphoto/LocationPhotoStorage.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhotoStorage</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#locationPhotoStorage">locationPhotoStorage</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>protected <a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#qrCode">qrCode</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected <a href="QRCodeDatabase.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeDatabase</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#qrCodeDatabase">qrCodeDatabase</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -332,6 +342,13 @@ implements java.io.Serializable</pre>
 <div class="block">Enable and disable buttons of QRCodeFragment</div>
 </td>
 </tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateLocationPhoto()">updateLocationPhoto</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Updates the locationPhoto image view to show the newly-captured location photo</div>
+</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.androidx.fragment.app.DialogFragment">
@@ -379,15 +396,6 @@ implements java.io.Serializable</pre>
 <pre>protected&nbsp;<a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a> qrCode</pre>
 </li>
 </ul>
-<a id="locationPhoto">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>locationPhoto</h4>
-<pre>protected&nbsp;android.widget.ImageView locationPhoto</pre>
-</li>
-</ul>
 <a id="takeLocationPhotoBtn">
 <!--   -->
 </a>
@@ -413,15 +421,6 @@ implements java.io.Serializable</pre>
 <li class="blockList">
 <h4>locationHandler</h4>
 <pre>protected&nbsp;<a href="../map/LocationHandler.html" title="class in com.cmput301w23t09.qrhunter.map">LocationHandler</a> locationHandler</pre>
-</li>
-</ul>
-<a id="locationPhotoFragment">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>locationPhotoFragment</h4>
-<pre>protected&nbsp;<a href="../scanqr/LocationPhotoFragment.html" title="class in com.cmput301w23t09.qrhunter.scanqr">LocationPhotoFragment</a> locationPhotoFragment</pre>
 </li>
 </ul>
 <a id="activePlayer">
@@ -458,6 +457,42 @@ implements java.io.Serializable</pre>
 <li class="blockList">
 <h4>loadingButton</h4>
 <pre>protected&nbsp;com.google.android.material.floatingactionbutton.FloatingActionButton loadingButton</pre>
+</li>
+</ul>
+<a id="qrCodeDatabase">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>qrCodeDatabase</h4>
+<pre>protected&nbsp;<a href="QRCodeDatabase.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeDatabase</a> qrCodeDatabase</pre>
+</li>
+</ul>
+<a id="locationPhotoSlider">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>locationPhotoSlider</h4>
+<pre>protected&nbsp;com.smarteist.autoimageslider.SliderView locationPhotoSlider</pre>
+</li>
+</ul>
+<a id="locationPhotoAdapter">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>locationPhotoAdapter</h4>
+<pre>protected&nbsp;<a href="../locationphoto/LocationPhotoAdapter.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhotoAdapter</a> locationPhotoAdapter</pre>
+</li>
+</ul>
+<a id="locationPhotoStorage">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>locationPhotoStorage</h4>
+<pre>protected&nbsp;<a href="../locationphoto/LocationPhotoStorage.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhotoStorage</a> locationPhotoStorage</pre>
 </li>
 </ul>
 <a id="listElement">
@@ -556,7 +591,7 @@ public&nbsp;android.app.Dialog&nbsp;onCreateDialog&#8203;(@Nullable
 <a id="setUpButtons(android.view.View)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>setUpButtons</h4>
 <pre class="methodSignature">protected&nbsp;void&nbsp;setUpButtons&#8203;(android.view.View&nbsp;view)</pre>
@@ -564,6 +599,21 @@ public&nbsp;android.app.Dialog&nbsp;onCreateDialog&#8203;(@Nullable
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>view</code> - the view</dd>
+</dl>
+</li>
+</ul>
+<a id="updateLocationPhoto()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>updateLocationPhoto</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;updateLocationPhoto()</pre>
+<div class="block">Updates the locationPhoto image view to show the newly-captured location photo</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../scanqr/camera/CameraLocationPhotoController.html" title="class in com.cmput301w23t09.qrhunter.scanqr.camera"><code>CameraLocationPhotoController</code></a>, 
+<a href="../locationphoto/LocationPhotoController.html" title="class in com.cmput301w23t09.qrhunter.locationphoto"><code>LocationPhotoController</code></a></dd>
 </dl>
 </li>
 </ul>

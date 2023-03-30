@@ -99,6 +99,57 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <section>
+<h2 title="Package">Package&nbsp;com.cmput301w23t09.qrhunter.locationphoto</h2>
+<ul class="blockList">
+<li class="blockList"><a id="com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoController">
+<!--   -->
+</a>
+<h3>Class <a href="com/cmput301w23t09/qrhunter/locationphoto/LocationPhotoController.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoController</a> extends java.lang.Object implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>activePlayer</h4>
+<pre><a href="com/cmput301w23t09/qrhunter/player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a> activePlayer</pre>
+</li>
+<li class="blockList">
+<h4>cameraExecutor</h4>
+<pre>java.util.concurrent.ExecutorService cameraExecutor</pre>
+</li>
+<li class="blockList">
+<h4>fragment</h4>
+<pre><a href="com/cmput301w23t09/qrhunter/locationphoto/LocationPhotoFragment.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhotoFragment</a> fragment</pre>
+</li>
+<li class="blockList">
+<h4>imageCapture</h4>
+<pre>androidx.camera.core.ImageCapture imageCapture</pre>
+</li>
+<li class="blockList">
+<h4>locationPhoto</h4>
+<pre><a href="com/cmput301w23t09/qrhunter/locationphoto/LocationPhoto.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhoto</a> locationPhoto</pre>
+</li>
+<li class="blockList">
+<h4>locationPhotoStorage</h4>
+<pre><a href="com/cmput301w23t09/qrhunter/locationphoto/LocationPhotoStorage.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhotoStorage</a> locationPhotoStorage</pre>
+</li>
+<li class="blockList">
+<h4>qrCode</h4>
+<pre><a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a> qrCode</pre>
+</li>
+<li class="blockListLast">
+<h4>storageRef</h4>
+<pre>com.google.firebase.storage.StorageReference storageRef</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+</li>
+<li class="blockList">
+<section>
 <h2 title="Package">Package&nbsp;com.cmput301w23t09.qrhunter.player</h2>
 <ul class="blockList">
 <li class="blockList"><a id="com.cmput301w23t09.qrhunter.player.Player">
@@ -154,6 +205,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!--   -->
 </a>
 <h3>Class <a href="com/cmput301w23t09/qrhunter/qrcode/AddQRCodeFragment.html" title="class in com.cmput301w23t09.qrhunter.qrcode">com.cmput301w23t09.qrhunter.qrcode.AddQRCodeFragment</a> extends <a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeFragment.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeFragment</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>locationPhotoController</h4>
+<pre><a href="com/cmput301w23t09/qrhunter/locationphoto/LocationPhotoController.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhotoController</a> locationPhotoController</pre>
+</li>
+<li class="blockListLast">
+<h4>locationPhotoFragment</h4>
+<pre><a href="com/cmput301w23t09/qrhunter/locationphoto/LocationPhotoFragment.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhotoFragment</a> locationPhotoFragment</pre>
+</li>
+</ul>
+</li>
+</ul>
 </li>
 <li class="blockList"><a id="com.cmput301w23t09.qrhunter.qrcode.DeleteQRCodeFragment">
 <!--   -->
@@ -184,14 +250,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">This is the location of the QR code</div>
 </li>
 <li class="blockList">
+<h4>locationPhotos</h4>
+<pre>java.util.ArrayList&lt;<a href="com/cmput301w23t09/qrhunter/locationphoto/LocationPhoto.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhoto</a>&gt; locationPhotos</pre>
+<div class="block">This is a list of photos that have been taken of the QR code</div>
+</li>
+<li class="blockList">
+<h4>locations</h4>
+<pre>java.util.ArrayList&lt;<a href="com/cmput301w23t09/qrhunter/map/QRLocation.html" title="class in com.cmput301w23t09.qrhunter.map">QRLocation</a>&gt; locations</pre>
+<div class="block">This is a list of locations that the QR code has been found in</div>
+</li>
+<li class="blockList">
 <h4>name</h4>
 <pre>java.lang.String name</pre>
 <div class="block">This is the name of the QR code</div>
-</li>
-<li class="blockList">
-<h4>photos</h4>
-<pre>java.util.ArrayList&lt;<a href="com/cmput301w23t09/qrhunter/photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a>&gt; photos</pre>
-<div class="block">This is a list of photos that have been taken of the QR code</div>
 </li>
 <li class="blockList">
 <h4>players</h4>
@@ -249,16 +320,24 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre><a href="com/cmput301w23t09/qrhunter/map/LocationHandler.html" title="class in com.cmput301w23t09.qrhunter.map">LocationHandler</a> locationHandler</pre>
 </li>
 <li class="blockList">
-<h4>locationPhoto</h4>
-<pre>android.widget.ImageView locationPhoto</pre>
+<h4>locationPhotoAdapter</h4>
+<pre><a href="com/cmput301w23t09/qrhunter/locationphoto/LocationPhotoAdapter.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhotoAdapter</a> locationPhotoAdapter</pre>
 </li>
 <li class="blockList">
-<h4>locationPhotoFragment</h4>
-<pre><a href="com/cmput301w23t09/qrhunter/scanqr/LocationPhotoFragment.html" title="class in com.cmput301w23t09.qrhunter.scanqr">LocationPhotoFragment</a> locationPhotoFragment</pre>
+<h4>locationPhotoSlider</h4>
+<pre>com.smarteist.autoimageslider.SliderView locationPhotoSlider</pre>
+</li>
+<li class="blockList">
+<h4>locationPhotoStorage</h4>
+<pre><a href="com/cmput301w23t09/qrhunter/locationphoto/LocationPhotoStorage.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhotoStorage</a> locationPhotoStorage</pre>
 </li>
 <li class="blockList">
 <h4>qrCode</h4>
 <pre><a href="com/cmput301w23t09/qrhunter/qrcode/QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a> qrCode</pre>
+</li>
+<li class="blockList">
+<h4>qrCodeDatabase</h4>
+<pre><a href="com/cmput301w23t09/qrhunter/qrcode/QRCodeDatabase.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeDatabase</a> qrCodeDatabase</pre>
 </li>
 <li class="blockList">
 <h4>scansAdapter</h4>

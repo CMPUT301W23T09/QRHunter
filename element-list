@@ -3,9 +3,9 @@ com.cmput301w23t09.qrhunter.comment
 com.cmput301w23t09.qrhunter.database
 com.cmput301w23t09.qrhunter.databinding
 com.cmput301w23t09.qrhunter.leaderboard
+com.cmput301w23t09.qrhunter.locationphoto
 com.cmput301w23t09.qrhunter.map
 com.cmput301w23t09.qrhunter.navigation
-com.cmput301w23t09.qrhunter.photo
 com.cmput301w23t09.qrhunter.player
 com.cmput301w23t09.qrhunter.profile
 com.cmput301w23t09.qrhunter.qrcode

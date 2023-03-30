@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -169,11 +169,12 @@ implements java.io.Serializable</pre>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String,java.lang.String,java.lang.Integer,android.location.Location,java.util.ArrayList,java.util.ArrayList,java.util.ArrayList)">QRCode</a></span>&#8203;(java.lang.String&nbsp;hash,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String,java.lang.String,java.lang.Integer,android.location.Location,java.util.ArrayList,java.util.ArrayList,java.util.ArrayList,java.util.ArrayList)">QRCode</a></span>&#8203;(java.lang.String&nbsp;hash,
       java.lang.String&nbsp;name,
       java.lang.Integer&nbsp;score,
       android.location.Location&nbsp;loc,
-      java.util.ArrayList&lt;<a href="../photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a>&gt;&nbsp;photos,
+      java.util.ArrayList&lt;<a href="../map/QRLocation.html" title="class in com.cmput301w23t09.qrhunter.map">QRLocation</a>&gt;&nbsp;locations,
+      java.util.ArrayList&lt;<a href="../locationphoto/LocationPhoto.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhoto</a>&gt;&nbsp;locationPhotos,
       java.util.ArrayList&lt;<a href="../comment/Comment.html" title="class in com.cmput301w23t09.qrhunter.comment">Comment</a>&gt;&nbsp;comments,
       java.util.ArrayList&lt;java.lang.String&gt;&nbsp;players)</code></th>
 <td class="colLast">
@@ -208,117 +209,146 @@ implements java.io.Serializable</pre>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addPhoto(com.cmput301w23t09.qrhunter.photo.Photo)">addPhoto</a></span>&#8203;(<a href="../photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a>&nbsp;photo)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addLocation(com.cmput301w23t09.qrhunter.map.QRLocation)">addLocation</a></span>&#8203;(<a href="../map/QRLocation.html" title="class in com.cmput301w23t09.qrhunter.map">QRLocation</a>&nbsp;loc)</code></th>
+<td class="colLast">
+<div class="block">Adds a new location to the list of locations, as long as it's farther than 100m from any
+ existing location.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addPhoto(com.cmput301w23t09.qrhunter.locationphoto.LocationPhoto)">addPhoto</a></span>&#8203;(<a href="../locationphoto/LocationPhoto.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhoto</a>&nbsp;locationPhoto)</code></th>
 <td class="colLast">
 <div class="block">This adds a photo taken of the QR code</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addPlayer(java.lang.String)">addPlayer</a></span>&#8203;(java.lang.String&nbsp;player)</code></th>
 <td class="colLast">
 <div class="block">This adds a player that has scanned the QR code</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#deleteComment(com.cmput301w23t09.qrhunter.comment.Comment)">deleteComment</a></span>&#8203;(<a href="../comment/Comment.html" title="class in com.cmput301w23t09.qrhunter.comment">Comment</a>&nbsp;comment)</code></th>
 <td class="colLast">
 <div class="block">This deletes a comment from the QR code</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#deletePhoto(com.cmput301w23t09.qrhunter.photo.Photo)">deletePhoto</a></span>&#8203;(<a href="../photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a>&nbsp;photo)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#deletePhoto(com.cmput301w23t09.qrhunter.locationphoto.LocationPhoto)">deletePhoto</a></span>&#8203;(<a href="../locationphoto/LocationPhoto.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhoto</a>&nbsp;locationPhoto)</code></th>
 <td class="colLast">
 <div class="block">This deletes a photo taken of the QR code</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#deletePlayer(java.lang.String)">deletePlayer</a></span>&#8203;(java.lang.String&nbsp;player)</code></th>
 <td class="colLast">
 <div class="block">This removes a player that has scanned the QR code</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>java.util.ArrayList&lt;<a href="../comment/Comment.html" title="class in com.cmput301w23t09.qrhunter.comment">Comment</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getComments()">getComments</a></span>()</code></th>
 <td class="colLast">
 <div class="block">This returns the comments on the QR code</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getHash()">getHash</a></span>()</code></th>
 <td class="colLast">
 <div class="block">This returns the hash of the QR code</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>android.location.Location</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLoc()">getLoc</a></span>()</code></th>
 <td class="colLast">
 <div class="block">This returns the location of the QR code</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
+<td class="colFirst"><code>java.util.ArrayList&lt;<a href="../map/QRLocation.html" title="class in com.cmput301w23t09.qrhunter.map">QRLocation</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLocations()">getLocations</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Returns all locations of the QR code</div>
+</td>
+</tr>
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getName()">getName</a></span>()</code></th>
 <td class="colLast">
 <div class="block">This returns the name of the QR code</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
-<td class="colFirst"><code>java.util.List&lt;<a href="../photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a>&gt;</code></td>
+<tr id="i12" class="altColor">
+<td class="colFirst"><code>java.util.List&lt;<a href="../locationphoto/LocationPhoto.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhoto</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPhotos()">getPhotos</a></span>()</code></th>
 <td class="colLast">
 <div class="block">This returns the photos taken of the QR code</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>java.util.List&lt;java.lang.String&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPlayers()">getPlayers</a></span>()</code></th>
 <td class="colLast">
 <div class="block">This returns the player who have scanned the QR code</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>java.lang.Integer</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getScore()">getScore</a></span>()</code></th>
 <td class="colLast">
 <div class="block">This returns the score of the QR code</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>android.graphics.Bitmap</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getVisualRepresentation()">getVisualRepresentation</a></span>()</code></th>
 <td class="colLast">
 <div class="block">This returns the visual representation of the QR code</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i16" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#removeLocation(com.cmput301w23t09.qrhunter.map.QRLocation)">removeLocation</a></span>&#8203;(<a href="../map/QRLocation.html" title="class in com.cmput301w23t09.qrhunter.map">QRLocation</a>&nbsp;loc)</code></th>
+<td class="colLast">
+<div class="block">Removes a location from the list of locations.</div>
+</td>
+</tr>
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setComments(java.util.ArrayList)">setComments</a></span>&#8203;(java.util.ArrayList&lt;<a href="../comment/Comment.html" title="class in com.cmput301w23t09.qrhunter.comment">Comment</a>&gt;&nbsp;comments)</code></th>
 <td class="colLast">
 <div class="block">This sets the comments on the QR code</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setLoc(android.location.Location)">setLoc</a></span>&#8203;(android.location.Location&nbsp;loc)</code></th>
 <td class="colLast">
 <div class="block">This sets the location of the QR code</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setPhotos(java.util.ArrayList)">setPhotos</a></span>&#8203;(java.util.ArrayList&lt;<a href="../photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a>&gt;&nbsp;photos)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setLocations(java.util.ArrayList)">setLocations</a></span>&#8203;(java.util.ArrayList&lt;<a href="../map/QRLocation.html" title="class in com.cmput301w23t09.qrhunter.map">QRLocation</a>&gt;&nbsp;locations)</code></th>
+<td class="colLast">
+<div class="block">Sets the locations of the QR code</div>
+</td>
+</tr>
+<tr id="i20" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setPhotos(java.util.ArrayList)">setPhotos</a></span>&#8203;(java.util.ArrayList&lt;<a href="../locationphoto/LocationPhoto.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhoto</a>&gt;&nbsp;photos)</code></th>
 <td class="colLast">
 <div class="block">This sets the photos of the QR code</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setPlayers(java.util.ArrayList)">setPlayers</a></span>&#8203;(java.util.ArrayList&lt;java.lang.String&gt;&nbsp;players)</code></th>
 <td class="colLast">
@@ -363,7 +393,7 @@ implements java.io.Serializable</pre>
 </dl>
 </li>
 </ul>
-<a id="&lt;init&gt;(java.lang.String,java.lang.String,java.lang.Integer,android.location.Location,java.util.ArrayList,java.util.ArrayList,java.util.ArrayList)">
+<a id="&lt;init&gt;(java.lang.String,java.lang.String,java.lang.Integer,android.location.Location,java.util.ArrayList,java.util.ArrayList,java.util.ArrayList,java.util.ArrayList)">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -373,7 +403,8 @@ implements java.io.Serializable</pre>
               java.lang.String&nbsp;name,
               java.lang.Integer&nbsp;score,
               android.location.Location&nbsp;loc,
-              java.util.ArrayList&lt;<a href="../photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a>&gt;&nbsp;photos,
+              java.util.ArrayList&lt;<a href="../map/QRLocation.html" title="class in com.cmput301w23t09.qrhunter.map">QRLocation</a>&gt;&nbsp;locations,
+              java.util.ArrayList&lt;<a href="../locationphoto/LocationPhoto.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhoto</a>&gt;&nbsp;locationPhotos,
               java.util.ArrayList&lt;<a href="../comment/Comment.html" title="class in com.cmput301w23t09.qrhunter.comment">Comment</a>&gt;&nbsp;comments,
               java.util.ArrayList&lt;java.lang.String&gt;&nbsp;players)</pre>
 <div class="block">This initializes a QR code with its hash, name, visual representation, score, location, photo,
@@ -384,7 +415,7 @@ implements java.io.Serializable</pre>
 <dd><code>name</code> - This is the name of the QR code</dd>
 <dd><code>score</code> - This is the score of the QR code</dd>
 <dd><code>loc</code> - This is the location of the QR code</dd>
-<dd><code>photos</code> - This is the list of photos of the QR code</dd>
+<dd><code>locationPhotos</code> - This is the list of photos of the QR code</dd>
 <dd><code>comments</code> - This is the list of comments on the QR code</dd>
 <dd><code>players</code> - This is the list of players (documentIDs) that have scanned the QR code</dd>
 </dl>
@@ -489,13 +520,70 @@ implements java.io.Serializable</pre>
 </dl>
 </li>
 </ul>
+<a id="getLocations()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getLocations</h4>
+<pre class="methodSignature">public&nbsp;java.util.ArrayList&lt;<a href="../map/QRLocation.html" title="class in com.cmput301w23t09.qrhunter.map">QRLocation</a>&gt;&nbsp;getLocations()</pre>
+<div class="block">Returns all locations of the QR code</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>An ArrayList of this QR code's locations</dd>
+</dl>
+</li>
+</ul>
+<a id="setLocations(java.util.ArrayList)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setLocations</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;setLocations&#8203;(java.util.ArrayList&lt;<a href="../map/QRLocation.html" title="class in com.cmput301w23t09.qrhunter.map">QRLocation</a>&gt;&nbsp;locations)</pre>
+<div class="block">Sets the locations of the QR code</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>locations</code> - The locations of the QRCode</dd>
+</dl>
+</li>
+</ul>
+<a id="addLocation(com.cmput301w23t09.qrhunter.map.QRLocation)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>addLocation</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;addLocation&#8203;(<a href="../map/QRLocation.html" title="class in com.cmput301w23t09.qrhunter.map">QRLocation</a>&nbsp;loc)</pre>
+<div class="block">Adds a new location to the list of locations, as long as it's farther than 100m from any
+ existing location.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>loc</code> - New location to add</dd>
+</dl>
+</li>
+</ul>
+<a id="removeLocation(com.cmput301w23t09.qrhunter.map.QRLocation)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>removeLocation</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;removeLocation&#8203;(<a href="../map/QRLocation.html" title="class in com.cmput301w23t09.qrhunter.map">QRLocation</a>&nbsp;loc)</pre>
+<div class="block">Removes a location from the list of locations.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>loc</code> - Location to remove</dd>
+</dl>
+</li>
+</ul>
 <a id="getPhotos()">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getPhotos</h4>
-<pre class="methodSignature">public&nbsp;java.util.List&lt;<a href="../photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a>&gt;&nbsp;getPhotos()</pre>
+<pre class="methodSignature">public&nbsp;java.util.List&lt;<a href="../locationphoto/LocationPhoto.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhoto</a>&gt;&nbsp;getPhotos()</pre>
 <div class="block">This returns the photos taken of the QR code</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -621,7 +709,7 @@ implements java.io.Serializable</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>setPhotos</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;setPhotos&#8203;(java.util.ArrayList&lt;<a href="../photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a>&gt;&nbsp;photos)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;setPhotos&#8203;(java.util.ArrayList&lt;<a href="../locationphoto/LocationPhoto.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhoto</a>&gt;&nbsp;photos)</pre>
 <div class="block">This sets the photos of the QR code</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -629,31 +717,31 @@ implements java.io.Serializable</pre>
 </dl>
 </li>
 </ul>
-<a id="addPhoto(com.cmput301w23t09.qrhunter.photo.Photo)">
+<a id="addPhoto(com.cmput301w23t09.qrhunter.locationphoto.LocationPhoto)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>addPhoto</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;addPhoto&#8203;(<a href="../photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a>&nbsp;photo)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;addPhoto&#8203;(<a href="../locationphoto/LocationPhoto.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhoto</a>&nbsp;locationPhoto)</pre>
 <div class="block">This adds a photo taken of the QR code</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>photo</code> - This is the photo to add</dd>
+<dd><code>locationPhoto</code> - This is the photo to add</dd>
 </dl>
 </li>
 </ul>
-<a id="deletePhoto(com.cmput301w23t09.qrhunter.photo.Photo)">
+<a id="deletePhoto(com.cmput301w23t09.qrhunter.locationphoto.LocationPhoto)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>deletePhoto</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;deletePhoto&#8203;(<a href="../photo/Photo.html" title="class in com.cmput301w23t09.qrhunter.photo">Photo</a>&nbsp;photo)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;deletePhoto&#8203;(<a href="../locationphoto/LocationPhoto.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhoto</a>&nbsp;locationPhoto)</pre>
 <div class="block">This deletes a photo taken of the QR code</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>photo</code> - This is the photo to delete</dd>
+<dd><code>locationPhoto</code> - This is the photo to delete</dd>
 </dl>
 </li>
 </ul>

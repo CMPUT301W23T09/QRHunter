@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":9,"i2":10,"i3":10,"i4":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":9,"i4":10,"i5":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -198,7 +198,7 @@ extends <a href="QRCodeFragment.html" title="class in com.cmput301w23t09.qrhunte
 <!--   -->
 </a>
 <h3>Fields inherited from class&nbsp;com.cmput301w23t09.qrhunter.qrcode.<a href="QRCodeFragment.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeFragment</a></h3>
-<code><a href="QRCodeFragment.html#activePlayer">activePlayer</a>, <a href="QRCodeFragment.html#addButton">addButton</a>, <a href="QRCodeFragment.html#deleteButton">deleteButton</a>, <a href="QRCodeFragment.html#listElement">listElement</a>, <a href="QRCodeFragment.html#loadingButton">loadingButton</a>, <a href="QRCodeFragment.html#locationCheckbox">locationCheckbox</a>, <a href="QRCodeFragment.html#locationHandler">locationHandler</a>, <a href="QRCodeFragment.html#locationPhoto">locationPhoto</a>, <a href="QRCodeFragment.html#locationPhotoFragment">locationPhotoFragment</a>, <a href="QRCodeFragment.html#qrCode">qrCode</a>, <a href="QRCodeFragment.html#scansAdapter">scansAdapter</a>, <a href="QRCodeFragment.html#takeLocationPhotoBtn">takeLocationPhotoBtn</a></code></li>
+<code><a href="QRCodeFragment.html#activePlayer">activePlayer</a>, <a href="QRCodeFragment.html#addButton">addButton</a>, <a href="QRCodeFragment.html#deleteButton">deleteButton</a>, <a href="QRCodeFragment.html#listElement">listElement</a>, <a href="QRCodeFragment.html#loadingButton">loadingButton</a>, <a href="QRCodeFragment.html#locationCheckbox">locationCheckbox</a>, <a href="QRCodeFragment.html#locationHandler">locationHandler</a>, <a href="QRCodeFragment.html#locationPhotoAdapter">locationPhotoAdapter</a>, <a href="QRCodeFragment.html#locationPhotoSlider">locationPhotoSlider</a>, <a href="QRCodeFragment.html#locationPhotoStorage">locationPhotoStorage</a>, <a href="QRCodeFragment.html#qrCode">qrCode</a>, <a href="QRCodeFragment.html#qrCodeDatabase">qrCodeDatabase</a>, <a href="QRCodeFragment.html#scansAdapter">scansAdapter</a>, <a href="QRCodeFragment.html#takeLocationPhotoBtn">takeLocationPhotoBtn</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a id="fields.inherited.from.class.androidx.fragment.app.DialogFragment">
@@ -253,11 +253,21 @@ extends <a href="QRCodeFragment.html" title="class in com.cmput301w23t09.qrhunte
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="../scanqr/LocationPhotoFragment.html" title="class in com.cmput301w23t09.qrhunter.scanqr">LocationPhotoFragment</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLocationPhotoFragment()">getLocationPhotoFragment</a></span>()</code></th>
+<td class="colFirst"><code><a href="../locationphoto/LocationPhotoAdapter.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhotoAdapter</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLocationPhotoAdapter()">getLocationPhotoAdapter</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code><a href="../locationphoto/LocationPhotoController.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhotoController</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLocationPhotoController()">getLocationPhotoController</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="../locationphoto/LocationPhotoFragment.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhotoFragment</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLocationPhotoFragment()">getLocationPhotoFragment</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static <a href="AddQRCodeFragment.html" title="class in com.cmput301w23t09.qrhunter.qrcode">AddQRCodeFragment</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#newInstance(com.cmput301w23t09.qrhunter.qrcode.QRCode,com.cmput301w23t09.qrhunter.player.Player)">newInstance</a></span>&#8203;(<a href="QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&nbsp;qrCode,
            <a href="../player/Player.html" title="class in com.cmput301w23t09.qrhunter.player">Player</a>&nbsp;activePlayer)</code></th>
@@ -265,7 +275,7 @@ extends <a href="QRCodeFragment.html" title="class in com.cmput301w23t09.qrhunte
 <div class="block">Creates a new AddQRCodeFragment to display a specific QR Code</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onRequestPermissionsResult(int,java.lang.String%5B%5D,int%5B%5D)">onRequestPermissionsResult</a></span>&#8203;(int&nbsp;requestCode,
                           java.lang.String[]&nbsp;permissions,
@@ -274,18 +284,11 @@ extends <a href="QRCodeFragment.html" title="class in com.cmput301w23t09.qrhunte
 <div class="block">Disables the "Record QR Location" box if the user has not granted location permissions</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setUpButtons(android.view.View)">setUpButtons</a></span>&#8203;(android.view.View&nbsp;view)</code></th>
 <td class="colLast">
 <div class="block">Enable and disable buttons of QRCodeFragment</div>
-</td>
-</tr>
-<tr id="i4" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateLocationPhoto()">updateLocationPhoto</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Updates the locationPhoto image view to show the newly-captured location photo</div>
 </td>
 </tr>
 </table>
@@ -294,7 +297,7 @@ extends <a href="QRCodeFragment.html" title="class in com.cmput301w23t09.qrhunte
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.cmput301w23t09.qrhunter.qrcode.<a href="QRCodeFragment.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeFragment</a></h3>
-<code><a href="QRCodeFragment.html#onCreateDialog(android.os.Bundle)">onCreateDialog</a>, <a href="QRCodeFragment.html#onResume()">onResume</a></code></li>
+<code><a href="QRCodeFragment.html#onCreateDialog(android.os.Bundle)">onCreateDialog</a>, <a href="QRCodeFragment.html#onResume()">onResume</a>, <a href="QRCodeFragment.html#updateLocationPhoto()">updateLocationPhoto</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.androidx.fragment.app.DialogFragment">
@@ -387,21 +390,6 @@ extends <a href="QRCodeFragment.html" title="class in com.cmput301w23t09.qrhunte
 </dl>
 </li>
 </ul>
-<a id="updateLocationPhoto()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>updateLocationPhoto</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;updateLocationPhoto()</pre>
-<div class="block">Updates the locationPhoto image view to show the newly-captured location photo</div>
-<dl>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../scanqr/camera/CameraLocationPhotoController.html" title="class in com.cmput301w23t09.qrhunter.scanqr.camera"><code>CameraLocationPhotoController</code></a>, 
-<a href="../scanqr/LocationPhotoController.html" title="class in com.cmput301w23t09.qrhunter.scanqr"><code>LocationPhotoController</code></a></dd>
-</dl>
-</li>
-</ul>
 <a id="onRequestPermissionsResult(int,java.lang.String[],int[])">
 <!--   -->
 </a>
@@ -427,13 +415,39 @@ extends <a href="QRCodeFragment.html" title="class in com.cmput301w23t09.qrhunte
 <a id="getLocationPhotoFragment()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getLocationPhotoFragment</h4>
-<pre class="methodSignature">public&nbsp;<a href="../scanqr/LocationPhotoFragment.html" title="class in com.cmput301w23t09.qrhunter.scanqr">LocationPhotoFragment</a>&nbsp;getLocationPhotoFragment()</pre>
+<pre class="methodSignature">public&nbsp;<a href="../locationphoto/LocationPhotoFragment.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhotoFragment</a>&nbsp;getLocationPhotoFragment()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The location photo fragment</dd>
+</dl>
+</li>
+</ul>
+<a id="getLocationPhotoController()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getLocationPhotoController</h4>
+<pre class="methodSignature">public&nbsp;<a href="../locationphoto/LocationPhotoController.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhotoController</a>&nbsp;getLocationPhotoController()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The location photo controller</dd>
+</dl>
+</li>
+</ul>
+<a id="getLocationPhotoAdapter()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getLocationPhotoAdapter</h4>
+<pre class="methodSignature">public&nbsp;<a href="../locationphoto/LocationPhotoAdapter.html" title="class in com.cmput301w23t09.qrhunter.locationphoto">LocationPhotoAdapter</a>&nbsp;getLocationPhotoAdapter()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The location photo adapter</dd>
 </dl>
 </li>
 </ul>
