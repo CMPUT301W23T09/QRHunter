@@ -312,7 +312,7 @@ public abstract class ProfileController implements DatabaseChangeListener {
    */
   public void retrievePercentile(BiConsumer<Exception, Float> callback) {
     if (qrCodes.size() <= 0) {
-      callback.accept(null, 0f);
+      callback.accept(null, 100f);
       return;
     }
 
