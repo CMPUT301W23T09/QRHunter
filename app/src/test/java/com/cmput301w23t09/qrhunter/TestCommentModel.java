@@ -1,7 +1,8 @@
-package com.cmput301w23t09.qrhunter.comment;
+package com.cmput301w23t09.qrhunter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.player.Player;
 import java.util.ArrayList;
 import java.util.UUID;
