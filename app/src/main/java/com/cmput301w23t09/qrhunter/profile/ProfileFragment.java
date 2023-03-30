@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -42,7 +41,7 @@ public class ProfileFragment extends BaseFragment {
   /** This is the view displaying the settings button */
   private FloatingActionButton contactButton;
   /** This is the button that allows the user to view their rankings */
-  private Button rankingsButton;
+  private FloatingActionButton rankingsButton;
 
   /**
    * Initializes the fragment with the app controller
