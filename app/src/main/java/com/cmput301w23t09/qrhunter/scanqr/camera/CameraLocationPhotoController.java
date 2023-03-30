@@ -1,5 +1,6 @@
 package com.cmput301w23t09.qrhunter.scanqr.camera;
 
+import android.view.Surface;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.Preview;
@@ -59,6 +60,7 @@ public class CameraLocationPhotoController extends CameraController {
     imageCapture =
         new ImageCapture.Builder()
             .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+            .setTargetRotation(Surface.ROTATION_90)
             .build();
     controller.setCameraFields(cameraExecutor, imageCapture);
     cameraProvider.bindToLifecycle(
