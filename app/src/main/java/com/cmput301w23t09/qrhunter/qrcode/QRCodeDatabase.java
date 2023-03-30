@@ -4,6 +4,7 @@ import android.location.Location;
 import android.util.Log;
 import androidx.annotation.Nullable;
 import com.cmput301w23t09.qrhunter.DatabaseChangeListener;
+import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.database.DatabaseConnection;
 import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
 import com.cmput301w23t09.qrhunter.database.DatabaseQueryResults;
@@ -401,12 +402,23 @@ public class QRCodeDatabase {
       location.setLongitude((double) snapshot.get("longitude"));
     }
     ArrayList<String> players = (ArrayList<String>) snapshot.get("players");
+
+    // Parse comments
+    ArrayList<Map<String, String>> commentsData =
+        (ArrayList<Map<String, String>>) snapshot.get("comments");
+    ArrayList<Comment> comments = new ArrayList<>();
+    if (commentsData == null) {
+      commentsData = new ArrayList<>();
+    }
+    for (Map<String, String> data : commentsData) {
+      comments.add(new Comment(data.get("playerId"), data.get("username"), data.get("comment")));
+    }
+
     ArrayList<String> locationsStr = (ArrayList<String>) snapshot.get("locations");
     ArrayList<QRLocation> locations = new ArrayList<>();
     if (locationsStr != null)
       for (String locStr : locationsStr) locations.add(new QRLocation(locStr));
-    return new QRCode(
-        hash, name, score, location, locations, new ArrayList<>(), new ArrayList<>(), players);
+    return new QRCode(hash, name, score, location, locations, new ArrayList<>(), comments, players);
   }
 
   /**
@@ -423,9 +435,14 @@ public class QRCodeDatabase {
     values.put("latitude", qrCode.getLoc() != null ? qrCode.getLoc().getLatitude() : null);
     values.put("longitude", qrCode.getLoc() != null ? qrCode.getLoc().getLongitude() : null);
     values.put("players", qrCode.getPlayers());
+    values.put("comments", qrCode.getComments());
+
     ArrayList<String> locationsStr = new ArrayList<>();
-    for (QRLocation loc : qrCode.getLocations()) locationsStr.add(loc.getLocationString());
+    for (QRLocation loc : qrCode.getLocations()) {
+      locationsStr.add(loc.getLocationString());
+    }
     values.put("locations", locationsStr);
+
     return values;
   }
 

@@ -35,7 +35,7 @@ public class QRCodePlayerScansAdapter extends ArrayAdapter<QRPlayerScanEntry> {
     TextView name = view.findViewById(R.id.qrcode_player_scan_name);
     name.setText(entry.getPlayer().getUsername());
 
-    TextView score = view.findViewById(R.id.qrcode_player_scan_points);
+    TextView score = view.findViewById(R.id.player_comment_input);
     score.setText(entry.getScore() + " PTS");
 
     return view;

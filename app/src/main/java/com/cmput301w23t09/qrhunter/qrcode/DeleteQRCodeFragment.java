@@ -1,10 +1,18 @@
 package com.cmput301w23t09.qrhunter.qrcode;
 
+import static android.content.ContentValues.TAG;
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
+import androidx.core.content.ContextCompat;
+import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.player.Player;
+import com.google.android.material.tabs.TabLayout;
 
 /**
  * Displays information about a specific QRCode. It also lets the user:
@@ -30,6 +38,7 @@ public class DeleteQRCodeFragment extends QRCodeFragment {
     return fragment;
   }
 
+  @SuppressLint("ClickableViewAccessibility")
   @Override
   protected void setUpButtons(View view) {
     deleteButton.setVisibility(View.VISIBLE);
@@ -39,6 +48,31 @@ public class DeleteQRCodeFragment extends QRCodeFragment {
     loadingButton.setVisibility(View.GONE);
     updateDeleteButton();
     deleteButton.setOnClickListener(this::onRemoveQRClicked);
+
+    commentBox.setVisibility(View.GONE);
+    tabLayout.addOnTabSelectedListener(
+        new TabLayout.OnTabSelectedListener() {
+          @Override
+          public void onTabSelected(TabLayout.Tab tab) {
+            if (tab.getPosition() == 1) {
+              commentBox.setVisibility(View.VISIBLE);
+            } else {
+              // Hide the comment box
+              commentBox.setVisibility(View.GONE);
+            }
+          }
+
+          @Override
+          public void onTabUnselected(TabLayout.Tab tab) {}
+
+          @Override
+          public void onTabReselected(TabLayout.Tab tab) {}
+        });
+
+    // allows user to enter a comment
+    commentBox.setOnClickListener(this::onAddCommentInput);
+    // allows user to click send and store comment in the database
+    commentBox.setOnTouchListener(this::onSendComment);
     updateLocationPhoto();
   }
 
@@ -85,6 +119,101 @@ public class DeleteQRCodeFragment extends QRCodeFragment {
             });
   }
 
-  /** Show the location photo of the qr code */
-  public void showLocationPhoto() {}
+  /**
+   * Removes hint text when clicked*
+   *
+   * @param view view
+   */
+  public void onAddCommentInput(View view) {
+    commentBox.setHint("");
+  }
+
+  /**
+   * Handles sending a comment when the send icon is clicked. Changes the color of the send icon
+   * depending on the state.
+   *
+   * @param view View
+   * @param event The motion event
+   * @return True if the event is handled. otherwise, false.
+   */
+  private boolean onSendComment(View view, MotionEvent event) {
+    final int DRAWABLE_RIGHT = 2;
+
+    // changes color of send icon depending on the state
+    int default_color = ContextCompat.getColor(requireContext(), R.color.purple_500);
+    int on_send_color = ContextCompat.getColor(requireContext(), R.color.purple_200);
+
+    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+      if (event.getRawX()
+          >= (commentBox.getRight()
+              - commentBox.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+        commentBox.getCompoundDrawables()[DRAWABLE_RIGHT].setTint(
+            on_send_color); // Change color to red when hovered on
+        return true;
+      }
+    } else if (event.getAction() == MotionEvent.ACTION_UP) {
+      if (event.getRawX()
+          >= (commentBox.getRight()
+              - commentBox.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+        commentBox.getCompoundDrawables()[DRAWABLE_RIGHT].setTint(default_color);
+        ;
+
+        // stores comment message in a variable and calls the addComment method
+        String commentText = commentBox.getText().toString().trim();
+        if (!commentText.isEmpty()) {
+          addComment(commentText);
+          commentBox.setText("");
+          commentBox.setHint(R.string.comment_box_hint_text);
+        } else {
+          // Comment text is empty, show an error message
+          Toast.makeText(getContext(), "Comment text is empty", Toast.LENGTH_SHORT).show();
+        }
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Adds a comment to the comments list updates the comments adapter saves the comment to the
+   * database.
+   *
+   * @param commentText The comment text to be added to database
+   */
+  private void addComment(String commentText) {
+    Comment comment =
+        new Comment(activePlayer.getDocumentId(), activePlayer.getUsername(), commentText);
+    comments.add(comment);
+    commentsAdapter.notifyDataSetChanged();
+    listElement.setSelection(commentsAdapter.getCount() - 1);
+
+    QRCodeDatabase.getInstance()
+        .getQRCodeByHash(
+            qrCode.getHash(),
+            qrCodeQueryResults -> {
+              if (qrCodeQueryResults.isSuccessful()) {
+                // Update the QRCode with the new comment
+                QRCode qrCodeToUpdate = qrCodeQueryResults.getData();
+                qrCodeToUpdate.addComment(comment);
+                QRCodeDatabase.getInstance()
+                    .updateQRCode(
+                        qrCodeToUpdate,
+                        updateResults -> {
+                          if (updateResults.isSuccessful()) {
+                            Log.d(
+                                TAG,
+                                "Comment added to QRCode with hash: " + qrCodeToUpdate.getHash());
+                          } else {
+                            Log.w(
+                                TAG,
+                                "Error updating QRCode with new comment",
+                                updateResults.getException());
+                          }
+                        });
+              } else {
+                Log.w(TAG, "Error getting QRCode from database", qrCodeQueryResults.getException());
+              }
+            });
+    Log.d("AddQRCodeFragment", "Comment saved to database");
+  }
 }
