@@ -48,6 +48,7 @@ public class ProfileFragment extends BaseFragment {
    * Initializes the fragment with the app controller
    *
    * @param gameController This is the app controller
+   * @param playerDeviceId The device ID of the player this profile represents
    */
   public ProfileFragment(GameController gameController, UUID playerDeviceId) {
     super(gameController);

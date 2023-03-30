@@ -224,6 +224,7 @@ public class QRCodeDatabase {
    * Adds a never-before-scanned QRCode to the database
    *
    * @param qrCode The never-before-scanned QRCode to add
+   * @param task callback on database operation completion
    */
   public void addQRCode(QRCode qrCode, DatabaseConsumer<Void> task) {
     getQRCodeByHash(
@@ -258,6 +259,7 @@ public class QRCodeDatabase {
    *
    * @param player The player to add QRCode to.
    * @param qrCode The QRCode to be added.
+   * @param task callback on database operation completion
    */
   public void addPlayerToQR(Player player, QRCode qrCode, DatabaseConsumer<Void> task) {
     // Adds QRCode's hash to player's collection of QRCodes
@@ -313,6 +315,7 @@ public class QRCodeDatabase {
    *
    * @param player The player to remove QRCode from.
    * @param qrCode The QRCode to be removed
+   * @param task callback on database operation completion
    */
   public void removeQRCodeFromPlayer(Player player, QRCode qrCode, DatabaseConsumer<Void> task) {
     // Adds QRCode's hash to player's collection of QRCodes
@@ -416,7 +419,11 @@ public class QRCodeDatabase {
     return values;
   }
 
-  /** Add snapshot listener to database */
+  /**
+   * Add snapshot listener to database
+   *
+   * @param listener listener to call on updates to the qr code database
+   */
   public void addListener(DatabaseChangeListener listener) {
     collection.addSnapshotListener(
         new EventListener<QuerySnapshot>() {

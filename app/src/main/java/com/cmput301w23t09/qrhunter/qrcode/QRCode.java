@@ -6,6 +6,7 @@ import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.photo.Photo;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /** This class defines a QR code */
@@ -106,6 +107,8 @@ public class QRCode implements Serializable {
   /**
    * This returns the visual representation of the QR code
    *
+   * @throws InterruptedException if failed to retrieve visual
+   * @throws ExecutionException if failed to retrieve visual
    * @return Return the visual representation of the QR code
    */
   public Bitmap getVisualRepresentation() throws InterruptedException, ExecutionException {
@@ -141,7 +144,7 @@ public class QRCode implements Serializable {
    *
    * @return Return the player who have scanned the QR code
    */
-  public ArrayList<String> getPlayers() {
+  public List<String> getPlayers() {
     return players;
   }
 
