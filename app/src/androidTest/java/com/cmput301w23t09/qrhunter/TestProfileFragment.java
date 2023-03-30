@@ -36,12 +36,18 @@ import org.junit.Test;
 /** Test classes for profile activity */
 public abstract class TestProfileFragment extends BaseTest {
 
-  private static Intent intent;
+  private static final Intent intent;
   protected static Player ourPlayer;
 
-  {
+  static {
     ourPlayer =
-        new Player(getDeviceUUID(), "Irene", "5873571506", "isun@ualberta.ca", new ArrayList<>());
+        new Player(
+            getDeviceUUID(),
+            "Irene",
+            "5873571506",
+            "isun@ualberta.ca",
+            new ArrayList<>(),
+            new ArrayList<>());
     intent = new Intent(ApplicationProvider.getApplicationContext(), GameActivity.class);
     intent.putExtra("activePlayer", ourPlayer);
   }

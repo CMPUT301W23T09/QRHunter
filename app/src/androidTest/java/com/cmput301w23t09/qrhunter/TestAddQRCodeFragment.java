@@ -57,7 +57,12 @@ public class TestAddQRCodeFragment extends BaseTest {
   public void setUp() throws InterruptedException {
     player =
         new Player(
-            UUID.randomUUID(), "johndoe42", "7801234567", "doe@ualberta.ca", new ArrayList<>());
+            UUID.randomUUID(),
+            "johndoe42",
+            "7801234567",
+            "doe@ualberta.ca",
+            new ArrayList<>(),
+            new ArrayList<>());
 
     CountDownLatch dbTasks = new CountDownLatch(1);
     PlayerDatabase.getInstance()

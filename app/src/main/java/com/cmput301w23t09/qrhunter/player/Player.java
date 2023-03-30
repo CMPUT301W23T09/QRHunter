@@ -19,6 +19,8 @@ public class Player implements Serializable {
   private String email;
   /** QRCode hashes the player has scanned */
   private List<String> qrCodeHashes;
+  /** The document ids of the players this player is following */
+  private List<String> following;
 
   /**
    * This initializes a Player with the deviceId, username, phoneNo, and email.
@@ -30,12 +32,18 @@ public class Player implements Serializable {
    * @param qrCodeHashes QRCodes the player has scanned
    */
   public Player(
-      UUID deviceId, String username, String phoneNo, String email, List<String> qrCodeHashes) {
+      UUID deviceId,
+      String username,
+      String phoneNo,
+      String email,
+      List<String> qrCodeHashes,
+      List<String> following) {
     this.deviceId = deviceId;
     this.username = username;
     this.phoneNo = phoneNo;
     this.email = email;
     this.qrCodeHashes = qrCodeHashes;
+    this.following = following;
   }
 
   /**
@@ -55,13 +63,15 @@ public class Player implements Serializable {
       String username,
       String phoneNo,
       String email,
-      List<String> qrCodeHashes) {
+      List<String> qrCodeHashes,
+      List<String> following) {
     this.documentId = documentId;
     this.deviceId = deviceId;
     this.username = username;
     this.phoneNo = phoneNo;
     this.email = email;
     this.qrCodeHashes = qrCodeHashes;
+    this.following = following;
   }
 
   /**
@@ -184,5 +194,23 @@ public class Player implements Serializable {
    */
   public void setQRCodeHashes(List<String> scannedQRHashes) {
     this.qrCodeHashes = scannedQRHashes;
+  }
+
+  /**
+   * Retrieve the document ids of the players this player is following
+   *
+   * @return player ids
+   */
+  public List<String> getFollowing() {
+    return following;
+  }
+
+  /**
+   * Set the document ids that this player is following
+   *
+   * @param following new following list
+   */
+  public void setFollowing(List<String> following) {
+    this.following = following;
   }
 }

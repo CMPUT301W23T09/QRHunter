@@ -55,10 +55,20 @@ public class TestQRCodeFragment extends BaseTest {
   public void setUp() throws InterruptedException {
     player =
         new Player(
-            UUID.randomUUID(), "johndoe42", "7801234567", "doe@ualberta.ca", new ArrayList<>());
+            UUID.randomUUID(),
+            "johndoe42",
+            "7801234567",
+            "doe@ualberta.ca",
+            new ArrayList<>(),
+            new ArrayList<>());
     playerWhoScannedQR =
         new Player(
-            UUID.randomUUID(), "steve", "1234567890", "example@example.com", new ArrayList<>());
+            UUID.randomUUID(),
+            "steve",
+            "1234567890",
+            "example@example.com",
+            new ArrayList<>(),
+            new ArrayList<>());
 
     // Mock QRCode Info
     // Actual Data: CMPUT301W23T09-QRHunter

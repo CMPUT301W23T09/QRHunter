@@ -31,7 +31,12 @@ public class TestGameActivity extends BaseTest {
     CountDownLatch databaseSetup = new CountDownLatch(1);
     Player player =
         new Player(
-            getDeviceUUID(), "User", "123-456-7890", "example@example.com", new ArrayList<>());
+            getDeviceUUID(),
+            "User",
+            "123-456-7890",
+            "example@example.com",
+            new ArrayList<>(),
+            new ArrayList<>());
     PlayerDatabase.getInstance().add(player, ignored -> databaseSetup.countDown());
     databaseSetup.await();
   }

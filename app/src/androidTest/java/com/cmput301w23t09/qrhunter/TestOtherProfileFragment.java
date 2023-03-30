@@ -39,7 +39,12 @@ public class TestOtherProfileFragment extends TestProfileFragment {
   @Override
   protected Player getProfilePlayer() {
     return new Player(
-        UUID.randomUUID(), "DaPerson", "123-456-7890", "example@example.com", new ArrayList<>());
+        UUID.randomUUID(),
+        "DaPerson",
+        "123-456-7890",
+        "example@example.com",
+        new ArrayList<>(),
+        new ArrayList<>());
   }
 
   @Override

@@ -81,7 +81,12 @@ public class TestLandingActivity extends BaseTest {
     PlayerDatabase.getInstance()
         .add(
             new Player(
-                UUID.randomUUID(), validUsername, validPhoneNo, validEmail, new ArrayList<>()),
+                UUID.randomUUID(),
+                validUsername,
+                validPhoneNo,
+                validEmail,
+                new ArrayList<>(),
+                new ArrayList<>()),
             task -> latch.countDown());
     latch.await();
 

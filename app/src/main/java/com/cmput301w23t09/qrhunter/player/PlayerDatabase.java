@@ -274,9 +274,16 @@ public class PlayerDatabase {
     String phoneNo = snapshot.getString("phoneNo");
     String email = snapshot.getString("email");
     ArrayList<String> qrCodeHashes = (ArrayList<String>) snapshot.get("qrCodeHashes");
+    ArrayList<String> following = (ArrayList<String>) snapshot.get("following");
 
     return new Player(
-        documentId, deviceUUID, username, phoneNo, email, new ArrayList<>(qrCodeHashes));
+        documentId,
+        deviceUUID,
+        username,
+        phoneNo,
+        email,
+        new ArrayList<>(qrCodeHashes),
+        new ArrayList<>(following));
   }
 
   /**
@@ -293,6 +300,7 @@ public class PlayerDatabase {
     values.put("phoneNo", player.getPhoneNo());
     values.put("email", player.getEmail());
     values.put("qrCodeHashes", player.getQRCodeHashes());
+    values.put("following", player.getFollowing());
 
     return values;
   }
