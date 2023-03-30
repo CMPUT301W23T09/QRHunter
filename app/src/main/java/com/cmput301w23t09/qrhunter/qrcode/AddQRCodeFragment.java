@@ -70,7 +70,7 @@ public class AddQRCodeFragment extends QRCodeFragment {
           }
         });
 
-    //hides comment box
+    // hides comment box
     commentBox.setVisibility(View.GONE);
 
     updateAddButton();
@@ -111,6 +111,16 @@ public class AddQRCodeFragment extends QRCodeFragment {
                             loadingButton.setVisibility(View.GONE);
                             return;
                           }
+
+                          // Add the player to the QR
+                          QRCodeDatabase.getInstance()
+                              .addPlayerToQR(
+                                  activePlayer,
+                                  qrCode,
+                                  ignored -> {
+                                    loadingButton.setVisibility(View.GONE);
+                                    this.dismiss();
+                                  });
                         });
 
               } else {
