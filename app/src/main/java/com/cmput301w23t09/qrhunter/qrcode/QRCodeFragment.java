@@ -3,65 +3,71 @@ package com.cmput301w23t09.qrhunter.qrcode;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import com.cmput301w23t09.qrhunter.GameActivity;
+import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoAdapter;
+import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoController;
+import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoStorage;
 import com.cmput301w23t09.qrhunter.map.LocationHandler;
 import com.cmput301w23t09.qrhunter.player.Player;
-import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoController;
-import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoFragment;
+import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
+import com.cmput301w23t09.qrhunter.profile.MyProfileFragment;
+import com.cmput301w23t09.qrhunter.profile.OtherProfileFragment;
+import com.cmput301w23t09.qrhunter.profile.ProfileFragment;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
+import com.smarteist.autoimageslider.SliderView;
 import java.io.Serializable;
 import java.util.concurrent.ExecutionException;
 
-/**
- * Displays information about a specific QRCode. It also lets the user:
- *
- * <ul>
- *   <li>Add scanned QR code to profile
- *   <li>Remove selected QR code from profile
- *   <li>Record geolocation of scanned QR code
- *   <li>Take location photo of scanned qr code
- * </ul>
- *
- * @author John Mabanta
- * @version 1.0
- */
+/** Displays information about a specific QRCode. It also lets the user: */
 public class QRCodeFragment extends DialogFragment implements Serializable {
+  protected QRCode qrCode;
+  protected Button takeLocationPhotoBtn;
+  protected CheckBox locationCheckbox;
+  protected LocationHandler locationHandler;
+  protected Player activePlayer;
+  protected FloatingActionButton addButton;
+  protected FloatingActionButton deleteButton;
+  protected FloatingActionButton loadingButton;
 
-  private ImageView locationPhoto;
-  private QRCode qrCode;
-  private Button takeLocationPhotoBtn;
-  private CheckBox locationCheckbox;
-  private LocationHandler locationHandler;
-  private LocationPhotoFragment locationPhotoFragment;
-  private Player activePlayer;
-  private FloatingActionButton addButton;
-  private FloatingActionButton deleteButton;
-  private FloatingActionButton loadingButton;
-  private QRCodeDatabase qrCodeDatabase;
+  protected TabLayout tabLayout;
+  protected QRCodeDatabase qrCodeDatabase;
+  protected SliderView locationPhotoSlider;
+  protected LocationPhotoAdapter locationPhotoAdapter;
+  protected LocationPhotoStorage locationPhotoStorage;
+
+  protected ListView listElement;
+  protected QRCodePlayerScansAdapter scansAdapter;
 
   /**
    * Creates a new QRCodeFragment to display a specific QR Code
    *
    * @param qrCode The QR code to view
-   * @param activePlayer The currently active/logged-in player
+   * @param player The player that scanned the given QR code
    * @return QRCodeFragment
    */
-  public static QRCodeFragment newInstance(QRCode qrCode, Player activePlayer) {
+  public static QRCodeFragment newInstance(QRCode qrCode, Player player) {
     Bundle args = new Bundle();
     args.putSerializable("qrcode", qrCode);
-    args.putSerializable("activePlayer", activePlayer);
+    args.putSerializable("player", player);
     QRCodeFragment fragment = new QRCodeFragment();
     fragment.setArguments(args);
     return fragment;
@@ -71,16 +77,27 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
     View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_qrcode, null);
     qrCode = (QRCode) getArguments().getSerializable("qrcode");
-    activePlayer = (Player) getArguments().getSerializable("activePlayer");
-    locationHandler = new LocationHandler(this);
+    activePlayer = (Player) getArguments().getSerializable("player");
     qrCodeDatabase = QRCodeDatabase.getInstance();
+    locationPhotoStorage = LocationPhotoStorage.getInstance();
+
     try {
       setupViews(view);
     } catch (ExecutionException | InterruptedException e) {
       throw new RuntimeException(e);
     }
-    updateLocationPhoto();
     return createAlertDialog(view);
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+
+    // Adjust QRFragment window size to match content.
+    Window window = getDialog().getWindow();
+    window.setLayout(
+        WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+    window.setGravity(Gravity.CENTER);
   }
 
   /**
@@ -89,119 +106,157 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
    * @param view The view that displays fragment_qrcode.xml
    */
   private void setupViews(View view) throws ExecutionException, InterruptedException {
-    locationPhoto = view.findViewById(R.id.location_photo);
+    setupTab(view);
+
+    // get widgets in QRCodeFragment
     locationCheckbox = view.findViewById(R.id.location_request_box);
-
-    TextView qrName = view.findViewById(R.id.qr_name);
-    qrName.setText(qrCode.getName());
-
-    TextView qrScore = view.findViewById(R.id.qr_points);
-    qrScore.setText(qrCode.getScore().toString() + " PTS");
-
-    ImageView qrCodeVisual = view.findViewById(R.id.qr_code_visual);
-    qrCodeVisual.setImageBitmap(qrCode.getVisualRepresentation());
-
     takeLocationPhotoBtn = view.findViewById(R.id.take_location_photo_btn);
-    takeLocationPhotoBtn.setOnClickListener(
-        v -> {
-          if (qrCode.getPhotos().size() > 0) {
-            qrCode.deletePhoto(qrCode.getPhotos().get(0));
-            updateLocationPhoto();
-          } else {
-            locationPhotoFragment = LocationPhotoFragment.newInstance(qrCode, this, activePlayer);
-            locationPhotoFragment.show(getParentFragmentManager(), "Take Location Photo");
-          }
-        });
-    locationCheckbox.setOnCheckedChangeListener(
-        (buttonView, isChecked) -> {
-          if (isChecked) {
-            locationHandler.setQrToLastLocation(qrCode);
-          } else {
-            qrCode.setLoc(null);
-          }
-        });
-
+    TextView qrName = view.findViewById(R.id.qr_name);
+    TextView qrScore = view.findViewById(R.id.qr_points);
+    ImageView qrCodeVisual = view.findViewById(R.id.qr_code_visual);
     addButton = view.findViewById(R.id.addButton);
     deleteButton = view.findViewById(R.id.deleteButton);
     loadingButton = view.findViewById(R.id.loadingButton);
 
-    updateAddDeleteButton();
+    // setup location photos
+    locationPhotoSlider = view.findViewById(R.id.location_photos);
+    locationPhotoAdapter = new LocationPhotoAdapter(this.getContext(), qrCode);
+    locationPhotoSlider.setSliderAdapter(locationPhotoAdapter, false);
 
-    // implementing the add/delete button listeners
-    addButton.setOnClickListener(this::onAddQRClicked);
-    deleteButton.setOnClickListener(this::onRemoveQRClicked);
+    // fill views with qr code information
+    qrName.setText(qrCode.getName());
+    qrScore.setText(qrCode.getScore().toString() + " PTS");
+    qrCodeVisual.setImageBitmap(qrCode.getVisualRepresentation());
+
+    // set up buttons
+    setUpButtons(view);
   }
 
   /**
-   * Called when the add QR button is clicked
+   * Enable and disable buttons of QRCodeFragment
    *
-   * @param view view
+   * @param view the view
    */
-  private void onAddQRClicked(View view) {
+  protected void setUpButtons(View view) {
+    takeLocationPhotoBtn.setVisibility(View.GONE);
+    locationCheckbox.setVisibility(View.GONE);
     addButton.setVisibility(View.GONE);
-    loadingButton.setVisibility(View.VISIBLE);
+    loadingButton.setVisibility(View.GONE);
+  }
 
-    // Add QR to database, when the QR has been added, allow the deletion of the QRCode.
-    // First check if the qr code exists.
-    qrCodeDatabase.getQRCodeByHash(
-        qrCode.getHash(),
-        qrCodeHash -> {
-          if (qrCodeHash.getException() != null) {
-            addButton.setVisibility(View.VISIBLE);
-            loadingButton.setVisibility(View.GONE);
-            return;
+  /**
+   * Sets up the tab related items and listeners for the qr fragment.
+   *
+   * @param view dialog
+   */
+  private void setupTab(View view) {
+    tabLayout = view.findViewById(R.id.qr_nav);
+    tabLayout.addTab(tabLayout.newTab().setText(getText(R.string.players_who_scanned_tab_title)));
+    tabLayout.addTab(tabLayout.newTab().setText(getText(R.string.comments_tab_title)));
+
+    listElement = view.findViewById(R.id.qr_nav_items);
+    setupListListener();
+
+    scansAdapter = new QRCodePlayerScansAdapter(getContext());
+    setupPlayerScans();
+
+    listElement.setAdapter(
+        scansAdapter); // by default, the adapter should display the scanned players.
+
+    tabLayout.addOnTabSelectedListener(
+        new TabLayout.OnTabSelectedListener() {
+          @Override
+          public void onTabSelected(TabLayout.Tab tab) {
+            if (tab.getText().equals(getText(R.string.players_who_scanned_tab_title))) {
+              // Who scanned the QR
+              listElement.setAdapter(scansAdapter);
+            } else {
+              // Comments
+            }
           }
 
-          // If it doesn't exist, add the QR
-          if (qrCodeHash.getData() == null) {
-            qrCodeDatabase.addQRCode(
-                qrCode,
-                task -> {
-                  if (!task.isSuccessful()) {
-                    addButton.setVisibility(View.VISIBLE);
-                    loadingButton.setVisibility(View.GONE);
-                    return;
-                  }
+          @Override
+          public void onTabUnselected(TabLayout.Tab tab) {}
 
-                  // Add the player to the QR
-                  qrCodeDatabase.addPlayerToQR(
-                      activePlayer,
-                      qrCode,
-                      ignored -> {
-                        deleteButton.setVisibility(View.VISIBLE);
-                        loadingButton.setVisibility(View.GONE);
-                      });
-                });
-
-          } else {
-            // QRCode already exists, add player to the QR
-            qrCodeDatabase.addPlayerToQR(
-                activePlayer,
-                qrCode,
-                ignored -> {
-                  deleteButton.setVisibility(View.VISIBLE);
-                  loadingButton.setVisibility(View.GONE);
-                });
-          }
+          @Override
+          public void onTabReselected(TabLayout.Tab tab) {}
         });
   }
 
-  /**
-   * Called when the remove QR button is clicked
-   *
-   * @param view view
-   */
-  private void onRemoveQRClicked(View view) {
-    deleteButton.setVisibility(View.GONE);
-    loadingButton.setVisibility(View.VISIBLE);
+  /** Fetch all players who scanned this QR and add it to the adapter. */
+  private void setupPlayerScans() {
+    // For each player who scanned the QR, fetch them and the score they have.
+    // Upon fetching them, add them to our adapter.
+    for (String documentId : qrCode.getPlayers()) {
+      PlayerDatabase.getInstance()
+          .getPlayerByDocumentId(
+              documentId,
+              task -> {
+                if (!task.isSuccessful()) {
+                  Toast.makeText(
+                          getContext(),
+                          "An exception occurred while fetching the players who scanned this QR...",
+                          Toast.LENGTH_LONG)
+                      .show();
+                  return;
+                }
+                Player player = task.getData();
 
-    // Remove QR from player
-    qrCodeDatabase.removeQRCodeFromPlayer(
-        activePlayer,
-        qrCode,
-        ignored2 -> {
-          addButton.setVisibility(View.VISIBLE);
-          loadingButton.setVisibility(View.GONE);
+                // Retrieve all of the QRs the player has to get their total score.
+                QRCodeDatabase.getInstance()
+                    .getQRCodeHashes(
+                        player.getQRCodeHashes(),
+                        qrsTask -> {
+                          if (!qrsTask.isSuccessful()) {
+                            Toast.makeText(
+                                    getContext(),
+                                    "An exception occurred while fetching the QRs of a player who scanned this QR...",
+                                    Toast.LENGTH_LONG)
+                                .show();
+                            return;
+                          }
+
+                          // Calculate the player's total score
+                          int score =
+                              qrsTask.getData().stream()
+                                  .mapToInt(QRCode::getScore)
+                                  .reduce(0, Integer::sum);
+
+                          // Add an entry into our adapter with their score and player.
+                          scansAdapter.add(new QRPlayerScanEntry(player, score));
+                        });
+              });
+    }
+  }
+
+  private void setupListListener() {
+    listElement.setOnItemClickListener(
+        new AdapterView.OnItemClickListener() {
+          @Override
+          public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            boolean isPlayerScansSelected = tabLayout.getSelectedTabPosition() == 0;
+
+            if (isPlayerScansSelected) {
+              QRPlayerScanEntry scanEntry = scansAdapter.getItem(position);
+
+              // Navigate to their profile.
+              GameController gameController = ((GameActivity) getActivity()).getController();
+              ProfileFragment profileFragment;
+              boolean isOurProfile =
+                  scanEntry.getPlayer().getDeviceId().equals(activePlayer.getDeviceId());
+              if (isOurProfile) {
+                profileFragment = new MyProfileFragment(gameController);
+              } else {
+                profileFragment =
+                    new OtherProfileFragment(gameController, scanEntry.getPlayer().getDeviceId());
+              }
+              gameController.setBody(profileFragment);
+              QRCodeFragment.this.dismiss();
+
+            } else {
+
+            }
+          }
         });
   }
 
@@ -212,32 +267,21 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
    * @see LocationPhotoController
    */
   public void updateLocationPhoto() {
-    if (qrCode.getPhotos() != null && qrCode.getPhotos().size() > 0) {
-      takeLocationPhotoBtn.setText(R.string.remove_location_photo);
-      locationPhoto.setImageBitmap(qrCode.getPhotos().get(0).getPhoto());
-    } else {
-      takeLocationPhotoBtn.setText(R.string.take_location_photo);
-      locationPhoto.setImageResource(android.R.color.transparent);
-    }
-  }
-
-  /**
-   * Disables the "Record QR Location" box if the user has not granted location permissions
-   *
-   * @param requestCode The request code passed in {@link #requestPermissions(String[], int)}.
-   * @param permissions The requested permissions. Never null.
-   * @param grantResults The grant results for the corresponding permissions which is either {@link
-   *     android.content.pm.PackageManager#PERMISSION_GRANTED} or {@link
-   *     android.content.pm.PackageManager#PERMISSION_DENIED}. Never null.
-   */
-  @Override
-  public void onRequestPermissionsResult(
-      int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (requestCode == LocationHandler.REQUEST_CODE_PERMISSIONS) {
-      if (!locationHandler.locationPermissionsGranted()) {
-        locationCheckbox.setEnabled(false);
-      }
-    }
+    locationPhotoStorage.playerHasLocationPhoto(
+        qrCode,
+        activePlayer,
+        (hasPhoto) -> {
+          if (hasPhoto) {
+            takeLocationPhotoBtn.setText(R.string.remove_location_photo);
+            locationPhotoSlider.setCurrentPagePosition(
+                locationPhotoAdapter.getPlayerLocationPhoto(activePlayer));
+          } else takeLocationPhotoBtn.setText(R.string.take_location_photo);
+        });
+    locationPhotoAdapter.renewLocationPhotos(
+        photos -> {
+          if (photos.size() == 0) locationPhotoSlider.setVisibility(View.GONE);
+          else locationPhotoSlider.setVisibility(View.VISIBLE);
+        });
   }
 
   /**
@@ -249,41 +293,5 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   private AlertDialog createAlertDialog(View view) {
     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
     return builder.setView(view).setPositiveButton("Close", null).create();
-  }
-
-  /**
-   * Display the add (+) QRCode button if the player does not have the QRCode to their name, else
-   * display the remove (x) QRCode button if the player has it.
-   */
-  private void updateAddDeleteButton() {
-    qrCodeDatabase.playerHasQRCode(
-        activePlayer,
-        qrCode,
-        results -> {
-          if (results.isSuccessful()) {
-            if (results.getData()) {
-              // QR code hash is already added to the player's account
-              // Thus, display delete button
-              addButton.setVisibility(View.GONE);
-              deleteButton.setVisibility(View.VISIBLE);
-            } else {
-              // QR code hash is not yet added to the player's account
-              // Thus, display add button
-              addButton.setVisibility(View.VISIBLE);
-              deleteButton.setVisibility(View.GONE);
-            }
-          } else {
-            Log.w("QRCodeFragment", "Error getting player by device ID.", results.getException());
-            Toast.makeText(getContext(), "Error getting player by device ID.", Toast.LENGTH_SHORT)
-                .show();
-          }
-        });
-  }
-
-  /**
-   * @return The location photo fragment
-   */
-  public LocationPhotoFragment getLocationPhotoFragment() {
-    return locationPhotoFragment;
   }
 }

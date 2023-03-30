@@ -6,7 +6,10 @@ import android.util.Log;
 import androidx.camera.core.ImageProxy;
 import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.player.Player;
+import com.cmput301w23t09.qrhunter.qrcode.AddQRCodeFragment;
+import com.cmput301w23t09.qrhunter.qrcode.DeleteQRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraController;
 import com.google.android.gms.tasks.Task;
@@ -29,11 +32,11 @@ import java.util.List;
 public class ScannerController {
 
   private BarcodeScannerOptions options;
-  private BarcodeScanner scanner;
-  private BaseFragment fragment;
+  private final BarcodeScanner scanner;
+  private final BaseFragment fragment;
   private QRCodeFragment qrCodeFragment = null;
-  private String pastHash = "";
-  private Player activePlayer;
+  private final Player activePlayer;
+  private boolean currentlyScanning = false;
 
   /**
    * Creates a ScannerController
@@ -67,6 +70,8 @@ public class ScannerController {
                   barcodes -> {
                     if (barcodes.size() > 0) {
                       Barcode scannedCode = barcodes.get(0);
+                      if (currentlyScanning) return;
+                      currentlyScanning = true;
                       // TODO: Draw qrCode.getBoundingBox()
 
                       // Only deal with the code's hash (US 08.01.01)
@@ -78,15 +83,34 @@ public class ScannerController {
                               .hashString(scannedCode.getRawValue(), StandardCharsets.UTF_8)
                               .toString();
 
-                      if ((qrCodeFragment == null || !qrCodeFragment.isAdded())
-                          && !pastHash.equals(currentHash)) {
-                        pastHash = currentHash;
-                        if (qrCodeFragment != null) qrCodeFragment.dismissNow();
-                        QRCode qrCode = new QRCode(pastHash);
-                        qrCodeFragment = QRCodeFragment.newInstance(qrCode, activePlayer);
-                        fragment.getGameController().setPopup(qrCodeFragment);
+                      if (fragment.getGameController().getPopup() == null) {
+                        // Fetch existing QR data or create new QR
+                        QRCodeDatabase.getInstance()
+                            .getQRCodeByHash(
+                                currentHash,
+                                task -> {
+                                  if (task.isSuccessful()) {
+                                    QRCode qrCode;
+                                    if (task.getData() != null) {
+                                      qrCode = task.getData();
+                                    } else {
+                                      qrCode = new QRCode(currentHash);
+                                    }
+
+                                    if (qrCode
+                                        .getPlayers()
+                                        .contains(activePlayer.getDocumentId())) {
+                                      qrCodeFragment =
+                                          DeleteQRCodeFragment.newInstance(qrCode, activePlayer);
+                                    } else {
+                                      qrCodeFragment =
+                                          AddQRCodeFragment.newInstance(qrCode, activePlayer);
+                                    }
+                                    showQRCodeFragment();
+                                  }
+                                });
                       }
-                    }
+                    } else currentlyScanning = false;
                   })
               .addOnFailureListener(e -> Log.e("ERROR", e.toString()))
               .addOnCompleteListener(
@@ -95,5 +119,10 @@ public class ScannerController {
                     imgProxy.close();
                   });
     }
+  }
+
+  private void showQRCodeFragment() {
+    if (fragment.getGameController().getPopup() == null)
+      fragment.getGameController().setPopup(qrCodeFragment);
   }
 }

@@ -2,13 +2,18 @@ package com.cmput301w23t09.qrhunter.qrcode;
 
 import android.location.Location;
 import android.util.Log;
+import androidx.annotation.Nullable;
+import com.cmput301w23t09.qrhunter.DatabaseChangeListener;
 import com.cmput301w23t09.qrhunter.database.DatabaseConnection;
 import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
 import com.cmput301w23t09.qrhunter.database.DatabaseQueryResults;
+import com.cmput301w23t09.qrhunter.map.QRLocation;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
@@ -16,7 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 /**
@@ -238,6 +242,7 @@ public class QRCodeDatabase {
    * Adds a never-before-scanned QRCode to the database
    *
    * @param qrCode The never-before-scanned QRCode to add
+   * @param task callback on database operation completion
    */
   public void addQRCode(QRCode qrCode, DatabaseConsumer<Void> task) {
     getQRCodeByHash(
@@ -272,6 +277,7 @@ public class QRCodeDatabase {
    *
    * @param player The player to add QRCode to.
    * @param qrCode The QRCode to be added.
+   * @param task callback on database operation completion
    */
   public void addPlayerToQR(Player player, QRCode qrCode, DatabaseConsumer<Void> task) {
     // Adds QRCode's hash to player's collection of QRCodes
@@ -302,6 +308,7 @@ public class QRCodeDatabase {
                     QRCode updatedQRCode = qrHashTask.getData();
                     updatedQRCode.addPlayer(player.getDocumentId());
                     updatedQRCode.setLoc(qrCode.getLoc());
+                    updatedQRCode.setLocations(qrCode.getLocations());
                     updateQRCode(
                         updatedQRCode,
                         updateResult -> {
@@ -327,6 +334,7 @@ public class QRCodeDatabase {
    *
    * @param player The player to remove QRCode from.
    * @param qrCode The QRCode to be removed
+   * @param task callback on database operation completion
    */
   public void removeQRCodeFromPlayer(Player player, QRCode qrCode, DatabaseConsumer<Void> task) {
     // Adds QRCode's hash to player's collection of QRCodes
@@ -410,11 +418,12 @@ public class QRCodeDatabase {
       location.setLongitude((double) snapshot.get("longitude"));
     }
     ArrayList<String> players = (ArrayList<String>) snapshot.get("players");
-    try {
-      return new QRCode(hash, name, score, null, null, null, players);
-    } catch (ExecutionException | InterruptedException e) {
-      throw new RuntimeException(e);
-    }
+    ArrayList<String> locationsStr = (ArrayList<String>) snapshot.get("locations");
+    ArrayList<QRLocation> locations = new ArrayList<>();
+    if (locationsStr != null)
+      for (String locStr : locationsStr) locations.add(new QRLocation(locStr));
+    return new QRCode(
+        hash, name, score, location, locations, new ArrayList<>(), new ArrayList<>(), players);
   }
 
   /**
@@ -431,6 +440,25 @@ public class QRCodeDatabase {
     values.put("latitude", qrCode.getLoc() != null ? qrCode.getLoc().getLatitude() : null);
     values.put("longitude", qrCode.getLoc() != null ? qrCode.getLoc().getLongitude() : null);
     values.put("players", qrCode.getPlayers());
+    ArrayList<String> locationsStr = new ArrayList<>();
+    for (QRLocation loc : qrCode.getLocations()) locationsStr.add(loc.getLocationString());
+    values.put("locations", locationsStr);
     return values;
+  }
+
+  /**
+   * Add snapshot listener to database
+   *
+   * @param listener listener to call on updates to the qr code database
+   */
+  public void addListener(DatabaseChangeListener listener) {
+    collection.addSnapshotListener(
+        new EventListener<QuerySnapshot>() {
+          @Override
+          public void onEvent(
+              @Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+            listener.onChange();
+          }
+        });
   }
 }

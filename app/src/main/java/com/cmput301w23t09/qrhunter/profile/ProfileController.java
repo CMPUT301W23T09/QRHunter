@@ -7,16 +7,16 @@ import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.cmput301w23t09.qrhunter.DatabaseChangeListener;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
-import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
+import com.cmput301w23t09.qrhunter.qrcode.DeleteQRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeAdapter;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.ScoreComparator;
-import com.cmput301w23t09.qrhunter.util.DeviceUtils;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -30,17 +30,27 @@ import java.util.Objects;
 import java.util.UUID;
 
 /** This is the controller for the profile fragment of the app */
-public class ProfileController {
+public abstract class ProfileController implements DatabaseChangeListener {
   /** This is the game controller that controls the content on screen. */
-  private final GameController gameController;
+  protected final GameController gameController;
   /** This is the profile fragment the controller handles */
-  private final ProfileFragment fragment;
+  protected final ProfileFragment fragment;
   /** This is the array of QRCode objects that the fragment displays */
   private ArrayList<QRCode> qrCodes;
   /** This is the adapter for displaying the QRCode objects */
   private QRCodeAdapter qrCodeAdapter;
   /** Device UUID of the profile */
-  private final UUID deviceUUID;
+  protected final UUID deviceUUID;
+  /** This is the gridview showing the qr codes of the player */
+  private GridView qrCodeList;
+  /** This is the view that shows the qr codes of the player */
+  private TextView totalPoints;
+  /** This is the view showing the total number of codes the player has */
+  private TextView totalCodes;
+  /** This is the view showing the top score of the player's qr codes */
+  private TextView topScore;
+  /** This is the spinner that determines the qr code display order */
+  private Spinner orderSpinner;
 
   /**
    * This initializes the controller with its corresponding fragment
@@ -90,11 +100,22 @@ public class ProfileController {
       TextView totalCodes,
       TextView topScore,
       Spinner orderSpinner) {
+    // set controller attributes
+    this.qrCodeList = qrCodeList;
+    this.totalPoints = totalPoints;
+    this.totalCodes = totalCodes;
+    this.topScore = topScore;
+    this.orderSpinner = orderSpinner;
+
     // set QR code data and list view adapter
     qrCodes = new ArrayList<>();
     qrCodeAdapter = new QRCodeAdapter(gameController.getActivity(), qrCodes);
     qrCodeList.setAdapter(qrCodeAdapter);
 
+    updateQRList();
+  }
+
+  private void updateQRList() {
     // get current player
     PlayerDatabase.getInstance()
         .getPlayerByDeviceId(
@@ -106,6 +127,9 @@ public class ProfileController {
                 return;
               }
               // otherwise get the qr code hashes of the current player
+              if (playerCollectionResults.getData() == null) {
+                return;
+              }
               List<String> codeHashes = playerCollectionResults.getData().getQRCodeHashes();
               // get the qr codes from the hashes
               QRCodeDatabase.getInstance()
@@ -158,29 +182,7 @@ public class ProfileController {
    * This handles the action to take when the contact info button is clicked. Either displaying the
    * contact information or rendering the edit details fragment.
    */
-  public void handleContactButtonClick() {
-    if (deviceUUID.equals(DeviceUtils.getDeviceUUID(gameController.getActivity()))) {
-      // Display edit settings fragment
-      ProfileSettingsFragment settingsFragment =
-          new ProfileSettingsFragment(gameController, deviceUUID);
-      gameController.setBody(settingsFragment);
-    } else {
-      // Display contact info popup
-      PlayerDatabase.getInstance()
-          .getPlayerByDeviceId(
-              deviceUUID,
-              task -> {
-                if (task.getException() != null) {
-                  showMsg(
-                      "An exception occurred while trying to load this player's contact details.");
-                  return;
-                }
-
-                Player player = task.getData();
-                fragment.displayContactInfo(player.getEmail(), player.getPhoneNo());
-              });
-    }
-  }
+  public abstract void handleContactButtonClick();
 
   /**
    * This updates the order of qr codes shown
@@ -214,10 +216,39 @@ public class ProfileController {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         QRCode qrCode = qrCodes.get(position);
-        QRCodeFragment.newInstance(qrCode, gameController.getActivePlayer())
-            .show(fragment.getParentFragmentManager(), "");
+
+        QRCodeDatabase.getInstance()
+            .playerHasQRCode(
+                gameController.getActivePlayer(),
+                qrCode,
+                task -> {
+                  if (task.isSuccessful()) {
+                    boolean playerHasQR = task.getData();
+
+                    if (playerHasQR) {
+                      gameController.setPopup(
+                          DeleteQRCodeFragment.newInstance(
+                              qrCode, gameController.getActivePlayer()));
+                    } else {
+                      gameController.setPopup(
+                          QRCodeFragment.newInstance(qrCode, gameController.getActivePlayer()));
+                    }
+                  }
+                });
       }
     };
+  }
+
+  /** This refreshes the profile upon database change */
+  public void onChange() {
+    if (qrCodeAdapter != null) {
+      updateQRList();
+    }
+  }
+
+  /** This sets up the listener for real-time database changes */
+  public void addUpdater() {
+    QRCodeDatabase.getInstance().addListener(this);
   }
 
   /**
@@ -253,7 +284,7 @@ public class ProfileController {
    *
    * @param msg The message to display
    */
-  private void showMsg(String msg) {
+  protected void showMsg(String msg) {
     Toast.makeText(gameController.getActivity(), msg, Toast.LENGTH_SHORT).show();
   }
 

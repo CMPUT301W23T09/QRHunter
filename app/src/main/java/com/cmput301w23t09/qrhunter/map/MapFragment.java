@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -49,8 +50,10 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
   private static LatLng[] placeholderQR;
   private LatLng currentLocation;
-
   private List<LatLng> latLngsList;
+  private SearchView qrSearcher;
+  private SearchQRController searchController;
+
 
   public MapFragment(GameController gameController) {
     super(gameController);
@@ -233,26 +236,39 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     Places.initialize(
         getContext().getApplicationContext(), "AIzaSyDniTKVk4HDVsQVG-uDxQ-eFV4nCWeM-gU");
-    fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
-    return inflater.inflate(R.layout.fragment_map, container, false);
-  }
 
-  /**
-   * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
-   * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous
-   *     saved state as given here.
-   */
-  @Override
-  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
+
+    View view = inflater.inflate(R.layout.fragment_map, container, false);
+
     SupportMapFragment mapFragment =
-        (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+            (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
     // Checks if support map fragment is found, if so pass current fragment as callback
     if (mapFragment != null) {
       // Gets a googleMap object
       mapFragment.getMapAsync(this);
     }
+
+    fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+
+    // create search view
+    qrSearcher = view.findViewById(R.id.qr_searcher);
+    searchController = new SearchQRController(qrSearcher, this);
+    qrSearcher.setOnQueryTextListener(searchController.handleSearch());
+
+    return view;
   }
+
+//  /**
+//   * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+//   * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous
+//   *     saved state as given here.
+//   */
+//  @Override
+//  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+//    super.onViewCreated(view, savedInstanceState);
+//
+//  }
 
   /**
    * @param map the Google maps

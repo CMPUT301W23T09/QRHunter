@@ -22,6 +22,7 @@ public class LocationHandler {
 
   private Fragment fragment;
   private FusedLocationProviderClient fusedLocationClient;
+  private QRLocation lastAddedLocation = null;
 
   public static final int REQUEST_CODE_PERMISSIONS = 20;
   public static final String[] LOCATION_PERMISSIONS =
@@ -60,6 +61,37 @@ public class LocationHandler {
                 }
               });
     }
+  }
+
+  /**
+   * Adds current location to the list of QR Codes.
+   *
+   * @param qrCode The QRCode to add current location to.
+   */
+  @SuppressLint("MissingPermission") // Checked by locationPermissionsGranted()
+  public void addLocation(QRCode qrCode) {
+    if (locationPermissionsGranted()) {
+      fusedLocationClient
+          .getCurrentLocation(Priority.PRIORITY_BALANCED_POWER_ACCURACY, null)
+          .addOnSuccessListener(
+              fragment.getActivity(),
+              location -> {
+                if (location != null) {
+                  lastAddedLocation = new QRLocation(location);
+                  qrCode.addLocation(lastAddedLocation);
+                }
+              });
+    }
+  }
+
+  /**
+   * Removes the most-recently added location from the QR code
+   *
+   * @param qrCode The QRCode to remove location from
+   */
+  public void removeLastAddedLocation(QRCode qrCode) {
+    qrCode.removeLocation(lastAddedLocation);
+    lastAddedLocation = null;
   }
 
   /**

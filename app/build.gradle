@@ -24,6 +24,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            testCoverageEnabled = true
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -38,6 +41,10 @@ android {
 
     buildFeatures {
         viewBinding true
+    }
+
+    lint {
+        abortOnError false
     }
 }
 
@@ -78,6 +85,8 @@ spotless {
 dependencies {
     implementation platform('com.google.firebase:firebase-bom:31.2.2')
     implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.google.firebase:firebase-storage-ktx'
+    implementation 'com.firebaseui:firebase-ui-storage:7.2.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -86,6 +95,19 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    // AutoImagesSlider (https://github.com/smarteist/Android-Image-Slider)
+    // Provides an Image Slider used to show users the different location pictures
+    // By: Ali Hosseini (https://github.com/smarteist)
+    // License: Apache 2.0
+    implementation 'com.github.smarteist:autoimageslider:1.4.0'
+
+    // Glide (https://github.com/bumptech/glide)
+    // Fast image loading framework
+    // By: Bumptech (https://github.com/bumptech)
+    // License: BSD, part MIT, Apache 2.0
+    implementation 'com.github.bumptech.glide:glide:4.15.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.15.0'
 
     // Awaitility
     // Helps us wait for certain conditions to be true within a given timeframe in testing

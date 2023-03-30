@@ -1,9 +1,14 @@
 package com.cmput301w23t09.qrhunter.leaderboard;
 
+import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
+import com.cmput301w23t09.qrhunter.profile.MyProfileFragment;
+import com.cmput301w23t09.qrhunter.profile.OtherProfileFragment;
+import com.cmput301w23t09.qrhunter.qrcode.DeleteQRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,12 +18,19 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 
 public class LeaderboardController {
+  private final GameController gameController;
+
+  public LeaderboardController(GameController gameController) {
+    this.gameController = gameController;
+  }
+
   /**
    * Retrieve the total points leaderboard in descending order.
    *
    * @param callback callback to call with leaderboard
    */
-  public void getTotalPointsLeaderboard(BiConsumer<Exception, Leaderboard> callback) {
+  public void getTotalPointsLeaderboard(
+      BiConsumer<Exception, Leaderboard<PlayerLeaderboardEntry>> callback) {
     PlayerDatabase.getInstance()
         .getAllPlayers(
             task -> {
@@ -29,7 +41,7 @@ public class LeaderboardController {
               }
 
               // Map each player to their total qr code hash scores.
-              List<LeaderboardEntry> entries = new ArrayList<>();
+              List<PlayerLeaderboardEntry> entries = new ArrayList<>();
               AtomicInteger entriesLeft = new AtomicInteger(task.getData().size());
               AtomicReference<Exception> exception = new AtomicReference<>();
 
@@ -46,8 +58,7 @@ public class LeaderboardController {
                                     .reduce(0, Long::sum);
 
                             // Add new player leaderboard entry
-                            entries.add(
-                                new LeaderboardEntry(player.getUsername(), score, "points"));
+                            entries.add(new PlayerLeaderboardEntry(player, score, "points"));
                           } else {
                             exception.set(qrCodeHashesTask.getException());
                           }
@@ -62,7 +73,7 @@ public class LeaderboardController {
 
                             // entries now contains all players and their scores.
                             Collections.sort(entries);
-                            callback.accept(null, new Leaderboard(entries));
+                            callback.accept(null, new Leaderboard<>(entries));
                           }
                         });
               }
@@ -74,7 +85,8 @@ public class LeaderboardController {
    *
    * @param callback callback to call with leaderboard
    */
-  public void getTopScansLeaderboard(BiConsumer<Exception, Leaderboard> callback) {
+  public void getTopScansLeaderboard(
+      BiConsumer<Exception, Leaderboard<PlayerLeaderboardEntry>> callback) {
     PlayerDatabase.getInstance()
         .getAllPlayers(
             task -> {
@@ -83,14 +95,14 @@ public class LeaderboardController {
                 return;
               }
 
-              List<LeaderboardEntry> entries = new ArrayList<>();
+              List<PlayerLeaderboardEntry> entries = new ArrayList<>();
               for (Player player : task.getData()) {
                 long scans = player.getQRCodeHashes().size();
-                entries.add(new LeaderboardEntry(player.getUsername(), scans, "codes"));
+                entries.add(new PlayerLeaderboardEntry(player, scans, "codes"));
               }
 
               Collections.sort(entries);
-              callback.accept(null, new Leaderboard(entries));
+              callback.accept(null, new Leaderboard<>(entries));
             });
   }
 
@@ -99,7 +111,8 @@ public class LeaderboardController {
    *
    * @param callback callback to call with leaderboard
    */
-  public void getTopQRCodesLeaderboard(BiConsumer<Exception, Leaderboard> callback) {
+  public void getTopQRCodesLeaderboard(
+      BiConsumer<Exception, Leaderboard<QRCodeLeaderboardEntry>> callback) {
     QRCodeDatabase.getInstance()
         .getAllQRCodes(
             task -> {
@@ -108,18 +121,51 @@ public class LeaderboardController {
                 return;
               }
 
-              List<LeaderboardEntry> entries = new ArrayList<>();
+              List<QRCodeLeaderboardEntry> entries = new ArrayList<>();
               for (QRCode qrCode : task.getData()) {
-                entries.add(new LeaderboardEntry(qrCode.getName(), qrCode.getScore(), "points"));
+                entries.add(new QRCodeLeaderboardEntry(qrCode, qrCode.getScore(), "points"));
               }
 
               Collections.sort(entries);
-              callback.accept(null, new Leaderboard(entries));
+              callback.accept(null, new Leaderboard<>(entries));
+            });
+  }
+
+  public void handleEntryClick(PlayerLeaderboardEntry entry) {
+    Player player = entry.getPlayer();
+    if (player.getDeviceId().equals(gameController.getActivePlayer().getDeviceId())) {
+      gameController.setBody(new MyProfileFragment(gameController));
+    } else {
+      gameController.setBody(new OtherProfileFragment(gameController, player.getDeviceId()));
+    }
+  }
+
+  public void handleEntryClick(QRCodeLeaderboardEntry entry) {
+    QRCode qrCode = entry.getQRCode();
+    QRCodeDatabase.getInstance()
+        .playerHasQRCode(
+            gameController.getActivePlayer(),
+            qrCode,
+            task -> {
+              if (task.isSuccessful()) {
+                boolean playerHasQR = task.getData();
+
+                QRCodeFragment fragment;
+                if (playerHasQR) {
+                  // Show delete fragment
+                  fragment =
+                      DeleteQRCodeFragment.newInstance(qrCode, gameController.getActivePlayer());
+                } else {
+                  // Show QR fragment without any option
+                  fragment = QRCodeFragment.newInstance(qrCode, gameController.getActivePlayer());
+                }
+                gameController.setPopup(fragment);
+              }
             });
   }
 
   public void getTopQRCodesByRegionLeaderboard(
-      BiConsumer<Exception, Map<String, Leaderboard>> callback) {
+      BiConsumer<Exception, Map<String, Leaderboard<QRCodeLeaderboardEntry>>> callback) {
     // TODO: Implement after location recording is completed and fetch the region of the photo.
   }
 }

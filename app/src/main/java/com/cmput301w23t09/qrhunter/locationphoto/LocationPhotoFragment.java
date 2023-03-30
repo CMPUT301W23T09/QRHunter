@@ -1,8 +1,7 @@
-package com.cmput301w23t09.qrhunter.scanqr;
+package com.cmput301w23t09.qrhunter.locationphoto;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +10,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.player.Player;
+import com.cmput301w23t09.qrhunter.qrcode.AddQRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
-import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -25,9 +24,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  */
 public class LocationPhotoFragment extends DialogFragment {
 
-  private LocationPhotoController controller;
   private QRCode qrCode;
-  private QRCodeFragment qrCodeFragment;
+  private AddQRCodeFragment qrCodeFragment;
   private CameraLocationPhotoController cameraController;
   private Player activePlayer;
 
@@ -37,11 +35,11 @@ public class LocationPhotoFragment extends DialogFragment {
    * @param qrCode The QRCode to add the location photo to
    * @param qrCodeFragment The QRCodeFragment to update once the location photo has been taken
    * @param activePlayer The current logged in player
-   * @see QRCodeFragment
+   * @see AddQRCodeFragment
    * @return The LocationPhotoFragment to display
    */
   public static LocationPhotoFragment newInstance(
-      QRCode qrCode, QRCodeFragment qrCodeFragment, Player activePlayer) {
+      QRCode qrCode, AddQRCodeFragment qrCodeFragment, Player activePlayer) {
     // TODO: May need to bundle arguments
     Bundle args = new Bundle();
     args.putSerializable("qrcode", qrCode);
@@ -63,30 +61,23 @@ public class LocationPhotoFragment extends DialogFragment {
   public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
     View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_location_photo, null);
     qrCode = (QRCode) getArguments().getSerializable("qrcode");
-    qrCodeFragment = (QRCodeFragment) getArguments().getSerializable("qrcodefrag");
+    qrCodeFragment = (AddQRCodeFragment) getArguments().getSerializable("qrcodefrag");
     activePlayer = (Player) getArguments().getSerializable("activePlayer");
-    controller = new LocationPhotoController(this, qrCode, activePlayer);
     cameraController =
         new CameraLocationPhotoController(
-            this, view.findViewById(R.id.locationPhotoCameraPreview), controller);
+            this,
+            view.findViewById(R.id.locationPhotoCameraPreview),
+            qrCodeFragment.getLocationPhotoController());
     FloatingActionButton shutterButton = view.findViewById(R.id.location_photo_shutter);
     shutterButton.setOnClickListener(
         v -> {
-          controller.takePhoto();
+          qrCodeFragment.getLocationPhotoController().takePhoto();
         });
     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
     return builder.setView(view).create();
   }
 
-  /**
-   * Once the user dismisses the LocationPhotoFragment, update the QRCodeFragment to show the
-   * newly-taken location photo
-   *
-   * @param dialog the dialog that was dismissed will be passed into the method
-   */
-  @Override
-  public void onDismiss(@NonNull DialogInterface dialog) {
-    super.onDismiss(dialog);
-    qrCodeFragment.updateLocationPhoto();
+  public AddQRCodeFragment getAddQRCodeFragment() {
+    return qrCodeFragment;
   }
 }

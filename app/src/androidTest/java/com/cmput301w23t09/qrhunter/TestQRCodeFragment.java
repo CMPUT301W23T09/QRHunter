@@ -1,7 +1,6 @@
 package com.cmput301w23t09.qrhunter;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -10,15 +9,13 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.GrantPermissionRule;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
@@ -30,7 +27,6 @@ import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,19 +43,12 @@ public class TestQRCodeFragment extends BaseTest {
   private QRCode qrCode;
   private Solo solo;
   private QRCodeFragment qrCodeFragment;
-
   private Player player;
+  private Player playerWhoScannedQR;
 
   @Rule
   public ActivityScenarioRule<GameActivity> activityScenarioRule =
       new ActivityScenarioRule<>(GameActivity.class);
-
-  @Rule
-  public GrantPermissionRule permissionRule =
-      GrantPermissionRule.grant(
-          Manifest.permission.ACCESS_FINE_LOCATION,
-          Manifest.permission.ACCESS_COARSE_LOCATION,
-          Manifest.permission.CAMERA);
 
   /** Opens the QRCodeFragment, assuming we've scanned a QR code with hash "test-hash123" */
   @Before
@@ -67,15 +56,9 @@ public class TestQRCodeFragment extends BaseTest {
     player =
         new Player(
             UUID.randomUUID(), "johndoe42", "7801234567", "doe@ualberta.ca", new ArrayList<>());
-
-    CountDownLatch dbTasks = new CountDownLatch(1);
-    PlayerDatabase.getInstance()
-        .add(
-            player,
-            ignored -> {
-              dbTasks.countDown();
-            });
-    dbTasks.await();
+    playerWhoScannedQR =
+        new Player(
+            UUID.randomUUID(), "steve", "1234567890", "example@example.com", new ArrayList<>());
 
     // Mock QRCode Info
     // Actual Data: CMPUT301W23T09-QRHunter
@@ -83,6 +66,30 @@ public class TestQRCodeFragment extends BaseTest {
     // Name: RobaqinectTiger✿
     // Score: 32 PTS
     qrCode = new QRCode("8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d");
+
+    CountDownLatch playerDBTasks = new CountDownLatch(2);
+    PlayerDatabase.getInstance().add(player, ignored -> playerDBTasks.countDown());
+    PlayerDatabase.getInstance().add(playerWhoScannedQR, ignored -> playerDBTasks.countDown());
+    playerDBTasks.await();
+
+    CountDownLatch qrDBTasks = new CountDownLatch(1);
+    QRCodeDatabase.getInstance()
+        .addQRCode(
+            qrCode,
+            ignored ->
+                QRCodeDatabase.getInstance()
+                    .addPlayerToQR(playerWhoScannedQR, qrCode, ignored2 -> qrDBTasks.countDown()));
+    qrDBTasks.await();
+
+    CountDownLatch fetchLatestQR = new CountDownLatch(1);
+    QRCodeDatabase.getInstance()
+        .getQRCodeByHash(
+            qrCode.getHash(),
+            task -> {
+              qrCode = task.getData();
+              fetchLatestQR.countDown();
+            });
+    fetchLatestQR.await();
 
     qrCodeFragment = QRCodeFragment.newInstance(qrCode, player);
     activityScenarioRule
@@ -108,177 +115,27 @@ public class TestQRCodeFragment extends BaseTest {
     assertTrue(qrVisualBitmap.sameAs(qrCode.getVisualRepresentation()));
   }
 
-  /** Checks if we can set the QRCode's location by checking the checkbox */
+  /** Checks that players who scanned the QR show up */
   @Test
-  public void testQRSetLocation() {
-    solo.sleep(5000); // This test is really flaky on Github Actions :(
-    solo.clickOnText("Record QR Location");
-    assertTrue(solo.waitForCondition(() -> qrCode.getLoc() != null, 25000));
-  }
-
-  /** Checks if we can remove the QRCode's location by unchecking the checkbox */
-  @Test
-  public void testQRRemoveLocation() {
-    solo.clickOnText("Record QR Location");
-    solo.clickOnText("Record QR Location");
-    assertTrue(solo.waitForCondition(() -> qrCode.getLoc() == null, 25000));
-  }
-
-  /** Test if we can take a location photo and if the player that took it is correctly logged */
-  @Test
-  public void testSnapLocationPhoto() {
-    assertEquals(0, qrCode.getPhotos().size());
-    onView(withId(R.id.take_location_photo_btn)).inRoot(isDialog()).perform(click());
-    await().until(() -> qrCodeFragment.getLocationPhotoFragment().getDialog().isShowing());
-    onView(withId(R.id.location_photo_shutter)).inRoot(isDialog()).perform(click());
-    await().until(() -> qrCodeFragment.getLocationPhotoFragment().getDialog() == null);
-    await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getPhotos().size() > 0);
-    // Check if player that snapped location photo is correct
+  public void testScannedByShowingPlayers() {
     await()
-        .atMost(30, TimeUnit.SECONDS)
-        .until(() -> qrCode.getPhotos().get(0).getPlayer().equals(player));
-  }
-
-  /** Test if after we take a location photo, we can remove it using the same button */
-  @Test
-  public void testRemoveLocationPhoto() {
-    onView(withId(R.id.take_location_photo_btn)).inRoot(isDialog()).perform(click());
-    await().until(() -> qrCodeFragment.getLocationPhotoFragment().getDialog().isShowing());
-    onView(withId(R.id.location_photo_shutter)).inRoot(isDialog()).perform(click());
-    await().until(() -> qrCodeFragment.getLocationPhotoFragment().getDialog() == null);
-    onView(withId(R.id.take_location_photo_btn)).check(matches(withText("Remove Location Photo")));
-    onView(withId(R.id.take_location_photo_btn)).inRoot(isDialog()).perform(click());
-    await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getPhotos().size() == 0);
-  }
-
-  /** Test to see that QRCodes are successfully added to the player's account */
-  @Test
-  public void testAddQRCode() throws Exception {
-    // Click the add QR button and add the QR
-    onView(withId(R.id.addButton)).inRoot(isDialog()).perform(click());
-    await()
-        .atMost(30, TimeUnit.SECONDS)
-        .until(
-            () ->
-                qrCodeFragment.getDialog().findViewById(R.id.deleteButton).getVisibility()
-                    == View.VISIBLE);
-
-    // Check that the database details are correct in that the player exists in the QR's scanned
-    // player fields
-    // and that the qr exists in the player's scanned qr field.
-
-    AtomicReference<Player> updatedPlayer = new AtomicReference<>();
-    await()
-        .atMost(30, TimeUnit.SECONDS)
+        .atMost(10, TimeUnit.SECONDS)
         .until(
             () -> {
-              // If we have already fetched the player, check that the QRCode is not within the
-              // Player.
-              Player databasePlayer = updatedPlayer.get();
-              if (databasePlayer != null
-                  && databasePlayer.getQRCodeHashes().contains(qrCode.getHash())) {
-                return true; // Player was correctly updated!
-              }
-
-              // If the phone no was not updated yet or if we have not fetched the newest copy of
-              // the player
-              // then fetch the latest database saved entry.
-              PlayerDatabase.getInstance()
-                  .getPlayerByUsername(
-                      player.getUsername(),
-                      fetchedPlayer -> updatedPlayer.set(fetchedPlayer.getData()));
-              return false; // Try again.
+              ListView qrList = (ListView) solo.getView(R.id.qr_nav_items);
+              return qrList.getChildCount() > 0;
             });
 
-    AtomicReference<QRCode> updatedQR = new AtomicReference<>();
-    await()
-        .atMost(30, TimeUnit.SECONDS)
-        .until(
-            () -> {
-              // If we have already fetched the QRCode, check that the Player is not within the
-              // QRCode.
-              QRCode databaseQR = updatedQR.get();
-              if (databaseQR != null && databaseQR.getPlayers().contains(player.getDocumentId())) {
-                return true; // Player was correctly updated!
-              }
+    // First check that only 1 player is showing
+    ListView qrList = (ListView) solo.getView(R.id.qr_nav_items);
+    assertEquals(1, qrList.getChildCount());
 
-              // If the QRCode was not updated yet or if we have not fetched the newest copy of the
-              // QRCode
-              // then fetch the latest database saved entry.
-              QRCodeDatabase.getInstance()
-                  .getQRCodeByHash(
-                      qrCode.getHash(), fetchedQR -> updatedQR.set(fetchedQR.getData()));
-              return false; // Try again.
-            });
-  }
-
-  /** Test to see that QRCodes are successfully removed from the player account */
-  @Test
-  public void testDeleteQRCode() {
-    // Add the QRCode first
-    onView(withId(R.id.addButton)).inRoot(isDialog()).perform(click());
-    await()
-        .atMost(30, TimeUnit.SECONDS)
-        .until(
-            () ->
-                qrCodeFragment.getDialog().findViewById(R.id.deleteButton).getVisibility()
-                    == View.VISIBLE);
-
-    // Delete the QRCode from the player's account
-    onView(withId(R.id.deleteButton)).inRoot(isDialog()).perform(click());
-    await()
-        .atMost(30, TimeUnit.SECONDS)
-        .until(
-            () ->
-                qrCodeFragment.getDialog().findViewById(R.id.addButton).getVisibility()
-                    == View.VISIBLE);
-
-    // Check that the database details are correct in that the player does not exist in the qr's
-    // scanned player fields
-    // and that the qr does not exist in the player's scanned qr field.
-
-    AtomicReference<Player> updatedPlayer = new AtomicReference<>();
-    await()
-        .atMost(30, TimeUnit.SECONDS)
-        .until(
-            () -> {
-              // If we have already fetched the player, check that the QRCode is not within the
-              // Player.
-              Player databasePlayer = updatedPlayer.get();
-              if (databasePlayer != null
-                  && !databasePlayer.getQRCodeHashes().contains(qrCode.getHash())) {
-                return true; // Player was correctly updated!
-              }
-
-              // If the phone no was not updated yet or if we have not fetched the newest copy of
-              // the player
-              // then fetch the latest database saved entry.
-              PlayerDatabase.getInstance()
-                  .getPlayerByUsername(
-                      player.getUsername(),
-                      fetchedPlayer -> updatedPlayer.set(fetchedPlayer.getData()));
-              return false; // Try again.
-            });
-
-    AtomicReference<QRCode> updatedQR = new AtomicReference<>();
-    await()
-        .atMost(30, TimeUnit.SECONDS)
-        .until(
-            () -> {
-              // If we have already fetched the QRCode, check that the Player is not within the
-              // QRCode.
-              QRCode databaseQR = updatedQR.get();
-              if (databaseQR != null && !databaseQR.getPlayers().contains(player.getDocumentId())) {
-                return true; // Player was correctly updated!
-              }
-
-              // If the QRCode was not updated yet or if we have not fetched the newest copy of the
-              // QRCode
-              // then fetch the latest database saved entry.
-              QRCodeDatabase.getInstance()
-                  .getQRCodeByHash(
-                      qrCode.getHash(), fetchedQR -> updatedQR.set(fetchedQR.getData()));
-              return false; // Try again.
-            });
+    // Next, check to see that the username and points are correct.
+    onView(withId(R.id.qrcode_player_scan_name))
+        .inRoot(isDialog())
+        .check(matches(withText(playerWhoScannedQR.getUsername())));
+    onView(withId(R.id.qrcode_player_scan_points))
+        .inRoot(isDialog())
+        .check(matches(withText("32 PTS")));
   }
 }
