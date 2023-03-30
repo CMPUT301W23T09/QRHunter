@@ -5,12 +5,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
-import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoAdapter;
+import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoController;
+import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoFragment;
 import com.cmput301w23t09.qrhunter.map.LocationHandler;
 import com.cmput301w23t09.qrhunter.player.Player;
-import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoController;
-import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoFragment;
-import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
 
 /**
  * Displays information about a specific QRCode. It also lets the user:
@@ -22,6 +21,8 @@ import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
  * </ul>
  */
 public class AddQRCodeFragment extends QRCodeFragment {
+  private LocationPhotoFragment locationPhotoFragment;
+  private LocationPhotoController locationPhotoController;
 
   /**
    * Creates a new AddQRCodeFragment to display a specific QR Code
@@ -39,39 +40,44 @@ public class AddQRCodeFragment extends QRCodeFragment {
     return fragment;
   }
 
-  /**
-   * Creates a new QRCodeFragment to display a specific QR Code with adding capabilities
-   *
-   * @param view
-   * @return QRCodeFragment
-   */
   @Override
   protected void setUpButtons(View view) {
+    commentBox.setVisibility(View.GONE);
     addButton.setVisibility(View.VISIBLE);
     deleteButton.setVisibility(View.GONE);
     loadingButton.setVisibility(View.GONE);
     locationHandler = new LocationHandler(this);
+    locationPhotoFragment = LocationPhotoFragment.newInstance(qrCode, this, activePlayer);
+    locationPhotoController =
+        new LocationPhotoController(locationPhotoFragment, qrCode, activePlayer);
     takeLocationPhotoBtn.setOnClickListener(
         v -> {
-          if (qrCode.getPhotos().size() > 0) {
-            qrCode.deletePhoto(qrCode.getPhotos().get(0));
-            updateLocationPhoto();
-          } else {
-            locationPhotoFragment = LocationPhotoFragment.newInstance(qrCode, this, activePlayer);
-            locationPhotoFragment.show(getParentFragmentManager(), "Take Location Photo");
-          }
+          locationPhotoStorage.playerHasLocationPhoto(
+              qrCode,
+              activePlayer,
+              (hasPhoto) -> {
+                if (hasPhoto) {
+                  locationPhotoStorage.deletePhoto(
+                      qrCode,
+                      activePlayer,
+                      isSuccessful -> {
+                        if (isSuccessful) updateLocationPhoto();
+                      });
+                } else {
+                  locationPhotoFragment.show(getParentFragmentManager(), "Take Location Photo");
+                }
+              });
         });
     locationCheckbox.setOnCheckedChangeListener(
         (buttonView, isChecked) -> {
           if (isChecked) {
             locationHandler.setQrToLastLocation(qrCode);
+            locationHandler.addLocation(qrCode);
           } else {
             qrCode.setLoc(null);
+            locationHandler.removeLastAddedLocation(qrCode);
           }
         });
-
-    // hides comment box
-    commentBox.setVisibility(View.GONE);
 
     updateAddButton();
     addButton.setOnClickListener(this::onAddQRClicked);
@@ -139,22 +145,6 @@ public class AddQRCodeFragment extends QRCodeFragment {
   }
 
   /**
-   * Updates the locationPhoto image view to show the newly-captured location photo
-   *
-   * @see CameraLocationPhotoController
-   * @see LocationPhotoController
-   */
-  public void updateLocationPhoto() {
-    if (qrCode.getPhotos() != null && qrCode.getPhotos().size() > 0) {
-      takeLocationPhotoBtn.setText(R.string.remove_location_photo);
-      locationPhoto.setImageBitmap(qrCode.getPhotos().get(0).getPhoto());
-    } else {
-      takeLocationPhotoBtn.setText(R.string.take_location_photo);
-      locationPhoto.setImageResource(android.R.color.transparent);
-    }
-  }
-
-  /**
    * Disables the "Record QR Location" box if the user has not granted location permissions
    *
    * @param requestCode The request code passed in {@link #requestPermissions(String[], int)}.
@@ -207,5 +197,19 @@ public class AddQRCodeFragment extends QRCodeFragment {
    */
   public LocationPhotoFragment getLocationPhotoFragment() {
     return locationPhotoFragment;
+  }
+
+  /**
+   * @return The location photo controller
+   */
+  public LocationPhotoController getLocationPhotoController() {
+    return locationPhotoController;
+  }
+
+  /**
+   * @return The location photo adapter
+   */
+  public LocationPhotoAdapter getLocationPhotoAdapter() {
+    return locationPhotoAdapter;
   }
 }

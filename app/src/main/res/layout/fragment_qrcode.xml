@@ -30,20 +30,25 @@
         app:layout_constraintStart_toEndOf="@+id/qr_code_visual"
         app:layout_constraintTop_toBottomOf="@+id/qr_name" />
 
-    <ImageView
-        android:id="@+id/location_photo"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:adjustViewBounds="true"
-        android:maxHeight="480px"
-        android:scaleType="fitStart"
-        android:src="@drawable/test_image1"
+    <com.smarteist.autoimageslider.SliderView
+        android:id="@+id/location_photos"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/qr_code_visual"
-        tools:adjustViewBounds="true"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+        app:sliderAnimationDuration="600"
+        app:sliderIndicatorAnimationDuration="600"
+        app:sliderIndicatorGravity="center_horizontal|bottom"
+        app:sliderIndicatorMargin="15dp"
+        app:sliderIndicatorOrientation="horizontal"
+        app:sliderIndicatorPadding="3dp"
+        app:sliderIndicatorRadius="2dp"
+        app:sliderIndicatorSelectedColor="#5A5A5A"
+        app:sliderIndicatorUnselectedColor="#FFF"
+        app:sliderScrollTimeInSec="1"
+        android:layout_marginTop="8dp"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/take_location_photo_btn"
@@ -51,8 +56,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:text="@string/take_location_photo"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <ImageView
         android:id="@+id/qr_code_visual"
@@ -123,7 +128,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location_photo" />
+        app:layout_constraintTop_toBottomOf="@+id/location_photos" />
 
 
     <EditText

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -18,15 +19,24 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import com.cmput301w23t09.qrhunter.GameActivity;
+import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.comment.CommentAdapter;
+import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoAdapter;
+import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoController;
+import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoStorage;
 import com.cmput301w23t09.qrhunter.map.LocationHandler;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
-import com.cmput301w23t09.qrhunter.scanqr.LocationPhotoFragment;
+import com.cmput301w23t09.qrhunter.profile.MyProfileFragment;
+import com.cmput301w23t09.qrhunter.profile.OtherProfileFragment;
+import com.cmput301w23t09.qrhunter.profile.ProfileFragment;
+import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.smarteist.autoimageslider.SliderView;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +45,9 @@ import java.util.concurrent.ExecutionException;
 /** Displays information about a specific QRCode. It also lets the user: */
 public class QRCodeFragment extends DialogFragment implements Serializable {
   protected QRCode qrCode;
-  protected ImageView locationPhoto;
   protected Button takeLocationPhotoBtn;
   protected CheckBox locationCheckbox;
   protected LocationHandler locationHandler;
-  protected LocationPhotoFragment locationPhotoFragment;
   protected Player activePlayer;
   protected FloatingActionButton addButton;
   protected FloatingActionButton deleteButton;
@@ -49,10 +57,12 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
   protected ListView listView;
   protected List<Comment> comments;
   protected CommentAdapter commentsAdapter;
+  protected SliderView locationPhotoSlider;
+  protected LocationPhotoAdapter locationPhotoAdapter;
+  protected LocationPhotoStorage locationPhotoStorage;
 
   protected ListView listElement;
   protected QRCodePlayerScansAdapter scansAdapter;
-  protected int selectedTabIndex = 0;
 
   /**
    * Creates a new QRCodeFragment to display a specific QR Code
@@ -75,6 +85,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_qrcode, null);
     qrCode = (QRCode) getArguments().getSerializable("qrcode");
     activePlayer = (Player) getArguments().getSerializable("player");
+    locationPhotoStorage = LocationPhotoStorage.getInstance();
 
     try {
       setupViews(view);
@@ -104,7 +115,6 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     setupTab(view);
 
     // get widgets in QRCodeFragment
-    locationPhoto = view.findViewById(R.id.location_photo);
     locationCheckbox = view.findViewById(R.id.location_request_box);
     takeLocationPhotoBtn = view.findViewById(R.id.take_location_photo_btn);
     TextView qrName = view.findViewById(R.id.qr_name);
@@ -117,6 +127,11 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     commentBox = view.findViewById(R.id.comment_box);
     listView = view.findViewById(R.id.qr_nav_items);
 
+    // setup location photos
+    locationPhotoSlider = view.findViewById(R.id.location_photos);
+    locationPhotoAdapter = new LocationPhotoAdapter(this.getContext(), qrCode);
+    locationPhotoSlider.setSliderAdapter(locationPhotoAdapter, false);
+
     // fill views with qr code information
     qrName.setText(qrCode.getName());
     qrScore.setText(qrCode.getScore().toString() + " PTS");
@@ -126,13 +141,18 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     setUpButtons(view);
   }
 
-  /** Enable and disable buttons of QRCodeFragment */
+  /**
+   * Enable and disable buttons of QRCodeFragment
+   *
+   * @param view the view
+   */
   protected void setUpButtons(View view) {
-    locationPhoto.setVisibility(View.GONE);
     takeLocationPhotoBtn.setVisibility(View.GONE);
     locationCheckbox.setVisibility(View.GONE);
     addButton.setVisibility(View.GONE);
-    loadingButton.setVisibility(View.VISIBLE);
+    deleteButton.setVisibility(View.GONE);
+    loadingButton.setVisibility(View.GONE);
+    commentBox.setVisibility(View.GONE);
   }
 
   /**
@@ -141,11 +161,12 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
    * @param view dialog
    */
   private void setupTab(View view) {
-    TabLayout layout = view.findViewById(R.id.qr_nav);
-    layout.addTab(layout.newTab().setText(getText(R.string.players_who_scanned_tab_title)));
-    layout.addTab(layout.newTab().setText(getText(R.string.comments_tab_title)));
+    tabLayout = view.findViewById(R.id.qr_nav);
+    tabLayout.addTab(tabLayout.newTab().setText(getText(R.string.players_who_scanned_tab_title)));
+    tabLayout.addTab(tabLayout.newTab().setText(getText(R.string.comments_tab_title)));
 
     listElement = view.findViewById(R.id.qr_nav_items);
+    setupListListener();
 
     scansAdapter = new QRCodePlayerScansAdapter(getContext());
     setupPlayerScans();
@@ -157,7 +178,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     listElement.setAdapter(
         scansAdapter); // by default, the adapter should display the scanned players.
 
-    layout.addOnTabSelectedListener(
+    tabLayout.addOnTabSelectedListener(
         new TabLayout.OnTabSelectedListener() {
 
           @Override
@@ -173,6 +194,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
 
           @Override
           public void onTabUnselected(TabLayout.Tab tab) {}
+
           @Override
           public void onTabReselected(TabLayout.Tab tab) {}
         });
@@ -224,10 +246,61 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     }
   }
 
+  private void setupListListener() {
+    listElement.setOnItemClickListener(
+        new AdapterView.OnItemClickListener() {
+          @Override
+          public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            boolean isPlayerScansSelected = tabLayout.getSelectedTabPosition() == 0;
+
+            if (isPlayerScansSelected) {
+              QRPlayerScanEntry scanEntry = scansAdapter.getItem(position);
+
+              // Navigate to their profile.
+              GameController gameController = ((GameActivity) getActivity()).getController();
+              ProfileFragment profileFragment;
+              boolean isOurProfile =
+                  scanEntry.getPlayer().getDeviceId().equals(activePlayer.getDeviceId());
+              if (isOurProfile) {
+                profileFragment = new MyProfileFragment(gameController);
+              } else {
+                profileFragment =
+                    new OtherProfileFragment(gameController, scanEntry.getPlayer().getDeviceId());
+              }
+              gameController.setBody(profileFragment);
+              QRCodeFragment.this.dismiss();
+            }
+          }
+        });
+  }
+
   /**
-   * Sets up the player comments for the current QR code.
-   * Adds all the comments for the current QR code to the list
-   * Notifies Adapter of data change
+   * Updates the locationPhoto image view to show the newly-captured location photo
+   *
+   * @see CameraLocationPhotoController
+   * @see LocationPhotoController
+   */
+  public void updateLocationPhoto() {
+    locationPhotoStorage.playerHasLocationPhoto(
+        qrCode,
+        activePlayer,
+        (hasPhoto) -> {
+          if (hasPhoto) {
+            takeLocationPhotoBtn.setText(R.string.remove_location_photo);
+            locationPhotoSlider.setCurrentPagePosition(
+                locationPhotoAdapter.getPlayerLocationPhoto(activePlayer));
+          } else takeLocationPhotoBtn.setText(R.string.take_location_photo);
+        });
+    locationPhotoAdapter.renewLocationPhotos(
+        photos -> {
+          if (photos.size() == 0) locationPhotoSlider.setVisibility(View.GONE);
+          else locationPhotoSlider.setVisibility(View.VISIBLE);
+        });
+  }
+
+  /**
+   * Sets up the player comments for the current QR code. Adds all the comments for the current QR
+   * code to the list Notifies Adapter of data change
    */
   private void setupPlayerComments() {
     comments.clear();

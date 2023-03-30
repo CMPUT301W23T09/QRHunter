@@ -9,20 +9,17 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.ArrayRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
-import com.cmput301w23t09.qrhunter.util.DeviceUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import java.util.UUID;
 
 /** This is the fragment displaying the user's profile */
-public class ProfileFragment extends BaseFragment {
-  /** This is the UUID corresponding to the profile of this player */
-  private UUID deviceUUID;
+public abstract class ProfileFragment extends BaseFragment {
   /** This is the controller that manages the fragment */
   private ProfileController controller;
   /** This is the view displaying the user's username */
@@ -38,17 +35,20 @@ public class ProfileFragment extends BaseFragment {
   /** This is the view displaying the list of codes the user has */
   private GridView qrCodeList;
   /** This is the view displaying the settings button */
-  private FloatingActionButton contactButton;
+  protected FloatingActionButton contactButton;
+  /** This is the button that allows the user to view their rankings */
+  protected FloatingActionButton rankingsButton;
 
   /**
    * Initializes the fragment with the app controller
    *
    * @param gameController This is the app controller
    */
-  public ProfileFragment(GameController gameController, UUID playerDeviceId) {
+  public ProfileFragment(GameController gameController) {
     super(gameController);
-    deviceUUID = playerDeviceId;
   }
+
+  protected abstract ProfileController getProfileController();
 
   @Override
   public View onCreateView(
@@ -57,9 +57,8 @@ public class ProfileFragment extends BaseFragment {
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.profile_activity, container, false);
 
-    controller = new ProfileController(this, getGameController(), deviceUUID);
+    controller = getProfileController();
     createProfile(view);
-    handleProfileHeaderEstimates(view);
     return view;
   }
 
@@ -77,6 +76,7 @@ public class ProfileFragment extends BaseFragment {
     topCodeScore = view.findViewById(R.id.top_code_score);
     sortOrderSpinner = view.findViewById(R.id.order_spinner);
     contactButton = view.findViewById(R.id.contact_info_button);
+    rankingsButton = view.findViewById(R.id.rankings_button);
 
     // create a default empty profile (shown while waiting for database queries)
     createDefaultProfile();
@@ -85,6 +85,9 @@ public class ProfileFragment extends BaseFragment {
     controller.setUpUsername(username);
     controller.setUpQRList(qrCodeList, totalPoints, totalCodes, topCodeScore, sortOrderSpinner);
     qrCodeList.setOnItemClickListener(controller.handleQRSelect());
+
+    // calculate qr code rankings
+    handleProfileHeaderEstimates(view);
     controller.addUpdater();
   }
 
@@ -97,18 +100,11 @@ public class ProfileFragment extends BaseFragment {
     createSpinner(sortOrderSpinner, R.array.order_options);
 
     setupContactButton();
+    contactButton.setOnClickListener(v -> controller.handleContactButtonClick());
   }
 
   /** Sets the image of the profile settings button and handler. */
-  private void setupContactButton() {
-    if (deviceUUID.equals(DeviceUtils.getDeviceUUID(getGameController().getActivity()))) {
-      contactButton.setImageResource(R.drawable.baseline_settings_24);
-    } else {
-      contactButton.setImageResource(R.drawable.info_button);
-    }
-
-    contactButton.setOnClickListener(v -> controller.handleContactButtonClick());
-  }
+  protected abstract void setupContactButton();
 
   /**
    * Display a prompt showcasing the contact information for this profile.
@@ -156,11 +152,38 @@ public class ProfileFragment extends BaseFragment {
    * @param view The view of the fragment's layout
    */
   private void handleProfileHeaderEstimates(View view) {
-    topCodeScore.setOnClickListener(
+    rankingsButton.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            controller.calculateRankOfHighestQRScore();
+            AlertDialog loadingDialog =
+                new AlertDialog.Builder(getContext())
+                    .setTitle("Rankings")
+                    .setMessage("Calculating rankings...")
+                    .setPositiveButton("OK", null)
+                    .create();
+            loadingDialog.show();
+
+            controller.retrievePercentile(
+                (exception, percentile) -> {
+                  loadingDialog.dismiss();
+                  if (exception != null) {
+                    Toast.makeText(
+                            getContext(),
+                            "An exception occurred while fetching the ranking..",
+                            Toast.LENGTH_SHORT)
+                        .show();
+                    return;
+                  }
+
+                  String formattedMessage = getString(R.string.ranking_message, percentile);
+                  new AlertDialog.Builder(getContext())
+                      .setTitle("Rankings")
+                      .setMessage(formattedMessage)
+                      .setPositiveButton("OK", null)
+                      .create()
+                      .show();
+                });
           }
         });
   }
