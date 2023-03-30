@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
+import com.cmput301w23t09.qrhunter.profile.OtherProfileFragment;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -103,8 +104,7 @@ public class PlayerSearchController {
         return noPlayersFoundMessage;
     }
 
-//    public void handleSearchQueryListClick(SearchQueryEntry entry) {
-//        gameController.setBody(new OtherProfileFragment(gameController, entry.getDeviceId()));
-//        }
-//    }
+    public void handleSearchQueryListClick(SearchQueryEntry entry) {
+        gameController.setBody(new OtherProfileFragment(gameController, entry.getDeviceId()));
+    }
 }

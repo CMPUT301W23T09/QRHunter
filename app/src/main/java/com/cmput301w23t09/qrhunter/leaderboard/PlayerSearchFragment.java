@@ -67,7 +67,7 @@ public class PlayerSearchFragment extends BaseFragment {
         backButton.setOnClickListener(v -> controller.handleBackButton());
         searchQueryList.setOnItemClickListener((parent, v, position, id) -> {
             SearchQueryEntry entry = searchQueryEntries.get(position);
-//            controller.handleSearchQueryListClick(entry);
+            controller.handleSearchQueryListClick(entry);
         });
 
         playerSearchQuery.setText("Search query: " + searchQuery);
