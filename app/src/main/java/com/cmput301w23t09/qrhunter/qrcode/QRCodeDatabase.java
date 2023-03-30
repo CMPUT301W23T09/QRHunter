@@ -4,6 +4,7 @@ import android.location.Location;
 import android.util.Log;
 import androidx.annotation.Nullable;
 import com.cmput301w23t09.qrhunter.DatabaseChangeListener;
+import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.database.DatabaseConnection;
 import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
 import com.cmput301w23t09.qrhunter.database.DatabaseQueryResults;
@@ -397,8 +398,19 @@ public class QRCodeDatabase {
       location.setLongitude((double) snapshot.get("longitude"));
     }
     ArrayList<String> players = (ArrayList<String>) snapshot.get("players");
+
+    ArrayList<Map<String, String>> commentsData =
+        (ArrayList<Map<String, String>>) snapshot.get("comments");
+    ArrayList<Comment> comments = new ArrayList<>();
+    if (commentsData == null) {
+      commentsData = new ArrayList<>();
+    }
+    for (Map<String, String> data : commentsData) {
+      comments.add(new Comment(data.get("comment"), data.get("playerId"), data.get("username")));
+    }
+
     try {
-      return new QRCode(hash, name, score, location, new ArrayList<>(), new ArrayList<>(), players);
+      return new QRCode(hash, name, score, location, new ArrayList<>(), comments, players);
     } catch (ExecutionException | InterruptedException e) {
       throw new RuntimeException(e);
     }

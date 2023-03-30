@@ -8,13 +8,10 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
-
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.google.android.material.tabs.TabLayout;
-
-import org.checkerframework.common.returnsreceiver.qual.This;
 
 /**
  * Displays information about a specific QRCode. It also lets the user:
@@ -53,45 +50,30 @@ public class DeleteQRCodeFragment extends QRCodeFragment {
     showLocationPhoto();
 
     commentBox.setVisibility(View.GONE);
-    tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-      @Override
-      public void onTabSelected(TabLayout.Tab tab) {
-        if (tab.getPosition() == 1) {
-          // Call playerHasQRCode to check if the active player has the QR code
-          QRCodeDatabase.getInstance()
-                  .playerHasQRCode(
-                          activePlayer,
-                          qrCode,
-                          hasQRCodeResult -> {
-                            if (hasQRCodeResult.getData() != null && hasQRCodeResult.getData()) {
-                              // show comment box only when the active player has a QR code
-                              commentBox.setVisibility(View.VISIBLE);
-                            } else {
-                              // hide comment box when the active player does not have a QR code
-                              commentBox.setVisibility(View.GONE);
-                            }
-                          });
+    tabLayout.addOnTabSelectedListener(
+        new TabLayout.OnTabSelectedListener() {
+          @Override
+          public void onTabSelected(TabLayout.Tab tab) {
+            if (tab.getPosition() == 1) {
+              // Call playerHasQRCode to check if the active player has the QR code
+              commentBox.setVisibility(View.VISIBLE);
+            } else {
+              // Hide the comment box
+              commentBox.setVisibility(View.GONE);
+            }
+          }
 
-        } else {
-          // Hide the comment box
-          commentBox.setVisibility(View.GONE);
-        }
-      }
+          @Override
+          public void onTabUnselected(TabLayout.Tab tab) {}
 
-
-      @Override
-      public void onTabUnselected(TabLayout.Tab tab) {}
-
-      @Override
-      public void onTabReselected(TabLayout.Tab tab) {}
-    });
+          @Override
+          public void onTabReselected(TabLayout.Tab tab) {}
+        });
 
     // allows user enter a comment
     commentBox.setOnClickListener(this::onAddCommentInput);
     // allows user to click send and store comment in the database
     commentBox.setOnTouchListener(this::onSendComment);
-
-
   }
 
   /**
@@ -154,12 +136,12 @@ public class DeleteQRCodeFragment extends QRCodeFragment {
     final int DRAWABLE_RIGHT = 2;
     if (event.getAction() == MotionEvent.ACTION_UP) {
       if (event.getRawX()
-              >= (commentBox.getRight()
+          >= (commentBox.getRight()
               - commentBox.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
         // User clicked on the drawable icon
         String commentText = commentBox.getText().toString().trim();
         if (!commentText.isEmpty()) {
-          saveCommentToDatabase(commentText);
+          addComment(commentText);
           commentBox.setText("");
           commentBox.setHint(R.string.comment_box_hint_text);
         } else {
@@ -172,38 +154,39 @@ public class DeleteQRCodeFragment extends QRCodeFragment {
     return false;
   }
 
-  private void saveCommentToDatabase(String commentText) {
-    // Retrieve the active player object from the arguments bundle
-    Player activePlayer = (Player) getArguments().getSerializable("player");
+  private void addComment(String commentText) {
+    Comment comment =
+        new Comment(commentText, activePlayer.getDocumentId(), activePlayer.getUsername());
+    comments.add(comment);
+    commentsAdapter.notifyDataSetChanged();
 
-    Comment comment = new Comment(commentText, activePlayer, activePlayer.getDocumentId());
     QRCodeDatabase.getInstance()
-            .getQRCodeByHash(
-                    qrCode.getHash(),
-                    qrCodeQueryResults -> {
-                      if (qrCodeQueryResults.isSuccessful()) {
-                        // Update the QRCode with the new comment
-                        QRCode qrCodeToUpdate = qrCodeQueryResults.getData();
-                        qrCodeToUpdate.addComment(comment);
-                        QRCodeDatabase.getInstance()
-                                .updateQRCode(
-                                        qrCodeToUpdate,
-                                        updateResults -> {
-                                          if (updateResults.isSuccessful()) {
-                                            Log.d(
-                                                    TAG,
-                                                    "Comment added to QRCode with hash: " + qrCodeToUpdate.getHash());
-                                          } else {
-                                            Log.w(
-                                                    TAG,
-                                                    "Error updating QRCode with new comment",
-                                                    updateResults.getException());
-                                          }
-                                        });
-                      } else {
-                        Log.w(TAG, "Error getting QRCode from database", qrCodeQueryResults.getException());
-                      }
-                    });
+        .getQRCodeByHash(
+            qrCode.getHash(),
+            qrCodeQueryResults -> {
+              if (qrCodeQueryResults.isSuccessful()) {
+                // Update the QRCode with the new comment
+                QRCode qrCodeToUpdate = qrCodeQueryResults.getData();
+                qrCodeToUpdate.addComment(comment);
+                QRCodeDatabase.getInstance()
+                    .updateQRCode(
+                        qrCodeToUpdate,
+                        updateResults -> {
+                          if (updateResults.isSuccessful()) {
+                            Log.d(
+                                TAG,
+                                "Comment added to QRCode with hash: " + qrCodeToUpdate.getHash());
+                          } else {
+                            Log.w(
+                                TAG,
+                                "Error updating QRCode with new comment",
+                                updateResults.getException());
+                          }
+                        });
+              } else {
+                Log.w(TAG, "Error getting QRCode from database", qrCodeQueryResults.getException());
+              }
+            });
     Log.d("AddQRCodeFragment", "Comment saved to database");
   }
 }

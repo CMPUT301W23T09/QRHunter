@@ -14,13 +14,13 @@ import java.util.List;
 public class CommentAdapter extends ArrayAdapter<Comment> {
 
   private final Context context;
-  private List<Comment> players_comments;
+  private List<Comment> playerComments;
 
-  public CommentAdapter(Context context, List<Comment> players_comments) {
-    super(context, 0, players_comments);
+  public CommentAdapter(Context context, List<Comment> playerComments) {
+    super(context, 0, playerComments);
 
     this.context = context;
-    this.players_comments = players_comments;
+    this.playerComments = playerComments;
   }
 
   @NonNull @Override
@@ -32,14 +32,14 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
     }
 
     // get player data
-    Comment current_comment = players_comments.get(position);
+    Comment currentComment = playerComments.get(position);
 
     // set fields of view
     TextView player_name = view.findViewById(R.id.comment_player_name);
-    player_name.setText(current_comment.getPlayer().getUsername());
+    player_name.setText(currentComment.getUsername());
 
     TextView comment = view.findViewById(R.id.player_comment_input);
-    comment.setText(current_comment.getComment());
+    comment.setText(currentComment.getComment());
 
     return view;
   }
