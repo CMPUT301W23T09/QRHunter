@@ -4,8 +4,10 @@ import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
+import com.cmput301w23t09.qrhunter.qrcode.QRLocation;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -118,8 +120,41 @@ public class LeaderboardController {
             });
   }
 
-  public void getTopQRCodesByRegionLeaderboard(
-      BiConsumer<Exception, Map<String, Leaderboard>> callback) {
+  /**
+   * Retrieve the top QRCode points value leaderboard by region in descending order.
+   *
+   * @param callback callback to call with the leaderboards mapped by their city.
+   */
+  public void getTopQRCodesByRegionLeaderboard(BiConsumer<Exception, List<Leaderboard>> callback) {
+    QRCodeDatabase.getInstance()
+        .getAllQRCodes(
+            task -> {
+              if (!task.isSuccessful()) {
+                callback.accept(task.getException(), null);
+                return;
+              }
+
+              Map<String, List<LeaderboardEntry>> leaderboardEntriesByRegion = new HashMap<>();
+              for (QRCode qrCode : task.getData()) {
+                QRLocation qrLocation = qrCode.getLoc();
+                if (qrLocation != null) {
+                  leaderboardEntriesByRegion.putIfAbsent(qrLocation.getCity(), new ArrayList<>());
+                  leaderboardEntriesByRegion
+                      .get(qrLocation.getCity())
+                      .add(new LeaderboardEntry(qrCode.getName(), qrCode.getScore(), "points"));
+                }
+              }
+
+              List<Leaderboard> leaderboards = new ArrayList<>();
+              for (String city : leaderboardEntriesByRegion.keySet()) {
+                List<LeaderboardEntry> entries = leaderboardEntriesByRegion.get(city);
+                Collections.sort(entries);
+
+                leaderboards.add(new Leaderboard(city, entries));
+              }
+
+              callback.accept(null, leaderboards);
+            });
     // TODO: Implement after location recording is completed and fetch the region of the photo.
   }
 }
