@@ -39,25 +39,6 @@ public class PlayerSearchController {
         gameController.setBody(searchFragment);
     }
 
-//    public void getSearchQueryData(String usernameQuery) {
-//        PlayerDatabase.getInstance()
-//                .getPlayersWithRelatedUsernames(
-//                        usernameQuery,
-//                        relatedPlayers -> {
-//                            if (!relatedPlayers.isSuccessful()) {
-//                                return;
-//                            }
-//
-//                            if (relatedPlayers.getData() == null) {
-//                                return;
-//                            }
-//
-//                            for (Player relatedPlayer : relatedPlayers.getData()) {
-//                                Log.d("relatedPlayer", relatedPlayer.getUsername());
-//                            }
-//                        }
-//                );
-//    }
     public void displaySearchQueryData(
             String usernameQuery,
             List<SearchQueryEntry> searchQueryEntries,
