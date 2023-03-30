@@ -2,6 +2,7 @@ package com.cmput301w23t09.qrhunter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import android.graphics.Bitmap;
@@ -71,7 +72,7 @@ public class TestQRModel {
   public void testGetLoc() {
     QRCode qr = new QRCode(mockHash(), "RobaqinectTiger✿", 32, mockLoc(), null, null, null, null);
     QRLocation loc = qr.getLoc();
-    assertEquals(loc.getClass().toString(), "class android.location.Location");
+    assertNotNull(loc);
     assertEquals(loc.getLatitude(), mockLoc().getLatitude());
     assertEquals(loc.getLongitude(), mockLoc().getLongitude());
   }
@@ -81,7 +82,7 @@ public class TestQRModel {
     QRCode qr = mockCode();
     qr.setLoc(mockLoc());
     QRLocation loc = qr.getLoc();
-    assertEquals(loc.getClass().toString(), "class android.location.Location");
+    assertNotNull(loc);
     assertEquals(loc.getLatitude(), mockLoc().getLatitude());
     assertEquals(loc.getLongitude(), mockLoc().getLongitude());
   }
