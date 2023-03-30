@@ -63,7 +63,7 @@ public class PlayerSearchFragment extends BaseFragment {
         backButton.setOnClickListener(v -> controller.handleBackButton());
         playerSearchQuery.setText("Search query: " + searchQuery);
         // displaySearchQueryData();
-        controller.getSearchQueryData(searchQuery);
+        controller.displaySearchQueryData(searchQuery, searchQueryEntries, entryAdapter);
     }
 
     private void displaySearchQueryData() {

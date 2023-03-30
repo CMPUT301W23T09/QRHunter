@@ -236,28 +236,28 @@ public class PlayerDatabase {
             });
   }
 
-  public void getPlayersWithRelatedUsernames(String username, DatabaseConsumer<Set<Player>> callback) {
-      collection
-          .whereGreaterThanOrEqualTo("username_lower", username.toLowerCase())
-          .whereLessThan("username_lower", username.toLowerCase() + "\uf8ff")
-          .get()
-          .addOnCompleteListener(
-                  task -> {
-                      if (!task.isSuccessful()) {
-                          callback.accept(new DatabaseQueryResults<>(null, task.getException()));
-                          Log.d(LOGGER_TAG, "Failed to execute getPlayersWithRelatedUsernames", task.getException());
-                          return;
-                      }
-
-                      // Convert all snapshots to Players
-                      Set<Player> players = new HashSet<>();
-                      for (QueryDocumentSnapshot snapshot : task.getResult()) {
-                          players.add(snapshotToPlayer(snapshot));
-                      }
-
-                      callback.accept(new DatabaseQueryResults<>(players));
-                  });
-  }
+//  public void getPlayersWithRelatedUsernames(String username, DatabaseConsumer<Set<Player>> callback) {
+//      collection
+//          .whereGreaterThanOrEqualTo("username_lower", username.toLowerCase())
+//          .whereLessThan("username_lower", username.toLowerCase() + "\uf8ff")
+//          .get()
+//          .addOnCompleteListener(
+//                  task -> {
+//                      if (!task.isSuccessful()) {
+//                          callback.accept(new DatabaseQueryResults<>(null, task.getException()));
+//                          Log.d(LOGGER_TAG, "Failed to execute getPlayersWithRelatedUsernames", task.getException());
+//                          return;
+//                      }
+//
+//                      // Convert all snapshots to Players
+//                      Set<Player> players = new HashSet<>();
+//                      for (QueryDocumentSnapshot snapshot : task.getResult()) {
+//                          players.add(snapshotToPlayer(snapshot));
+//                      }
+//
+//                      callback.accept(new DatabaseQueryResults<>(players));
+//                  });
+//  }
 
   /**
    * Retrieve all players from the database

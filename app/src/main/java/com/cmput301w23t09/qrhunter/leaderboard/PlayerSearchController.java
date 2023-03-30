@@ -2,12 +2,14 @@ package com.cmput301w23t09.qrhunter.leaderboard;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -50,7 +52,7 @@ public class PlayerSearchController {
 //                        }
 //                );
 //    }
-    public void getSearchQueryData(String usernameQuery) {
+    public void displaySearchQueryData(String usernameQuery, List<SearchQueryEntry> searchQueryEntries, SearchQueryEntryAdapter entryAdapter) {
         PlayerDatabase.getInstance()
                 .getAllPlayers(
                         allPlayers -> {
@@ -72,7 +74,9 @@ public class PlayerSearchController {
 
                             for (Player relatedPlayer : relatedUsernamePlayers) {
                                 Log.d("RelatedPlayer", relatedPlayer.getUsername());
+                                searchQueryEntries.add(new SearchQueryEntry(relatedPlayer.getUsername()));
                             }
+                            entryAdapter.notifyDataSetChanged();
                         }
                 );
     }
