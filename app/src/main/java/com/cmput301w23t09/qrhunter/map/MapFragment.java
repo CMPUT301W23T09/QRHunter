@@ -305,4 +305,15 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 //    for (LatLng location : placeholderQR) {
 //      map.addMarker(new MarkerOptions().position(location));
     }
+
+  public boolean getLocationPermissionGranted() {
+    return locationPermissionGranted;
+  }
+
+  public FusedLocationProviderClient getFusedLocationProviderClient() {
+    return fusedLocationProviderClient;
+  }
+
+
 }
+

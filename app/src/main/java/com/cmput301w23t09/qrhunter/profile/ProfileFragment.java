@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.ArrayRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,6 +36,8 @@ public abstract class ProfileFragment extends BaseFragment {
   private GridView qrCodeList;
   /** This is the view displaying the settings button */
   protected FloatingActionButton contactButton;
+  /** This is the button that allows the user to view their rankings */
+  protected FloatingActionButton rankingsButton;
 
   /**
    * Initializes the fragment with the app controller
@@ -56,7 +59,6 @@ public abstract class ProfileFragment extends BaseFragment {
 
     controller = getProfileController();
     createProfile(view);
-    handleProfileHeaderEstimates(view);
     return view;
   }
 
@@ -74,6 +76,7 @@ public abstract class ProfileFragment extends BaseFragment {
     topCodeScore = view.findViewById(R.id.top_code_score);
     sortOrderSpinner = view.findViewById(R.id.order_spinner);
     contactButton = view.findViewById(R.id.contact_info_button);
+    rankingsButton = view.findViewById(R.id.rankings_button);
 
     // create a default empty profile (shown while waiting for database queries)
     createDefaultProfile();
@@ -82,6 +85,9 @@ public abstract class ProfileFragment extends BaseFragment {
     controller.setUpUsername(username);
     controller.setUpQRList(qrCodeList, totalPoints, totalCodes, topCodeScore, sortOrderSpinner);
     qrCodeList.setOnItemClickListener(controller.handleQRSelect());
+
+    // calculate qr code rankings
+    handleProfileHeaderEstimates(view);
     controller.addUpdater();
   }
 
@@ -146,11 +152,38 @@ public abstract class ProfileFragment extends BaseFragment {
    * @param view The view of the fragment's layout
    */
   private void handleProfileHeaderEstimates(View view) {
-    topCodeScore.setOnClickListener(
+    rankingsButton.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            controller.calculateRankOfHighestQRScore();
+            AlertDialog loadingDialog =
+                new AlertDialog.Builder(getContext())
+                    .setTitle("Rankings")
+                    .setMessage("Calculating rankings...")
+                    .setPositiveButton("OK", null)
+                    .create();
+            loadingDialog.show();
+
+            controller.retrievePercentile(
+                (exception, percentile) -> {
+                  loadingDialog.dismiss();
+                  if (exception != null) {
+                    Toast.makeText(
+                            getContext(),
+                            "An exception occurred while fetching the ranking..",
+                            Toast.LENGTH_SHORT)
+                        .show();
+                    return;
+                  }
+
+                  String formattedMessage = getString(R.string.ranking_message, percentile);
+                  new AlertDialog.Builder(getContext())
+                      .setTitle("Rankings")
+                      .setMessage(formattedMessage)
+                      .setPositiveButton("OK", null)
+                      .create()
+                      .show();
+                });
           }
         });
   }
