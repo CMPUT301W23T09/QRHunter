@@ -1,5 +1,6 @@
 package com.cmput301w23t09.qrhunter;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -13,20 +14,21 @@ import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import java.util.ArrayList;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
+// still needs testGetLocations() and testSetLocations()
+@RunWith(MockitoJUnitRunner.class)
 public class TestQRModel {
   // create a mock hash
-  private String mockHash() {
-    return "8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d";
-  }
+  private String mockHash = "8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d";
 
-  private Location mockLoc() {
-    return new Location("");
-  }
+  @Mock private Location mockLoc = new Location("");
 
   // create a mock qr code
   private QRCode mockCode() {
-    return new QRCode(mockHash());
+    return new QRCode(mockHash);
   }
 
   // create a mock list of player IDs
@@ -55,7 +57,7 @@ public class TestQRModel {
 
   @Test
   public void testGetHash() {
-    assertEquals(mockCode().getHash(), mockHash());
+    assertEquals(mockCode().getHash(), mockHash);
   }
 
   @Test
@@ -70,28 +72,27 @@ public class TestQRModel {
 
   @Test
   public void testGetLoc() {
-    QRCode qr = new QRCode(mockHash(), "RobaqinectTiger✿", 32, mockLoc(), null, null, null, null);
+    QRCode qr = new QRCode(mockHash, "RobaqinectTiger✿", 32, mockLoc, null, null, null, null);
     Location loc = qr.getLoc();
     assertEquals(loc.getClass().toString(), "class android.location.Location");
-    assertEquals(loc.getLatitude(), mockLoc().getLatitude());
-    assertEquals(loc.getLongitude(), mockLoc().getLongitude());
+    assertEquals(loc.getLatitude(), mockLoc.getLatitude());
+    assertEquals(loc.getLongitude(), mockLoc.getLongitude());
   }
 
   @Test
   public void testSetLoc() {
     QRCode qr = mockCode();
-    qr.setLoc(mockLoc());
+    qr.setLoc(mockLoc);
     Location loc = qr.getLoc();
     assertEquals(loc.getClass().toString(), "class android.location.Location");
-    assertEquals(loc.getLatitude(), mockLoc().getLatitude());
-    assertEquals(loc.getLongitude(), mockLoc().getLongitude());
+    assertEquals(loc.getLatitude(), mockLoc.getLatitude());
+    assertEquals(loc.getLongitude(), mockLoc.getLongitude());
   }
 
   @Test
   public void testGetPlayers() {
     ArrayList<String> players = mockPlayers();
-    QRCode qr =
-        new QRCode(mockHash(), "RobaqinectTiger✿", 32, mockLoc(), null, null, null, players);
+    QRCode qr = new QRCode(mockHash, "RobaqinectTiger✿", 32, null, null, null, null, players);
     assertEquals(qr.getPlayers(), players);
   }
 
@@ -126,8 +127,7 @@ public class TestQRModel {
   @Test
   public void testGetComments() {
     ArrayList<Comment> comments = mockComments();
-    QRCode qr =
-        new QRCode(mockHash(), "RobaqinectTiger✿", 32, mockLoc(), null, null, comments, null);
+    QRCode qr = new QRCode(mockHash, "RobaqinectTiger✿", 32, null, null, null, comments, null);
     assertEquals(qr.getComments(), comments);
   }
 
@@ -162,7 +162,7 @@ public class TestQRModel {
   @Test
   public void testGetPhotos() {
     ArrayList<LocationPhoto> photos = mockPhotos();
-    QRCode qr = new QRCode(mockHash(), "RobaqinectTiger✿", 32, mockLoc(), null, photos, null, null);
+    QRCode qr = new QRCode(mockHash, "RobaqinectTiger✿", 32, null, null, photos, null, null);
     assertEquals(qr.getPhotos(), photos);
   }
 
@@ -192,21 +192,7 @@ public class TestQRModel {
     assertEquals(1, qr.getPhotos().size());
     qr.deletePhoto(photos.get(0));
     assertEquals(0, qr.getPhotos().size());
-  }
-
-  @Test
-  public void testGetCorrectHash() {
-    assertEquals(mockCode().getHash(), mockHash());
-  }
-
-  @Test
-  public void testGetCorrectName() {
-    assertEquals(mockCode().getName(), "RobaqinectTiger✿");
-  }
-
-  @Test
-  public void testGetCorrectScore() {
-    assertEquals((int) mockCode().getScore(), 32);
+    assertNull(mockCode().getLoc());
   }
 
   @Test
