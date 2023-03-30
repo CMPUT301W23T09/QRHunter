@@ -9,16 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
-import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
-import com.cmput301w23t09.qrhunter.database.DatabaseQueryResults;
-import com.cmput301w23t09.qrhunter.leaderboard.Leaderboard;
-import com.cmput301w23t09.qrhunter.leaderboard.LeaderboardEntry;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -32,11 +27,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 public class MapFragment extends BaseFragment implements OnMapReadyCallback {
   private boolean locationPermissionGranted;
@@ -53,7 +44,6 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
   private List<LatLng> latLngsList;
   private SearchView qrSearcher;
   private SearchQRController searchController;
-
 
   public MapFragment(GameController gameController) {
     super(gameController);
@@ -158,163 +148,165 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     updateLocationUI();
   }
 
-//    private void getQRFromDB() {
-//      QRCodeDatabase.getInstance().getAllQRCodes(task -> {
-//        if (!task.isSuccessful()) {
-//          // do error handling here as database query failed
-//          return;
-//        }
-//
-//        // do stuff with ALL qr codes
-//        List<LatLng> latLngs = new ArrayList<>();
-//        if (task.isSuccessful()) {
-//          for (QRCode qrCode : task.getData()) {
-//            // Extract the latitude and longitude values for each QRCode.
-//            Location loc = qrCode.getLoc();
-//            double latitude = loc.getLatitude();
-//            double longitude = loc.getLongitude();
-//            // Create a new LatLng object and add it to the list.
-//            LatLng latLng = new LatLng(latitude, longitude);
-//            latLngs.add(latLng);
-//          }
-//        }
-//      });
-//    }
+  //    private void getQRFromDB() {
+  //      QRCodeDatabase.getInstance().getAllQRCodes(task -> {
+  //        if (!task.isSuccessful()) {
+  //          // do error handling here as database query failed
+  //          return;
+  //        }
+  //
+  //        // do stuff with ALL qr codes
+  //        List<LatLng> latLngs = new ArrayList<>();
+  //        if (task.isSuccessful()) {
+  //          for (QRCode qrCode : task.getData()) {
+  //            // Extract the latitude and longitude values for each QRCode.
+  //            Location loc = qrCode.getLoc();
+  //            double latitude = loc.getLatitude();
+  //            double longitude = loc.getLongitude();
+  //            // Create a new LatLng object and add it to the list.
+  //            LatLng latLng = new LatLng(latitude, longitude);
+  //            latLngs.add(latLng);
+  //          }
+  //        }
+  //      });
+  //    }
   public void displayQRCodeMarkersOnMap(GoogleMap mMap) {
-    QRCodeDatabase.getInstance().getAllQRCodes(qrCodes -> {
-      if (qrCodes.isSuccessful()) {
-        // Get the list of QRCode objects from the callback result
-        List<QRCode> qrCodeList = qrCodes.getData();
-        Log.d(TAG, "Query successful. Result count: " + qrCodes.getData().size());
+    QRCodeDatabase.getInstance()
+        .getAllQRCodes(
+            qrCodes -> {
+              if (qrCodes.isSuccessful()) {
+                // Get the list of QRCode objects from the callback result
+                List<QRCode> qrCodeList = qrCodes.getData();
+                Log.d(TAG, "Query successful. Result count: " + qrCodes.getData().size());
 
-        // Loop through the list of QRCode objects and add markers to the Google Map
-        for (QRCode qrCode : qrCodeList) {
-          Location loc = qrCode.getLoc();
-          if (loc != null) {
-            LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(latLng).title(qrCode.getName()));
-            Log.d(TAG, "Marker added for QR code: " + qrCode.getName() + " at " + latLng.toString());
-          }
-        }
-      }
-    });
+                // Loop through the list of QRCode objects and add markers to the Google Map
+                for (QRCode qrCode : qrCodeList) {
+                  Location loc = qrCode.getLoc();
+                  if (loc != null) {
+                    LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
+                    mMap.addMarker(new MarkerOptions().position(latLng).title(qrCode.getName()));
+                    Log.d(
+                        TAG,
+                        "Marker added for QR code: "
+                            + qrCode.getName()
+                            + " at "
+                            + latLng.toString());
+                  }
+                }
+              }
+            });
   }
 
-//  public void getTopQRCodesLeaderboard(BiConsumer<Exception, Leaderboard> callback) {
-//    QRCodeDatabase.getInstance()
-//            .getAllQRCodes(
-//                    task -> {
-//                      if (!task.isSuccessful()) {
-//                        callback.accept(task.getException(), null);
-//                        return;
-//                      }
-//
-//                      List<LeaderboardEntry> entries = new ArrayList<>();
-//                      for (QRCode qrCode : task.getData()) {
-//                        entries.add(new LeaderboardEntry(qrCode.getName(), qrCode.getScore(), "points"));
-//                      }
-//
-//                      Collections.sort(entries);
-//                      callback.accept(null, new Leaderboard(entries));
-//                    });
-//  }
+  //  public void getTopQRCodesLeaderboard(BiConsumer<Exception, Leaderboard> callback) {
+  //    QRCodeDatabase.getInstance()
+  //            .getAllQRCodes(
+  //                    task -> {
+  //                      if (!task.isSuccessful()) {
+  //                        callback.accept(task.getException(), null);
+  //                        return;
+  //                      }
+  //
+  //                      List<LeaderboardEntry> entries = new ArrayList<>();
+  //                      for (QRCode qrCode : task.getData()) {
+  //                        entries.add(new LeaderboardEntry(qrCode.getName(), qrCode.getScore(),
+  // "points"));
+  //                      }
+  //
+  //                      Collections.sort(entries);
+  //                      callback.accept(null, new Leaderboard(entries));
+  //                    });
+  //  }
 
+  /**
+   * @param inflater The LayoutInflater object that can be used to inflate any views in the
+   *     fragment,
+   * @param container If non-null, this is the parent view that the fragment's UI should be attached
+   *     to. The fragment should not add the view itself, but this can be used to generate the
+   *     LayoutParams of the view.
+   * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous
+   *     saved state as given here.
+   * @return View the view which is inflated displaying the the R.layout.map xml file
+   */
+  @Override
+  public View onCreateView(
+      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    Places.initialize(
+        getContext().getApplicationContext(), "AIzaSyDniTKVk4HDVsQVG-uDxQ-eFV4nCWeM-gU");
 
-          /**
-           * @param inflater The LayoutInflater object that can be used to inflate any views in the
-           *     fragment,
-           * @param container If non-null, this is the parent view that the fragment's UI should be attached
-           *     to. The fragment should not add the view itself, but this can be used to generate the
-           *     LayoutParams of the view.
-           * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous
-           *     saved state as given here.
-           * @return View the view which is inflated displaying the the R.layout.map xml file
-           */
-          @Override
-          public View onCreateView (
-                  LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-            Places.initialize(
-                    getContext().getApplicationContext(), "AIzaSyDniTKVk4HDVsQVG-uDxQ-eFV4nCWeM-gU");
+    View view = inflater.inflate(R.layout.fragment_map, container, false);
 
+    SupportMapFragment mapFragment =
+        (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+    // Checks if support map fragment is found, if so pass current fragment as callback
+    if (mapFragment != null) {
+      // Gets a googleMap object
+      mapFragment.getMapAsync(this);
+    }
 
-            View view = inflater.inflate(R.layout.fragment_map, container, false);
+    fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
-            SupportMapFragment mapFragment =
-                    (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-            // Checks if support map fragment is found, if so pass current fragment as callback
-            if (mapFragment != null) {
-              // Gets a googleMap object
-              mapFragment.getMapAsync(this);
-            }
+    // create search view
+    qrSearcher = view.findViewById(R.id.qr_searcher);
+    searchController = new SearchQRController(qrSearcher, this);
+    qrSearcher.setOnQueryTextListener(searchController.handleSearch());
 
-            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+    return view;
+  }
 
+  //  /**
+  //   * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+  //   * @param savedInstanceState If non-null, this fragment is being re-constructed from a
+  // previous
+  //   *     saved state as given here.
+  //   */
+  //  @Override
+  //  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+  //    super.onViewCreated(view, savedInstanceState);
+  //
+  //  }
 
-            // create search view
-            qrSearcher = view.findViewById(R.id.qr_searcher);
-            searchController = new SearchQRController(qrSearcher, this);
-            qrSearcher.setOnQueryTextListener(searchController.handleSearch());
+  /**
+   * @param googleMap the Google maps
+   */
+  @Override
+  public void onMapReady(GoogleMap googleMap) {
+    this.map = googleMap;
+    // Turn on the My Location layer and the related control on the map.
+    updateLocationUI();
 
-            return view;
-          }
+    // Get the current location of the device and set the position of the map.
+    getDeviceLocation();
 
-//  /**
-//   * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
-//   * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous
-//   *     saved state as given here.
-//   */
-//  @Override
-//  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-//    super.onViewCreated(view, savedInstanceState);
-//
-//  }
+    if (this.map != null) {
+      displayQRCodeMarkersOnMap(map);
+    }
+    // loop through arraylist
+    //    getQRFromDB(latLngList -> {
+    //      for (LatLng latLng : latLngsList) {
+    //        // add a marker for each LatLng on the map
+    //        map.addMarker(new MarkerOptions().position(latLng));
+    //      }
+    //    });
 
-          /**
-           * @param googleMap the Google maps
-           */
-          @Override
-          public void onMapReady (GoogleMap googleMap){
-            this.map = map;
-            // Turn on the My Location layer and the related control on the map.
-            updateLocationUI();
+    //    placeholderQR =
+    //        new LatLng[] {
+    //          new LatLng(53.52748572137864, -113.52965526862573), // Engineering Physics Club
+    //          new LatLng(53.52644615688437, -113.52453761405557), // CAB
+    //          new LatLng(53.526790555323736, -113.52716617858209), // CSC
+    //          new LatLng(53.52606986652603, -113.52166228586451), // Rutherford Library
+    //          new LatLng(53.523182298052724, -113.52719701274522), // Butterdome
+    //          new LatLng(53.520845993958204, -113.523585870797) // Ualberta hospital
+    //        };
+    //    //replace with listQR
+    //    for (LatLng location : placeholderQR) {
+    //      map.addMarker(new MarkerOptions().position(location));
+  }
 
-            // Get the current location of the device and set the position of the map.
-            getDeviceLocation();
+  public boolean getLocationPermissionGranted() {
+    return locationPermissionGranted;
+  }
 
-            if (this.map != null) {
-              displayQRCodeMarkersOnMap(map);
-            }
-            //loop through arraylist
-//    getQRFromDB(latLngList -> {
-//      for (LatLng latLng : latLngsList) {
-//        // add a marker for each LatLng on the map
-//        map.addMarker(new MarkerOptions().position(latLng));
-//      }
-//    });
-
-
-//    placeholderQR =
-//        new LatLng[] {
-//          new LatLng(53.52748572137864, -113.52965526862573), // Engineering Physics Club
-//          new LatLng(53.52644615688437, -113.52453761405557), // CAB
-//          new LatLng(53.526790555323736, -113.52716617858209), // CSC
-//          new LatLng(53.52606986652603, -113.52166228586451), // Rutherford Library
-//          new LatLng(53.523182298052724, -113.52719701274522), // Butterdome
-//          new LatLng(53.520845993958204, -113.523585870797) // Ualberta hospital
-//        };
-//    //replace with listQR
-//    for (LatLng location : placeholderQR) {
-//      map.addMarker(new MarkerOptions().position(location));
-          }
-
-          public boolean getLocationPermissionGranted () {
-            return locationPermissionGranted;
-          }
-
-          public FusedLocationProviderClient getFusedLocationProviderClient () {
-            return fusedLocationProviderClient;
-          }
-
-
-        }
-
+  public FusedLocationProviderClient getFusedLocationProviderClient() {
+    return fusedLocationProviderClient;
+  }
+}
