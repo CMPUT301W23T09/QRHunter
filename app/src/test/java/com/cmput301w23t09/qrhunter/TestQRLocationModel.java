@@ -10,10 +10,11 @@ public class TestQRLocationModel {
   // Test if we can construct QRLocation from a locationString stored in Firebase
   @Test
   public void testStringConstructor() {
-    String locationString = "53.52678;-113.52708"; // CSC
+    String locationString = "53.52678;-113.52708;Edmonton"; // CSC
     QRLocation location = new QRLocation(locationString);
     assertEquals(53.52678, location.getLatitude());
     assertEquals(-113.52708, location.getLongitude());
+    assertEquals("Edmonton", location.getCity());
   }
 
   // Test if we can construct QRLocation from a pair of latitude and longitude coordinates
