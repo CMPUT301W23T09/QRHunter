@@ -42,7 +42,6 @@
     <string name="contact_information">Contact Information</string>
     <string name="comments_tab_title">Comments</string>
     <string name="players_who_scanned_tab_title">Scanned By</string>
-    <string name="search_hint">Enter Location Here</string>
     <string name="ranking_message">The top highest scoring unique QR code is in the top %.2f%% in terms of points.</string>
     <string-array name="sort_options">
         <item>Points</item>

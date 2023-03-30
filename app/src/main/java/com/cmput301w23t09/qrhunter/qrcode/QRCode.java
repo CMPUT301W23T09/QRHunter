@@ -193,7 +193,7 @@ public class QRCode implements Serializable {
   }
 
   /**
-   * This returns the player who have scanned the QR code
+   * This returns the players who have scanned the QR code
    *
    * @return Return the player who have scanned the QR code
    */
