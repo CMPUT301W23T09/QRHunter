@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import android.graphics.Bitmap;
 import android.location.Location;
 import com.cmput301w23t09.qrhunter.comment.Comment;
@@ -23,8 +24,7 @@ public class TestQRModel {
   // create a mock hash
   private String mockHash = "8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d";
 
-  @Mock
-  private Location mockLoc = new Location("");
+  @Mock private Location mockLoc = new Location("");
 
   // create a mock qr code
   private QRCode mockCode() {

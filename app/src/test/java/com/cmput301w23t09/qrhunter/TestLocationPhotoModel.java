@@ -3,6 +3,7 @@ package com.cmput301w23t09.qrhunter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
+
 import android.graphics.Bitmap;
 import com.cmput301w23t09.qrhunter.locationphoto.LocationPhoto;
 import com.cmput301w23t09.qrhunter.player.Player;
