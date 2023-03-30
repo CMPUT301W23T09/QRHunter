@@ -69,8 +69,8 @@ public class LocationPhotoStorage {
    */
   public void uploadPhoto(QRCode qrCode, LocationPhoto locationPhoto, Consumer<Boolean> callback) {
     ByteArrayOutputStream output = new ByteArrayOutputStream();
-    // Resize to a maximum of 960x1280, preserving aspect ratio
-    Bitmap resizedPhoto = resizeBitmap(locationPhoto.getPhoto(), 768, 1024);
+    // Resize to a maximum of 600x800, preserving aspect ratio
+    Bitmap resizedPhoto = resizeBitmap(locationPhoto.getPhoto(), 600, 800);
     // Use 25 JPEG quality to keep image sizes low (US 09.01.01)
     resizedPhoto.compress(Bitmap.CompressFormat.JPEG, 25, output);
     byte[] data = output.toByteArray();
