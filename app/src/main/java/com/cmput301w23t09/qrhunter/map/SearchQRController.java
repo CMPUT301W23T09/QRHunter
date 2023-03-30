@@ -28,19 +28,34 @@ public class SearchQRController {
       public boolean onQueryTextSubmit(String query) {
         String locationInput = searchView.getQuery().toString().trim();
         // parse location input
-        LatLng loc = parseInput(locationInput);
-        if (loc == null) {
-          Toast msg =
-              Toast.makeText(
-                  fragment.getContext(),
-                  "Invalid format, enter \"Here\", geolocation coordinates, or an address",
-                  Toast.LENGTH_LONG);
-
-          msg.show();
-        } else {
-          // query for nearby qr codes
-          showNearbyQRCodes(loc);
+        LatLng loc;
+        try {
+          loc = parseInput(locationInput);
+        } catch (Exception err) {
+          Toast.makeText(fragment.getContext(), err.toString(), Toast.LENGTH_LONG).show();
+          return true;
         }
+        // get location first if parseInput returns null
+        // code for once SearchQRController fuses with the MapController
+        // add an onFailureListener if available
+        // if (loc == null && locationPermissionsGranted()) {
+        //      fusedLocationClient
+        //          .getCurrentLocation(Priority.PRIORITY_BALANCED_POWER_ACCURACY, null)
+        //          .addOnSuccessListener(
+        //              fragment.getActivity(),
+        //              location -> {
+        //                if (location != null) {
+        //                  showNearbyQRCodes(LatLng(location.getLatitude(),
+        // location.getLongitude()));
+        //                } else {
+        //                  Toast.makeText(
+        //                  fragment.getContext(),
+        //                  "Could not query your current location",
+        //                  Toast.LENGTH_LONG).show();
+        //              });
+        //    }
+        // query for nearby qr codes (after fusion, put this in an else statement)
+        showNearbyQRCodes(loc);
         return true;
       }
 
@@ -51,14 +66,20 @@ public class SearchQRController {
     };
   }
 
-  private LatLng parseInput(String locationInput) {
+  private LatLng parseInput(String locationInput) throws Exception {
     // check if input is blank
     if (locationInput.equals("")) {
-      return null;
+      throw new Exception("Please enter a location");
     }
 
     // check if input is "here"
-    // ... to be implemented ... //
+    if (locationInput.equalsIgnoreCase("here")) {
+      // code for once SearchQRController fuses with the MapController
+      // if (!locationPermissionsGranted()) {
+      //    throw("Location permissions not granted");
+      // }
+      return null;
+    }
 
     // check if a location coordinate was given
     if (locationInput.matches(".*\\d.*")) {
@@ -70,12 +91,18 @@ public class SearchQRController {
       }
       // check input format
       if (coords.length != 2) {
-        return null;
+        throw new Exception(
+            "Invalid format, enter \"Here\", geolocation coordinates, or an address");
       }
       // get location coordinates
       Double latitude = parseDoubleInput(coords[0]);
       Double longitude = parseDoubleInput(coords[1]);
-      return new LatLng(latitude, longitude);
+      if (latitude != null && longitude != null) {
+        return new LatLng(latitude, longitude);
+      } else {
+        throw new Exception(
+            "Invalid format, enter \"Here\", geolocation coordinates, or an address");
+      }
     }
 
     // check if a location address was given
@@ -85,11 +112,11 @@ public class SearchQRController {
     try {
       addresses = geocoder.getFromLocationName(locationInput, 1);
     } catch (IOException e) {
-      return null;
+      throw new Exception("Invalid format, enter \"Here\", geolocation coordinates, or an address");
     }
     // get address coordinates
     if (addresses.size() != 1) {
-      return null;
+      throw new Exception("Failure to find a matching address");
     }
     Address address = addresses.get(0);
     return new LatLng(address.getLatitude(), address.getLongitude());
