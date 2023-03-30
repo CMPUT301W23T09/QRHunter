@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import androidx.appcompat.widget.SearchView;
 import android.widget.Toast;
@@ -27,12 +28,14 @@ public class LeaderboardFragment extends BaseFragment {
   private List<LeaderboardEntry> leaderboardEntries;
 
   private String currentActiveTab;
-  private Map<String, Leaderboard> cachedLeaderboards;
+
+  private Map<String, Leaderboard<?>> cachedLeaderboards;
   private SearchView playerSearchView;
 
   public LeaderboardFragment(GameController gameController) {
     super(gameController);
-    controller = new LeaderboardController(getGameController());
+
+    controller = new LeaderboardController(gameController);
     searchController = new PlayerSearchController(getGameController());
   }
 
@@ -51,6 +54,7 @@ public class LeaderboardFragment extends BaseFragment {
 
     setupTabList(view);
     setUpPlayerSearch();
+    setupListView(view);
     return view;
   }
 
@@ -70,7 +74,7 @@ public class LeaderboardFragment extends BaseFragment {
             currentActiveTab = tabText;
 
             // Render cached leaderboard data if any exists.
-            Leaderboard cachedLeaderboard = cachedLeaderboards.getOrDefault(tabText, null);
+            Leaderboard<?> cachedLeaderboard = cachedLeaderboards.getOrDefault(tabText, null);
             if (cachedLeaderboard != null) {
               renderLeaderboard(cachedLeaderboard);
             } else {
@@ -120,7 +124,28 @@ public class LeaderboardFragment extends BaseFragment {
     }
   }
 
-  private void onLeaderboardCallback(String tabName, Exception exception, Leaderboard leaderboard) {
+  private void setupListView(View view) {
+    ListView leaderboardListView = view.findViewById(R.id.leaderboard_list);
+    leaderboardListView.setOnItemClickListener(
+        new AdapterView.OnItemClickListener() {
+          @Override
+          public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            LeaderboardEntry entry = leaderboardEntries.get(position);
+
+            // What kind of entry is this?
+            if (entry instanceof PlayerLeaderboardEntry) {
+              // Player leaderboard item, display their profile.
+              controller.handleEntryClick((PlayerLeaderboardEntry) entry);
+            } else {
+              // QR leaderboard item, display the QR fragment.
+              controller.handleEntryClick((QRCodeLeaderboardEntry) entry);
+            }
+          }
+        });
+  }
+
+  private void onLeaderboardCallback(
+      String tabName, Exception exception, Leaderboard<?> leaderboard) {
     if (exception != null) {
       Log.e(getClass().getName(), exception.getLocalizedMessage());
       Toast.makeText(
@@ -144,14 +169,14 @@ public class LeaderboardFragment extends BaseFragment {
     entryAdapter.notifyDataSetChanged();
   }
 
-  private void renderLeaderboard(Leaderboard leaderboard) {
+  private void renderLeaderboard(Leaderboard<?> leaderboard) {
     clearLeaderboard();
 
     leaderboardEntries.addAll(leaderboard.getEntries());
     entryAdapter.notifyDataSetChanged();
   }
 
-  private void renderLeaderboard(Map<String, Leaderboard> leaderboardWithHeaders) {
+  private void renderLeaderboard(Map<String, Leaderboard<?>> leaderboardWithHeaders) {
     // TODO: when locations are implemented
   }
 

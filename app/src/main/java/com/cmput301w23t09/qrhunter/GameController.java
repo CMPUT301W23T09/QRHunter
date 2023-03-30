@@ -65,7 +65,7 @@ public class GameController {
    * @return current popup dialog.
    */
   public DialogFragment getPopup() {
-    if (popup == null || !popup.isVisible()) {
+    if (popup == null || popup.getDialog() == null || !popup.getDialog().isShowing()) {
       return null;
     }
 

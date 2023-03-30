@@ -1,5 +1,6 @@
 package com.cmput301w23t09.qrhunter.map;
 
+import android.annotation.SuppressLint;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -7,6 +8,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
+import com.google.android.gms.location.Priority;
 import com.google.android.gms.maps.model.LatLng;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,26 +21,49 @@ public class SearchQRController {
   public SearchQRController(SearchView searchView, MapFragment fragment) {
     this.searchView = searchView;
     this.fragment = fragment;
-    searchView.setQueryHint("Enter location");
+    searchView.setQueryHint("Enter location here");
   }
 
   public SearchView.OnQueryTextListener handleSearch() {
     return new SearchView.OnQueryTextListener() {
+      @SuppressLint("MissingPermission")
       @Override
       public boolean onQueryTextSubmit(String query) {
         String locationInput = searchView.getQuery().toString().trim();
-        // parse location input
-        LatLng loc = parseInput(locationInput);
-        if (loc == null) {
-          Toast msg =
-              Toast.makeText(
-                  fragment.getContext(),
-                  "Invalid format, enter \"Here\", geolocation coordinates, or an address",
-                  Toast.LENGTH_LONG);
-
-          msg.show();
+        // check if user wants to search from the current location
+        if (locationInput.equalsIgnoreCase("here") && fragment.getLocationPermissionGranted()) {
+          fragment
+              .getFusedLocationProviderClient()
+              .getCurrentLocation(Priority.PRIORITY_BALANCED_POWER_ACCURACY, null)
+              .addOnSuccessListener(
+                  fragment.getActivity(),
+                  location -> {
+                    if (location != null) {
+                      showNearbyQRCodes(
+                          new LatLng(location.getLatitude(), location.getLongitude()));
+                    } else {
+                      Toast.makeText(
+                              fragment.getContext(),
+                              "Could not query your current location",
+                              Toast.LENGTH_LONG)
+                          .show();
+                    }
+                  });
+        } else if (locationInput.equalsIgnoreCase("here")
+            && !fragment.getLocationPermissionGranted()) {
+          Toast.makeText(
+                  fragment.getContext(), "Location permission not granted", Toast.LENGTH_SHORT)
+              .show();
         } else {
-          // query for nearby qr codes
+          // parse location input
+          LatLng loc;
+          try {
+            loc = parseInput(locationInput);
+          } catch (Exception err) {
+            Toast.makeText(fragment.getContext(), err.toString(), Toast.LENGTH_LONG).show();
+            return true;
+          }
+          // otherwise get nearby qr codes directly
           showNearbyQRCodes(loc);
         }
         return true;
@@ -51,14 +76,11 @@ public class SearchQRController {
     };
   }
 
-  private LatLng parseInput(String locationInput) {
+  private LatLng parseInput(String locationInput) throws Exception {
     // check if input is blank
     if (locationInput.equals("")) {
-      return null;
+      throw new Exception("Please enter a location");
     }
-
-    // check if input is "here"
-    // ... to be implemented ... //
 
     // check if a location coordinate was given
     if (locationInput.matches(".*\\d.*")) {
@@ -69,13 +91,14 @@ public class SearchQRController {
         coords = locationInput.split(" ");
       }
       // check input format
-      if (coords.length != 2) {
-        return null;
+      if (coords.length == 2) {
+        // get location coordinates
+        Double latitude = parseDoubleInput(coords[0]);
+        Double longitude = parseDoubleInput(coords[1]);
+        if (latitude != null && longitude != null) {
+          return new LatLng(latitude, longitude);
+        }
       }
-      // get location coordinates
-      Double latitude = parseDoubleInput(coords[0]);
-      Double longitude = parseDoubleInput(coords[1]);
-      return new LatLng(latitude, longitude);
     }
 
     // check if a location address was given
@@ -85,11 +108,11 @@ public class SearchQRController {
     try {
       addresses = geocoder.getFromLocationName(locationInput, 1);
     } catch (IOException e) {
-      return null;
+      throw new Exception("Invalid format, enter \"Here\", geolocation coordinates, or an address");
     }
     // get address coordinates
     if (addresses.size() != 1) {
-      return null;
+      throw new Exception("Failure to find a matching address");
     }
     Address address = addresses.get(0);
     return new LatLng(address.getLatitude(), address.getLongitude());
@@ -104,7 +127,7 @@ public class SearchQRController {
   }
 
   /**
-   * Return qr codes near given location
+   * Show qr codes near given location
    *
    * @param loc Location to find nearby qr codes from
    */
@@ -126,14 +149,18 @@ public class SearchQRController {
             if (qrCode.getLoc() != null) {
               // get the qr code's distance from the given location
               float[] distance = new float[1];
-              Location.distanceBetween(
-                  loc.latitude,
-                  loc.longitude,
-                  qrCode.getLoc().getLatitude(),
-                  qrCode.getLoc().getLongitude(),
-                  distance);
-              if (distance[0] < 100) {
-                nearbyCodes.add(qrCode);
+              for (QRLocation qrLocation : qrCode.getLocations()) {
+                Location.distanceBetween(
+                    loc.latitude,
+                    loc.longitude,
+                    qrLocation.getLatitude(),
+                    qrLocation.getLongitude(),
+                    distance);
+                // add the qr code if one of its locations is nearby
+                if (distance[0] < 100) {
+                  nearbyCodes.add(qrCode);
+                  break;
+                }
               }
             }
           }

@@ -1,14 +1,17 @@
-package com.cmput301w23t09.qrhunter.scanqr;
+package com.cmput301w23t09.qrhunter.locationphoto;
 
 import android.util.Log;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.ImageProxy;
-import com.cmput301w23t09.qrhunter.photo.Photo;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraLocationPhotoController;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import java.io.Serializable;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -19,13 +22,16 @@ import java.util.concurrent.ExecutorService;
  * @author John Mabanta
  * @version 1.0
  */
-public class LocationPhotoController {
+public class LocationPhotoController implements Serializable {
 
   private LocationPhotoFragment fragment;
   private ImageCapture imageCapture;
   private QRCode qrCode;
+  private LocationPhoto locationPhoto;
   private ExecutorService cameraExecutor;
   private Player activePlayer;
+  private StorageReference storageRef;
+  private LocationPhotoStorage locationPhotoStorage;
 
   /**
    * Creates the LocationPhotoController
@@ -38,8 +44,11 @@ public class LocationPhotoController {
       LocationPhotoFragment fragment, QRCode qrCode, Player activePlayer) {
     this.fragment = fragment;
     this.qrCode = qrCode;
+    this.locationPhoto = null;
     this.activePlayer = activePlayer;
     this.imageCapture = null;
+    this.storageRef = FirebaseStorage.getInstance().getReference();
+    this.locationPhotoStorage = LocationPhotoStorage.getInstance();
   }
 
   /**
@@ -64,7 +73,16 @@ public class LocationPhotoController {
           public void onCaptureSuccess(@NonNull ImageProxy image) {
             super.onCaptureSuccess(image);
 
-            qrCode.addPhoto(new Photo(image, activePlayer));
+            locationPhoto = new LocationPhoto(image, activePlayer);
+            locationPhotoStorage.uploadPhoto(
+                qrCode,
+                locationPhoto,
+                (isSuccessful) -> {
+                  if (!isSuccessful)
+                    Toast.makeText(
+                        fragment.getContext(), "Image failed to upload!", Toast.LENGTH_LONG);
+                  fragment.getAddQRCodeFragment().updateLocationPhoto();
+                });
             image.close();
             fragment.dismiss();
           }

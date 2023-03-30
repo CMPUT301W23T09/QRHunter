@@ -1,6 +1,5 @@
 package com.cmput301w23t09.qrhunter.profile;
 
-import android.content.Context;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -10,38 +9,32 @@ import android.widget.Toast;
 import com.cmput301w23t09.qrhunter.DatabaseChangeListener;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
-import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.DeleteQRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeAdapter;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.ScoreComparator;
-import com.cmput301w23t09.qrhunter.util.DeviceUtils;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.BiConsumer;
 
 /** This is the controller for the profile fragment of the app */
-public class ProfileController implements DatabaseChangeListener {
+public abstract class ProfileController implements DatabaseChangeListener {
   /** This is the game controller that controls the content on screen. */
-  private final GameController gameController;
+  protected final GameController gameController;
   /** This is the profile fragment the controller handles */
-  private final ProfileFragment fragment;
+  protected final ProfileFragment fragment;
   /** This is the array of QRCode objects that the fragment displays */
   private ArrayList<QRCode> qrCodes;
   /** This is the adapter for displaying the QRCode objects */
   private QRCodeAdapter qrCodeAdapter;
   /** Device UUID of the profile */
-  private final UUID deviceUUID;
+  protected final UUID deviceUUID;
   /** This is the gridview showing the qr codes of the player */
   private GridView qrCodeList;
   /** This is the view that shows the qr codes of the player */
@@ -113,6 +106,10 @@ public class ProfileController implements DatabaseChangeListener {
     qrCodeAdapter = new QRCodeAdapter(gameController.getActivity(), qrCodes);
     qrCodeList.setAdapter(qrCodeAdapter);
 
+    updateQRList();
+  }
+
+  private void updateQRList() {
     // get current player
     PlayerDatabase.getInstance()
         .getPlayerByDeviceId(
@@ -179,29 +176,7 @@ public class ProfileController implements DatabaseChangeListener {
    * This handles the action to take when the contact info button is clicked. Either displaying the
    * contact information or rendering the edit details fragment.
    */
-  public void handleContactButtonClick() {
-    if (deviceUUID.equals(DeviceUtils.getDeviceUUID(gameController.getActivity()))) {
-      // Display edit settings fragment
-      ProfileSettingsFragment settingsFragment =
-          new ProfileSettingsFragment(gameController, deviceUUID);
-      gameController.setBody(settingsFragment);
-    } else {
-      // Display contact info popup
-      PlayerDatabase.getInstance()
-          .getPlayerByDeviceId(
-              deviceUUID,
-              task -> {
-                if (task.getException() != null) {
-                  showMsg(
-                      "An exception occurred while trying to load this player's contact details.");
-                  return;
-                }
-
-                Player player = task.getData();
-                fragment.displayContactInfo(player.getEmail(), player.getPhoneNo());
-              });
-    }
-  }
+  public abstract void handleContactButtonClick();
 
   /**
    * This updates the order of qr codes shown
@@ -235,20 +210,39 @@ public class ProfileController implements DatabaseChangeListener {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         QRCode qrCode = qrCodes.get(position);
-        DeleteQRCodeFragment.newInstance(qrCode, gameController.getActivePlayer())
-            .show(fragment.getParentFragmentManager(), "Show QR code information");
+
+        QRCodeDatabase.getInstance()
+            .playerHasQRCode(
+                gameController.getActivePlayer(),
+                qrCode,
+                task -> {
+                  if (task.isSuccessful()) {
+                    boolean playerHasQR = task.getData();
+
+                    if (playerHasQR) {
+                      gameController.setPopup(
+                          DeleteQRCodeFragment.newInstance(
+                              qrCode, gameController.getActivePlayer()));
+                    } else {
+                      gameController.setPopup(
+                          QRCodeFragment.newInstance(qrCode, gameController.getActivePlayer()));
+                    }
+                  }
+                });
       }
     };
   }
 
   /** This refreshes the profile upon database change */
   public void onChange() {
-    setUpQRList(qrCodeList, totalPoints, totalCodes, topScore, orderSpinner);
+    if (qrCodeAdapter != null) {
+      updateQRList();
+    }
   }
 
   /** This sets up the listener for real-time database changes */
   public void addUpdater() {
-    // QRCodeDatabase.getInstance().addListener(this);
+    QRCodeDatabase.getInstance().addListener(this);
   }
 
   /**
@@ -284,23 +278,23 @@ public class ProfileController implements DatabaseChangeListener {
    *
    * @param msg The message to display
    */
-  private void showMsg(String msg) {
+  protected void showMsg(String msg) {
     Toast.makeText(gameController.getActivity(), msg, Toast.LENGTH_SHORT).show();
   }
 
   /**
    * Finds the position of the user's top QR code relative to all QR codes
    *
-   * @param queryDocumentSnapshots Documents for all QR codes
+   * @param allQRCodes List of all QR codes
    * @param topQR The user's highest scoring QR code
    * @return -1 if the user's top QR code was not found in the collection
    * @return The user's top QR position relative to all the other QR code positions
    */
-  private int getTopQRPosition(QuerySnapshot queryDocumentSnapshots, QRCode topQR) {
+  private int getTopQRPosition(List<QRCode> allQRCodes, QRCode topQR) {
     int position = 1;
 
-    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-      String qrHash = documentSnapshot.getString("hash");
+    for (QRCode code : allQRCodes) {
+      String qrHash = code.getHash();
 
       if (topQR != null && qrHash.equals(topQR.getHash())) {
         return position;
@@ -312,49 +306,33 @@ public class ProfileController implements DatabaseChangeListener {
     return -1;
   }
 
-  /** Calculates the percentile rank of the user's top QR code by score relative to all QR codes */
-  public void calculateRankOfHighestQRScore() {
+  /**
+   * Calculates and returns the percentile rank of the user's top QR code by score relative to all
+   * QR codes to the callback
+   */
+  public void retrievePercentile(BiConsumer<Exception, Float> callback) {
     if (qrCodes.size() <= 0) {
+      callback.accept(null, 0f);
       return;
     }
 
-    qrCodes.sort(new ScoreComparator().reversed());
-    QRCode topQR = qrCodes.get(0);
-    CollectionReference qrcodeCollection = FirebaseFirestore.getInstance().collection("qrcodes");
-    Query query = qrcodeCollection.orderBy("score", Query.Direction.ASCENDING);
-    query
-        .get()
-        .addOnSuccessListener(
-            new OnSuccessListener<QuerySnapshot>() {
-              @Override
-              public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                int topQRPosition = getTopQRPosition(queryDocumentSnapshots, topQR);
-                int totalNumQRCodes = queryDocumentSnapshots.size();
+    List<QRCode> qrCodesSortedByScore = new ArrayList<>(qrCodes);
+    qrCodesSortedByScore.sort(new ScoreComparator().reversed());
+    QRCode topQR = qrCodesSortedByScore.get(0);
 
-                if (topQRPosition == -1) {
-                  return;
-                }
-
-                float percentileRank = ((topQRPosition - 1) / (float) totalNumQRCodes) * 100;
-                displayHighestQRScoreToast(percentileRank);
+    QRCodeDatabase.getInstance()
+        .getAllQRCodes(
+            allQRCodes -> {
+              if (!allQRCodes.isSuccessful()) {
+                callback.accept(allQRCodes.getException(), null);
+                return;
               }
-            });
-  }
 
-  /**
-   * Displays the percentile rank of the user's top QR code by score relative to all QR codes
-   *
-   * @param percentile Percentile value for the user's top QR code
-   */
-  private void displayHighestQRScoreToast(float percentile) {
-    int duration = Toast.LENGTH_SHORT;
-    Context context = gameController.getActivity();
-    String formattedPercentile = String.format("%.2f", 100.0 - percentile);
-    String message =
-        String.format(
-            "Your highest scoring unique QR code is in the top %s%% in terms of points.",
-            formattedPercentile);
-    Toast toast = Toast.makeText(context, message, duration);
-    toast.show();
+              // Sort all the QR codes in ascending order
+              allQRCodes.getData().sort(new ScoreComparator());
+              int topQRPosition = getTopQRPosition(allQRCodes.getData(), topQR);
+              int totalNumQRCodes = allQRCodes.getData().size();
+              callback.accept(null, 100 - ((topQRPosition - 1) / (float) totalNumQRCodes) * 100);
+            });
   }
 }
