@@ -134,8 +134,6 @@ public class TestQRCodeFragment extends BaseTest {
     onView(withId(R.id.qrcode_player_scan_name))
         .inRoot(isDialog())
         .check(matches(withText(playerWhoScannedQR.getUsername())));
-    onView(withId(R.id.qrcode_player_scan_points))
-        .inRoot(isDialog())
-        .check(matches(withText("32 PTS")));
+    onView(withId(R.id.player_comment_input)).inRoot(isDialog()).check(matches(withText("32 PTS")));
   }
 }

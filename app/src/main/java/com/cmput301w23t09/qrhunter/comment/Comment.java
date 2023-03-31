@@ -1,23 +1,23 @@
 package com.cmput301w23t09.qrhunter.comment;
 
-import com.cmput301w23t09.qrhunter.player.Player;
-
 /** This is a class that stores a comment that a player made */
 public class Comment {
   /** This is the comment made by the player */
-  private String comment;
+  private final String comment;
+  /** This is the username of the player that made the comment. */
+  private final String username;
   /** This is the player that made the comment */
-  private Player player;
+  private final String playerId;
 
   /**
    * This initializes a Comment with a comment and the player who made it
    *
    * @param comment This is the comment made by the player
-   * @param player This is the player that made the comment
    */
-  public Comment(String comment, Player player) {
+  public Comment(String playerId, String username, String comment) {
     this.comment = comment;
-    this.player = player;
+    this.playerId = playerId;
+    this.username = username;
   }
 
   /**
@@ -30,20 +30,20 @@ public class Comment {
   }
 
   /**
-   * This returns the player attribute
+   * This returns the player ID attribute
    *
-   * @return Return the player that made the comment
+   * @return Return the ID of the player that made the comment
    */
-  public Player getPlayer() {
-    return player;
+  public String getPlayerId() {
+    return playerId;
   }
 
   /**
-   * This sets the comment attribute
+   * This returns the player username attribute
    *
-   * @param comment This is the string comment to set the comment attribute to
+   * @return Return the username of player that made the comment
    */
-  public void setComment(String comment) {
-    this.comment = comment;
+  public String getUsername() {
+    return username;
   }
 }
