@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.widget.SearchView;
+import androidx.appcompat.widget.SearchView;
 import android.widget.Toast;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
@@ -21,7 +21,6 @@ public class SearchQRController {
   public SearchQRController(SearchView searchView, MapFragment fragment) {
     this.searchView = searchView;
     this.fragment = fragment;
-    searchView.setQueryHint("Enter location here");
   }
 
   public SearchView.OnQueryTextListener handleSearch() {

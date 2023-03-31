@@ -7,7 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
+import androidx.appcompat.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -166,7 +166,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     View view = inflater.inflate(R.layout.fragment_map, container, false);
 
     // create search view
-    qrSearcher = view.findViewById(R.id.qr_searcher);
+    qrSearcher = view.findViewById(R.id.qr_searchbar);
     searchController = new SearchQRController(qrSearcher, this);
     qrSearcher.setOnQueryTextListener(searchController.handleSearch());
 
