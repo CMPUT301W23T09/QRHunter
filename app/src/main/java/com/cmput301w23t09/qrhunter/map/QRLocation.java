@@ -14,11 +14,10 @@ public class QRLocation {
    * @param locStr Location string
    */
   public QRLocation(String locStr) {
-    System.out.println(locStr);
     this.locationString = locStr;
-    int splitPoint = locStr.indexOf(';');
-    Double lat = Double.parseDouble(locStr.substring(0, splitPoint));
-    Double lon = Double.parseDouble(locStr.substring(splitPoint + 1));
+    String[] parts = locStr.split(";");
+    Double lat = Double.parseDouble(parts[0]);
+    Double lon = Double.parseDouble(parts[1]);
     latitude = lat;
     longitude = lon;
   }

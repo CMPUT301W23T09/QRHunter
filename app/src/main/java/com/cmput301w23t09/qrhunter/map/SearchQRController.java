@@ -146,7 +146,7 @@ public class SearchQRController {
           }
           // if query was successful
           for (QRCode qrCode : result.getData()) {
-            if (qrCode.getLoc() != null) {
+            if (qrCode.getLocations() != null) {
               // get the qr code's distance from the given location
               float[] distance = new float[1];
               for (QRLocation qrLocation : qrCode.getLocations()) {
