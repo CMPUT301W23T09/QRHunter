@@ -27,6 +27,11 @@ public class SearchQRController {
     this.fragment = fragment;
   }
 
+  /**
+   * Gets an on-query listener that shows qr codes near the queried location
+   *
+   * @return Return the on-query listener
+   */
   public SearchView.OnQueryTextListener searchNearbyCodes() {
     return new SearchView.OnQueryTextListener() {
       @Override
@@ -52,7 +57,12 @@ public class SearchQRController {
     };
   }
 
-  @SuppressLint("MissingPermission")
+  /**
+   * Get an on click listener that shows qr codes near the user's location
+   *
+   * @return Return the on-click listener
+   */
+  @SuppressLint("MissingPermission") // handled by LocationPermissionGranted
   public View.OnClickListener getNearbyCodes() {
     return new View.OnClickListener() {
       @Override
@@ -85,6 +95,13 @@ public class SearchQRController {
     };
   }
 
+  /**
+   * Parse string containing a location into a LatLng object
+   *
+   * @param locationInput The string to parse
+   * @return Return the LatLng object parsed from the string input
+   * @throws Exception Throw exception if unable to find a location from the input
+   */
   private LatLng parseInput(String locationInput) throws Exception {
     // check if input is blank
     if (locationInput.equals("")) {
@@ -110,15 +127,17 @@ public class SearchQRController {
           return new LatLng(latitude, longitude);
         }
       }
-    } else if (locationInput.matches(".*\\w.*")) {
-      // check if a location address was given
+    }
+
+    // check if a location address was given
+    else if (locationInput.matches(".*\\w.*")) {
       Geocoder geocoder = new Geocoder(fragment.getContext());
       List<Address> addresses;
       // parse location name
       try {
         addresses = geocoder.getFromLocationName(locationInput, 1);
       } catch (IOException e) {
-        throw new Exception("Error finding address");
+        throw new Exception("Error reading address");
       }
       // get address coordinates
       if (addresses.size() != 1) {
@@ -131,6 +150,12 @@ public class SearchQRController {
     throw new Exception("Invalid format, enter geolocation coordinates, or an address");
   }
 
+  /**
+   * Parse a double from a string
+   *
+   * @param str The string to parse
+   * @return Return the parsed double, or null if no double was found
+   */
   private Double parseDoubleInput(String str) {
     try {
       return Double.parseDouble(str);
