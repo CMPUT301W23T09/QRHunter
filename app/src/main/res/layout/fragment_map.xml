@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|center"
         android:layout_marginBottom="20dp"
-        android:layout_marginTop="10dp"
+        android:background="@color/white"
         android:queryHint="Enter location here"
         app:iconifiedByDefault="false" />
 
@@ -28,14 +28,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="30dp"
         card_view:cardCornerRadius="15dp"
-        card_view:cardBackgroundColor="@color/purple_700">
+        card_view:cardBackgroundColor="@color/quantum_bluegrey300">
 
         <Button
             android:id="@+id/qr_searcher"
             android:layout_width="70dp"
             android:layout_height="70dp"
+            android:backgroundTint="@color/quantum_bluegrey300"
             android:foreground="?android:attr/actionModeWebSearchDrawable"
             android:foregroundTint="@color/white" />
     </androidx.cardview.widget.CardView>
