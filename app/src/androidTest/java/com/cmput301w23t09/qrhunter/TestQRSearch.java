@@ -105,8 +105,8 @@ public class TestQRSearch extends BaseTest {
     nearbyLoc.setLatitude(userLocation.getLatitude() + 0.0001);
     nearbyLoc.setLongitude(userLocation.getLongitude() + 0.0001);
     ArrayList<QRLocation> nearbyLocations = new ArrayList<>();
-    nearbyLocations.add(new QRLocation(userLocation));
-    nearbyLocations.add(new QRLocation(nearbyLoc));
+    nearbyLocations.add(new QRLocation(null, userLocation));
+    nearbyLocations.add(new QRLocation(null, nearbyLoc));
     return nearbyLocations;
   }
 
@@ -133,7 +133,7 @@ public class TestQRSearch extends BaseTest {
       distantLocation.setLatitude(userLocation.getLongitude() - 5);
     }
     ArrayList<QRLocation> distantLocations = new ArrayList<>();
-    distantLocations.add(new QRLocation(distantLocation));
+    distantLocations.add(new QRLocation(null, distantLocation));
 
     // create qr codes
     QRCode qr1 = new QRCode("06388d4ff367b3bfaecb890322f0f9c6b33f5a31ec3198606cd2199fb30f5fbe");
