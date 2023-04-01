@@ -176,8 +176,10 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTopQRCodesByRegionLeaderboard(java.util.function.BiConsumer)">getTopQRCodesByRegionLeaderboard</a></span>&#8203;(java.util.function.BiConsumer&lt;java.lang.Exception,&#8203;java.util.Map&lt;java.lang.String,&#8203;<a href="Leaderboard.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">Leaderboard</a>&lt;<a href="QRCodeLeaderboardEntry.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">QRCodeLeaderboardEntry</a>&gt;&gt;&gt;&nbsp;callback)</code></th>
-<td class="colLast">&nbsp;</td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTopQRCodesByRegionLeaderboard(java.util.function.BiConsumer)">getTopQRCodesByRegionLeaderboard</a></span>&#8203;(java.util.function.BiConsumer&lt;java.lang.Exception,&#8203;java.util.List&lt;<a href="Leaderboard.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">Leaderboard</a>&lt;<a href="QRCodeLeaderboardEntry.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">QRCodeLeaderboardEntry</a>&gt;&gt;&gt;&nbsp;callback)</code></th>
+<td class="colLast">
+<div class="block">Retrieve the top QRCode points value leaderboard by region in descending order.</div>
+</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
@@ -295,6 +297,20 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
+<a id="getTopQRCodesByRegionLeaderboard(java.util.function.BiConsumer)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getTopQRCodesByRegionLeaderboard</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;getTopQRCodesByRegionLeaderboard&#8203;(java.util.function.BiConsumer&lt;java.lang.Exception,&#8203;java.util.List&lt;<a href="Leaderboard.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">Leaderboard</a>&lt;<a href="QRCodeLeaderboardEntry.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">QRCodeLeaderboardEntry</a>&gt;&gt;&gt;&nbsp;callback)</pre>
+<div class="block">Retrieve the top QRCode points value leaderboard by region in descending order.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>callback</code> - callback to call with the leaderboards mapped by their city.</dd>
+</dl>
+</li>
+</ul>
 <a id="handleEntryClick(com.cmput301w23t09.qrhunter.leaderboard.PlayerLeaderboardEntry)">
 <!--   -->
 </a>
@@ -307,19 +323,10 @@ extends java.lang.Object</pre>
 <a id="handleEntryClick(com.cmput301w23t09.qrhunter.leaderboard.QRCodeLeaderboardEntry)">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>handleEntryClick</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;handleEntryClick&#8203;(<a href="QRCodeLeaderboardEntry.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">QRCodeLeaderboardEntry</a>&nbsp;entry)</pre>
-</li>
-</ul>
-<a id="getTopQRCodesByRegionLeaderboard(java.util.function.BiConsumer)">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>getTopQRCodesByRegionLeaderboard</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;getTopQRCodesByRegionLeaderboard&#8203;(java.util.function.BiConsumer&lt;java.lang.Exception,&#8203;java.util.Map&lt;java.lang.String,&#8203;<a href="Leaderboard.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">Leaderboard</a>&lt;<a href="QRCodeLeaderboardEntry.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">QRCodeLeaderboardEntry</a>&gt;&gt;&gt;&nbsp;callback)</pre>
 </li>
 </ul>
 </li>
