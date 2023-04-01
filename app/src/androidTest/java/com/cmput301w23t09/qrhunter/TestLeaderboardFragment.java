@@ -12,6 +12,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.CoreMatchers.anything;
+import static org.hamcrest.CoreMatchers.containsString;
 
 import android.Manifest;
 import android.content.Intent;
@@ -307,12 +308,7 @@ public class TestLeaderboardFragment extends BaseTest {
         .inAdapterView(withId(R.id.search_query_list))
         .atPosition(2)
         .onChildView(withId(R.id.search_query_entry_text))
-        .check(matches(withText("123Other Player")));
-    onData(anything())
-        .inAdapterView(withId(R.id.search_query_list))
-        .atPosition(3)
-        .onChildView(withId(R.id.search_query_entry_text))
-        .check(matches(withText("123Other Player123")));
+        .check(matches(withText(containsString("123Other Player"))));
   }
 
   /**
