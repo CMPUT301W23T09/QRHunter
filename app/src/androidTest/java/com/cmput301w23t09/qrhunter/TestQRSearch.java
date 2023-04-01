@@ -1,11 +1,28 @@
 package com.cmput301w23t09.qrhunter;
 
+import static androidx.test.espresso.Espresso.onData;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.pressKey;
+import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.awaitility.Awaitility.await;
+import static org.hamcrest.CoreMatchers.anything;
+
 import android.Manifest;
+import android.content.Intent;
 import android.location.Location;
+import android.view.KeyEvent;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
+import com.cmput301w23t09.qrhunter.map.MapFragment;
 import com.cmput301w23t09.qrhunter.map.QRLocation;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
+import com.cmput301w23t09.qrhunter.qrcode.ScoreComparator;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
@@ -34,7 +51,7 @@ public class TestQRSearch extends BaseTest {
   @Before
   public void setUp() throws InterruptedException {
     // get solo
-    /*activityScenarioRule
+    activityScenarioRule
         .getScenario()
         .onActivity(
             activity -> {
@@ -51,18 +68,15 @@ public class TestQRSearch extends BaseTest {
                     instanceof MapFragment);
 
     // generate qr codes near location
-    generateNearbyQRCodes(getNearbyLocations());
+    getLocation();
+    generateNearbyQRCodes();
 
     // add generated codes to database
-    addCodesToDB();*/
+    addCodesToDB();
   }
 
-  /**
-   * Get a list of locations near the user
-   *
-   * @return Return a list of locations near the user
-   */
-  private ArrayList<QRLocation> getNearbyLocations() throws InterruptedException {
+  /** Get location of the user */
+  private void getLocation() throws InterruptedException {
     // get location
     AtomicReference<Location> retrievedLocation = new AtomicReference<>();
     CountDownLatch locationFetch = new CountDownLatch(1);
@@ -84,41 +98,29 @@ public class TestQRSearch extends BaseTest {
 
     locationFetch.await();
     userLocation = retrievedLocation.get();
-
-    // create array of nearby locations
-    Location nearbyLoc = userLocation;
-    nearbyLoc.setLatitude(userLocation.getLatitude() + 0.0001);
-    nearbyLoc.setLongitude(userLocation.getLongitude() + 0.0001);
-    ArrayList<QRLocation> nearbyLocations = new ArrayList<>();
-    nearbyLocations.add(new QRLocation(null, userLocation));
-    nearbyLocations.add(new QRLocation(null, nearbyLoc));
-    return nearbyLocations;
   }
 
-  /**
-   * Setup list of qr codes with locations near the user
-   *
-   * @param qrLocations This is a list of location near the user
-   */
-  private void generateNearbyQRCodes(ArrayList<QRLocation> qrLocations) {
-    // generate location lists for qr codes
-    /*ArrayList<QRLocation> subList = new ArrayList<>();
-    QRLocation firstLoc = qrLocations.get(0);
-    subList.add(firstLoc);
+  /** Setup list of qr codes with locations near the user */
+  private void generateNearbyQRCodes() {
+    // get coordinates from user Location
+    Double latitude = userLocation.getLatitude();
+    Double longitude = userLocation.getLongitude();
 
-    Location distantLocation = userLocation;
-    if (userLocation.getLatitude() < 0) {
-      distantLocation.setLatitude(userLocation.getLatitude() + 5);
-    } else {
-      distantLocation.setLatitude(userLocation.getLatitude() - 5);
-    }
-    if (userLocation.getLongitude() < 0) {
-      distantLocation.setLongitude(userLocation.getLongitude() + 5);
-    } else {
-      distantLocation.setLatitude(userLocation.getLongitude() - 5);
-    }
+    // generate lists of nearby locations
+    ArrayList<QRLocation> nearbyLocations = new ArrayList<>();
+    ArrayList<QRLocation> nearbyLocationsSubList = new ArrayList<>();
+
+    nearbyLocations.add(new QRLocation(null, latitude, longitude));
+    nearbyLocationsSubList.add(new QRLocation(null, latitude, longitude));
+    latitude = (latitude < 0) ? latitude + 0.0001 : latitude - 0.0001;
+    longitude = (longitude < 0) ? longitude + 0.0001 : longitude - 0.0001;
+    nearbyLocations.add(new QRLocation(null, latitude, longitude));
+
+    // generate a list of distant locations
     ArrayList<QRLocation> distantLocations = new ArrayList<>();
-    distantLocations.add(new QRLocation(null, distantLocation));
+    latitude = (latitude < 0) ? latitude + 5 : latitude - 5;
+    longitude = (longitude < 0) ? longitude + 5 : longitude - 5;
+    distantLocations.add(new QRLocation(null, latitude, longitude));
 
     // create qr codes
     QRCode qr1 = new QRCode("06388d4ff367b3bfaecb890322f0f9c6b33f5a31ec3198606cd2199fb30f5fbe");
@@ -127,8 +129,8 @@ public class TestQRSearch extends BaseTest {
     QRCode qr3 = new QRCode("cc30c003ed7f48534fe5a8e9310db24eb8d488b709825e06bf312000487605e5");
 
     // set qr codes' locations
-    qr1.setLocations(qrLocations);
-    qr2.setLocations(subList);
+    qr1.setLocations(nearbyLocations);
+    qr2.setLocations(nearbyLocationsSubList);
     qr3.setLocations(distantLocations);
 
     // save qr codes to a list
@@ -136,13 +138,13 @@ public class TestQRSearch extends BaseTest {
     qrCodes.add(qr1);
     qrCodes.add(qr2);
     qrCodes.add(qr3);
-    qrCodes.sort(new ScoreComparator().reversed());*/
+    qrCodes.sort(new ScoreComparator().reversed());
   }
 
   /** Add qr codes to live mock database */
   private void addCodesToDB() throws InterruptedException {
     // add qr codes to database
-    /*CountDownLatch qrDBAddTask = new CountDownLatch(qrCodes.size());
+    CountDownLatch qrDBAddTask = new CountDownLatch(qrCodes.size());
     for (QRCode qrCode : qrCodes) {
       QRCodeDatabase.getInstance()
           .addQRCode(
@@ -162,14 +164,13 @@ public class TestQRSearch extends BaseTest {
                 qrDBDataTask.countDown();
               });
     }
-    qrDBDataTask.await();*/
+    qrDBDataTask.await();
   }
 
   /** Check qr search button click result */
   @Test
   public void testClickSearchButtonResult() {
     // click on search button
-    /*solo.waitForView(R.id.qr_searcher);
     onView(withId(R.id.qr_searcher)).perform(click());
     // check first qr code of result
     solo.waitForView(R.id.search_qr_result);
@@ -178,19 +179,20 @@ public class TestQRSearch extends BaseTest {
     onView(withId(android.R.id.button1)).perform(click());
     // check second qr code of result
     onData(anything()).inAdapterView(withId(R.id.search_qr_result)).atPosition(1).perform(click());
-    onView(withId(R.id.qr_name)).check(matches(withText(qrCodes.get(2).getName())));*/
+    onView(withId(R.id.qr_name)).check(matches(withText(qrCodes.get(2).getName())));
   }
 
-  /** Check qr search query result */
+  /** Check qr search query result when location coordinates are typed in */
   @Test
   public void testNearbyCodesQueryResult() {
     // enter geolocation coordinates into search query
-    /*solo.waitForView(R.id.qr_searcher);
-    onView(withId(R.id.qr_searcher)).perform(click());
+    solo.waitForView(R.id.qr_searchbar);
+    onView(withId(R.id.qr_searchbar)).perform(click());
     onView(withId(androidx.appcompat.R.id.search_src_text))
         .perform(
             typeText(
-                String.format("%f, %f", userLocation.getLatitude(), userLocation.getLongitude())));
+                String.format("%f, %f", userLocation.getLatitude(), userLocation.getLongitude())),
+            pressKey(KeyEvent.KEYCODE_ENTER));
     solo.waitForView(R.id.search_qr_result);
     // check first qr code of result
     onData(anything()).inAdapterView(withId(R.id.search_qr_result)).atPosition(0).perform(click());
@@ -198,6 +200,6 @@ public class TestQRSearch extends BaseTest {
     onView(withId(android.R.id.button1)).perform(click());
     // check second qr code of result
     onData(anything()).inAdapterView(withId(R.id.search_qr_result)).atPosition(1).perform(click());
-    onView(withId(R.id.qr_name)).check(matches(withText(qrCodes.get(2).getName())));*/
+    onView(withId(R.id.qr_name)).check(matches(withText(qrCodes.get(2).getName())));
   }
 }
