@@ -8,16 +8,34 @@ import java.util.List;
  * @param <T> the leaderboard entry type this leaderboard will contain
  */
 public class Leaderboard<T extends LeaderboardEntry> {
+  /** Name of the leaderboard */
+  private final String name;
   /** All leaderboard entries within this leaderboard. */
   private final List<T> entries;
 
   /**
    * Constructor for a leaderboard
    *
+   * @param name leaderboard name
    * @param entries entries of this leaderboard.
    */
-  public Leaderboard(List<T> entries) {
+  public Leaderboard(String name, List<T> entries) {
+    this.name = name;
     this.entries = entries;
+  }
+
+  /**
+   * Constructor for a leaderboard
+   *
+   * @param entries entries of this nameless leaderboard
+   */
+  public Leaderboard(List<T> entries) {
+    this.name = null;
+    this.entries = entries;
+  }
+
+  public String getName() {
+    return name;
   }
 
   /**
