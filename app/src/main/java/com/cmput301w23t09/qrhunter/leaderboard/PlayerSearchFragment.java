@@ -26,10 +26,17 @@ public class PlayerSearchFragment extends BaseFragment {
     private SearchQueryEntryAdapter entryAdapter;
     private List<SearchQueryEntry> searchQueryEntries;
     private LinearLayout searchLinearLayout;
+//    private static GameController gameController;
 
     public PlayerSearchFragment(GameController gameController) {
         super(gameController);
+//        this.gameController = gameController;
     }
+
+//    public static PlayerSearchFragment newInstance() {
+//        PlayerSearchFragment fragment = new PlayerSearchFragment(gameController);
+//        return fragment;
+//    }
 
 //    @Override
 //    public void onCreate(Bundle savedInstanceState) {
@@ -46,11 +53,6 @@ public class PlayerSearchFragment extends BaseFragment {
         searchQueryEntries = new ArrayList<>();
         entryAdapter = new SearchQueryEntryAdapter(getContext(), searchQueryEntries);
         ((ListView) view.findViewById(R.id.search_query_list)).setAdapter(entryAdapter);
-
-//        searchQueryEntries.add(new SearchQueryEntry("Joe"));
-//        searchQueryEntries.add(new SearchQueryEntry("Hank"));
-//        searchQueryEntries.add(new SearchQueryEntry("Bob"));
-//        entryAdapter.notifyDataSetChanged();
 
         setUpSearchFragment(view);
 

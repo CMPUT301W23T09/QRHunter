@@ -18,11 +18,15 @@ import android.content.Intent;
 import android.view.KeyEvent;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.DataInteraction;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
+
+import com.cmput301w23t09.qrhunter.leaderboard.PlayerSearchFragment;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.profile.MyProfileFragment;
@@ -201,15 +205,6 @@ public class TestLeaderboardFragment extends BaseTest {
             });
   }
 
-  @Test
-  public void testSearchTransitionsToPlayerSearchFragment() {
-    onView(withId(R.id.player_search)).perform(click());
-    onView(isAssignableFrom(EditText.class)).perform(typeText("Joe"), pressKey(KeyEvent.KEYCODE_ENTER));
-
-    onView(withId(R.id.search_linear_layout))
-            .check(matches(isDisplayed()));
-  }
-
   /** Clicking on a QR you own should show the DeleteQRFragment. */
   @Test
   public void testClickOnOwnedQRShouldShowDeleteQRFragment() {
@@ -226,6 +221,23 @@ public class TestLeaderboardFragment extends BaseTest {
               GameActivity gameActivity = (GameActivity) solo.getCurrentActivity();
               return gameActivity.getController().getPopup() instanceof DeleteQRCodeFragment;
             });
+  }
+
+  @Test
+  public void testSearchTransitionsToPlayerSearchFragment() {
+    onView(withId(R.id.player_search)).perform(click());
+    onView(isAssignableFrom(EditText.class)).perform(typeText("Joe"), pressKey(KeyEvent.KEYCODE_ENTER));
+
+    onView(withId(R.id.search_linear_layout))
+            .check(matches(isDisplayed()));
+  }
+
+  @Test
+  public void testSearchDisplaysNoPlayers() {
+    onView(withId(R.id.player_search)).perform(click());
+    onView(isAssignableFrom(EditText.class)).perform(typeText("Joe"), pressKey(KeyEvent.KEYCODE_ENTER));    onView(withId(R.id.search_linear_layout)).check(matches(isDisplayed()));
+    onView(withText("Player Not Found.")).check(matches(isDisplayed()));
+
   }
 
   /**

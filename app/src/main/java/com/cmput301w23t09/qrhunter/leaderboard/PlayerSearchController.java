@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -97,10 +98,12 @@ public class PlayerSearchController {
     }
 
     private TextView createNoPlayersFoundTextView(Context context) {
+        int textViewId = View.generateViewId();
         TextView noPlayersFoundMessage = new TextView(context);
         noPlayersFoundMessage.setText("Player Not Found.");
         noPlayersFoundMessage.setTextSize(24);
         noPlayersFoundMessage.setGravity(Gravity.CENTER);
+        noPlayersFoundMessage.setId(textViewId);
         return noPlayersFoundMessage;
     }
 
