@@ -84,7 +84,7 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
     View dialogView = inflater.inflate(R.layout.comment_dialog, null);
 
     TextView playerNameTextView = dialogView.findViewById(R.id.comment_dialog_player_name);
-    String playerNameHeading = playerName + "'s Comments";
+    String playerNameHeading = playerName + "'s Comment:";
     playerNameTextView.setText(playerNameHeading);
 
     TextView commentTextView = dialogView.findViewById(R.id.comment_dialog_comment_text);
