@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.widget.SearchView;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
+import com.cmput301w23t09.qrhunter.qrcode.ScoreComparator;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.maps.model.LatLng;
 import java.io.IOException;
@@ -207,6 +208,7 @@ public class SearchQRController {
             Toast.makeText(fragment.getContext(), "No nearby qr codes found", Toast.LENGTH_SHORT)
                 .show();
           } else {
+            nearbyCodes.sort(new ScoreComparator().reversed());
             new QRSearchResultFragment(nearbyCodes, fragment)
                 .show(fragment.getChildFragmentManager(), "Show QR code search information");
           }
