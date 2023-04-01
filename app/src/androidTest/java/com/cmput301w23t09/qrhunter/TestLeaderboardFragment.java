@@ -250,6 +250,7 @@ public class TestLeaderboardFragment extends BaseTest {
             });
   }
 
+  /** Using the search bar to search for a player should transition to the player search fragment */
   @Test
   public void testSearchTransitionsToPlayerSearchFragment() {
     onView(withId(R.id.player_search)).perform(click());
@@ -259,15 +260,24 @@ public class TestLeaderboardFragment extends BaseTest {
             .check(matches(isDisplayed()));
   }
 
+  /** Searching for a player that does not exist should display a text view (Player Not Found) */
   @Test
   public void testSearchDisplaysNoPlayers() {
     onView(withId(R.id.player_search)).perform(click());
     onView(isAssignableFrom(EditText.class)).perform(typeText("Joe"), pressKey(KeyEvent.KEYCODE_ENTER));
     onView(withId(R.id.search_linear_layout)).check(matches(isDisplayed()));
+
+    try {
+      Thread.sleep(3000);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+
     onView(withText("Player Not Found.")).check(matches(isDisplayed()));
 
   }
 
+  /** Presing the back button in the player search fragment should return to the leaderboards */
   @Test
   public void testPlayerSearchBackButton() {
     onView(withId(R.id.player_search)).perform(click());
@@ -276,9 +286,10 @@ public class TestLeaderboardFragment extends BaseTest {
 
     onView(withId(R.id.back_button)).perform(click());
     onView(withId(R.id.leaderboard_linear_layout)).check(matches(isDisplayed()));
-
   }
 
+  /** Searching for a player should display related player names with the exact match
+   * first and names with the exact match prefix in descending order based on closeness to the front */
   @Test
   public void testRelatedUsernameSearch() {
     onView(withId(R.id.player_search)).perform(click());
@@ -330,13 +341,14 @@ public class TestLeaderboardFragment extends BaseTest {
             });
   }
 
+  /** Wait until the search query list has entries. */
   private void waitUntilSearchListHasData() {
     await()
         .atMost(5, TimeUnit.SECONDS)
         .until(
                 () -> {
                   ListView listView = (ListView) solo.getView(R.id.search_query_list);
-                  return listView.getChildCount() > 0;
+                  return listView.getChildCount() == 4;
                 });
   }
 }
