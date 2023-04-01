@@ -37,6 +37,7 @@ import org.junit.Test;
 public class TestQRSearch extends BaseTest {
   private Solo solo;
   private Location userLocation;
+  private QRLocation universityLocation;
   private ArrayList<QRCode> qrCodes;
 
   @Rule
@@ -67,8 +68,9 @@ public class TestQRSearch extends BaseTest {
                 ((GameActivity) solo.getCurrentActivity()).getController().getBody()
                     instanceof MapFragment);
 
-    // generate qr codes near location
-    getLocation();
+    // generate qr codes
+    universityLocation = new QRLocation(null, 53.5228447, -113.5270794);
+    getUserLocation();
     generateNearbyQRCodes();
 
     // add generated codes to database
@@ -76,7 +78,7 @@ public class TestQRSearch extends BaseTest {
   }
 
   /** Get location of the user */
-  private void getLocation() throws InterruptedException {
+  private void getUserLocation() throws InterruptedException {
     // get location
     AtomicReference<Location> retrievedLocation = new AtomicReference<>();
     CountDownLatch locationFetch = new CountDownLatch(1);
@@ -106,31 +108,35 @@ public class TestQRSearch extends BaseTest {
     Double latitude = userLocation.getLatitude();
     Double longitude = userLocation.getLongitude();
 
-    // generate lists of nearby locations
-    ArrayList<QRLocation> nearbyLocations = new ArrayList<>();
-    ArrayList<QRLocation> nearbyLocationsSubList = new ArrayList<>();
+    // generate a list of nearby locations
+    ArrayList<QRLocation> nearbyLocations1 = new ArrayList<>();
+    nearbyLocations1.add(new QRLocation(null, latitude, longitude));
+    nearbyLocations1.add(universityLocation);
 
-    nearbyLocations.add(new QRLocation(null, latitude, longitude));
-    nearbyLocationsSubList.add(new QRLocation(null, latitude, longitude));
+    // generate another list of nearby locations
+    ArrayList<QRLocation> nearbyLocations2 = new ArrayList<>();
     latitude = (latitude < 0) ? latitude + 0.0001 : latitude - 0.0001;
     longitude = (longitude < 0) ? longitude + 0.0001 : longitude - 0.0001;
-    nearbyLocations.add(new QRLocation(null, latitude, longitude));
+    nearbyLocations2.add(new QRLocation(null, latitude, longitude));
+    nearbyLocations2.add(universityLocation);
 
     // generate a list of distant locations
     ArrayList<QRLocation> distantLocations = new ArrayList<>();
     latitude = (latitude < 0) ? latitude + 5 : latitude - 5;
     longitude = (longitude < 0) ? longitude + 5 : longitude - 5;
     distantLocations.add(new QRLocation(null, latitude, longitude));
+    distantLocations.add(universityLocation);
 
     // create qr codes
     QRCode qr1 = new QRCode("06388d4ff367b3bfaecb890322f0f9c6b33f5a31ec3198606cd2199fb30f5fbe");
     QRCode qr2 = new QRCode("355944495d73dd01d42d7985b45949f066c543a2b5b1960fae23797786f9a18b");
-    // qr code with the largest score of 440, should not show up in search results
+    // qr code with the largest score of 440
+    // should not show up in search results for codes near the user
     QRCode qr3 = new QRCode("cc30c003ed7f48534fe5a8e9310db24eb8d488b709825e06bf312000487605e5");
 
     // set qr codes' locations
-    qr1.setLocations(nearbyLocations);
-    qr2.setLocations(nearbyLocationsSubList);
+    qr1.setLocations(nearbyLocations1);
+    qr2.setLocations(nearbyLocations2);
     qr3.setLocations(distantLocations);
 
     // save qr codes to a list
@@ -184,7 +190,7 @@ public class TestQRSearch extends BaseTest {
 
   /** Check qr search query result when location coordinates are typed in */
   @Test
-  public void testNearbyCodesQueryResult() {
+  public void testSearchCodesByCoordinateQueryResult() {
     // enter geolocation coordinates into search query
     solo.waitForView(R.id.qr_searchbar);
     onView(withId(R.id.qr_searchbar)).perform(click());
@@ -200,6 +206,28 @@ public class TestQRSearch extends BaseTest {
     onView(withId(android.R.id.button1)).perform(click());
     // check second qr code of result
     onData(anything()).inAdapterView(withId(R.id.search_qr_result)).atPosition(1).perform(click());
+    onView(withId(R.id.qr_name)).check(matches(withText(qrCodes.get(2).getName())));
+  }
+
+  /** Check qr search query result when address is typed in */
+  @Test
+  public void testSearchCodesByAddressQueryResult() {
+    // enter geolocation coordinates into search query
+    solo.waitForView(R.id.qr_searchbar);
+    onView(withId(R.id.qr_searchbar)).perform(click());
+    onView(withId(androidx.appcompat.R.id.search_src_text))
+        .perform(typeText("University of Alberta, Edmonton AB"), pressKey(KeyEvent.KEYCODE_ENTER));
+    solo.waitForView(R.id.search_qr_result, 1, 6000);
+    // check first qr code of result
+    onData(anything()).inAdapterView(withId(R.id.search_qr_result)).atPosition(0).perform(click());
+    onView(withId(R.id.qr_name)).check(matches(withText(qrCodes.get(0).getName())));
+    onView(withId(android.R.id.button1)).perform(click());
+    // check second qr code of result
+    onData(anything()).inAdapterView(withId(R.id.search_qr_result)).atPosition(1).perform(click());
+    onView(withId(R.id.qr_name)).check(matches(withText(qrCodes.get(1).getName())));
+    onView(withId(android.R.id.button1)).perform(click());
+    // check third qr code of result
+    onData(anything()).inAdapterView(withId(R.id.search_qr_result)).atPosition(2).perform(click());
     onView(withId(R.id.qr_name)).check(matches(withText(qrCodes.get(2).getName())));
   }
 }
