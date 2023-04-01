@@ -13,6 +13,8 @@ import static org.hamcrest.CoreMatchers.anything;
 
 import android.Manifest;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.view.KeyEvent;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -27,7 +29,11 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.robotium.solo.Solo;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.Before;
@@ -37,7 +43,8 @@ import org.junit.Test;
 public class TestQRSearch extends BaseTest {
   private Solo solo;
   private Location userLocation;
-  private QRLocation universityLocation;
+  private String distantCity;
+  private QRLocation distantCityLocation;
   private ArrayList<QRCode> qrCodes;
 
   @Rule
@@ -50,7 +57,7 @@ public class TestQRSearch extends BaseTest {
 
   /** Runs before all tests and creates solo instance */
   @Before
-  public void setUp() throws InterruptedException {
+  public void setUp() throws InterruptedException, IOException {
     // get solo
     activityScenarioRule
         .getScenario()
@@ -69,15 +76,15 @@ public class TestQRSearch extends BaseTest {
                     instanceof MapFragment);
 
     // generate qr codes
-    universityLocation = new QRLocation(null, 53.5228447, -113.5270794);
     getUserLocation();
+    getDistantLocation();
     generateNearbyQRCodes();
 
     // add generated codes to database
     addCodesToDB();
   }
 
-  /** Get location of the user */
+  /** Get and store location of the user */
   private void getUserLocation() throws InterruptedException {
     // get location
     AtomicReference<Location> retrievedLocation = new AtomicReference<>();
@@ -102,6 +109,26 @@ public class TestQRSearch extends BaseTest {
     userLocation = retrievedLocation.get();
   }
 
+  /** Get and store a distant location and its corresponding address */
+  private void getDistantLocation() throws IOException {
+    // get city of user location
+    Geocoder geocoder;
+    List<Address> addresses;
+    geocoder = new Geocoder(solo.getCurrentActivity().getApplicationContext(), Locale.getDefault());
+    addresses =
+        geocoder.getFromLocation(userLocation.getLatitude(), userLocation.getLongitude(), 1);
+    Address userAddress = addresses.get(0);
+    String userCity = userAddress.getLocality();
+
+    // get a city that is not the city of the user
+    distantCity = (Objects.equals(userCity, "Edmonton")) ? "Calgary" : "Edmonton";
+    addresses = geocoder.getFromLocationName(distantCity, 1);
+    Address distantAddress = addresses.get(0);
+    distantCityLocation =
+        new QRLocation(
+            null, distantAddress.getLatitude() + 0.0001, distantAddress.getLongitude() + 0.0001);
+  }
+
   /** Setup list of qr codes with locations near the user */
   private void generateNearbyQRCodes() {
     // get coordinates from user Location
@@ -111,21 +138,19 @@ public class TestQRSearch extends BaseTest {
     // generate a list of nearby locations
     ArrayList<QRLocation> nearbyLocations1 = new ArrayList<>();
     nearbyLocations1.add(new QRLocation(null, latitude, longitude));
-    nearbyLocations1.add(universityLocation);
 
     // generate another list of nearby locations
     ArrayList<QRLocation> nearbyLocations2 = new ArrayList<>();
     latitude = (latitude < 0) ? latitude + 0.0001 : latitude - 0.0001;
     longitude = (longitude < 0) ? longitude + 0.0001 : longitude - 0.0001;
     nearbyLocations2.add(new QRLocation(null, latitude, longitude));
-    nearbyLocations2.add(universityLocation);
 
     // generate a list of distant locations
     ArrayList<QRLocation> distantLocations = new ArrayList<>();
     latitude = (latitude < 0) ? latitude + 5 : latitude - 5;
     longitude = (longitude < 0) ? longitude + 5 : longitude - 5;
     distantLocations.add(new QRLocation(null, latitude, longitude));
-    distantLocations.add(universityLocation);
+    distantLocations.add(distantCityLocation);
 
     // create qr codes
     QRCode qr1 = new QRCode("06388d4ff367b3bfaecb890322f0f9c6b33f5a31ec3198606cd2199fb30f5fbe");
@@ -216,18 +241,10 @@ public class TestQRSearch extends BaseTest {
     solo.waitForView(R.id.qr_searchbar);
     onView(withId(R.id.qr_searchbar)).perform(click());
     onView(withId(androidx.appcompat.R.id.search_src_text))
-        .perform(typeText("University of Alberta, Edmonton AB"), pressKey(KeyEvent.KEYCODE_ENTER));
+        .perform(typeText(distantCity), pressKey(KeyEvent.KEYCODE_ENTER));
     solo.waitForView(R.id.search_qr_result, 1, 6000);
     // check first qr code of result
     onData(anything()).inAdapterView(withId(R.id.search_qr_result)).atPosition(0).perform(click());
     onView(withId(R.id.qr_name)).check(matches(withText(qrCodes.get(0).getName())));
-    onView(withId(android.R.id.button1)).perform(click());
-    // check second qr code of result
-    onData(anything()).inAdapterView(withId(R.id.search_qr_result)).atPosition(1).perform(click());
-    onView(withId(R.id.qr_name)).check(matches(withText(qrCodes.get(1).getName())));
-    onView(withId(android.R.id.button1)).perform(click());
-    // check third qr code of result
-    onData(anything()).inAdapterView(withId(R.id.search_qr_result)).atPosition(2).perform(click());
-    onView(withId(R.id.qr_name)).check(matches(withText(qrCodes.get(2).getName())));
   }
 }
