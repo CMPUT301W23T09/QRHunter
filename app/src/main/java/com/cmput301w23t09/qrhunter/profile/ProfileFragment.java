@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +35,8 @@ public abstract class ProfileFragment extends BaseFragment {
   private Spinner sortOrderSpinner;
   /** This is the view displaying the list of codes the user has */
   private GridView qrCodeList;
+  /** This is the view displaying the user's profile picture */
+  private ImageView profilePic;
   /** This is the view displaying the settings button */
   protected FloatingActionButton contactButton;
   /** This is the button that allows the user to view their rankings */
@@ -77,12 +80,13 @@ public abstract class ProfileFragment extends BaseFragment {
     sortOrderSpinner = view.findViewById(R.id.order_spinner);
     contactButton = view.findViewById(R.id.contact_info_button);
     rankingsButton = view.findViewById(R.id.rankings_button);
+    profilePic = view.findViewById(R.id.profile_pic);
 
     // create a default empty profile (shown while waiting for database queries)
     createDefaultProfile();
 
     // setup profile elements
-    controller.setUpUsername(username);
+    controller.setUpUsernameAndPicture(username, profilePic);
     controller.setUpQRList(qrCodeList, totalPoints, totalCodes, topCodeScore, sortOrderSpinner);
     qrCodeList.setOnItemClickListener(controller.handleQRSelect());
 
@@ -97,6 +101,7 @@ public abstract class ProfileFragment extends BaseFragment {
     totalPoints.setText("");
     totalCodes.setText("");
     topCodeScore.setText("");
+    profilePic.setImageBitmap(null);
     createSpinner(sortOrderSpinner, R.array.order_options);
 
     setupContactButton();
