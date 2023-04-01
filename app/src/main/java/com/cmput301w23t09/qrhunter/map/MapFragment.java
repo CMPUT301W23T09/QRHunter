@@ -10,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -112,38 +110,48 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
             });
       }
       Handler handler = new Handler();
-      handler.postDelayed(new Runnable() {
-        @Override
-        public void run() {
-          try {
-            Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
-            locationResult.addOnCompleteListener(getActivity(), new OnCompleteListener<Location>() {
-              @Override
-              public void onComplete(@NonNull Task<Location> task) {
-                if (task.isSuccessful()) {
-                  Location newLocation = task.getResult();
-                  int MIN_DISTANCE_UPDATE = 5000;
-                  if (newLocation != null && lastKnownLocation.distanceTo(newLocation) > MIN_DISTANCE_UPDATE) {
-                    lastKnownLocation = newLocation;
-                    currentLocation = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM));
-                    map.clear();
-                    map.addMarker(new MarkerOptions().position(currentLocation).title("YOU"));
-                  }
-                } else {
-                  Log.d(TAG, "Current location is null. Using defaults.");
-                  Log.e(TAG, "Exception: %s", task.getException());
-                }
+      handler.postDelayed(
+          new Runnable() {
+            @Override
+            public void run() {
+              try {
+                Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
+                locationResult.addOnCompleteListener(
+                    getActivity(),
+                    new OnCompleteListener<Location>() {
+                      @Override
+                      public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful()) {
+                          Location newLocation = task.getResult();
+                          int MIN_DISTANCE_UPDATE = 5000;
+                          if (newLocation != null
+                              && lastKnownLocation.distanceTo(newLocation) > MIN_DISTANCE_UPDATE) {
+                            lastKnownLocation = newLocation;
+                            currentLocation =
+                                new LatLng(
+                                    lastKnownLocation.getLatitude(),
+                                    lastKnownLocation.getLongitude());
+                            map.animateCamera(
+                                CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM));
+                            map.clear();
+                            map.addMarker(
+                                new MarkerOptions().position(currentLocation).title("YOU"));
+                          }
+                        } else {
+                          Log.d(TAG, "Current location is null. Using defaults.");
+                          Log.e(TAG, "Exception: %s", task.getException());
+                        }
+                      }
+                    });
+              } catch (SecurityException e) {
+                Log.e("Exception: %s", e.getMessage(), e);
+              } finally {
+                // Schedule the next location update
+                handler.postDelayed(this, LOCATION_UPDATE_INTERVAL);
               }
-            });
-          } catch (SecurityException e) {
-            Log.e("Exception: %s", e.getMessage(), e);
-          } finally {
-            // Schedule the next location update
-            handler.postDelayed(this, LOCATION_UPDATE_INTERVAL);
-          }
-        }
-      }, LOCATION_UPDATE_INTERVAL);
+            }
+          },
+          LOCATION_UPDATE_INTERVAL);
     } catch (SecurityException e) {
       Log.e("Exception: %s", e.getMessage(), e);
     }
@@ -201,7 +209,9 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
                   QRLocation loc = qrCode.getLoc();
                   if (loc != null) {
                     LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
-                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(qrCode.getName()));
+                    Marker marker =
+                        mMap.addMarker(
+                            new MarkerOptions().position(latLng).title(qrCode.getName()));
                     marker.setTag(qrCode);
                     Log.d(
                         TAG,
@@ -215,29 +225,39 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
             });
 
     // Set up the marker click listener to display QR code properties
-    mMap.setOnMarkerClickListener(marker -> {
-              QRCode qrCode = (QRCode) marker.getTag(); // Retrieve the associated QR code object
-              if (qrCode != null) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                // Displays QR attributes as text
-                builder.setTitle(qrCode.getName())
-                        .setMessage("QR Name: " + qrCode.getName() + "\n" +
-                                "Location: " + qrCode.getLoc().toString() + "\n" +
-                                "Score: " + qrCode.getScore().toString() + "\n" +
-                                "Date created: " + qrCode.getComments())
-                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
-                // Displays the QR image if available
-                if (qrCode.getPhotos() != null) {
-                  //Handle imges
-                }
-                AlertDialog dialog = builder.create();
-                dialog.show();
-                return true;
+    mMap.setOnMarkerClickListener(
+        marker -> {
+          QRCode qrCode = (QRCode) marker.getTag(); // Retrieve the associated QR code object
+          if (qrCode != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            // Displays QR attributes as text
+            builder
+                .setTitle(qrCode.getName())
+                .setMessage(
+                    "QR Name: "
+                        + qrCode.getName()
+                        + "\n"
+                        + "Location: "
+                        + qrCode.getLoc().toString()
+                        + "\n"
+                        + "Score: "
+                        + qrCode.getScore().toString()
+                        + "\n"
+                        + "Date created: "
+                        + qrCode.getComments())
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+            // Displays the QR image if available
+            if (qrCode.getPhotos() != null) {
+              // Handle imges
+            }
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            return true;
 
-              } else {
-                return false;
-              }
-    });
+          } else {
+            return false;
+          }
+        });
   }
 
   /**
