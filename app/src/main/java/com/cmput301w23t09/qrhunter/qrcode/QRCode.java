@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.locationphoto.LocationPhoto;
 import com.cmput301w23t09.qrhunter.map.QRLocation;
+import com.cmput301w23t09.qrhunter.util.VisualFetcher;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -120,8 +121,8 @@ public class QRCode implements Serializable {
   public Bitmap getVisualRepresentation() throws InterruptedException, ExecutionException {
     if (visualRepresentation == null) {
       visualRepresentation =
-          new QRCodeVisualFetcher()
-              .execute("https://api.dicebear.com/5.x/pixel-art-neutral/jpg?seed=" + hash)
+          new VisualFetcher()
+              .execute("https://api.dicebear.com/6.x/pixel-art-neutral/jpg?seed=" + hash)
               .get();
     }
     return visualRepresentation;

@@ -1,4 +1,4 @@
-package com.cmput301w23t09.qrhunter.qrcode;
+package com.cmput301w23t09.qrhunter.util;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,9 +8,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Fetches QRCode's visual representation from DiceBear (https://www.dicebear.com) License: MIT Art
- * Style Used: Pixel Art Neutral (https://www.figma.com/community/file/1198754108850888330) By:
- * Florian Körner (contact@florian-koerner.com) License: CC BY
+ * Fetches QRCode's visual representation and profile pictures from DiceBear
+ * (https://www.dicebear.com) License: MIT Art Styles Used: - Pixel Art Neutral
+ * (https://www.figma.com/community/file/1198754108850888330) - Identicon Both by: Florian Körner
+ * (contact@florian-koerner.com) License: CC BY
  *
  * <p>API Call Code was adapted from
  * https://www.java67.com/2019/03/7-examples-of-httpurlconnection-in-java.html By: Soma Sharma
@@ -18,7 +19,7 @@ import java.net.URL;
  * <p>Again, all the code was by andy-mtng (Andy Nguyen's) but git blamed on jmmabanta who
  * integrated his feature.
  */
-public class QRCodeVisualFetcher extends AsyncTask<String, Void, Bitmap> {
+public class VisualFetcher extends AsyncTask<String, Void, Bitmap> {
   private int responseCode;
 
   @Override
