@@ -16,6 +16,7 @@ import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
 import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,13 +25,14 @@ public class LeaderboardFragment extends BaseFragment {
 
   private final LeaderboardController controller;
   private final PlayerSearchController searchController;
-  private LeaderboardEntryAdapter entryAdapter;
-  private List<LeaderboardEntry> leaderboardEntries;
+  private LeaderboardEntryAdapter leaderboardAdapter;
+  private List<LeaderboardAdapterItem<?>> leaderboardAdapterItems;
 
   private String currentActiveTab;
 
-  private Map<String, Leaderboard<?>> cachedLeaderboards;
+  private Map<String, List<Leaderboard<?>>> cachedLeaderboardsByTab;
   private SearchView playerSearchView;
+
 
   public LeaderboardFragment(GameController gameController) {
     super(gameController);
@@ -46,11 +48,13 @@ public class LeaderboardFragment extends BaseFragment {
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_leaderboard, container, false);
 
-    cachedLeaderboards = new HashMap<>();
-    leaderboardEntries = new ArrayList<>();
-    entryAdapter = new LeaderboardEntryAdapter(getContext(), leaderboardEntries);
-    ((ListView) view.findViewById(R.id.leaderboard_list)).setAdapter(entryAdapter);
+    cachedLeaderboardsByTab = new HashMap<>();
+    leaderboardAdapterItems = new ArrayList<>();
+    leaderboardAdapter = new LeaderboardEntryAdapter(getContext(), leaderboardAdapterItems);
+    ListView leaderboardListView = view.findViewById(R.id.leaderboard_list);
+    leaderboardListView.setAdapter(leaderboardAdapter);
     playerSearchView = view.findViewById(R.id.player_search);
+
 
     setupTabList(view);
     setUpPlayerSearch();
@@ -63,6 +67,7 @@ public class LeaderboardFragment extends BaseFragment {
    *
    * @param view the view of the fragment
    */
+  @SuppressWarnings("unchecked")
   private void setupTabList(View view) {
     TabLayout tabNavigation = view.findViewById(R.id.leaderboard_navigation);
     tabNavigation.addOnTabSelectedListener(
@@ -74,31 +79,40 @@ public class LeaderboardFragment extends BaseFragment {
             currentActiveTab = tabText;
 
             // Render cached leaderboard data if any exists.
-            Leaderboard<?> cachedLeaderboard = cachedLeaderboards.getOrDefault(tabText, null);
-            if (cachedLeaderboard != null) {
-              renderLeaderboard(cachedLeaderboard);
+            List<Leaderboard<?>> cachedLeaderboards =
+                cachedLeaderboardsByTab.getOrDefault(tabText, null);
+            if (cachedLeaderboards != null) {
+              renderLeaderboards(cachedLeaderboards);
             } else {
-              clearLeaderboard();
+              clearLeaderboards();
             }
 
             switch (String.valueOf(tab.getText())) {
               case "Total Points":
                 controller.getTotalPointsLeaderboard(
                     (exception, leaderboard) ->
-                        onLeaderboardCallback(tabText, exception, leaderboard));
+                        onLeaderboardCallback(
+                            tabText, exception, Collections.singletonList(leaderboard)));
                 break;
               case "Scanned":
                 controller.getTopScansLeaderboard(
                     (exception, leaderboard) ->
-                        onLeaderboardCallback(tabText, exception, leaderboard));
+                        onLeaderboardCallback(
+                            tabText, exception, Collections.singletonList(leaderboard)));
                 break;
               case "Top Codes":
                 controller.getTopQRCodesLeaderboard(
                     (exception, leaderboard) ->
-                        onLeaderboardCallback(tabText, exception, leaderboard));
+                        onLeaderboardCallback(
+                            tabText, exception, Collections.singletonList(leaderboard)));
                 break;
               case "Top Codes (By Region)":
-                // TODO: Implement after location uploading is implemented.
+                controller.getTopQRCodesByRegionLeaderboard(
+                    (exception, leaderboardsByRegion) ->
+                        onLeaderboardCallback(
+                            tabText,
+                            exception,
+                            (List<Leaderboard<?>>) (Object) leaderboardsByRegion));
                 break;
               default:
                 throw new UnsupportedOperationException(
@@ -130,13 +144,13 @@ public class LeaderboardFragment extends BaseFragment {
         new AdapterView.OnItemClickListener() {
           @Override
           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            LeaderboardEntry entry = leaderboardEntries.get(position);
+            LeaderboardAdapterItem<?> entry = leaderboardAdapterItems.get(position);
 
             // What kind of entry is this?
             if (entry instanceof PlayerLeaderboardEntry) {
               // Player leaderboard item, display their profile.
               controller.handleEntryClick((PlayerLeaderboardEntry) entry);
-            } else {
+            } else if (entry instanceof QRCodeLeaderboardEntry) {
               // QR leaderboard item, display the QR fragment.
               controller.handleEntryClick((QRCodeLeaderboardEntry) entry);
             }
@@ -145,7 +159,7 @@ public class LeaderboardFragment extends BaseFragment {
   }
 
   private void onLeaderboardCallback(
-      String tabName, Exception exception, Leaderboard<?> leaderboard) {
+      String tabName, Exception exception, List<Leaderboard<?>> leaderboards) {
     if (exception != null) {
       Log.e(getClass().getName(), exception.getLocalizedMessage());
       Toast.makeText(
@@ -157,27 +171,29 @@ public class LeaderboardFragment extends BaseFragment {
     }
 
     // Store leaderboard in cache to "reduce" empty leaderboard page time when flipping between
-    cachedLeaderboards.put(tabName, leaderboard);
+    cachedLeaderboardsByTab.put(tabName, leaderboards);
 
     if (currentActiveTab.equals(tabName)) {
-      renderLeaderboard(leaderboard);
+      renderLeaderboards(leaderboards);
     }
   }
 
-  private void clearLeaderboard() {
-    leaderboardEntries.clear();
-    entryAdapter.notifyDataSetChanged();
+  private void clearLeaderboards() {
+    leaderboardAdapterItems.clear();
+    leaderboardAdapter.notifyDataSetChanged();
   }
 
-  private void renderLeaderboard(Leaderboard<?> leaderboard) {
-    clearLeaderboard();
+  private void renderLeaderboards(List<Leaderboard<?>> leaderboards) {
+    clearLeaderboards();
 
-    leaderboardEntries.addAll(leaderboard.getEntries());
-    entryAdapter.notifyDataSetChanged();
-  }
-
-  private void renderLeaderboard(Map<String, Leaderboard<?>> leaderboardWithHeaders) {
-    // TODO: when locations are implemented
+    for (Leaderboard<?> leaderboard : leaderboards) {
+      if (leaderboard.getName() != null) {
+        // Add title element
+        leaderboardAdapterItems.add(new LeaderboardEntryTitle(leaderboard.getName()));
+      }
+      leaderboardAdapterItems.addAll(leaderboard.getEntries());
+      leaderboardAdapter.notifyDataSetChanged();
+    }
   }
 
   /** Sets up the search view to respond to user input */
