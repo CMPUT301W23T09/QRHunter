@@ -14,17 +14,36 @@ import com.cmput301w23t09.qrhunter.R;
 
 import java.util.List;
 
+/**
+ * ArrayAdapter for search query entries
+ *
+ * @author Andy Nguyen
+ * @version 1.0
+ */
 public class SearchQueryEntryAdapter extends ArrayAdapter<SearchQueryEntry> {
+    /** Search query entries to use for this adapter */
     private final List<SearchQueryEntry> entries;
-
+    /** Context for the search fragment */
     private final Context context;
 
+    /**
+     * Constructor for the SearchQueryEntryAdapter
+     * @param context Context for the saerch fragment
+     * @param entries Search query entries to use for this adapter
+     */
     public SearchQueryEntryAdapter(Context context, List<SearchQueryEntry> entries) {
         super(context, 0, entries);
         this.entries = entries;
         this.context = context;
     }
 
+    /**
+     * Gets the view that represents the search query entry at a certain position in the list
+     * @param position Position of the search entry
+     * @param convertView Potential view the adapter can reuse
+     * @param parent Parent of convertView
+     * @return View that represents the search query entry
+     */
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view = convertView;
