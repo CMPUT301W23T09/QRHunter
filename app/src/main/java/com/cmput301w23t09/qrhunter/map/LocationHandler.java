@@ -3,6 +3,9 @@ package com.cmput301w23t09.qrhunter.map;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.widget.Toast;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
@@ -10,6 +13,9 @@ import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
+import java.io.IOException;
+import java.util.Locale;
+import java.util.function.BiConsumer;
 
 /**
  * Handles location permissions and retrieving the location of the player's device. Used to set the
@@ -57,7 +63,29 @@ public class LocationHandler {
               fragment.getActivity(),
               location -> {
                 if (location != null) {
-                  qrCode.setLoc(location);
+                  getAddressFromCoords(
+                      location.getLatitude(),
+                      location.getLongitude(),
+                      (exception, address) -> {
+                        if (exception != null) {
+                          Toast.makeText(
+                                  fragment.getContext(),
+                                  "An exception occurred while fetching your location.",
+                                  Toast.LENGTH_SHORT)
+                              .show();
+                          return;
+                        }
+
+                        // Now that we have the address, get the city and add the location to the
+                        // QR.
+                        String region = address.getThoroughfare();
+                        if (region != null) {
+                          QRLocation qrLocation =
+                              new QRLocation(
+                                  region, location.getLatitude(), location.getLongitude());
+                          qrCode.setLoc(qrLocation);
+                        }
+                      });
                 }
               });
     }
@@ -77,8 +105,29 @@ public class LocationHandler {
               fragment.getActivity(),
               location -> {
                 if (location != null) {
-                  lastAddedLocation = new QRLocation(location);
-                  qrCode.addLocation(lastAddedLocation);
+                  getAddressFromCoords(
+                      location.getLatitude(),
+                      location.getLongitude(),
+                      (exception, address) -> {
+                        if (exception != null) {
+                          Toast.makeText(
+                                  fragment.getContext(),
+                                  "An exception occurred while fetching your location.",
+                                  Toast.LENGTH_SHORT)
+                              .show();
+                          return;
+                        }
+
+                        // Now that we have the address, get the city and add the location to the
+                        // QR.
+                        String region = address.getThoroughfare();
+                        if (region != null) {
+                          lastAddedLocation =
+                              new QRLocation(
+                                  region, location.getLatitude(), location.getLongitude());
+                          qrCode.addLocation(lastAddedLocation);
+                        }
+                      });
                 }
               });
     }
@@ -92,6 +141,23 @@ public class LocationHandler {
   public void removeLastAddedLocation(QRCode qrCode) {
     qrCode.removeLocation(lastAddedLocation);
     lastAddedLocation = null;
+  }
+
+  private void getAddressFromCoords(
+      double lat, double lon, BiConsumer<Exception, Address> callback) {
+    Geocoder geoCoder = new Geocoder(fragment.getContext(), Locale.getDefault());
+    try {
+      Address address = geoCoder.getFromLocation(lat, lon, 1).stream().findAny().orElse(null);
+
+      if (address == null) {
+        callback.accept(new IllegalStateException("No address found."), null);
+        return;
+      }
+
+      callback.accept(null, address);
+    } catch (IOException e) {
+      callback.accept(e, null);
+    }
   }
 
   /**

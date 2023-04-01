@@ -3,10 +3,10 @@ package com.cmput301w23t09.qrhunter;
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import android.graphics.Bitmap;
-import android.location.Location;
 import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.locationphoto.LocationPhoto;
 import com.cmput301w23t09.qrhunter.map.QRLocation;
@@ -15,16 +15,18 @@ import java.util.ArrayList;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 // still needs testGetLocations() and testSetLocations()
 @RunWith(MockitoJUnitRunner.class)
 public class TestQRModel {
   // create a mock hash
-  private String mockHash = "8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d";
+  private final String mockHash =
+      "8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d";
 
-  @Mock private Location mockLoc = new Location("");
+  private QRLocation mockLoc() {
+    return new QRLocation("0;0;City");
+  }
 
   // create a mock qr code
   private QRCode mockCode() {
@@ -72,21 +74,21 @@ public class TestQRModel {
 
   @Test
   public void testGetLoc() {
-    QRCode qr = new QRCode(mockHash, "RobaqinectTiger✿", 32, mockLoc, null, null, null, null);
-    Location loc = qr.getLoc();
-    assertEquals(loc.getClass().toString(), "class android.location.Location");
-    assertEquals(loc.getLatitude(), mockLoc.getLatitude());
-    assertEquals(loc.getLongitude(), mockLoc.getLongitude());
+    QRCode qr = new QRCode(mockHash, "RobaqinectTiger✿", 32, mockLoc(), null, null, null, null);
+    QRLocation loc = qr.getLoc();
+    assertNotNull(loc);
+    assertEquals(loc.getLatitude(), mockLoc().getLatitude());
+    assertEquals(loc.getLongitude(), mockLoc().getLongitude());
   }
 
   @Test
   public void testSetLoc() {
     QRCode qr = mockCode();
-    qr.setLoc(mockLoc);
-    Location loc = qr.getLoc();
-    assertEquals(loc.getClass().toString(), "class android.location.Location");
-    assertEquals(loc.getLatitude(), mockLoc.getLatitude());
-    assertEquals(loc.getLongitude(), mockLoc.getLongitude());
+    qr.setLoc(mockLoc());
+    QRLocation loc = qr.getLoc();
+    assertNotNull(loc);
+    assertEquals(loc.getLatitude(), mockLoc().getLatitude());
+    assertEquals(loc.getLongitude(), mockLoc().getLongitude());
   }
 
   @Test
@@ -197,7 +199,7 @@ public class TestQRModel {
 
   @Test
   public void testAddLocation() {
-    QRLocation csc = new QRLocation(53.52678, -113.52708); // CSC
+    QRLocation csc = new QRLocation("Edmonton", 53.52678, -113.52708); // CSC
     QRCode mockQR = mockCode();
     mockQR.addLocation(csc);
     assertTrue(mockQR.getLocations().contains(csc));
@@ -205,9 +207,9 @@ public class TestQRModel {
 
   @Test
   public void testAddLocationTooClose() {
-    QRLocation csc = new QRLocation(53.52678, -113.52708); // CSC
+    QRLocation csc = new QRLocation("Edmonton", 53.52678, -113.52708); // CSC
     QRLocation athabasca =
-        new QRLocation(53.52671, -113.52663); // Athabasca Hall (within 100m of CSC)
+        new QRLocation("Edmonton", 53.52671, -113.52663); // Athabasca Hall (within 100m of CSC)
     QRCode mockQR = mockCode();
     mockQR.addLocation(csc);
     mockQR.addLocation(athabasca); // Should not add Athabasca
@@ -217,7 +219,7 @@ public class TestQRModel {
 
   @Test
   public void testSetAndRemoveLocation() {
-    QRLocation csc = new QRLocation(53.52678, -113.52708); // CSC
+    QRLocation csc = new QRLocation("Edmonton", 53.52678, -113.52708); // CSC
     ArrayList<QRLocation> locations = new ArrayList<>();
     locations.add(csc);
     QRCode mockQR = mockCode();
