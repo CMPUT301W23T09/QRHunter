@@ -180,6 +180,9 @@ public class LeaderboardFragment extends BaseFragment {
     // TODO: when locations are implemented
   }
 
+  /**
+   * Sets up the search view to respond to user input
+   * */
   private void setUpPlayerSearch() {
     playerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
       @Override
