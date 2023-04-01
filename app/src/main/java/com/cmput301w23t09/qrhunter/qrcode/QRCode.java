@@ -309,7 +309,14 @@ public class QRCode implements Serializable {
     String nameBitFive = (binary.charAt(4) == '0') ? "Tiny" : "Spicy";
     String nameBitSix = (binary.charAt(5) == '0') ? "Panda" : "Tiger";
 
-    return nameBitOne + nameBitTwo + nameBitThree + nameBitFour + " " + nameBitFive + " " + nameBitSix;
+    return nameBitOne
+        + nameBitTwo
+        + nameBitThree
+        + nameBitFour
+        + " "
+        + nameBitFive
+        + " "
+        + nameBitSix;
   }
 
   /**
