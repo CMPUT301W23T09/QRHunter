@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +49,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
   private List<LatLng> latLngsList;
   private SearchView qrSearcher;
   private SearchQRController searchController;
+  private long LOCATION_UPDATE_INTERVAL = 30000;
 
   public MapFragment(GameController gameController) {
     super(gameController);
@@ -109,6 +111,39 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
               }
             });
       }
+      Handler handler = new Handler();
+      handler.postDelayed(new Runnable() {
+        @Override
+        public void run() {
+          try {
+            Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
+            locationResult.addOnCompleteListener(getActivity(), new OnCompleteListener<Location>() {
+              @Override
+              public void onComplete(@NonNull Task<Location> task) {
+                if (task.isSuccessful()) {
+                  Location newLocation = task.getResult();
+                  int MIN_DISTANCE_UPDATE = 5000;
+                  if (newLocation != null && lastKnownLocation.distanceTo(newLocation) > MIN_DISTANCE_UPDATE) {
+                    lastKnownLocation = newLocation;
+                    currentLocation = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM));
+                    map.clear();
+                    map.addMarker(new MarkerOptions().position(currentLocation).title("YOU"));
+                  }
+                } else {
+                  Log.d(TAG, "Current location is null. Using defaults.");
+                  Log.e(TAG, "Exception: %s", task.getException());
+                }
+              }
+            });
+          } catch (SecurityException e) {
+            Log.e("Exception: %s", e.getMessage(), e);
+          } finally {
+            // Schedule the next location update
+            handler.postDelayed(this, LOCATION_UPDATE_INTERVAL);
+          }
+        }
+      }, LOCATION_UPDATE_INTERVAL);
     } catch (SecurityException e) {
       Log.e("Exception: %s", e.getMessage(), e);
     }
