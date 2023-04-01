@@ -12,12 +12,21 @@ import java.net.URL;
  * Style Used: Pixel Art Neutral (https://www.figma.com/community/file/1198754108850888330) By:
  * Florian Körner (contact@florian-koerner.com) License: CC BY
  *
- * <p>API Call Code was adapted from
- * https://stackoverflow.com/questions/24399294/android-asynctask-to-make-an-http-get-request By:
- * Rishabh Dixit https://www.digitalocean.com/community/tutorials/android-asynctask-example-tutorial
- * By: Anupam Chugh
+ * API Call Code was adapted from:
+ * Source: https://stackoverflow.com/questions/24399294/android-asynctask-to-make-an-http-get-request
+ * By: Rishabh Dixit (https://stackoverflow.com/users/6940935/rishabh-dixit) (03/09/17)
+ * License: cc-wiki
  *
- * <p>Again, all the code was by andy-mtng (Andy Nguyen's) but git blamed on jmmabanta who
+ * Source: https://www.digitalocean.com/community/tutorials/android-asynctask-example-tutorial
+ * By: Anupam Chugh (09/03/22)
+ * License: CC BY-NC-SA 4.0
+ *
+ * Source: https://stackoverflow.com/questions/62585357/how-to-print-read-image-from-rest-api-call-using-java
+ * By: abk (https://stackoverflow.com/users/3500996/abk) (03/24/21)
+ * Licsense: cc-wiki
+ *
+ *
+ * Again, all the code was by andy-mtng (Andy Nguyen's) but git blamed on jmmabanta who
  * integrated his feature.
  */
 public class QRCodeVisualFetcher extends AsyncTask<String, Void, Bitmap> {
