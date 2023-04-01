@@ -247,15 +247,15 @@ public class TestLeaderboardFragment extends BaseTest {
   /**
    * Using the search bar to search for a player should transition to the player search fragment
    *
-   * How to test if a fragment matches another fragment
-   * Source: https://stackoverflow.com/questions/69324021/how-do-i-test-if-a-fragment-has-been-replaced-by-another-fragment
-   * By: Shweta Chauhan (https://stackoverflow.com/users/6021469/shweta-chauhan) (09/26/21)
-   * License: cc-wiki
+   * <p>How to test if a fragment matches another fragment Source:
+   * https://stackoverflow.com/questions/69324021/how-do-i-test-if-a-fragment-has-been-replaced-by-another-fragment
+   * By: Shweta Chauhan (https://stackoverflow.com/users/6021469/shweta-chauhan) (09/26/21) License:
+   * cc-wiki
    *
-   * How to perform a click on the search view and search something
-   * Source: https://stackoverflow.com/questions/56134911/how-to-press-on-searchview-the-action-button-in-espresso
-   * By: Ahmed Garhy (https://stackoverflow.com/users/2714637/ahmed-garhy) (01/11/20)
-   * License: cc-wiki
+   * <p>How to perform a click on the search view and search something Source:
+   * https://stackoverflow.com/questions/56134911/how-to-press-on-searchview-the-action-button-in-espresso
+   * By: Ahmed Garhy (https://stackoverflow.com/users/2714637/ahmed-garhy) (01/11/20) License:
+   * cc-wiki
    */
   @Test
   public void testSearchTransitionsToPlayerSearchFragment() {
@@ -269,10 +269,9 @@ public class TestLeaderboardFragment extends BaseTest {
   /**
    * Searching for a player that does not exist should display a text view (Player Not Found)
    *
-   * How to delay code
-   * Source: https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java
-   * By: Boris the Spider (https://stackoverflow.com/users/2071828/boris-the-spider) (06/08/14)
-   * License: cc-wiki
+   * <p>How to delay code Source:
+   * https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java By: Boris the Spider
+   * (https://stackoverflow.com/users/2071828/boris-the-spider) (06/08/14) License: cc-wiki
    */
   @Test
   public void testSearchDisplaysNoPlayers() {
@@ -306,10 +305,10 @@ public class TestLeaderboardFragment extends BaseTest {
    * Searching for a player should display related player names with the exact match first and names
    * with the exact match prefix in descending order based on closeness to the front
    *
-   * How to test information in a listview
-   * Source: https://stackoverflow.com/questions/40822472/check-content-of-an-element-inside-a-listview-with-espresso
-   * By: lmiguelvargasf (https://stackoverflow.com/users/3705840/lmiguelvargasf) (11/26/16)
-   * License: cc-wiki
+   * <p>How to test information in a listview Source:
+   * https://stackoverflow.com/questions/40822472/check-content-of-an-element-inside-a-listview-with-espresso
+   * By: lmiguelvargasf (https://stackoverflow.com/users/3705840/lmiguelvargasf) (11/26/16) License:
+   * cc-wiki
    */
   @Test
   public void testRelatedUsernameSearch() {

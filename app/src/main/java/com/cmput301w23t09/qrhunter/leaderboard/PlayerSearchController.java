@@ -84,9 +84,9 @@ public class PlayerSearchController {
               }
 
               // Information on how to convert a set to a list
-                // Source: https://www.digitalocean.com/community/tutorials/set-to-list-in-java
-                // By: Jayant Verma (08/03/22)
-                // License: CC BY-NC-SA 4.0
+              // Source: https://www.digitalocean.com/community/tutorials/set-to-list-in-java
+              // By: Jayant Verma (08/03/22)
+              // License: CC BY-NC-SA 4.0
               Set<Player> allPlayersSet = allPlayers.getData();
               List<Player> allPlayersList = new ArrayList<>(allPlayersSet);
 
@@ -113,15 +113,15 @@ public class PlayerSearchController {
   /**
    * Filters the list of all players leaving only those containing the query as a substring
    *
-   * Information on how to filter a set:
-   * Source: https://stackoverflow.com/questions/122105/how-to-filter-a-java-collection-based-on-predicate
-   * By: Mario Fusco (https://stackoverflow.com/users/112779/mario-fusco) (09/06/10)
-   * License: cc-wiki
+   * <p>Information on how to filter a set: Source:
+   * https://stackoverflow.com/questions/122105/how-to-filter-a-java-collection-based-on-predicate
+   * By: Mario Fusco (https://stackoverflow.com/users/112779/mario-fusco) (09/06/10) License:
+   * cc-wiki
    *
-   * Information on how a comparator works:
-   * Source: https://stackoverflow.com/questions/23136998/how-does-this-comparator-work
-   * By: user3484803 and Denis Kulagin (https://stackoverflow.com/users/1065145/denis-kulagin) (04/17/14)
-   * License: cc-wiki
+   * <p>Information on how a comparator works: Source:
+   * https://stackoverflow.com/questions/23136998/how-does-this-comparator-work By: user3484803 and
+   * Denis Kulagin (https://stackoverflow.com/users/1065145/denis-kulagin) (04/17/14) License:
+   * cc-wiki
    *
    * @param allPlayersList List of all the players in the database
    * @param usernameQuery Username query the user is searching for
@@ -153,9 +153,9 @@ public class PlayerSearchController {
   /**
    * Creates the text view that if no players are found for the user's search query
    *
-   * Information on how to create a TextView
-   * Source: https://stackoverflow.com/questions/5918320/dynamically-add-textviews-to-a-linearlayout
-   * By: Joseph Earl (https://stackoverflow.com/users/290028/joseph-earl) (05/07/11)
+   * <p>Information on how to create a TextView Source:
+   * https://stackoverflow.com/questions/5918320/dynamically-add-textviews-to-a-linearlayout By:
+   * Joseph Earl (https://stackoverflow.com/users/290028/joseph-earl) (05/07/11)
    *
    * @param context Used to access the context of the fragment
    * @return TextView with a player not found message
