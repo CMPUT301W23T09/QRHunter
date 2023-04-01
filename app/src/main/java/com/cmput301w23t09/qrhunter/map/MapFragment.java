@@ -1,5 +1,6 @@
 package com.cmput301w23t09.qrhunter.map;
 
+import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -23,6 +26,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -148,28 +152,6 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     updateLocationUI();
   }
 
-  //    private void getQRFromDB() {
-  //      QRCodeDatabase.getInstance().getAllQRCodes(task -> {
-  //        if (!task.isSuccessful()) {
-  //          // do error handling here as database query failed
-  //          return;
-  //        }
-  //
-  //        // do stuff with ALL qr codes
-  //        List<LatLng> latLngs = new ArrayList<>();
-  //        if (task.isSuccessful()) {
-  //          for (QRCode qrCode : task.getData()) {
-  //            // Extract the latitude and longitude values for each QRCode.
-  //            Location loc = qrCode.getLoc();
-  //            double latitude = loc.getLatitude();
-  //            double longitude = loc.getLongitude();
-  //            // Create a new LatLng object and add it to the list.
-  //            LatLng latLng = new LatLng(latitude, longitude);
-  //            latLngs.add(latLng);
-  //          }
-  //        }
-  //      });
-  //    }
   public void displayQRCodeMarkersOnMap(GoogleMap mMap) {
     QRCodeDatabase.getInstance()
         .getAllQRCodes(
@@ -181,10 +163,11 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
                 // Loop through the list of QRCode objects and add markers to the Google Map
                 for (QRCode qrCode : qrCodeList) {
-                  Location loc = qrCode.getLoc();
+                  QRLocation loc = qrCode.getLoc();
                   if (loc != null) {
                     LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
-                    mMap.addMarker(new MarkerOptions().position(latLng).title(qrCode.getName()));
+                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(qrCode.getName()));
+                    marker.setTag(qrCode);
                     Log.d(
                         TAG,
                         "Marker added for QR code: "
@@ -195,27 +178,32 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
                 }
               }
             });
-  }
 
-  //  public void getTopQRCodesLeaderboard(BiConsumer<Exception, Leaderboard> callback) {
-  //    QRCodeDatabase.getInstance()
-  //            .getAllQRCodes(
-  //                    task -> {
-  //                      if (!task.isSuccessful()) {
-  //                        callback.accept(task.getException(), null);
-  //                        return;
-  //                      }
-  //
-  //                      List<LeaderboardEntry> entries = new ArrayList<>();
-  //                      for (QRCode qrCode : task.getData()) {
-  //                        entries.add(new LeaderboardEntry(qrCode.getName(), qrCode.getScore(),
-  // "points"));
-  //                      }
-  //
-  //                      Collections.sort(entries);
-  //                      callback.accept(null, new Leaderboard(entries));
-  //                    });
-  //  }
+    // Set up the marker click listener to display QR code properties
+    mMap.setOnMarkerClickListener(marker -> {
+              QRCode qrCode = (QRCode) marker.getTag(); // Retrieve the associated QR code object
+              if (qrCode != null) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                // Displays QR attributes as text
+                builder.setTitle(qrCode.getName())
+                        .setMessage("QR Name: " + qrCode.getName() + "\n" +
+                                "Location: " + qrCode.getLoc().toString() + "\n" +
+                                "Score: " + qrCode.getScore().toString() + "\n" +
+                                "Date created: " + qrCode.getComments())
+                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+                // Displays the QR image if available
+                if (qrCode.getPhotos() != null) {
+                  //Handle imges
+                }
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                return true;
+
+              } else {
+                return false;
+              }
+    });
+  }
 
   /**
    * @param inflater The LayoutInflater object that can be used to inflate any views in the
