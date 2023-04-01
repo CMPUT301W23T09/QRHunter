@@ -284,11 +284,27 @@ public class TestLeaderboardFragment extends BaseTest {
     onView(withId(R.id.player_search)).perform(click());
     onView(isAssignableFrom(EditText.class)).perform(typeText("Other Player"), pressKey(KeyEvent.KEYCODE_ENTER));
     onView(withId(R.id.search_linear_layout)).check(matches(isDisplayed()));
-
+    waitUntilSearchListHasData();
     onData(anything())
             .inAdapterView(withId(R.id.search_query_list))
             .atPosition(0)
+            .onChildView(withId(R.id.search_query_entry_text))
             .check(matches(withText("Other Player")));
+    onData(anything())
+            .inAdapterView(withId(R.id.search_query_list))
+            .atPosition(1)
+            .onChildView(withId(R.id.search_query_entry_text))
+            .check(matches(withText("Other Player123")));
+    onData(anything())
+            .inAdapterView(withId(R.id.search_query_list))
+            .atPosition(2)
+            .onChildView(withId(R.id.search_query_entry_text))
+            .check(matches(withText("123Other Player")));
+    onData(anything())
+            .inAdapterView(withId(R.id.search_query_list))
+            .atPosition(3)
+            .onChildView(withId(R.id.search_query_entry_text))
+            .check(matches(withText("123Other Player123")));
   }
 
   /**
@@ -312,5 +328,15 @@ public class TestLeaderboardFragment extends BaseTest {
               ListView listView = (ListView) solo.getView(R.id.leaderboard_list);
               return listView.getChildCount() > 0;
             });
+  }
+
+  private void waitUntilSearchListHasData() {
+    await()
+        .atMost(5, TimeUnit.SECONDS)
+        .until(
+                () -> {
+                  ListView listView = (ListView) solo.getView(R.id.search_query_list);
+                  return listView.getChildCount() > 0;
+                });
   }
 }
