@@ -17,32 +17,43 @@ import com.cmput301w23t09.qrhunter.R;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents fragment displaying the user's search query results
+ */
 
 public class PlayerSearchFragment extends BaseFragment {
+    /** The user's search query */
     private String searchQuery;
+    /** Button to go back to the leaderboards */
     private ImageView backButton;
+    /** Controller for the PlayerSearchFragment */
     private PlayerSearchController controller;
+    /** ListView container for all the players relating to the user's search query */
     private ListView searchQueryList;
+    /** Array adapter for the search entries */
     private SearchQueryEntryAdapter entryAdapter;
+    /** List of players relating to the user's search query */
     private List<SearchQueryEntry> searchQueryEntries;
+    /** LinearLayout container for all UI elements of the PlayerSearchFragment */
     private LinearLayout searchLinearLayout;
-//    private static GameController gameController;
 
+    /**
+     * Constructor for the PlayerSearchFragment
+     * @param gameController Gamecontroller used to switch between fragments
+     */
     public PlayerSearchFragment(GameController gameController) {
         super(gameController);
-//        this.gameController = gameController;
     }
 
-//    public static PlayerSearchFragment newInstance() {
-//        PlayerSearchFragment fragment = new PlayerSearchFragment(gameController);
-//        return fragment;
-//    }
-
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//    }
-
+    /**
+     * Method that runs when the view is created
+     *
+     * @param inflater Used to inflate any views in the fragment
+     * @param container Fragment's UI is attached to this parent view if not null
+     * @param savedInstanceState Previously saved state that is the fragment is re-constructed from if not null
+     *
+     * @return The view that will show the search queries
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Bundle args = getArguments();
@@ -59,6 +70,10 @@ public class PlayerSearchFragment extends BaseFragment {
         return view;
     }
 
+    /**
+     * Sets up the UI elements of the search fragment
+     * @param view View for the search fragment
+     */
     private void setUpSearchFragment(View view) {
         backButton = view.findViewById(R.id.back_button);
         searchQueryList = view.findViewById(R.id.search_query_list);
