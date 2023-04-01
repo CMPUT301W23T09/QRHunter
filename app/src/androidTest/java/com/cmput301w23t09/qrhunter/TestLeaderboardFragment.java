@@ -13,23 +13,16 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.CoreMatchers.anything;
 
-
 import android.Manifest;
 import android.content.Intent;
 import android.view.KeyEvent;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
-
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.DataInteraction;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
-
-import com.cmput301w23t09.qrhunter.leaderboard.Leaderboard;
-import com.cmput301w23t09.qrhunter.leaderboard.LeaderboardFragment;
-import com.cmput301w23t09.qrhunter.leaderboard.PlayerSearchFragment;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.profile.MyProfileFragment;
@@ -93,28 +86,28 @@ public class TestLeaderboardFragment extends BaseTest {
             new ArrayList<>());
     PlayerDatabase.getInstance().add(otherPlayer, ignored -> playerDatabaseSetup.countDown());
     Player otherPlayer2 =
-            new Player(
-                    UUID.randomUUID(),
-                    "Other Player123",
-                    "1234567890",
-                    "example@example.com",
-                    new ArrayList<>());
+        new Player(
+            UUID.randomUUID(),
+            "Other Player123",
+            "1234567890",
+            "example@example.com",
+            new ArrayList<>());
     PlayerDatabase.getInstance().add(otherPlayer2, ignored -> playerDatabaseSetup.countDown());
     Player otherPlayer3 =
-            new Player(
-                    UUID.randomUUID(),
-                    "123Other Player",
-                    "1234567890",
-                    "example@example.com",
-                    new ArrayList<>());
+        new Player(
+            UUID.randomUUID(),
+            "123Other Player",
+            "1234567890",
+            "example@example.com",
+            new ArrayList<>());
     PlayerDatabase.getInstance().add(otherPlayer3, ignored -> playerDatabaseSetup.countDown());
     Player otherPlayer4 =
-            new Player(
-                    UUID.randomUUID(),
-                    "123Other Player123",
-                    "1234567890",
-                    "example@example.com",
-                    new ArrayList<>());
+        new Player(
+            UUID.randomUUID(),
+            "123Other Player123",
+            "1234567890",
+            "example@example.com",
+            new ArrayList<>());
     PlayerDatabase.getInstance().add(otherPlayer4, ignored -> playerDatabaseSetup.countDown());
     playerDatabaseSetup.await();
 
@@ -254,17 +247,18 @@ public class TestLeaderboardFragment extends BaseTest {
   @Test
   public void testSearchTransitionsToPlayerSearchFragment() {
     onView(withId(R.id.player_search)).perform(click());
-    onView(isAssignableFrom(EditText.class)).perform(typeText("Joe"), pressKey(KeyEvent.KEYCODE_ENTER));
+    onView(isAssignableFrom(EditText.class))
+        .perform(typeText("Joe"), pressKey(KeyEvent.KEYCODE_ENTER));
 
-    onView(withId(R.id.search_linear_layout))
-            .check(matches(isDisplayed()));
+    onView(withId(R.id.search_linear_layout)).check(matches(isDisplayed()));
   }
 
   /** Searching for a player that does not exist should display a text view (Player Not Found) */
   @Test
   public void testSearchDisplaysNoPlayers() {
     onView(withId(R.id.player_search)).perform(click());
-    onView(isAssignableFrom(EditText.class)).perform(typeText("Joe"), pressKey(KeyEvent.KEYCODE_ENTER));
+    onView(isAssignableFrom(EditText.class))
+        .perform(typeText("Joe"), pressKey(KeyEvent.KEYCODE_ENTER));
     onView(withId(R.id.search_linear_layout)).check(matches(isDisplayed()));
 
     try {
@@ -274,48 +268,51 @@ public class TestLeaderboardFragment extends BaseTest {
     }
 
     onView(withText("Player Not Found.")).check(matches(isDisplayed()));
-
   }
 
   /** Presing the back button in the player search fragment should return to the leaderboards */
   @Test
   public void testPlayerSearchBackButton() {
     onView(withId(R.id.player_search)).perform(click());
-    onView(isAssignableFrom(EditText.class)).perform(typeText("Joe"), pressKey(KeyEvent.KEYCODE_ENTER));
+    onView(isAssignableFrom(EditText.class))
+        .perform(typeText("Joe"), pressKey(KeyEvent.KEYCODE_ENTER));
     onView(withId(R.id.search_linear_layout)).check(matches(isDisplayed()));
 
     onView(withId(R.id.back_button)).perform(click());
     onView(withId(R.id.leaderboard_linear_layout)).check(matches(isDisplayed()));
   }
 
-  /** Searching for a player should display related player names with the exact match
-   * first and names with the exact match prefix in descending order based on closeness to the front */
+  /**
+   * Searching for a player should display related player names with the exact match first and names
+   * with the exact match prefix in descending order based on closeness to the front
+   */
   @Test
   public void testRelatedUsernameSearch() {
     onView(withId(R.id.player_search)).perform(click());
-    onView(isAssignableFrom(EditText.class)).perform(typeText("Other Player"), pressKey(KeyEvent.KEYCODE_ENTER));
+    onView(isAssignableFrom(EditText.class))
+        .perform(typeText("Other Player"), pressKey(KeyEvent.KEYCODE_ENTER));
     onView(withId(R.id.search_linear_layout)).check(matches(isDisplayed()));
     waitUntilSearchListHasData();
     onData(anything())
-            .inAdapterView(withId(R.id.search_query_list))
-            .atPosition(0)
-            .onChildView(withId(R.id.search_query_entry_text))
-            .check(matches(withText("Other Player")));
+        .inAdapterView(withId(R.id.search_query_list))
+        .atPosition(0)
+        .onChildView(withId(R.id.search_query_entry_text))
+        .check(matches(withText("Other Player")));
     onData(anything())
-            .inAdapterView(withId(R.id.search_query_list))
-            .atPosition(1)
-            .onChildView(withId(R.id.search_query_entry_text))
-            .check(matches(withText("Other Player123")));
+        .inAdapterView(withId(R.id.search_query_list))
+        .atPosition(1)
+        .onChildView(withId(R.id.search_query_entry_text))
+        .check(matches(withText("Other Player123")));
     onData(anything())
-            .inAdapterView(withId(R.id.search_query_list))
-            .atPosition(2)
-            .onChildView(withId(R.id.search_query_entry_text))
-            .check(matches(withText("123Other Player")));
+        .inAdapterView(withId(R.id.search_query_list))
+        .atPosition(2)
+        .onChildView(withId(R.id.search_query_entry_text))
+        .check(matches(withText("123Other Player")));
     onData(anything())
-            .inAdapterView(withId(R.id.search_query_list))
-            .atPosition(3)
-            .onChildView(withId(R.id.search_query_entry_text))
-            .check(matches(withText("123Other Player123")));
+        .inAdapterView(withId(R.id.search_query_list))
+        .atPosition(3)
+        .onChildView(withId(R.id.search_query_entry_text))
+        .check(matches(withText("123Other Player123")));
   }
 
   /**
@@ -346,9 +343,9 @@ public class TestLeaderboardFragment extends BaseTest {
     await()
         .atMost(5, TimeUnit.SECONDS)
         .until(
-                () -> {
-                  ListView listView = (ListView) solo.getView(R.id.search_query_list);
-                  return listView.getChildCount() == 4;
-                });
+            () -> {
+              ListView listView = (ListView) solo.getView(R.id.search_query_list);
+              return listView.getChildCount() == 4;
+            });
   }
 }

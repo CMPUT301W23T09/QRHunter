@@ -2,19 +2,14 @@ package com.cmput301w23t09.qrhunter.leaderboard;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.profile.OtherProfileFragment;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -27,131 +22,142 @@ import java.util.stream.Collectors;
  * @author Andy Nguyen
  * @version 1.0
  */
-
-
 public class PlayerSearchController {
-    /** Game controller used to transition between fragments */
-    GameController gameController;
+  /** Game controller used to transition between fragments */
+  GameController gameController;
 
-    /**
-     * Creates a PlayerSearchController
-     * @param gameController Used to transition between fragments
-     */
-    public PlayerSearchController(GameController gameController) {
-        this.gameController = gameController;
-    }
+  /**
+   * Creates a PlayerSearchController
+   *
+   * @param gameController Used to transition between fragments
+   */
+  public PlayerSearchController(GameController gameController) {
+    this.gameController = gameController;
+  }
 
-    /**
-     * Handles the switch from the PlayerSearchFragment to the Leaderboard fragment when the back button is pressed
-     */
-    public void handleBackButton() {
-        LeaderboardFragment leaderboardFragment = new LeaderboardFragment(gameController);
-        gameController.setBody(leaderboardFragment);
-    }
+  /**
+   * Handles the switch from the PlayerSearchFragment to the Leaderboard fragment when the back
+   * button is pressed
+   */
+  public void handleBackButton() {
+    LeaderboardFragment leaderboardFragment = new LeaderboardFragment(gameController);
+    gameController.setBody(leaderboardFragment);
+  }
 
-    /**
-     * Handles the user's search query by transitioning to the search fragment
-     * @param query Username query the user is searching for
-     */
-    public void handleSearchQuery(String query) {
-        PlayerSearchFragment searchFragment = new PlayerSearchFragment(gameController);
-        Bundle args = new Bundle();
-        args.putString("search_query", query);
-        searchFragment.setArguments(args);
-        gameController.setBody(searchFragment);
-    }
+  /**
+   * Handles the user's search query by transitioning to the search fragment
+   *
+   * @param query Username query the user is searching for
+   */
+  public void handleSearchQuery(String query) {
+    PlayerSearchFragment searchFragment = new PlayerSearchFragment(gameController);
+    Bundle args = new Bundle();
+    args.putString("search_query", query);
+    searchFragment.setArguments(args);
+    gameController.setBody(searchFragment);
+  }
 
-    /**
-     * Displays the search query data in the list view of the PlayerSearchFragment
-     * @param usernameQuery Username query the user is searching for
-     * @param searchQueryEntries All related entries to the user's username query
-     * @param entryAdapter Adapter for the search query entries
-     * @param searchLinearLayout Container for the search queries
-     * @param context Used to access the context of the fragment
-     */
-    public void displaySearchQueryData(
-            String usernameQuery,
-            List<SearchQueryEntry> searchQueryEntries,
-            SearchQueryEntryAdapter entryAdapter,
-            LinearLayout searchLinearLayout,
-            Context context) {
-        PlayerDatabase.getInstance()
-                .getAllPlayers(
-                        allPlayers -> {
-                            if (!allPlayers.isSuccessful()) {
-                                return;
-                            }
+  /**
+   * Displays the search query data in the list view of the PlayerSearchFragment
+   *
+   * @param usernameQuery Username query the user is searching for
+   * @param searchQueryEntries All related entries to the user's username query
+   * @param entryAdapter Adapter for the search query entries
+   * @param searchLinearLayout Container for the search queries
+   * @param context Used to access the context of the fragment
+   */
+  public void displaySearchQueryData(
+      String usernameQuery,
+      List<SearchQueryEntry> searchQueryEntries,
+      SearchQueryEntryAdapter entryAdapter,
+      LinearLayout searchLinearLayout,
+      Context context) {
+    PlayerDatabase.getInstance()
+        .getAllPlayers(
+            allPlayers -> {
+              if (!allPlayers.isSuccessful()) {
+                return;
+              }
 
-                            if (allPlayers.getData() == null) {
-                                return;
-                            }
+              if (allPlayers.getData() == null) {
+                return;
+              }
 
-                            Set<Player> allPlayersSet = allPlayers.getData();
-                            List<Player> allPlayersList = new ArrayList<>(allPlayersSet);
+              Set<Player> allPlayersSet = allPlayers.getData();
+              List<Player> allPlayersList = new ArrayList<>(allPlayersSet);
 
-                            // filters the set of all players leaving only those containing the query as a substring
-                            List<Player> relatedUsernamePlayers = getRelatedUsernamePlayers(allPlayersList, usernameQuery);
+              // filters the set of all players leaving only those containing the query as a
+              // substring
+              List<Player> relatedUsernamePlayers =
+                  getRelatedUsernamePlayers(allPlayersList, usernameQuery);
 
-                            // if no players are found display Player Not Found message
-                            if (relatedUsernamePlayers.size() == 0) {
-                                TextView noPlayersFoundMessage = createNoPlayersFoundTextView(context);
-                                searchLinearLayout.addView(noPlayersFoundMessage);
+              // if no players are found display Player Not Found message
+              if (relatedUsernamePlayers.size() == 0) {
+                TextView noPlayersFoundMessage = createNoPlayersFoundTextView(context);
+                searchLinearLayout.addView(noPlayersFoundMessage);
+              }
 
-                            }
+              // add all players with relevant usernames to the search query to the list
+              for (Player relatedPlayer : relatedUsernamePlayers) {
+                searchQueryEntries.add(
+                    new SearchQueryEntry(relatedPlayer.getUsername(), relatedPlayer.getDeviceId()));
+              }
+              entryAdapter.notifyDataSetChanged();
+            });
+  }
 
-                            // add all players with relevant usernames to the search query to the list
-                            for (Player relatedPlayer : relatedUsernamePlayers) {
-                                searchQueryEntries.add(new SearchQueryEntry(relatedPlayer.getUsername(), relatedPlayer.getDeviceId()));
-                            }
-                            entryAdapter.notifyDataSetChanged();
-                        }
-                );
-    }
-
-    /**
-     * Filters the list of all players leaving only those containing the query as a substring
-     * @param allPlayersList List of all the players in the database
-     * @param usernameQuery Username query the user is searching for
-     * @return List of players containing the query as a substring
-     */
-    private List<Player> getRelatedUsernamePlayers(List<Player> allPlayersList, String usernameQuery) {
-        List<Player> relatedUsernamePlayers = allPlayersList.stream()
-                .filter(player -> player
-                        .getUsername()
-                        .toLowerCase()
-                        .contains(usernameQuery.toLowerCase()))
-                // makes exact matches come first in the list
-                .sorted(Comparator.comparing(player -> {
-                    if (player.getUsername().equalsIgnoreCase(usernameQuery)) {
+  /**
+   * Filters the list of all players leaving only those containing the query as a substring
+   *
+   * @param allPlayersList List of all the players in the database
+   * @param usernameQuery Username query the user is searching for
+   * @return List of players containing the query as a substring
+   */
+  private List<Player> getRelatedUsernamePlayers(
+      List<Player> allPlayersList, String usernameQuery) {
+    List<Player> relatedUsernamePlayers =
+        allPlayersList.stream()
+            .filter(
+                player -> player.getUsername().toLowerCase().contains(usernameQuery.toLowerCase()))
+            // makes exact matches come first in the list
+            .sorted(
+                Comparator.comparing(
+                    player -> {
+                      if (player.getUsername().equalsIgnoreCase(usernameQuery)) {
                         return -1;
-                    } else {
-                        return player.getUsername().toLowerCase().indexOf(usernameQuery.toLowerCase());
-                    }
-                }))
-                .collect(Collectors.toList());
-        return relatedUsernamePlayers;
-    }
+                      } else {
+                        return player
+                            .getUsername()
+                            .toLowerCase()
+                            .indexOf(usernameQuery.toLowerCase());
+                      }
+                    }))
+            .collect(Collectors.toList());
+    return relatedUsernamePlayers;
+  }
 
-    /**
-     * Creates the text view that if no players are found for the user's search query
-     * @param context Used to access the context of the fragment
-     * @return TextView with a player not found message
-     */
-    private TextView createNoPlayersFoundTextView(Context context) {
-        int textViewId = View.generateViewId();
-        TextView noPlayersFoundMessage = new TextView(context);
-        noPlayersFoundMessage.setText("Player Not Found.");
-        noPlayersFoundMessage.setTextSize(24);
-        noPlayersFoundMessage.setGravity(Gravity.CENTER);
-        noPlayersFoundMessage.setId(textViewId);
-        return noPlayersFoundMessage;
-    }
+  /**
+   * Creates the text view that if no players are found for the user's search query
+   *
+   * @param context Used to access the context of the fragment
+   * @return TextView with a player not found message
+   */
+  private TextView createNoPlayersFoundTextView(Context context) {
+    int textViewId = View.generateViewId();
+    TextView noPlayersFoundMessage = new TextView(context);
+    noPlayersFoundMessage.setText("Player Not Found.");
+    noPlayersFoundMessage.setTextSize(24);
+    noPlayersFoundMessage.setGravity(Gravity.CENTER);
+    noPlayersFoundMessage.setId(textViewId);
+    return noPlayersFoundMessage;
+  }
 
-    /**
-     * Handles when user clicking on a search entry by transitioning to their profile
-     * @param entry Entry the user clicks on
-     */
-    public void handleSearchQueryListClick(SearchQueryEntry entry) {
-        gameController.setBody(new OtherProfileFragment(gameController, entry.getDeviceId()));
-    }
+  /**
+   * Handles when user clicking on a search entry by transitioning to their profile
+   *
+   * @param entry Entry the user clicks on
+   */
+  public void handleSearchQueryListClick(SearchQueryEntry entry) {
+    gameController.setBody(new OtherProfileFragment(gameController, entry.getDeviceId()));
+  }
 }

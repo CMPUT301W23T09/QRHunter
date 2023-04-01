@@ -7,10 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import androidx.appcompat.widget.SearchView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
@@ -180,22 +180,21 @@ public class LeaderboardFragment extends BaseFragment {
     // TODO: when locations are implemented
   }
 
-  /**
-   * Sets up the search view to respond to user input
-   * */
+  /** Sets up the search view to respond to user input */
   private void setUpPlayerSearch() {
-    playerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-      @Override
-      public boolean onQueryTextSubmit(String query) {
-        Toast.makeText(getContext(), query, Toast.LENGTH_SHORT).show();
-        searchController.handleSearchQuery(query);
-        return true;
-      }
+    playerSearchView.setOnQueryTextListener(
+        new SearchView.OnQueryTextListener() {
+          @Override
+          public boolean onQueryTextSubmit(String query) {
+            Toast.makeText(getContext(), query, Toast.LENGTH_SHORT).show();
+            searchController.handleSearchQuery(query);
+            return true;
+          }
 
-      @Override
-      public boolean onQueryTextChange(String newText) {
-        return false;
-      }
-    });
+          @Override
+          public boolean onQueryTextChange(String newText) {
+            return false;
+          }
+        });
   }
 }

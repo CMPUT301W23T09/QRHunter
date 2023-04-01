@@ -1,6 +1,5 @@
 package com.cmput301w23t09.qrhunter.leaderboard;
 
-
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
@@ -169,5 +168,4 @@ public class LeaderboardController {
       BiConsumer<Exception, Map<String, Leaderboard<QRCodeLeaderboardEntry>>> callback) {
     // TODO: Implement after location recording is completed and fetch the region of the photo.
   }
-
 }

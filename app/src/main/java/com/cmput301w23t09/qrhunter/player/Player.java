@@ -186,7 +186,7 @@ public class Player implements Serializable {
     this.qrCodeHashes = scannedQRHashes;
   }
 
-//  public boolean contains(String str, String substring) {
-//    return str.indexOf(substring) != -1;
-//  }
+  //  public boolean contains(String str, String substring) {
+  //    return str.indexOf(substring) != -1;
+  //  }
 }
