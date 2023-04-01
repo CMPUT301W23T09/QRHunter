@@ -33,7 +33,6 @@ public class LeaderboardFragment extends BaseFragment {
   private Map<String, List<Leaderboard<?>>> cachedLeaderboardsByTab;
   private SearchView playerSearchView;
 
-
   public LeaderboardFragment(GameController gameController) {
     super(gameController);
 
@@ -54,7 +53,6 @@ public class LeaderboardFragment extends BaseFragment {
     ListView leaderboardListView = view.findViewById(R.id.leaderboard_list);
     leaderboardListView.setAdapter(leaderboardAdapter);
     playerSearchView = view.findViewById(R.id.player_search);
-
 
     setupTabList(view);
     setUpPlayerSearch();
