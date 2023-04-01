@@ -5,6 +5,7 @@ import static android.content.ContentValues.TAG;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -71,10 +72,20 @@ public class DeleteQRCodeFragment extends QRCodeFragment {
 
     // allows user to enter a comment
     commentBox.setOnClickListener(this::onAddCommentInput);
-    // allows user to click send and store comment in the database
-    commentBox.setOnTouchListener(this::onSendComment);
+
+    // allows user to click on send icon directly to store comment in the database
+    commentBox.setOnTouchListener((v, event) -> onSendComment(v, event, null));
     updateLocationPhoto();
+
+    //handles Enter key press to store comment in the database
+    commentBox.setOnKeyListener((v, keyCode, event) -> {
+      if (keyCode == KeyEvent.KEYCODE_ENTER) {
+          return onSendComment(v, null, event);
+      }
+      return false;
+    });
   }
+
 
   /**
    * Called when the remove QR button is clicked
@@ -136,45 +147,52 @@ public class DeleteQRCodeFragment extends QRCodeFragment {
    * @param event The motion event
    * @return True if the event is handled. otherwise, false.
    */
-  private boolean onSendComment(View view, MotionEvent event) {
-    final int DRAWABLE_RIGHT = 2;
+  private boolean onSendComment(View view, MotionEvent event, KeyEvent keyEvent) {
+      final int DRAWABLE_RIGHT = 2;
 
-    // changes color of send icon depending on the state
-    int default_color = ContextCompat.getColor(requireContext(), R.color.purple_500);
-    int on_send_color = ContextCompat.getColor(requireContext(), R.color.purple_200);
+      // changes color of send icon depending on the state
+      int default_color = ContextCompat.getColor(requireContext(), R.color.purple_500);
+      int on_send_color = ContextCompat.getColor(requireContext(), R.color.purple_200);
 
-    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-      if (event.getRawX()
-          >= (commentBox.getRight()
-              - commentBox.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-        commentBox.getCompoundDrawables()[DRAWABLE_RIGHT].setTint(
-            on_send_color); // Change color to red when hovered on
-        return true;
+      if (event != null && event.getAction() == MotionEvent.ACTION_DOWN) {
+          if (event.getRawX() >= (commentBox.getRight() - commentBox.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+              commentBox.getCompoundDrawables()[DRAWABLE_RIGHT].setTint(on_send_color);
+              return true;
+          }
+      } else if (event != null && event.getAction() == MotionEvent.ACTION_UP) {
+          if (event.getRawX() >= (commentBox.getRight() - commentBox.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+              commentBox.getCompoundDrawables()[DRAWABLE_RIGHT].setTint(default_color);
+
+              // stores comment message in a variable and calls the addComment method
+              String commentText = commentBox.getText().toString().trim();
+              if (!commentText.isEmpty()) {
+                  addComment(commentText);
+                  commentBox.setText("");
+                  commentBox.setHint(R.string.comment_box_hint_text);
+              } else {
+                  // Comment text is empty, show an error message
+                  Toast.makeText(getContext(), "Comment text is empty", Toast.LENGTH_SHORT).show();
+              }
+              return true;
+          }
+      } else if (keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
+          // handles the enter key press
+          String commentText = commentBox.getText().toString().trim();
+          if (!commentText.isEmpty()) {
+              addComment(commentText);
+              commentBox.setText("");
+              commentBox.setHint(R.string.comment_box_hint_text);
+          } else {
+              // Comment text is empty, show an error message
+              Toast.makeText(getContext(), "Comment text is empty", Toast.LENGTH_SHORT).show();
+          }
+          return true;
       }
-    } else if (event.getAction() == MotionEvent.ACTION_UP) {
-      if (event.getRawX()
-          >= (commentBox.getRight()
-              - commentBox.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-        commentBox.getCompoundDrawables()[DRAWABLE_RIGHT].setTint(default_color);
-        ;
-
-        // stores comment message in a variable and calls the addComment method
-        String commentText = commentBox.getText().toString().trim();
-        if (!commentText.isEmpty()) {
-          addComment(commentText);
-          commentBox.setText("");
-          commentBox.setHint(R.string.comment_box_hint_text);
-        } else {
-          // Comment text is empty, show an error message
-          Toast.makeText(getContext(), "Comment text is empty", Toast.LENGTH_SHORT).show();
-        }
-        return true;
-      }
-    }
-    return false;
+      return false;
   }
 
-  /**
+
+    /**
    * Adds a comment to the comments list updates the comments adapter saves the comment to the
    * database.
    *
