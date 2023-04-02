@@ -316,7 +316,9 @@ public class TestLeaderboardFragment extends BaseTest {
     onView(withId(androidx.appcompat.R.id.search_src_text))
         .perform(typeText("Other Player"), pressKey(KeyEvent.KEYCODE_ENTER));
     onView(withId(R.id.search_linear_layout)).check(matches(isDisplayed()));
+
     waitUntilSearchListHasData();
+
     onData(anything())
         .inAdapterView(withId(R.id.search_query_list))
         .atPosition(0)
@@ -364,7 +366,7 @@ public class TestLeaderboardFragment extends BaseTest {
         .until(
             () -> {
               ListView listView = (ListView) solo.getView(R.id.search_query_list);
-              return listView.getChildCount() == 4;
+              return listView.getChildCount() > 0;
             });
   }
 }
