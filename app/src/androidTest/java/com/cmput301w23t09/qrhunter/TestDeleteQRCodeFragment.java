@@ -59,7 +59,7 @@ public class TestDeleteQRCodeFragment extends BaseTest {
               // Mock QRCode Info
               // Actual Data: CMPUT301W23T09-QRHunter
               // Hash: 8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d
-              // Name: RobaqinectTiger✿
+              // Name: Robbel Spicy Tiger
               // Score: 32 PTS
               qrCode =
                   new QRCode("8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d");
@@ -90,7 +90,7 @@ public class TestDeleteQRCodeFragment extends BaseTest {
   @Test
   public void testCorrectDisplayInfo() throws InterruptedException, ExecutionException {
     // TODO: Currently, QRCodeFragment shows hash, CHANGE THIS TO NAME ONCE IMPLEMENTED
-    onView(withId(R.id.qr_name)).inRoot(isDialog()).check(matches(withText("RobaqinectTiger✿")));
+    onView(withId(R.id.qr_name)).inRoot(isDialog()).check(matches(withText("Robbel Spicy Tiger")));
     onView(withId(R.id.qr_points)).inRoot(isDialog()).check(matches(withText("32 PTS")));
     ImageView qrVisualView = (ImageView) solo.getView(R.id.qr_code_visual);
     Bitmap qrVisualBitmap = ((BitmapDrawable) qrVisualView.getDrawable()).getBitmap();
