@@ -65,7 +65,7 @@ public class QRCodeDatabase {
   }
 
   /**
-   * Retrieve a QRCode by its has from the database
+   * Retrieve a QRCode by its hash from the database
    *
    * @param hash QRCode hash to lookup
    * @param callback The callback function to handle result
