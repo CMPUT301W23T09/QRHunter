@@ -23,7 +23,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 /** This is the fragment displaying the user's profile */
 public abstract class ProfileFragment extends BaseFragment {
   /** This is the controller that manages the fragment */
-  private ProfileController controller;
+  protected ProfileController controller;
   /** This is the view displaying the user's username */
   private TextView username;
   /** This is the view displaying the sum of points of the user's qr codes */
@@ -112,6 +112,8 @@ public abstract class ProfileFragment extends BaseFragment {
     topCodeScore.setText("");
     followingText.setText("");
     followersText.setText("");
+    followButton.setText(R.string.ellipses);
+    followButton.setVisibility(View.GONE);
     profilePic.setImageBitmap(null);
     createSpinner(sortOrderSpinner, R.array.order_options);
 

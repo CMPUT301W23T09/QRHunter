@@ -47,6 +47,7 @@
     <string name="ranking_message">The top highest scoring unique QR code is in the top %.2f%% in terms of points.</string>
     <string name="follow">Follow</string>
     <string name="unfollow">Unfollow</string>
+    <string name="ellipses">…</string>
     <string name="profile_followers">%d Followers</string>
     <string name="profile_following">%d Following</string>
     <string-array name="sort_options">
