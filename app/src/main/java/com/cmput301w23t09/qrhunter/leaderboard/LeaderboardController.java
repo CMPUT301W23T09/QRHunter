@@ -12,6 +12,7 @@ import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -218,6 +219,7 @@ public class LeaderboardController {
 
                 leaderboards.add(new Leaderboard<>(city, entries));
               }
+              leaderboards.sort(Comparator.comparing(Leaderboard::getName));
 
               // Return leaderboards
               callback.accept(null, leaderboards);
