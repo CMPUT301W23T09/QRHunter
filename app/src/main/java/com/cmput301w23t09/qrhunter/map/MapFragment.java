@@ -1,24 +1,31 @@
 package com.cmput301w23t09.qrhunter.map;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,6 +37,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
+
 import java.util.List;
 
 public class MapFragment extends BaseFragment implements OnMapReadyCallback {
@@ -60,100 +68,46 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
      */
     if (ContextCompat.checkSelfPermission(
             getContext().getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
-        == PackageManager.PERMISSION_GRANTED) {
+            == PackageManager.PERMISSION_GRANTED) {
       locationPermissionGranted = true;
     } else {
       ActivityCompat.requestPermissions(
-          getActivity(),
-          new String[] {android.Manifest.permission.ACCESS_FINE_LOCATION},
-          PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+              getActivity(),
+              new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+              PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
     }
   }
 
   private void getDeviceLocation() {
-    /**
-     * Get the best and most recent location of the device, which may be null in rare cases when a
-     * location is not available.
-     */
-    //    fusedLocationProviderClient =
-    // LocationServices.getFusedLocationProviderClient(getContext());
-
     try {
       if (locationPermissionGranted) {
-        // Get the last known location
         Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
-        locationResult.addOnCompleteListener(
-            getActivity(),
-            new OnCompleteListener<Location>() {
-              @Override
-              public void onComplete(@NonNull Task<Location> task) {
-                if (task.isSuccessful()) {
-                  // Set the map's camera position to the current location of the device.
-                  lastKnownLocation = task.getResult();
-                  if (lastKnownLocation != null) {
-                    currentLocation =
-                        new LatLng(
-                            lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-                    map.animateCamera(
-                        CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM));
-                    map.addMarker(new MarkerOptions().position(currentLocation).title("YOU"));
-                  }
-                } else {
-                  // Sets the map camera to the a set default location if lastKnownLocation is null
-                  Log.d(TAG, "Current location is null. Using defaults.");
-                  Log.e(TAG, "Exception: %s", task.getException());
-                  map.animateCamera(
-                      CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
-                  map.getUiSettings().setMyLocationButtonEnabled(false);
+        locationResult.addOnCompleteListener(getActivity(), new OnCompleteListener<Location>() {
+          @Override
+          public void onComplete(@NonNull Task<Location> task) {
+            if (task.isSuccessful()) {
+              Location lastKnownLocation = task.getResult();
+              if (lastKnownLocation != null) {
+                LatLng currentLocation = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+                if (map != null) {
+                  map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM));
+                  map.addMarker(new MarkerOptions().position(currentLocation).title("YOU"));
                 }
+              } else {
+                Log.d(TAG, "Last known location is null. Using default location.");
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
+                map.getUiSettings().setMyLocationButtonEnabled(false);
               }
-            });
-      }
-      Handler handler = new Handler();
-      handler.postDelayed(
-          new Runnable() {
-            @Override
-            public void run() {
-              try {
-                Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
-                locationResult.addOnCompleteListener(
-                    getActivity(),
-                    new OnCompleteListener<Location>() {
-                      @Override
-                      public void onComplete(@NonNull Task<Location> task) {
-                        if (task.isSuccessful()) {
-                          Location newLocation = task.getResult();
-                          int MIN_DISTANCE_UPDATE = 5000;
-                          if (newLocation != null
-                              && lastKnownLocation.distanceTo(newLocation) > MIN_DISTANCE_UPDATE) {
-                            lastKnownLocation = newLocation;
-                            currentLocation =
-                                new LatLng(
-                                    lastKnownLocation.getLatitude(),
-                                    lastKnownLocation.getLongitude());
-                            map.animateCamera(
-                                CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM));
-                            map.clear();
-                            map.addMarker(
-                                new MarkerOptions().position(currentLocation).title("YOU"));
-                          }
-                        } else {
-                          Log.d(TAG, "Current location is null. Using defaults.");
-                          Log.e(TAG, "Exception: %s", task.getException());
-                        }
-                      }
-                    });
-              } catch (SecurityException e) {
-                Log.e("Exception: %s", e.getMessage(), e);
-              } finally {
-                // Schedule the next location update
-                handler.postDelayed(this, LOCATION_UPDATE_INTERVAL);
-              }
+            } else {
+              Log.d(TAG, "Error getting last known location.");
+              map.animateCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
+              map.getUiSettings().setMyLocationButtonEnabled(false);
             }
-          },
-          LOCATION_UPDATE_INTERVAL);
+          }
+        });
+      }
     } catch (SecurityException e) {
-      Log.e("Exception: %s", e.getMessage(), e);
+      Log.e(TAG, "Security exception occurred: " + e.getMessage());
     }
   }
 
@@ -177,6 +131,50 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
       Log.e("Exception: %s", e.getMessage());
     }
   }
+
+  private void startLocationUpdates() {
+    // Set the location request parameters
+    LocationRequest locationRequest = LocationRequest.create();
+    locationRequest.setInterval(10000);
+    locationRequest.setFastestInterval(5000);
+    locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+    // Request location updates
+    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+      // TODO: Consider calling
+      //    ActivityCompat#requestPermissions
+      // here to request the missing permissions, and then overriding
+      //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+      //                                          int[] grantResults)
+      // to handle the case where the user grants the permission. See the documentation
+      // for ActivityCompat#requestPermissions for more details.
+      return;
+    }
+    fusedLocationProviderClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            Looper.getMainLooper());
+  }
+
+  private LocationCallback locationCallback = new LocationCallback() {
+    @Override
+    public void onLocationResult(LocationResult locationResult) {
+      if (locationResult == null) {
+        return;
+      }
+      for (Location location : locationResult.getLocations()) {
+        if (location != null) {
+          // Update the last known location and move the camera
+          lastKnownLocation = location;
+          LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+          if (map != null) {
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM));
+            map.addMarker(new MarkerOptions().position(currentLocation).title("YOU"));
+          }
+        }
+      }
+    }
+  };
 
   /** Handles the users response to permission dialogue box popup */
   @Override
@@ -319,6 +317,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
     // Get the current location of the device and set the position of the map.
     getDeviceLocation();
+    startLocationUpdates();
 
     if (this.map != null) {
       displayQRCodeMarkersOnMap(map);
