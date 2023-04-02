@@ -116,6 +116,7 @@ public class TestAddQRCodeFragment extends BaseTest {
   @Test
   public void testQRRemoveLocation() {
     onView(withId(R.id.location_request_box)).perform(click());
+    await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getLoc() != null);
     onView(withId(R.id.location_request_box)).perform(click());
     await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getLoc() == null);
   }
