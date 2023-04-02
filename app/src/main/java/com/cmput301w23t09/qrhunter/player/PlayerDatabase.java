@@ -271,9 +271,11 @@ public class PlayerDatabase {
    * @param callback callback
    */
   public void unfollow(Player player, Player playerToUnfollow, DatabaseConsumer<Void> callback) {
-    if (player.getDocumentId() == null || playerToUnfollow.getDocumentId() == null) {
-      throw new IllegalArgumentException(
-          "One of the provided players does not have a document reference.");
+    if (player.getDocumentId() == null) {
+      throw new IllegalArgumentException("Player does not have a document reference.");
+    }
+    if (playerToUnfollow.getDocumentId() == null) {
+      throw new IllegalArgumentException("Player to unfollow does not have a document reference.");
     }
 
     // Remove the playerToFollow as following to the player
@@ -316,9 +318,11 @@ public class PlayerDatabase {
    * @param callback callback
    */
   public void follow(Player player, Player playerToFollow, DatabaseConsumer<Void> callback) {
-    if (player.getDocumentId() == null || playerToFollow.getDocumentId() == null) {
-      throw new IllegalArgumentException(
-          "One of the provided players does not have a document reference.");
+    if (player.getDocumentId() == null) {
+      throw new IllegalArgumentException("Player does not have a document reference.");
+    }
+    if (playerToFollow.getDocumentId() == null) {
+      throw new IllegalArgumentException("Player to follow does not have a document reference.");
     }
 
     // Add the playerToFollow as following to the player

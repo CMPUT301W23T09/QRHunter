@@ -88,6 +88,12 @@ public abstract class TestProfileFragment extends BaseTest {
         .add(
             ourPlayer,
             ignored -> {
+              // Update GameController activePlayer document id to match the record of the player
+              // being added
+              Player storedActivePlayer =
+                  ((GameActivity) solo.getCurrentActivity()).getController().getActivePlayer();
+              storedActivePlayer.setDocumentId(ourPlayer.getDocumentId());
+
               // Now that we added the main player, do we need to add the profile player too?
               if (profilePlayer.getDeviceId().equals(ourPlayer.getDeviceId())) {
                 // No we don't.
