@@ -47,6 +47,7 @@ public class TestLeaderboardFragment extends BaseTest {
             "1234567890",
             "example@example.com",
             new ArrayList<>(),
+            new ArrayList<>(),
             new ArrayList<>());
     intent = new Intent(ApplicationProvider.getApplicationContext(), GameActivity.class);
     intent.putExtra("activePlayer", ourPlayer);
@@ -82,6 +83,7 @@ public class TestLeaderboardFragment extends BaseTest {
             "Other Player",
             "1234567890",
             "example@example.com",
+            new ArrayList<>(),
             new ArrayList<>(),
             new ArrayList<>());
     PlayerDatabase.getInstance().add(otherPlayer, ignored -> playerDatabaseSetup.countDown());

@@ -36,6 +36,7 @@ public class TestGameActivity extends BaseTest {
             "123-456-7890",
             "example@example.com",
             new ArrayList<>(),
+            new ArrayList<>(),
             new ArrayList<>());
     PlayerDatabase.getInstance().add(player, ignored -> databaseSetup.countDown());
     databaseSetup.await();

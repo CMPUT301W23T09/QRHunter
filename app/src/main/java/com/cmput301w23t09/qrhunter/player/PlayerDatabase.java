@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /** Manages all Player database operations. */
 public class PlayerDatabase {
@@ -274,7 +275,12 @@ public class PlayerDatabase {
     String phoneNo = snapshot.getString("phoneNo");
     String email = snapshot.getString("email");
     ArrayList<String> qrCodeHashes = (ArrayList<String>) snapshot.get("qrCodeHashes");
-    ArrayList<String> following = (ArrayList<String>) snapshot.get("following");
+    ArrayList<String> following = new ArrayList<>();
+    ArrayList<String> followers = new ArrayList<>();
+    if (snapshot.contains("following")) {
+      following = (ArrayList<String>) snapshot.get("following");
+      followers = (ArrayList<String>) snapshot.get("followers");
+    }
 
     return new Player(
         documentId,
@@ -283,7 +289,8 @@ public class PlayerDatabase {
         phoneNo,
         email,
         new ArrayList<>(qrCodeHashes),
-        new ArrayList<>(following));
+        new ArrayList<>(following.stream().map(UUID::fromString).collect(Collectors.toList())),
+        new ArrayList<>(followers.stream().map(UUID::fromString).collect(Collectors.toList())));
   }
 
   /**
@@ -300,7 +307,8 @@ public class PlayerDatabase {
     values.put("phoneNo", player.getPhoneNo());
     values.put("email", player.getEmail());
     values.put("qrCodeHashes", player.getQRCodeHashes());
-    values.put("following", player.getFollowing());
+    values.put("following", player.getFollowing().stream().map(UUID::toString));
+    values.put("followers", player.getFollowers().stream().map(UUID::toString));
 
     return values;
   }

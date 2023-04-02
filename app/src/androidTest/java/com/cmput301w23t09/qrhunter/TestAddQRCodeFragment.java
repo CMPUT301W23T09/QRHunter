@@ -62,6 +62,7 @@ public class TestAddQRCodeFragment extends BaseTest {
             "7801234567",
             "doe@ualberta.ca",
             new ArrayList<>(),
+            new ArrayList<>(),
             new ArrayList<>());
 
     CountDownLatch dbTasks = new CountDownLatch(1);

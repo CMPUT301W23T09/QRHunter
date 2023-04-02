@@ -44,6 +44,7 @@ public class TestOtherProfileFragment extends TestProfileFragment {
         "123-456-7890",
         "example@example.com",
         new ArrayList<>(),
+        new ArrayList<>(),
         new ArrayList<>());
   }
 

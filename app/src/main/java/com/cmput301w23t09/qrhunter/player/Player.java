@@ -20,7 +20,9 @@ public class Player implements Serializable {
   /** QRCode hashes the player has scanned */
   private List<String> qrCodeHashes;
   /** The document ids of the players this player is following */
-  private List<String> following;
+  private List<UUID> following;
+  /** The device UUIDs of the players this player is being followed by */
+  private List<UUID> followers;
 
   /**
    * This initializes a Player with the deviceId, username, phoneNo, and email.
@@ -37,13 +39,15 @@ public class Player implements Serializable {
       String phoneNo,
       String email,
       List<String> qrCodeHashes,
-      List<String> following) {
+      List<UUID> following,
+      List<UUID> followers) {
     this.deviceId = deviceId;
     this.username = username;
     this.phoneNo = phoneNo;
     this.email = email;
     this.qrCodeHashes = qrCodeHashes;
     this.following = following;
+    this.followers = followers;
   }
 
   /**
@@ -64,7 +68,8 @@ public class Player implements Serializable {
       String phoneNo,
       String email,
       List<String> qrCodeHashes,
-      List<String> following) {
+      List<UUID> following,
+      List<UUID> followers) {
     this.documentId = documentId;
     this.deviceId = deviceId;
     this.username = username;
@@ -72,6 +77,7 @@ public class Player implements Serializable {
     this.email = email;
     this.qrCodeHashes = qrCodeHashes;
     this.following = following;
+    this.followers = followers;
   }
 
   /**
@@ -197,20 +203,38 @@ public class Player implements Serializable {
   }
 
   /**
-   * Retrieve the document ids of the players this player is following
+   * Retrieve the device ids of the players this player is following
    *
    * @return player ids
    */
-  public List<String> getFollowing() {
+  public List<UUID> getFollowing() {
     return following;
   }
 
   /**
-   * Set the document ids that this player is following
+   * Set the device ids that this player is following
    *
    * @param following new following list
    */
-  public void setFollowing(List<String> following) {
+  public void setFollowing(List<UUID> following) {
     this.following = following;
+  }
+
+  /**
+   * Retrieve the device ids of the players this player is being followed by
+   *
+   * @return player ids
+   */
+  public List<UUID> getFollowers() {
+    return followers;
+  }
+
+  /**
+   * Set the device ids that this player is being followed by
+   *
+   * @param followers new followers list
+   */
+  public void setFollowers(List<UUID> followers) {
+    this.followers = followers;
   }
 }

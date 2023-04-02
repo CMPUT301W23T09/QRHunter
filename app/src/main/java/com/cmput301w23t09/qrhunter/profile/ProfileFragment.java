@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -38,6 +39,10 @@ public abstract class ProfileFragment extends BaseFragment {
   protected FloatingActionButton contactButton;
   /** This is the button that allows the user to view their rankings */
   protected FloatingActionButton rankingsButton;
+
+  protected TextView followingText;
+  protected TextView followersText;
+  protected Button followButton;
 
   /**
    * Initializes the fragment with the app controller
@@ -77,12 +82,15 @@ public abstract class ProfileFragment extends BaseFragment {
     sortOrderSpinner = view.findViewById(R.id.order_spinner);
     contactButton = view.findViewById(R.id.contact_info_button);
     rankingsButton = view.findViewById(R.id.rankings_button);
+    followersText = view.findViewById(R.id.followers_count);
+    followingText = view.findViewById(R.id.following_count);
+    followButton = view.findViewById(R.id.follow_button);
 
     // create a default empty profile (shown while waiting for database queries)
     createDefaultProfile();
 
     // setup profile elements
-    controller.setUpUsername(username);
+    controller.setUpUsernameAndFollow(username, followingText, followersText, followButton);
     controller.setUpQRList(qrCodeList, totalPoints, totalCodes, topCodeScore, sortOrderSpinner);
     qrCodeList.setOnItemClickListener(controller.handleQRSelect());
 
@@ -97,14 +105,16 @@ public abstract class ProfileFragment extends BaseFragment {
     totalPoints.setText("");
     totalCodes.setText("");
     topCodeScore.setText("");
+    followingText.setText("");
+    followersText.setText("");
     createSpinner(sortOrderSpinner, R.array.order_options);
 
-    setupContactButton();
+    setupSocialMethods();
     contactButton.setOnClickListener(v -> controller.handleContactButtonClick());
   }
 
-  /** Sets the image of the profile settings button and handler. */
-  protected abstract void setupContactButton();
+  /** Sets the social related buttons. */
+  protected abstract void setupSocialMethods();
 
   /**
    * Display a prompt showcasing the contact information for this profile.

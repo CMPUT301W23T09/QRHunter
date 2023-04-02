@@ -2,6 +2,7 @@ package com.cmput301w23t09.qrhunter.profile;
 
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -65,7 +66,8 @@ public abstract class ProfileController implements DatabaseChangeListener {
    *
    * @param usernameView This is the TextView that shows the username
    */
-  public void setUpUsername(TextView usernameView) {
+  public void setUpUsernameAndFollow(
+      TextView usernameView, TextView followingText, TextView followersText, Button followButton) {
     PlayerDatabase.getInstance()
         .getPlayerByDeviceId(
             deviceUUID,
@@ -76,6 +78,18 @@ public abstract class ProfileController implements DatabaseChangeListener {
               }
               // otherwise get username
               usernameView.setText(results.getData().getUsername());
+              followingText.setText(
+                  fragment.getString(
+                      R.string.profile_following, results.getData().getFollowing().size()));
+              followersText.setText(
+                  fragment.getString(
+                      R.string.profile_followers, results.getData().getFollowers().size()));
+
+              if (gameController.getActivePlayer().getFollowing().contains(deviceUUID)) {
+                followButton.setText(R.string.unfollow);
+              } else {
+                followButton.setText(R.string.follow);
+              }
             });
   }
 

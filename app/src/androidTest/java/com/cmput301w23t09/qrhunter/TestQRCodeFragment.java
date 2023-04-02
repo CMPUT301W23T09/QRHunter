@@ -60,6 +60,7 @@ public class TestQRCodeFragment extends BaseTest {
             "7801234567",
             "doe@ualberta.ca",
             new ArrayList<>(),
+            new ArrayList<>(),
             new ArrayList<>());
     playerWhoScannedQR =
         new Player(
@@ -67,6 +68,7 @@ public class TestQRCodeFragment extends BaseTest {
             "steve",
             "1234567890",
             "example@example.com",
+            new ArrayList<>(),
             new ArrayList<>(),
             new ArrayList<>());
 

@@ -1,5 +1,6 @@
 package com.cmput301w23t09.qrhunter.profile;
 
+import android.view.View;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
 
@@ -20,7 +21,8 @@ public class MyProfileFragment extends ProfileFragment {
   }
 
   @Override
-  protected void setupContactButton() {
+  protected void setupSocialMethods() {
     contactButton.setImageResource(R.drawable.baseline_settings_24);
+    followButton.setVisibility(View.INVISIBLE);
   }
 }

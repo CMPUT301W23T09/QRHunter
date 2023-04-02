@@ -86,6 +86,7 @@ public class TestLandingActivity extends BaseTest {
                 validPhoneNo,
                 validEmail,
                 new ArrayList<>(),
+                new ArrayList<>(),
                 new ArrayList<>()),
             task -> latch.countDown());
     latch.await();

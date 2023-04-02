@@ -47,6 +47,7 @@ public abstract class TestProfileFragment extends BaseTest {
             "5873571506",
             "isun@ualberta.ca",
             new ArrayList<>(),
+            new ArrayList<>(),
             new ArrayList<>());
     intent = new Intent(ApplicationProvider.getApplicationContext(), GameActivity.class);
     intent.putExtra("activePlayer", ourPlayer);
