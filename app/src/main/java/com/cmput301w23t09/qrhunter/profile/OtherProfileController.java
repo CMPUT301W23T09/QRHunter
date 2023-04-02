@@ -1,8 +1,6 @@
 package com.cmput301w23t09.qrhunter.profile;
 
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
@@ -26,6 +24,41 @@ public class OtherProfileController extends ProfileController {
   }
 
   @Override
+  protected void updateFollowDetails() {
+    PlayerDatabase.getInstance()
+        .getPlayerByDeviceId(
+            deviceUUID,
+            results -> {
+              if (!results.isSuccessful()) {
+                showMsg("An error occurred while loading in your player data.");
+                return;
+              }
+
+              // Update count
+              followingText.setText(
+                  fragment.getString(
+                      R.string.profile_following, results.getData().getFollowing().size()));
+              followersText.setText(
+                  fragment.getString(
+                      R.string.profile_followers, results.getData().getFollowers().size()));
+
+              followLoadingButton.setVisibility(View.GONE);
+
+              // Update button
+              if (results
+                  .getData()
+                  .getFollowers()
+                  .contains(gameController.getActivePlayer().getDeviceId())) {
+                followButton.setVisibility(View.GONE);
+                unfollowButton.setVisibility(View.VISIBLE);
+              } else {
+                followButton.setVisibility(View.VISIBLE);
+                unfollowButton.setVisibility(View.GONE);
+              }
+            });
+  }
+
+  @Override
   public void handleContactButtonClick() {
     // Display contact info popup
     PlayerDatabase.getInstance()
@@ -43,55 +76,47 @@ public class OtherProfileController extends ProfileController {
             });
   }
 
-  @Override
-  public void setupFollowDetails(
-      TextView followingText, TextView followersText, Button followButton) {
-    super.setupFollowDetails(followingText, followersText, followButton);
-    followButton.setVisibility(View.VISIBLE);
-  }
-
   public void handleFollowButtonClick() {
-    if (followButton.isEnabled()) {
-      followButton.setEnabled(false);
-      followButton.setText(R.string.ellipses);
+    followButton.setVisibility(View.GONE);
+    unfollowButton.setVisibility(View.GONE);
+    followLoadingButton.setVisibility(View.VISIBLE);
 
-      // Get the latest following data of the profile user
-      PlayerDatabase.getInstance()
-          .getPlayerByDeviceId(
-              deviceUUID,
-              otherPlayer -> {
-                if (!otherPlayer.isSuccessful()) {
-                  Toast.makeText(
-                          fragment.getContext(),
-                          "An exception occurred while issuing a follow action.",
-                          Toast.LENGTH_SHORT)
-                      .show();
-                  return;
-                }
+    // Get the latest following data of the profile user
+    PlayerDatabase.getInstance()
+        .getPlayerByDeviceId(
+            deviceUUID,
+            otherPlayer -> {
+              if (!otherPlayer.isSuccessful()) {
+                Toast.makeText(
+                        fragment.getContext(),
+                        "An exception occurred while issuing a follow action.",
+                        Toast.LENGTH_SHORT)
+                    .show();
+                return;
+              }
 
-                // Which action do we take? follow or unfollow?
-                boolean weFollowingTheUser =
-                    otherPlayer
-                        .getData()
-                        .getFollowers()
-                        .contains(gameController.getActivePlayer().getDeviceId());
-                if (weFollowingTheUser) {
-                  // Unfollow request
-                  PlayerDatabase.getInstance()
-                      .unfollow(
-                          gameController.getActivePlayer(),
-                          otherPlayer.getData(),
-                          this::onUnfollowTask);
-                } else {
-                  // Follow request
-                  PlayerDatabase.getInstance()
-                      .follow(
-                          gameController.getActivePlayer(),
-                          otherPlayer.getData(),
-                          this::onFollowTask);
-                }
-              });
-    }
+              // Which action do we take? follow or unfollow?
+              boolean weFollowingTheUser =
+                  otherPlayer
+                      .getData()
+                      .getFollowers()
+                      .contains(gameController.getActivePlayer().getDeviceId());
+              if (weFollowingTheUser) {
+                // Unfollow request
+                PlayerDatabase.getInstance()
+                    .unfollow(
+                        gameController.getActivePlayer(),
+                        otherPlayer.getData(),
+                        this::onUnfollowTask);
+              } else {
+                // Follow request
+                PlayerDatabase.getInstance()
+                    .follow(
+                        gameController.getActivePlayer(),
+                        otherPlayer.getData(),
+                        this::onFollowTask);
+              }
+            });
   }
 
   private void onUnfollowTask(DatabaseQueryResults<Void> task) {

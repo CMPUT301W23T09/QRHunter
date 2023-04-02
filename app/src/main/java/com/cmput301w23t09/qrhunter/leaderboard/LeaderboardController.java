@@ -260,7 +260,7 @@ public class LeaderboardController {
   }
 
   public void onFilterButtonClick() {
-    LeaderboardSettingsFragment settingsFragment = new LeaderboardSettingsFragment(fragment, this);
+    LeaderboardSettingsFragment settingsFragment = new LeaderboardSettingsFragment(this);
     getGameController().setPopup(settingsFragment);
   }
 
@@ -278,5 +278,9 @@ public class LeaderboardController {
 
   public GameController getGameController() {
     return gameController;
+  }
+
+  public LeaderboardFragment getFragment() {
+    return fragment;
   }
 }

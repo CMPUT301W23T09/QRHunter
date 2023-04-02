@@ -30,5 +30,7 @@ public class OtherProfileFragment extends ProfileFragment {
     contactButton.setImageResource(R.drawable.info_button);
     followButton.setOnClickListener(
         ignored -> ((OtherProfileController) controller).handleFollowButtonClick());
+    unfollowButton.setOnClickListener(
+        ignored -> ((OtherProfileController) controller).handleFollowButtonClick());
   }
 }

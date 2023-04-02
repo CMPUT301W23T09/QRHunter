@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -45,7 +44,9 @@ public abstract class ProfileFragment extends BaseFragment {
 
   protected TextView followingText;
   protected TextView followersText;
-  protected Button followButton;
+  protected FloatingActionButton followButton;
+  protected FloatingActionButton unfollowButton;
+  protected FloatingActionButton loadingFollowButton;
 
   /**
    * Initializes the fragment with the app controller
@@ -88,6 +89,8 @@ public abstract class ProfileFragment extends BaseFragment {
     followersText = view.findViewById(R.id.followers_count);
     followingText = view.findViewById(R.id.following_count);
     followButton = view.findViewById(R.id.follow_button);
+    unfollowButton = view.findViewById(R.id.unfollow_button);
+    loadingFollowButton = view.findViewById(R.id.follow_loading_button);
     profilePic = view.findViewById(R.id.profile_pic);
 
     // create a default empty profile (shown while waiting for database queries)
@@ -95,7 +98,8 @@ public abstract class ProfileFragment extends BaseFragment {
 
     // setup profile elements
     controller.setUpUsernameAndPicture(username, profilePic);
-    controller.setupFollowDetails(followingText, followersText, followButton);
+    controller.setupFollowDetails(
+        followingText, followersText, followButton, unfollowButton, loadingFollowButton);
     controller.setUpQRList(qrCodeList, totalPoints, totalCodes, topCodeScore, sortOrderSpinner);
     qrCodeList.setOnItemClickListener(controller.handleQRSelect());
 
@@ -112,8 +116,9 @@ public abstract class ProfileFragment extends BaseFragment {
     topCodeScore.setText("");
     followingText.setText("");
     followersText.setText("");
-    followButton.setText(R.string.ellipses);
     followButton.setVisibility(View.GONE);
+    unfollowButton.setVisibility(View.GONE);
+    loadingFollowButton.setVisibility(View.GONE);
     profilePic.setImageBitmap(null);
     createSpinner(sortOrderSpinner, R.array.order_options);
 

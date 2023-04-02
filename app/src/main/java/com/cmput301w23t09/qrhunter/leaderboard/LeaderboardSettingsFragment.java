@@ -15,11 +15,8 @@ import com.cmput301w23t09.qrhunter.R;
 public class LeaderboardSettingsFragment extends DialogFragment {
 
   private final LeaderboardController controller;
-  private final LeaderboardFragment fragment;
 
-  public LeaderboardSettingsFragment(
-      LeaderboardFragment fragment, LeaderboardController controller) {
-    this.fragment = fragment;
+  public LeaderboardSettingsFragment(LeaderboardController controller) {
     this.controller = controller;
   }
 
@@ -33,7 +30,7 @@ public class LeaderboardSettingsFragment extends DialogFragment {
     checkBox.setOnCheckedChangeListener(
         (buttonView, isChecked) -> controller.setIsFilteredByFollowedPlayers(isChecked));
 
-    AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getContext());
+    AlertDialog.Builder builder = new AlertDialog.Builder(controller.getFragment().getContext());
     Dialog dialog =
         builder
             .setView(view)

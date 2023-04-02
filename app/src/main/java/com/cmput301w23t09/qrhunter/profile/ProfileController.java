@@ -2,7 +2,6 @@ package com.cmput301w23t09.qrhunter.profile;
 
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -18,6 +17,7 @@ import com.cmput301w23t09.qrhunter.qrcode.QRCodeAdapter;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.ScoreComparator;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -53,7 +53,10 @@ public abstract class ProfileController implements DatabaseChangeListener {
   /** This is the text that displays how many users the player is following */
   protected TextView followingText;
   /** This is the follow button */
-  protected Button followButton;
+  protected FloatingActionButton followButton;
+
+  protected FloatingActionButton unfollowButton;
+  protected FloatingActionButton followLoadingButton;
 
   /**
    * This initializes the controller with its corresponding fragment
@@ -77,46 +80,22 @@ public abstract class ProfileController implements DatabaseChangeListener {
    * @param followButton
    */
   public void setupFollowDetails(
-      TextView followingText, TextView followersText, Button followButton) {
+      TextView followingText,
+      TextView followersText,
+      FloatingActionButton followButton,
+      FloatingActionButton unfollowButton,
+      FloatingActionButton followLoadingButton) {
     this.followButton = followButton;
+    this.unfollowButton = unfollowButton;
+    this.followLoadingButton = followLoadingButton;
     this.followingText = followingText;
     this.followersText = followersText;
 
-    followButton.setEnabled(false);
     updateFollowDetails();
   }
 
   /** Updates the text and following/followers count of the follow related content in the view. */
-  protected void updateFollowDetails() {
-    PlayerDatabase.getInstance()
-        .getPlayerByDeviceId(
-            deviceUUID,
-            results -> {
-              if (!results.isSuccessful()) {
-                showMsg("An error occurred while loading in your player data.");
-                return;
-              }
-
-              // Update count
-              followingText.setText(
-                  fragment.getString(
-                      R.string.profile_following, results.getData().getFollowing().size()));
-              followersText.setText(
-                  fragment.getString(
-                      R.string.profile_followers, results.getData().getFollowers().size()));
-
-              // Update button
-              if (results
-                  .getData()
-                  .getFollowers()
-                  .contains(gameController.getActivePlayer().getDeviceId())) {
-                followButton.setText(R.string.unfollow);
-              } else {
-                followButton.setText(R.string.follow);
-              }
-              followButton.setEnabled(true);
-            });
-  }
+  protected abstract void updateFollowDetails();
 
   /**
    * This sets up the username view and profile pic view of the fragment
