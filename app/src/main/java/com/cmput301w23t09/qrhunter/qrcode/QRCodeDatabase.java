@@ -1,9 +1,9 @@
 package com.cmput301w23t09.qrhunter.qrcode;
 
-import android.location.Location;
 import android.util.Log;
 import androidx.annotation.Nullable;
 import com.cmput301w23t09.qrhunter.DatabaseChangeListener;
+import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.database.DatabaseConnection;
 import com.cmput301w23t09.qrhunter.database.DatabaseConsumer;
 import com.cmput301w23t09.qrhunter.database.DatabaseQueryResults;
@@ -18,9 +18,12 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -118,30 +121,47 @@ public class QRCodeDatabase {
       return;
     }
 
-    collection
-        .whereIn("hash", new ArrayList<>(hashes))
-        .get()
-        .addOnCompleteListener(
-            task -> {
-              if (!task.isSuccessful()) {
-                callback.accept(new DatabaseQueryResults<>(null, task.getException()));
-                Log.w(LOGGER_TAG, "Failed to execute getQRCodeHashes", task.getException());
-                return;
-              }
+    List<List<String>> hashBatches = new ArrayList<>();
+    for (int i = 0; i < hashes.size(); i += 10) {
+      int endingIndex = Math.min(hashes.size(), i + 10);
+      hashBatches.add(hashes.subList(i, endingIndex));
+    }
 
-              // Return found qrcodes if any.
-              if (task.getResult() != null) {
-                List<QRCode> qrCodes =
-                    task.getResult().getDocuments().stream()
-                        .map(this::snapshotToQRCode)
-                        .collect(Collectors.toList());
+    List<QRCode> allQRCodes = Collections.synchronizedList(new ArrayList<>());
+    AtomicInteger remainingBatches = new AtomicInteger(hashBatches.size());
+    AtomicReference<Exception> exceptionAtomicReference = new AtomicReference<>();
 
-                callback.accept(new DatabaseQueryResults<>(qrCodes));
-              } else {
-                // No QRCode by that hash exists.
-                callback.accept(new DatabaseQueryResults<>(null));
-              }
-            });
+    for (List<String> batch : hashBatches) {
+      collection
+          .whereIn("hash", batch)
+          .get()
+          .addOnCompleteListener(
+              task -> {
+                if (!task.isSuccessful()) {
+                  exceptionAtomicReference.set(task.getException());
+                  Log.w(LOGGER_TAG, "Failed to execute getQRCodeHashes", task.getException());
+                } else {
+                  // Return found qrcodes if any.
+                  if (task.getResult() != null) {
+                    List<QRCode> batchQRCodes =
+                        task.getResult().getDocuments().stream()
+                            .map(this::snapshotToQRCode)
+                            .collect(Collectors.toList());
+
+                    allQRCodes.addAll(batchQRCodes);
+                  }
+                }
+
+                if (remainingBatches.decrementAndGet() == 0) {
+                  if (exceptionAtomicReference.get() != null) {
+                    callback.accept(
+                        new DatabaseQueryResults<>(null, exceptionAtomicReference.get()));
+                  } else {
+                    callback.accept(new DatabaseQueryResults<>(allQRCodes));
+                  }
+                }
+              });
+    }
   }
 
   /**
@@ -393,20 +413,34 @@ public class QRCodeDatabase {
     String hash = snapshot.getId();
     String name = snapshot.getString("name");
     Integer score = (int) (long) snapshot.get("score");
-    Location location;
-    if (snapshot.get("latitude") == null || snapshot.get("longitude") == null) location = null;
-    else {
-      location = new Location("");
-      location.setLatitude((double) snapshot.get("latitude"));
-      location.setLongitude((double) snapshot.get("longitude"));
+    QRLocation location = null;
+    if (snapshot.get("latitude") != null
+        && snapshot.get("longitude") != null
+        && snapshot.get("region") != null) {
+      location =
+          new QRLocation(
+              snapshot.getString("region"),
+              snapshot.getDouble("latitude"),
+              snapshot.getDouble("longitude"));
     }
     ArrayList<String> players = (ArrayList<String>) snapshot.get("players");
+
+    // Parse comments
+    ArrayList<Map<String, String>> commentsData =
+        (ArrayList<Map<String, String>>) snapshot.get("comments");
+    ArrayList<Comment> comments = new ArrayList<>();
+    if (commentsData == null) {
+      commentsData = new ArrayList<>();
+    }
+    for (Map<String, String> data : commentsData) {
+      comments.add(new Comment(data.get("playerId"), data.get("username"), data.get("comment")));
+    }
+
     ArrayList<String> locationsStr = (ArrayList<String>) snapshot.get("locations");
     ArrayList<QRLocation> locations = new ArrayList<>();
     if (locationsStr != null)
       for (String locStr : locationsStr) locations.add(new QRLocation(locStr));
-    return new QRCode(
-        hash, name, score, location, locations, new ArrayList<>(), new ArrayList<>(), players);
+    return new QRCode(hash, name, score, location, locations, new ArrayList<>(), comments, players);
   }
 
   /**
@@ -422,10 +456,16 @@ public class QRCodeDatabase {
     values.put("score", qrCode.getScore());
     values.put("latitude", qrCode.getLoc() != null ? qrCode.getLoc().getLatitude() : null);
     values.put("longitude", qrCode.getLoc() != null ? qrCode.getLoc().getLongitude() : null);
+    values.put("region", qrCode.getLoc() != null ? qrCode.getLoc().getRegion() : null);
     values.put("players", qrCode.getPlayers());
+    values.put("comments", qrCode.getComments());
+
     ArrayList<String> locationsStr = new ArrayList<>();
-    for (QRLocation loc : qrCode.getLocations()) locationsStr.add(loc.getLocationString());
+    for (QRLocation loc : qrCode.getLocations()) {
+      locationsStr.add(loc.getLocationString());
+    }
     values.put("locations", locationsStr);
+
     return values;
   }
 

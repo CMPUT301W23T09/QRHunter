@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +36,8 @@ public abstract class ProfileFragment extends BaseFragment {
   private Spinner sortOrderSpinner;
   /** This is the view displaying the list of codes the user has */
   private GridView qrCodeList;
+  /** This is the view displaying the user's profile picture */
+  private ImageView profilePic;
   /** This is the view displaying the settings button */
   protected FloatingActionButton contactButton;
   /** This is the button that allows the user to view their rankings */
@@ -85,12 +88,14 @@ public abstract class ProfileFragment extends BaseFragment {
     followersText = view.findViewById(R.id.followers_count);
     followingText = view.findViewById(R.id.following_count);
     followButton = view.findViewById(R.id.follow_button);
+    profilePic = view.findViewById(R.id.profile_pic);
 
     // create a default empty profile (shown while waiting for database queries)
     createDefaultProfile();
 
     // setup profile elements
-    controller.setUpUsernameAndFollow(username, followingText, followersText, followButton);
+    controller.setUpUsernameAndPicture(username, profilePic);
+    controller.setupFollowDetails(followingText, followersText, followButton);
     controller.setUpQRList(qrCodeList, totalPoints, totalCodes, topCodeScore, sortOrderSpinner);
     qrCodeList.setOnItemClickListener(controller.handleQRSelect());
 
@@ -107,6 +112,7 @@ public abstract class ProfileFragment extends BaseFragment {
     topCodeScore.setText("");
     followingText.setText("");
     followersText.setText("");
+    profilePic.setImageBitmap(null);
     createSpinner(sortOrderSpinner, R.array.order_options);
 
     setupSocialMethods();

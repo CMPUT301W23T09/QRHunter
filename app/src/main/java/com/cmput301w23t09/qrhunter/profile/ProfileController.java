@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 
 /** This is the controller for the profile fragment of the app */
@@ -61,23 +63,17 @@ public abstract class ProfileController implements DatabaseChangeListener {
     this.deviceUUID = deviceUUID;
   }
 
-  /**
-   * This sets up the username view of the fragment
-   *
-   * @param usernameView This is the TextView that shows the username
-   */
-  public void setUpUsernameAndFollow(
-      TextView usernameView, TextView followingText, TextView followersText, Button followButton) {
+  public void setupFollowDetails(
+      TextView followingText, TextView followersText, Button followButton) {
     PlayerDatabase.getInstance()
         .getPlayerByDeviceId(
             deviceUUID,
             results -> {
-              // check if database query was successful
               if (!results.isSuccessful()) {
                 showMsg("An error occurred while loading in your player data.");
+                return;
               }
-              // otherwise get username
-              usernameView.setText(results.getData().getUsername());
+
               followingText.setText(
                   fragment.getString(
                       R.string.profile_following, results.getData().getFollowing().size()));
@@ -89,6 +85,31 @@ public abstract class ProfileController implements DatabaseChangeListener {
                 followButton.setText(R.string.unfollow);
               } else {
                 followButton.setText(R.string.follow);
+              }
+            });
+  }
+  /**
+   * This sets up the username view and profile pic view of the fragment
+   *
+   * @param usernameView This is the TextView that shows the username
+   * @param profilePic This is the ImageView that shows their profile picture
+   */
+  public void setUpUsernameAndPicture(TextView usernameView, ImageView profilePic) {
+    PlayerDatabase.getInstance()
+        .getPlayerByDeviceId(
+            deviceUUID,
+            results -> {
+              // check if database query was successful
+              if (!results.isSuccessful()) {
+                showMsg("An error occurred while loading in your player data.");
+                return;
+              }
+              // otherwise get username and profile picture
+              usernameView.setText(results.getData().getUsername());
+              try {
+                profilePic.setImageBitmap(results.getData().getProfilePic());
+              } catch (ExecutionException | InterruptedException e) {
+                showMsg("An error occurred while loading in your profile picture.");
               }
             });
   }

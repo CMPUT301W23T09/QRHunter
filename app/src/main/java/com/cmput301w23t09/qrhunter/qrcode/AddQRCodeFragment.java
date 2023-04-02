@@ -42,6 +42,7 @@ public class AddQRCodeFragment extends QRCodeFragment {
 
   @Override
   protected void setUpButtons(View view) {
+    commentBox.setVisibility(View.GONE);
     addButton.setVisibility(View.VISIBLE);
     deleteButton.setVisibility(View.GONE);
     loadingButton.setVisibility(View.GONE);
@@ -77,6 +78,7 @@ public class AddQRCodeFragment extends QRCodeFragment {
             locationHandler.removeLastAddedLocation(qrCode);
           }
         });
+
     updateAddButton();
     addButton.setOnClickListener(this::onAddQRClicked);
     updateLocationPhoto();
@@ -89,6 +91,7 @@ public class AddQRCodeFragment extends QRCodeFragment {
    */
   private void onAddQRClicked(View view) {
     addButton.setVisibility(View.GONE);
+
     loadingButton.setVisibility(View.VISIBLE);
 
     // Add QR to database, when the QR has been added, allow the deletion of the QRCode.
@@ -134,6 +137,7 @@ public class AddQRCodeFragment extends QRCodeFragment {
                         qrCode,
                         ignored -> {
                           loadingButton.setVisibility(View.GONE);
+
                           this.dismiss();
                         });
               }

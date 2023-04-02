@@ -1,10 +1,10 @@
 package com.cmput301w23t09.qrhunter.qrcode;
 
 import android.graphics.Bitmap;
-import android.location.Location;
 import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.locationphoto.LocationPhoto;
 import com.cmput301w23t09.qrhunter.map.QRLocation;
+import com.cmput301w23t09.qrhunter.util.VisualFetcher;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ public class QRCode implements Serializable {
   /** This is the score of the QR code */
   private Integer score;
   /** This is the location of the QR code */
-  private Location loc;
+  private QRLocation loc;
   /** This is a list of locations that the QR code has been found in */
   private ArrayList<QRLocation> locations;
   /** This is a list of photos that have been taken of the QR code */
@@ -68,7 +68,7 @@ public class QRCode implements Serializable {
       String hash,
       String name,
       Integer score,
-      Location loc,
+      QRLocation loc,
       ArrayList<QRLocation> locations,
       ArrayList<LocationPhoto> locationPhotos,
       ArrayList<Comment> comments,
@@ -121,8 +121,8 @@ public class QRCode implements Serializable {
   public Bitmap getVisualRepresentation() throws InterruptedException, ExecutionException {
     if (visualRepresentation == null) {
       visualRepresentation =
-          new QRCodeVisualFetcher()
-              .execute("https://api.dicebear.com/5.x/pixel-art-neutral/jpg?seed=" + hash)
+          new VisualFetcher()
+              .execute("https://api.dicebear.com/6.x/pixel-art-neutral/jpg?seed=" + hash)
               .get();
     }
     return visualRepresentation;
@@ -133,7 +133,7 @@ public class QRCode implements Serializable {
    *
    * @return Return the location of the QR code
    */
-  public Location getLoc() {
+  public QRLocation getLoc() {
     return loc;
   }
 
@@ -142,7 +142,7 @@ public class QRCode implements Serializable {
    *
    * @param loc This is the location to set to
    */
-  public void setLoc(Location loc) {
+  public void setLoc(QRLocation loc) {
     this.loc = loc;
   }
 

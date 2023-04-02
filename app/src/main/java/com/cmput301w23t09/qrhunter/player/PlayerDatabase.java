@@ -277,7 +277,7 @@ public class PlayerDatabase {
     ArrayList<String> qrCodeHashes = (ArrayList<String>) snapshot.get("qrCodeHashes");
     ArrayList<String> following = new ArrayList<>();
     ArrayList<String> followers = new ArrayList<>();
-    if (snapshot.contains("following")) {
+    if (snapshot.contains("following") && snapshot.contains("followers")) {
       following = (ArrayList<String>) snapshot.get("following");
       followers = (ArrayList<String>) snapshot.get("followers");
     }
