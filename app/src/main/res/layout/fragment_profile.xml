@@ -125,27 +125,15 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/divider">
 
-        <TextView
-            android:id="@+id/sort_lbl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="@string/sort_lbl"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <Spinner
             android:id="@+id/order_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="16dp"
             android:contentDescription="@string/order_spinner_desc"
             android:minHeight="48dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/sort_lbl"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -158,7 +146,7 @@
         android:layout_marginEnd="16dp"
         android:horizontalSpacing="8dp"
         android:numColumns="4"
-        android:verticalSpacing="4dp"
+        android:verticalSpacing="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

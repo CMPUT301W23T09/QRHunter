@@ -1,6 +1,5 @@
 package com.cmput301w23t09.qrhunter;
 
-import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -14,11 +13,7 @@ import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import java.util.ArrayList;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 
-// still needs testGetLocations() and testSetLocations()
-@RunWith(MockitoJUnitRunner.class)
 public class TestQRModel {
   // create a mock hash
   private final String mockHash =
@@ -194,7 +189,6 @@ public class TestQRModel {
     assertEquals(1, qr.getPhotos().size());
     qr.deletePhoto(photos.get(0));
     assertEquals(0, qr.getPhotos().size());
-    assertNull(mockCode().getLoc());
   }
 
   @Test

@@ -7,9 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
+import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import com.cmput301w23t09.qrhunter.BaseFragment;
@@ -40,7 +41,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
   private static LatLng[] placeholderQR;
   private LatLng currentLocation;
 
-  private SearchView qrSearcher;
+  private SearchView qrSearchbar;
+  private Button qrSearchButton;
   private SearchQRController searchController;
 
   public MapFragment(GameController gameController) {
@@ -166,9 +168,11 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     View view = inflater.inflate(R.layout.fragment_map, container, false);
 
     // create search view
-    qrSearcher = view.findViewById(R.id.qr_searcher);
-    searchController = new SearchQRController(qrSearcher, this);
-    qrSearcher.setOnQueryTextListener(searchController.handleSearch());
+    qrSearchbar = view.findViewById(R.id.qr_searchbar);
+    qrSearchButton = view.findViewById(R.id.qr_searcher);
+    searchController = new SearchQRController(qrSearchbar, qrSearchButton, this);
+    qrSearchbar.setOnQueryTextListener(searchController.searchNearbyCodes());
+    qrSearchButton.setOnClickListener(searchController.getNearbyCodes());
 
     return view;
   }
