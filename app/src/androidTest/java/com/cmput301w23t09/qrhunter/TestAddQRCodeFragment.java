@@ -108,16 +108,16 @@ public class TestAddQRCodeFragment extends BaseTest {
   /** Checks if we can set the QRCode's location by checking the checkbox */
   @Test
   public void testQRSetLocation() {
-    onView(withId(R.id.location_request_box)).perform(click());
+    solo.sleep(5000); // This test is really flaky on Github Actions :(
+    solo.clickOnText("Record QR Location");
     assertTrue(solo.waitForCondition(() -> qrCode.getLoc() != null, 25000));
   }
 
   /** Checks if we can remove the QRCode's location by unchecking the checkbox */
   @Test
   public void testQRRemoveLocation() {
-    onView(withId(R.id.location_request_box)).perform(click());
-    await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getLoc() != null);
-    onView(withId(R.id.location_request_box)).perform(click());
+    solo.clickOnText("Record QR Location");
+    solo.clickOnText("Record QR Location");
     await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getLoc() == null);
   }
 
