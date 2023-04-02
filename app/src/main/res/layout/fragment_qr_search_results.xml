@@ -6,6 +6,18 @@
     android:background="@color/white"
     android:backgroundTint="@color/white">
 
+    <TextView
+        android:id="@+id/nearby_qr_codes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/nearby_qr_codes_txt"
+        android:textSize="30sp"
+        android:paddingVertical="10dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <GridView
         android:id="@+id/search_qr_result"
         android:layout_width="match_parent"
@@ -16,7 +28,8 @@
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></GridView>
+        app:layout_constraintTop_toBottomOf="@+id/nearby_qr_codes">
+    </GridView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/qr_search_close_btn"
