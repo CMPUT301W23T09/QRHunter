@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
+// need to test comparator
 public class TestQRModel {
   // create a mock hash
   private final String mockHash =
