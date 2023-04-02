@@ -2,6 +2,7 @@ package com.cmput301w23t09.qrhunter.map;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
@@ -30,6 +31,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -38,6 +40,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MapFragment extends BaseFragment implements OnMapReadyCallback {
   private boolean locationPermissionGranted;
@@ -48,14 +51,14 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
   private static final String TAG = "MapFragment";
   private static final int DEFAULT_ZOOM = 14;
   private LatLng defaultLocation = new LatLng(53.523565919249364, -113.52815038503842);
-
-  private static LatLng[] placeholderQR;
   private LatLng currentLocation;
   private List<LatLng> latLngsList;
   private SearchView qrSearcher;
   private SearchQRController searchController;
   private long LOCATION_UPDATE_INTERVAL = 30000;
-  private final double radius = 10;
+  private final double radius = 10; // In km
+  private final int markerWidth = 70; // In pixels
+  private final int markerHeight = 70; // In pixels
   public MapFragment(GameController gameController) {
     super(gameController);
   }
@@ -192,7 +195,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     updateLocationUI();
   }
 
-  public void displayQRCodeMarkersOnMap(GoogleMap mMap) {
+  private void displayQRCodeMarkersOnMap(GoogleMap mMap) { // Use this to check all QR codes registered on the DB
     QRCodeDatabase.getInstance().getAllQRCodes(qrCodes -> {
       if (qrCodes.isSuccessful()) {
         List<QRCode> qrCodeList = qrCodes.getData();
@@ -202,9 +205,19 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
           QRLocation loc = qrCode.getLoc();
           if (loc != null) {
             LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
-            Marker marker = mMap.addMarker(new MarkerOptions()
-                    .position(latLng)
-                    .title(qrCode.getName()));
+            Marker marker = null;
+            try {
+              Bitmap qrBitmap = qrCode.getVisualRepresentation();
+              Bitmap scaledBitmap = Bitmap.createScaledBitmap(qrBitmap, markerWidth, markerHeight, false);
+              marker = mMap.addMarker(new MarkerOptions()
+                      .position(latLng)
+                      .title(qrCode.getName())
+                      .icon(BitmapDescriptorFactory.fromBitmap(scaledBitmap)));
+            } catch (InterruptedException e) {
+              throw new RuntimeException(e);
+            } catch (ExecutionException e) {
+              throw new RuntimeException(e);
+            }
             marker.setTag(qrCode); // Set the tag directly in the marker options
 
             Log.d(TAG, "Marker added for QR code: " + qrCode.getName() + " at " + latLng.toString());
@@ -237,11 +250,23 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
             float distanceInMeters = results[0];
             if (distanceInMeters <= radius * 1000) {
               LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
-              Marker marker = mMap.addMarker(new MarkerOptions()
-                      .position(latLng)
-                      .title(qrCode.getName()));
-              marker.setTag(qrCode);
-              Log.d(TAG, "Marker added for QR code: " + qrCode.getName() + " at " + latLng.toString());
+              Marker marker = null;
+              try {
+                Bitmap qrBitmap = qrCode.getVisualRepresentation();
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(qrBitmap, markerWidth, markerHeight, false);
+                marker = mMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title(qrCode.getName())
+                        .icon(BitmapDescriptorFactory.fromBitmap(scaledBitmap)));
+              } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+              } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+              }
+              if (marker != null) {
+                marker.setTag(qrCode);
+                Log.d(TAG, "Marker added for QR code: " + qrCode.getName() + " at " + latLng.toString());
+              }
             }
           }
         }
@@ -322,28 +347,9 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     // Get the current location of the device and set the position of the map.
     getDeviceLocation();
     startLocationUpdates();
-    displayQRCodeMarkersOnMap(map);
+//    displayQRCodeMarkersOnMap(map);
     displayQRCodeMarkersWithinRadiusOnMap(map, currentLocation, radius);
-    // loop through arraylist
-    //    getQRFromDB(latLngList -> {
-    //      for (LatLng latLng : latLngsList) {
-    //        // add a marker for each LatLng on the map
-    //        map.addMarker(new MarkerOptions().position(latLng));
-    //      }
-    //    });
 
-    //    placeholderQR =
-    //        new LatLng[] {
-    //          new LatLng(53.52748572137864, -113.52965526862573), // Engineering Physics Club
-    //          new LatLng(53.52644615688437, -113.52453761405557), // CAB
-    //          new LatLng(53.526790555323736, -113.52716617858209), // CSC
-    //          new LatLng(53.52606986652603, -113.52166228586451), // Rutherford Library
-    //          new LatLng(53.523182298052724, -113.52719701274522), // Butterdome
-    //          new LatLng(53.520845993958204, -113.523585870797) // Ualberta hospital
-    //        };
-    //    //replace with listQR
-    //    for (LatLng location : placeholderQR) {
-    //      map.addMarker(new MarkerOptions().position(location));
   }
 
   public boolean getLocationPermissionGranted() {
