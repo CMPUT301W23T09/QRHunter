@@ -22,6 +22,7 @@ import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -38,6 +39,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MapFragment extends BaseFragment implements OnMapReadyCallback {
@@ -194,68 +197,40 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
   }
 
   public void displayQRCodeMarkersOnMap(GoogleMap mMap) {
-    QRCodeDatabase.getInstance()
-        .getAllQRCodes(
-            qrCodes -> {
-              if (qrCodes.isSuccessful()) {
-                // Get the list of QRCode objects from the callback result
-                List<QRCode> qrCodeList = qrCodes.getData();
-                Log.d(TAG, "Query successful. Result count: " + qrCodes.getData().size());
+    QRCodeDatabase.getInstance().getAllQRCodes(qrCodes -> {
+      if (qrCodes.isSuccessful()) {
+        List<QRCode> qrCodeList = qrCodes.getData();
+        Log.d(TAG, "Query successful. Result count: " + qrCodes.getData().size());
 
-                // Loop through the list of QRCode objects and add markers to the Google Map
-                for (QRCode qrCode : qrCodeList) {
-                  QRLocation loc = qrCode.getLoc();
-                  if (loc != null) {
-                    LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
-                    Marker marker =
-                        mMap.addMarker(
-                            new MarkerOptions().position(latLng).title(qrCode.getName()));
-                    marker.setTag(qrCode);
-                    Log.d(
-                        TAG,
-                        "Marker added for QR code: "
-                            + qrCode.getName()
-                            + " at "
-                            + latLng.toString());
-                  }
-                }
-              }
-            });
+        for (QRCode qrCode : qrCodeList) {
+          QRLocation loc = qrCode.getLoc();
+          if (loc != null) {
+            LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(latLng)
+                    .title(qrCode.getName()));
+            marker.setTag(qrCode); // Set the tag directly in the marker options
 
-    // Set up the marker click listener to display QR code properties
-    mMap.setOnMarkerClickListener(
-        marker -> {
-          QRCode qrCode = (QRCode) marker.getTag(); // Retrieve the associated QR code object
-          if (qrCode != null) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            // Displays QR attributes as text
-            builder
-                .setTitle(qrCode.getName())
-                .setMessage(
-                    "QR Name: "
-                        + qrCode.getName()
-                        + "\n"
-                        + "Location: "
-                        + qrCode.getLoc().toString()
-                        + "\n"
-                        + "Score: "
-                        + qrCode.getScore().toString()
-                        + "\n"
-                        + "Date created: "
-                        + qrCode.getComments())
-                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
-            // Displays the QR image if available
-            if (qrCode.getPhotos() != null) {
-              // Handle imges
-            }
-            AlertDialog dialog = builder.create();
-            dialog.show();
-            return true;
-
-          } else {
-            return false;
+            Log.d(TAG, "Marker added for QR code: " + qrCode.getName() + " at " + latLng.toString());
           }
-        });
+        }
+
+        // Set the click listener for the markers
+        mMap.setOnMarkerClickListener(this::onMarkerClick);
+      }
+    });
+  }
+
+  private boolean onMarkerClick(Marker marker) {
+    Object tag = marker.getTag();
+    if (tag instanceof QRCode) {
+      QRCode qrCode = (QRCode) tag;
+      // Create and show the QRCodeFragment
+      QRCodeFragment qrCodeFragment = QRCodeFragment.newInstance(qrCode, getActivePlayer());
+      getGameController().setPopup(qrCodeFragment);
+      return true; // Return true to indicate that the click event has been consumed
+    }
+    return false; // Return false to indicate that the click event has not been consumed
   }
 
   /**
@@ -290,6 +265,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     qrSearcher = view.findViewById(R.id.qr_searcher);
     searchController = new SearchQRController(qrSearcher, this);
     qrSearcher.setOnQueryTextListener(searchController.handleSearch());
+//    genQR();
 
     return view;
   }
@@ -347,6 +323,25 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
   public boolean getLocationPermissionGranted() {
     return locationPermissionGranted;
   }
+
+//  public void genQR()  {
+//    int qrsToGenerate = 32;
+//    String CHARS = "abcdef1234567890";
+//    for (int i = 0; i < qrsToGenerate; i++) {
+//      String currentHash = "";
+//      for (int j = 0; j < 64; j++) {
+//        currentHash += CHARS.charAt((int) Math.floor(Math.random() * CHARS.length()));
+//      }
+//      QRCode code = new QRCode(currentHash);
+//      double latitude = Math.random() * 180 - 90;
+//      double longitude = Math.random() * 360 - 180;
+//      QRLocation location = new QRLocation(latitude + ";" + longitude + ";No Region");
+//      code.setLoc(location);
+//      code.setLocations(new ArrayList<>(Collections.singletonList(location)));
+//
+//      QRCodeDatabase.getInstance().addQRCode(code, task -> QRCodeDatabase.getInstance().updateQRCode(code, ignored -> {}));
+//    }
+//  }
 
   public FusedLocationProviderClient getFusedLocationProviderClient() {
     return fusedLocationProviderClient;
