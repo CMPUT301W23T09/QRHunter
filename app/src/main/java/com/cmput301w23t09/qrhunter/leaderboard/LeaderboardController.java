@@ -23,9 +23,12 @@ import java.util.function.BiConsumer;
 
 public class LeaderboardController {
   private final GameController gameController;
+  private final LeaderboardFragment fragment;
+  private boolean filteredByFollowedPlayers;
 
-  public LeaderboardController(GameController gameController) {
+  public LeaderboardController(LeaderboardFragment fragment, GameController gameController) {
     this.gameController = gameController;
+    this.fragment = fragment;
   }
 
   /**
@@ -50,6 +53,20 @@ public class LeaderboardController {
               AtomicReference<Exception> exception = new AtomicReference<>();
 
               for (Player player : task.getData()) {
+                // Do we need to filter by followed players?
+                if (isFilteredByFollowedPlayers()
+                    && (!gameController
+                            .getActivePlayer()
+                            .getFollowing()
+                            .contains(player.getDeviceId())
+                        && !gameController
+                            .getActivePlayer()
+                            .getDeviceId()
+                            .equals(player.getDeviceId()))) {
+                  entriesLeft.decrementAndGet();
+                  continue;
+                }
+
                 // Fetch the QRCodes for each player and sum them up.
                 QRCodeDatabase.getInstance()
                     .getQRCodeHashes(
@@ -101,6 +118,19 @@ public class LeaderboardController {
 
               List<PlayerLeaderboardEntry> entries = new ArrayList<>();
               for (Player player : task.getData()) {
+                // Do we need to filter by followed players?
+                if (isFilteredByFollowedPlayers()
+                    && (!gameController
+                            .getActivePlayer()
+                            .getFollowing()
+                            .contains(player.getDeviceId())
+                        && !gameController
+                            .getActivePlayer()
+                            .getDeviceId()
+                            .equals(player.getDeviceId()))) {
+                  continue;
+                }
+
                 long scans = player.getQRCodeHashes().size();
                 entries.add(new PlayerLeaderboardEntry(player, scans, "codes"));
               }
@@ -225,5 +255,26 @@ public class LeaderboardController {
                 gameController.setPopup(fragment);
               }
             });
+  }
+
+  public void onFilterButtonClick() {
+    LeaderboardSettingsFragment settingsFragment = new LeaderboardSettingsFragment(fragment, this);
+    getGameController().setPopup(settingsFragment);
+  }
+
+  public void setIsFilteredByFollowedPlayers(boolean filteredByFollowedPlayers) {
+    if (filteredByFollowedPlayers != this.filteredByFollowedPlayers) {
+      this.filteredByFollowedPlayers = filteredByFollowedPlayers;
+
+      fragment.clearCachesAndReloadLeaderboard();
+    }
+  }
+
+  public boolean isFilteredByFollowedPlayers() {
+    return filteredByFollowedPlayers;
+  }
+
+  public GameController getGameController() {
+    return gameController;
   }
 }

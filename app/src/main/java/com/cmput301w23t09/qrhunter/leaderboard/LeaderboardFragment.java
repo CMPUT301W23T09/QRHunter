@@ -32,7 +32,7 @@ public class LeaderboardFragment extends BaseFragment {
   public LeaderboardFragment(GameController gameController) {
     super(gameController);
 
-    controller = new LeaderboardController(gameController);
+    controller = new LeaderboardController(this, gameController);
   }
 
   @Override
@@ -48,6 +48,9 @@ public class LeaderboardFragment extends BaseFragment {
 
     ListView leaderboardListView = view.findViewById(R.id.leaderboard_list);
     leaderboardListView.setAdapter(leaderboardAdapter);
+
+    view.findViewById(R.id.leaderboard_filter_button)
+        .setOnClickListener(l -> controller.onFilterButtonClick());
 
     setupTabList(view);
     setupListView(view);
@@ -79,37 +82,7 @@ public class LeaderboardFragment extends BaseFragment {
               clearLeaderboards();
             }
 
-            switch (String.valueOf(tab.getText())) {
-              case "Total Points":
-                controller.getTotalPointsLeaderboard(
-                    (exception, leaderboard) ->
-                        onLeaderboardCallback(
-                            tabText, exception, Collections.singletonList(leaderboard)));
-                break;
-              case "Scanned":
-                controller.getTopScansLeaderboard(
-                    (exception, leaderboard) ->
-                        onLeaderboardCallback(
-                            tabText, exception, Collections.singletonList(leaderboard)));
-                break;
-              case "Top Codes":
-                controller.getTopQRCodesLeaderboard(
-                    (exception, leaderboard) ->
-                        onLeaderboardCallback(
-                            tabText, exception, Collections.singletonList(leaderboard)));
-                break;
-              case "Top Codes (By Region)":
-                controller.getTopQRCodesByRegionLeaderboard(
-                    (exception, leaderboardsByRegion) ->
-                        onLeaderboardCallback(
-                            tabText,
-                            exception,
-                            (List<Leaderboard<?>>) (Object) leaderboardsByRegion));
-                break;
-              default:
-                throw new UnsupportedOperationException(
-                    "This tab item is not supported: " + tab.getText());
-            }
+            LeaderboardFragment.this.onTabSelected(tabText);
           }
 
           @Override
@@ -130,6 +103,50 @@ public class LeaderboardFragment extends BaseFragment {
     }
   }
 
+  /** Clears the leaderboard cache and reloads the current shown leaderboard. */
+  public void clearCachesAndReloadLeaderboard() {
+    cachedLeaderboardsByTab.clear();
+    onTabSelected(currentActiveTab);
+  }
+
+  /**
+   * Called when a tab is selected and a leaderboard should be rendered.
+   *
+   * @param tabName tab selected
+   */
+  private void onTabSelected(String tabName) {
+    switch (tabName) {
+      case "Total Points":
+        controller.getTotalPointsLeaderboard(
+            (exception, leaderboard) ->
+                onLeaderboardCallback(tabName, exception, Collections.singletonList(leaderboard)));
+        break;
+      case "Scanned":
+        controller.getTopScansLeaderboard(
+            (exception, leaderboard) ->
+                onLeaderboardCallback(tabName, exception, Collections.singletonList(leaderboard)));
+        break;
+      case "Top Codes":
+        controller.getTopQRCodesLeaderboard(
+            (exception, leaderboard) ->
+                onLeaderboardCallback(tabName, exception, Collections.singletonList(leaderboard)));
+        break;
+      case "Top Codes (By Region)":
+        controller.getTopQRCodesByRegionLeaderboard(
+            (exception, leaderboardsByRegion) ->
+                onLeaderboardCallback(
+                    tabName, exception, (List<Leaderboard<?>>) (Object) leaderboardsByRegion));
+        break;
+      default:
+        throw new UnsupportedOperationException("This tab item is not supported: " + tabName);
+    }
+  }
+
+  /**
+   * Sets up the leaderboard list listener
+   *
+   * @param view
+   */
   private void setupListView(View view) {
     ListView leaderboardListView = view.findViewById(R.id.leaderboard_list);
     leaderboardListView.setOnItemClickListener(
@@ -150,6 +167,13 @@ public class LeaderboardFragment extends BaseFragment {
         });
   }
 
+  /**
+   * Called when the controller returns leaderboard data
+   *
+   * @param tabName leaderboard tab name
+   * @param exception if any exception occurred while fetching the leaderboards
+   * @param leaderboards the leaderboards fetched
+   */
   private void onLeaderboardCallback(
       String tabName, Exception exception, List<Leaderboard<?>> leaderboards) {
     if (exception != null) {
@@ -170,11 +194,17 @@ public class LeaderboardFragment extends BaseFragment {
     }
   }
 
+  /** Clear the current shown leaderboards */
   private void clearLeaderboards() {
     leaderboardAdapterItems.clear();
     leaderboardAdapter.notifyDataSetChanged();
   }
 
+  /**
+   * Render a list of leaderboards onto the list
+   *
+   * @param leaderboards leaderboards to render
+   */
   private void renderLeaderboards(List<Leaderboard<?>> leaderboards) {
     clearLeaderboards();
 

@@ -51,6 +51,8 @@
     <string name="profile_followers">%d Followers</string>
     <string name="profile_following">%d Following</string>
     <string name="nearby_qr_codes_txt">Nearby QR Codes</string>
+    <string name="followed_players_only">Followed Players Only</string>
+    <string name="leaderboard_filter_options_title">Leaderboard Filter Options</string>
     <string-array name="sort_options">
         <item>Points</item>
         <item>Date Taken</item>
