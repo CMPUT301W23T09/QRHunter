@@ -17,7 +17,7 @@ public class QRCode implements Serializable {
   /** This is the name of the QR code */
   private String name;
   /** This is the visual representation of the QR code */
-  private Bitmap visualRepresentation;
+  private transient Bitmap visualRepresentation;
   /** This is the score of the QR code */
   private Integer score;
   /** This is the location of the QR code */

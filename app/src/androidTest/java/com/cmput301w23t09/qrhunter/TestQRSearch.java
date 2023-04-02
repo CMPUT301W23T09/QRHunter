@@ -67,14 +67,6 @@ public class TestQRSearch extends BaseTest {
               solo = new Solo(InstrumentationRegistry.getInstrumentation(), activity);
             });
 
-    // Open the map fragment
-    onView(withId(R.id.navigation_qr_finder)).perform(click());
-    await()
-        .until(
-            () ->
-                ((GameActivity) solo.getCurrentActivity()).getController().getBody()
-                    instanceof MapFragment);
-
     // generate qr codes
     getUserLocation();
     getDistantLocation();
@@ -82,6 +74,14 @@ public class TestQRSearch extends BaseTest {
 
     // add generated codes to database
     addCodesToDB();
+
+    // Open the map fragment
+    onView(withId(R.id.navigation_qr_finder)).perform(click());
+    await()
+        .until(
+            () ->
+                ((GameActivity) solo.getCurrentActivity()).getController().getBody()
+                    instanceof MapFragment);
   }
 
   /** Get and store location of the user */

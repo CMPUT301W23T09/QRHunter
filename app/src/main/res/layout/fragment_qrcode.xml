@@ -133,7 +133,7 @@
 
     <EditText
         android:id="@+id/comment_box"
-        android:layout_width="350dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/comment_box_border"
         android:drawableEnd="@android:drawable/ic_menu_send"

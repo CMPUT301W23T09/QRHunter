@@ -31,7 +31,7 @@ public class TestMyProfileFragment extends TestProfileFragment {
 
   @Override
   protected Player getProfilePlayer() {
-    return ourPlayer;
+    return ((GameActivity) solo.getCurrentActivity()).getController().getActivePlayer();
   }
 
   @Override
@@ -117,9 +117,9 @@ public class TestMyProfileFragment extends TestProfileFragment {
     onView(withId(R.id.contact_info_button)).perform(click());
     // search for the player's phone and email
     onView(withId(R.id.settings_screen_phoneTextField))
-        .check(matches(withText(ourPlayer.getPhoneNo())));
+        .check(matches(withText(localPlayer.getPhoneNo())));
     onView(withId(R.id.settings_screen_emailTextField))
-        .check(matches(withText(ourPlayer.getEmail())));
+        .check(matches(withText(localPlayer.getEmail())));
   }
 
   /** Checks the change of the user's phone number */
@@ -155,7 +155,7 @@ public class TestMyProfileFragment extends TestProfileFragment {
               // fetch the latest database saved entry.
               PlayerDatabase.getInstance()
                   .getPlayerByUsername(
-                      ourPlayer.getUsername(),
+                      localPlayer.getUsername(),
                       fetchedPlayer -> updatedPlayer.set(fetchedPlayer.getData()));
               return false; // Try again.
             });
@@ -194,7 +194,7 @@ public class TestMyProfileFragment extends TestProfileFragment {
               // fetch the latest database saved entry.
               PlayerDatabase.getInstance()
                   .getPlayerByUsername(
-                      ourPlayer.getUsername(),
+                      localPlayer.getUsername(),
                       fetchedPlayer -> updatedPlayer.set(fetchedPlayer.getData()));
               return false; // Try again.
             });

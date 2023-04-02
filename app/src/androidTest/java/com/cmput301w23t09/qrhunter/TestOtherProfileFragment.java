@@ -9,7 +9,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.CoreMatchers.anything;
 
-import android.widget.Button;
+import android.view.View;
 import android.widget.TextView;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
@@ -18,6 +18,7 @@ import com.cmput301w23t09.qrhunter.profile.ProfileFragment;
 import com.cmput301w23t09.qrhunter.qrcode.DeleteQRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -77,13 +78,14 @@ public class TestOtherProfileFragment extends TestProfileFragment {
             () -> {
               TextView usernameView = (TextView) solo.getView(R.id.username);
               TextView totalPoints = (TextView) solo.getView(R.id.total_points);
-              Button followButton = (Button) solo.getView(R.id.follow_button);
+              FloatingActionButton followButton =
+                  (FloatingActionButton) solo.getView(R.id.follow_button);
+              FloatingActionButton unfollowButton =
+                  (FloatingActionButton) solo.getView(R.id.unfollow_button);
               return !usernameView.getText().toString().equals("")
                   && !totalPoints.getText().toString().equals("")
-                  && !followButton
-                      .getText()
-                      .toString()
-                      .equals(gameActivity.getString(R.string.ellipses));
+                  && (followButton.getVisibility() == View.VISIBLE
+                      || unfollowButton.getVisibility() == View.VISIBLE);
             });
   }
 
@@ -107,7 +109,7 @@ public class TestOtherProfileFragment extends TestProfileFragment {
     // Assign the first QR as owned.
     CountDownLatch addQRToPlayerDBTask = new CountDownLatch(1);
     QRCodeDatabase.getInstance()
-        .addPlayerToQR(ourPlayer, higherScoreQR, task -> addQRToPlayerDBTask.countDown());
+        .addPlayerToQR(localPlayer, higherScoreQR, task -> addQRToPlayerDBTask.countDown());
     addQRToPlayerDBTask.await();
 
     // Click the first QR
@@ -147,9 +149,9 @@ public class TestOtherProfileFragment extends TestProfileFragment {
         .atMost(10, TimeUnit.SECONDS)
         .until(
             () -> {
-              Button followButton = (Button) solo.getView(R.id.follow_button);
-              String unfollowString = "Unfollow";
-              return followButton.getText().toString().equals(unfollowString);
+              FloatingActionButton unfollowButton =
+                  (FloatingActionButton) solo.getView(R.id.unfollow_button);
+              return unfollowButton.getVisibility() == View.VISIBLE;
             });
 
     // Check database entries to ensure everything is correct.
@@ -185,7 +187,7 @@ public class TestOtherProfileFragment extends TestProfileFragment {
               // Player.
               Player databasePlayer = updatedPlayer.get();
               if (databasePlayer != null
-                  && databasePlayer.getFollowers().contains(ourPlayer.getDeviceId())) {
+                  && databasePlayer.getFollowers().contains(localPlayer.getDeviceId())) {
                 return true; // Player was correctly updated!
               }
 
@@ -211,22 +213,22 @@ public class TestOtherProfileFragment extends TestProfileFragment {
         .atMost(10, TimeUnit.SECONDS)
         .until(
             () -> {
-              Button followButton = (Button) solo.getView(R.id.follow_button);
-              String unfollowString = "Unfollow";
-              return followButton.getText().toString().equals(unfollowString);
+              FloatingActionButton unfollowButton =
+                  (FloatingActionButton) solo.getView(R.id.unfollow_button);
+              return unfollowButton.getVisibility() == View.VISIBLE;
             });
 
     // Unfollow user
-    onView(withId(R.id.follow_button)).perform(click());
+    onView(withId(R.id.unfollow_button)).perform(click());
 
-    // Wait for follow text to appear
+    // Wait for unfollow text to appear
     await()
         .atMost(10, TimeUnit.SECONDS)
         .until(
             () -> {
-              Button followButton = (Button) solo.getView(R.id.follow_button);
-              String followString = "Follow";
-              return followButton.getText().toString().equals(followString);
+              FloatingActionButton followButton =
+                  (FloatingActionButton) solo.getView(R.id.follow_button);
+              return followButton.getVisibility() == View.VISIBLE;
             });
 
     // Check database entries to ensure everything is correct.
@@ -262,7 +264,7 @@ public class TestOtherProfileFragment extends TestProfileFragment {
               // Player.
               Player databasePlayer = updatedPlayer.get();
               if (databasePlayer != null
-                  && !databasePlayer.getFollowers().contains(ourPlayer.getDeviceId())) {
+                  && !databasePlayer.getFollowers().contains(localPlayer.getDeviceId())) {
                 return true; // Player was correctly updated!
               }
 
@@ -288,9 +290,9 @@ public class TestOtherProfileFragment extends TestProfileFragment {
         .atMost(10, TimeUnit.SECONDS)
         .until(
             () -> {
-              Button followButton = (Button) solo.getView(R.id.follow_button);
-              String unfollowString = "Unfollow";
-              return followButton.getText().toString().equals(unfollowString);
+              FloatingActionButton unfollowButton =
+                  (FloatingActionButton) solo.getView(R.id.unfollow_button);
+              return unfollowButton.getVisibility() == View.VISIBLE;
             });
 
     // Navigate to our profile.

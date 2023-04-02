@@ -38,7 +38,7 @@ import org.junit.Test;
 public abstract class TestProfileFragment extends BaseTest {
 
   private static final Intent intent;
-  protected static Player ourPlayer;
+  private static final Player ourPlayer;
 
   static {
     ourPlayer =
@@ -56,6 +56,7 @@ public abstract class TestProfileFragment extends BaseTest {
 
   protected Solo solo;
   protected Player profilePlayer;
+  protected Player localPlayer;
 
   @Rule
   public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
@@ -87,12 +88,16 @@ public abstract class TestProfileFragment extends BaseTest {
     PlayerDatabase.getInstance()
         .add(
             ourPlayer,
-            ignored -> {
+            task -> {
               // Update GameController activePlayer document id to match the record of the player
               // being added
+
+              // Update the GameActivity activePlayer
               Player storedActivePlayer =
                   ((GameActivity) solo.getCurrentActivity()).getController().getActivePlayer();
-              storedActivePlayer.setDocumentId(ourPlayer.getDocumentId());
+              storedActivePlayer.setDocumentId(task.getData().getDocumentId());
+              localPlayer = storedActivePlayer;
+              ourPlayer.setDocumentId(null); // reset the document id assigned to our template
 
               // Now that we added the main player, do we need to add the profile player too?
               if (profilePlayer.getDeviceId().equals(ourPlayer.getDeviceId())) {
