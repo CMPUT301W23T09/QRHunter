@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10};
+var data = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -153,7 +153,8 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(android.widget.SearchView,com.cmput301w23t09.qrhunter.map.MapFragment)">SearchQRController</a></span>&#8203;(android.widget.SearchView&nbsp;searchView,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(androidx.appcompat.widget.SearchView,android.widget.Button,com.cmput301w23t09.qrhunter.map.MapFragment)">SearchQRController</a></span>&#8203;(androidx.appcompat.widget.SearchView&nbsp;searchView,
+                  android.widget.Button&nbsp;searchBtn,
                   <a href="MapFragment.html" title="class in com.cmput301w23t09.qrhunter.map">MapFragment</a>&nbsp;fragment)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -176,9 +177,18 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>android.widget.SearchView.OnQueryTextListener</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#handleSearch()">handleSearch</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colFirst"><code>android.view.View.OnClickListener</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getNearbyCodes()">getNearbyCodes</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Get an on click listener that shows qr codes near the user's location</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>androidx.appcompat.widget.SearchView.OnQueryTextListener</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#searchNearbyCodes()">searchNearbyCodes</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Gets an on-query listener that shows qr codes near the queried location</div>
+</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -204,13 +214,14 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;(android.widget.SearchView,com.cmput301w23t09.qrhunter.map.MapFragment)">
+<a id="&lt;init&gt;(androidx.appcompat.widget.SearchView,android.widget.Button,com.cmput301w23t09.qrhunter.map.MapFragment)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>SearchQRController</h4>
-<pre>public&nbsp;SearchQRController&#8203;(android.widget.SearchView&nbsp;searchView,
+<pre>public&nbsp;SearchQRController&#8203;(androidx.appcompat.widget.SearchView&nbsp;searchView,
+                          android.widget.Button&nbsp;searchBtn,
                           <a href="MapFragment.html" title="class in com.cmput301w23t09.qrhunter.map">MapFragment</a>&nbsp;fragment)</pre>
 </li>
 </ul>
@@ -224,13 +235,32 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="handleSearch()">
+<a id="searchNearbyCodes()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>searchNearbyCodes</h4>
+<pre class="methodSignature">public&nbsp;androidx.appcompat.widget.SearchView.OnQueryTextListener&nbsp;searchNearbyCodes()</pre>
+<div class="block">Gets an on-query listener that shows qr codes near the queried location</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Return the on-query listener</dd>
+</dl>
+</li>
+</ul>
+<a id="getNearbyCodes()">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>handleSearch</h4>
-<pre class="methodSignature">public&nbsp;android.widget.SearchView.OnQueryTextListener&nbsp;handleSearch()</pre>
+<h4>getNearbyCodes</h4>
+<pre class="methodSignature">public&nbsp;android.view.View.OnClickListener&nbsp;getNearbyCodes()</pre>
+<div class="block">Get an on click listener that shows qr codes near the user's location</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Return the on-click listener</dd>
+</dl>
 </li>
 </ul>
 </li>
