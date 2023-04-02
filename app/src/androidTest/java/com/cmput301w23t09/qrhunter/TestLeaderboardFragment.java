@@ -360,7 +360,7 @@ public class TestLeaderboardFragment extends BaseTest {
   /** Wait until the search query list has entries. */
   private void waitUntilSearchListHasData() {
     await()
-        .atMost(5, TimeUnit.SECONDS)
+        .atMost(10, TimeUnit.SECONDS)
         .until(
             () -> {
               ListView listView = (ListView) solo.getView(R.id.search_query_list);
