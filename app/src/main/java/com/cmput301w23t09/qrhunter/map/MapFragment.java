@@ -1,11 +1,9 @@
 package com.cmput301w23t09.qrhunter.map;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,8 +37,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class MapFragment extends BaseFragment implements OnMapReadyCallback {
@@ -59,7 +55,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
   private SearchView qrSearcher;
   private SearchQRController searchController;
   private long LOCATION_UPDATE_INTERVAL = 30000;
-
+  private final double radius = 10;
   public MapFragment(GameController gameController) {
     super(gameController);
   }
@@ -171,7 +167,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
           lastKnownLocation = location;
           LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
           if (map != null) {
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM));
+//            map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM));
             map.addMarker(new MarkerOptions().position(currentLocation).title("YOU"));
           }
         }
@@ -217,6 +213,38 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
         // Set the click listener for the markers
         mMap.setOnMarkerClickListener(this::onMarkerClick);
+      }
+    });
+  }
+
+  // Function to retrieve QR codes within a certain radius from the user's current location and display them on the map
+  public void displayQRCodeMarkersWithinRadiusOnMap(GoogleMap mMap, LatLng currentLocation, double radius) {
+    if (currentLocation == null) {
+      Log.e(TAG, "Current location is null");
+      return;
+    }
+    QRCodeDatabase.getInstance().getAllQRCodes(qrCodes -> {
+      if (qrCodes.isSuccessful()) {
+        List<QRCode> qrCodeList = qrCodes.getData();
+        Log.d(TAG, "Query successful. Result count: " + qrCodes.getData().size());
+
+        for (QRCode qrCode : qrCodeList) {
+          QRLocation loc = qrCode.getLoc();
+          if (loc != null) {
+            float[] results = new float[1];
+            Location.distanceBetween(currentLocation.latitude, currentLocation.longitude,
+                    loc.getLatitude(), loc.getLongitude(), results);
+            float distanceInMeters = results[0];
+            if (distanceInMeters <= radius * 1000) {
+              LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
+              Marker marker = mMap.addMarker(new MarkerOptions()
+                      .position(latLng)
+                      .title(qrCode.getName()));
+              marker.setTag(qrCode);
+              Log.d(TAG, "Marker added for QR code: " + qrCode.getName() + " at " + latLng.toString());
+            }
+          }
+        }
       }
     });
   }
@@ -294,10 +322,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     // Get the current location of the device and set the position of the map.
     getDeviceLocation();
     startLocationUpdates();
-
-    if (this.map != null) {
-      displayQRCodeMarkersOnMap(map);
-    }
+    displayQRCodeMarkersOnMap(map);
+    displayQRCodeMarkersWithinRadiusOnMap(map, currentLocation, radius);
     // loop through arraylist
     //    getQRFromDB(latLngList -> {
     //      for (LatLng latLng : latLngsList) {
