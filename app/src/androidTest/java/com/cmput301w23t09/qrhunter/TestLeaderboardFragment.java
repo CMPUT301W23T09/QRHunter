@@ -3,6 +3,7 @@ package com.cmput301w23t09.qrhunter;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.pressKey;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -314,7 +315,7 @@ public class TestLeaderboardFragment extends BaseTest {
   public void testRelatedUsernameSearch() {
     onView(withId(R.id.player_search)).perform(click());
     onView(isAssignableFrom(EditText.class))
-        .perform(typeText("Other Player"), pressKey(KeyEvent.KEYCODE_ENTER));
+        .perform(typeText("Other Player"), pressKey(KeyEvent.KEYCODE_ENTER), closeSoftKeyboard());
     onView(withId(R.id.search_linear_layout)).check(matches(isDisplayed()));
     waitUntilSearchListHasData();
     onData(anything())
