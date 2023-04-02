@@ -23,6 +23,6 @@ public class MyProfileFragment extends ProfileFragment {
   @Override
   protected void setupSocialMethods() {
     contactButton.setImageResource(R.drawable.baseline_settings_24);
-    followButton.setVisibility(View.INVISIBLE);
+    followButton.setVisibility(View.GONE);
   }
 }
