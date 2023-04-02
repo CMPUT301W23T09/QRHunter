@@ -50,6 +50,7 @@
     <string name="ellipses">…</string>
     <string name="profile_followers">%d Followers</string>
     <string name="profile_following">%d Following</string>
+    <string name="nearby_qr_codes_txt">Nearby QR Codes</string>
     <string-array name="sort_options">
         <item>Points</item>
         <item>Date Taken</item>

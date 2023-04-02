@@ -63,7 +63,7 @@ public abstract class ProfileFragment extends BaseFragment {
       @NonNull LayoutInflater inflater,
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.profile_activity, container, false);
+    View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
     controller = getProfileController();
     createProfile(view);

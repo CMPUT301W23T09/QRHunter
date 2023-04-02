@@ -25,6 +25,7 @@ import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.profile.ProfileFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
+import com.cmput301w23t09.qrhunter.qrcode.ScoreComparator;
 import com.robotium.solo.Solo;
 import java.util.ArrayList;
 import java.util.List;
@@ -222,5 +223,19 @@ public abstract class TestProfileFragment extends BaseTest {
     // get the displayed text for top code score
     onView(withId(R.id.top_code_score))
         .check(matches(withText(String.format("%d\nTop Code", highestScore))));
+  }
+
+  /** Checks if the correct QRCodeFragment pops up when a qr code is selected */
+  @Test
+  public void testQRClick() {
+    // get the list of qr codes sorted in descending order (default order of profile's qr code list)
+    List<QRCode> sortedCodes = getProfileQRCodesToAdd();
+    sortedCodes.sort(new ScoreComparator().reversed());
+    // get the qr code list
+    DataInteraction codeList = onData(anything()).inAdapterView(withId(R.id.code_list));
+    // click on an item in the code list
+    codeList.atPosition(0).perform(click());
+    // check that the correct QRCodeFragment is displayed
+    onView(withId(R.id.qr_name)).check(matches(withText(sortedCodes.get(0).getName())));
   }
 }
