@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -196,9 +195,6 @@ public class SearchQRController {
                     qrLocation.getLatitude(),
                     qrLocation.getLongitude(),
                     distance);
-                Log.d("mylat", String.valueOf(loc.latitude));
-                Log.d("mylong", String.valueOf(loc.longitude));
-                Log.d("mydist", String.valueOf(distance[0]));
                 // add the qr code if one of its locations is nearby
                 if (distance[0] < 100) {
                   nearbyCodes.add(qrCode);
