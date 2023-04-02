@@ -32,7 +32,14 @@ public class TestLocationPhotoModel {
   public void testGetPlayer() {
     UUID mockUUID = UUID.randomUUID();
     Player player =
-        new Player(mockUUID, "Username", "587-998-1206", "mock-email@gmail.com", new ArrayList<>());
+        new Player(
+            mockUUID,
+            "Username",
+            "587-998-1206",
+            "mock-email@gmail.com",
+            new ArrayList<>(),
+            new ArrayList<>(),
+            new ArrayList<>());
     LocationPhoto photo = new LocationPhoto((Bitmap) null, player);
     assertEquals(photo.getPlayer(), player);
   }
