@@ -1,5 +1,6 @@
 package com.cmput301w23t09.qrhunter.leaderboard;
 
+import com.cmput301w23t09.qrhunter.player.Player;
 import java.util.UUID;
 
 /**
@@ -14,15 +15,18 @@ public class SearchQueryEntry {
   /** Device ID of a player's device */
   private UUID deviceUUID;
 
+  private Player player;
+
   /**
    * Constructor for SearchQueryEntry
    *
    * @param name Name of the player in the search query
    * @param deviceUUID Device ID of the player in the search query
    */
-  public SearchQueryEntry(String name, UUID deviceUUID) {
+  public SearchQueryEntry(String name, UUID deviceUUID, Player player) {
     this.name = name;
     this.deviceUUID = deviceUUID;
+    this.player = player;
   }
 
   /**
@@ -41,5 +45,9 @@ public class SearchQueryEntry {
    */
   public UUID getDeviceId() {
     return deviceUUID;
+  }
+
+  public Player getPlayer() {
+    return player;
   }
 }

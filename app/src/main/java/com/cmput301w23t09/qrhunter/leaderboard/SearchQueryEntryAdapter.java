@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.cmput301w23t09.qrhunter.R;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * ArrayAdapter for search query entries
@@ -55,6 +57,14 @@ public class SearchQueryEntryAdapter extends ArrayAdapter<SearchQueryEntry> {
     // set fields of view
     TextView name = view.findViewById(R.id.search_query_entry_text);
     name.setText(entry.getName());
+    ImageView picture = view.findViewById(R.id.search_query_image);
+    try {
+      picture.setImageBitmap(entry.getPlayer().getProfilePic());
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    } catch (ExecutionException e) {
+      throw new RuntimeException(e);
+    }
 
     return view;
   }

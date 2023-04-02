@@ -104,7 +104,8 @@ public class PlayerSearchController {
               // add all players with relevant usernames to the search query to the list
               for (Player relatedPlayer : relatedUsernamePlayers) {
                 searchQueryEntries.add(
-                    new SearchQueryEntry(relatedPlayer.getUsername(), relatedPlayer.getDeviceId()));
+                    new SearchQueryEntry(
+                        relatedPlayer.getUsername(), relatedPlayer.getDeviceId(), relatedPlayer));
               }
               entryAdapter.notifyDataSetChanged();
             });
