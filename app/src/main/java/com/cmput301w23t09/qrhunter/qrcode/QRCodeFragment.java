@@ -1,10 +1,14 @@
 package com.cmput301w23t09.qrhunter.qrcode;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -18,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import com.cmput301w23t09.qrhunter.GameActivity;
 import com.cmput301w23t09.qrhunter.GameController;
@@ -112,8 +117,6 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
    * @param view The view that displays fragment_qrcode.xml
    */
   private void setupViews(View view) throws ExecutionException, InterruptedException {
-    setupTab(view);
-
     // get widgets in QRCodeFragment
     locationCheckbox = view.findViewById(R.id.location_request_box);
     takeLocationPhotoBtn = view.findViewById(R.id.take_location_photo_btn);
@@ -139,6 +142,9 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
 
     // set up buttons
     setUpButtons(view);
+
+    // set up tab menu
+    setupTab(view);
   }
 
   /**
@@ -178,6 +184,7 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     listElement.setAdapter(
         scansAdapter); // by default, the adapter should display the scanned players.
 
+    commentBox.setVisibility(View.GONE);
     tabLayout.addOnTabSelectedListener(
         new TabLayout.OnTabSelectedListener() {
 
@@ -186,9 +193,10 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
             if (tab.getText().equals(getText(R.string.players_who_scanned_tab_title))) {
               // Who scanned the QR
               listElement.setAdapter(scansAdapter);
-
+              toggleCommentBox(false);
             } else {
               listElement.setAdapter(commentsAdapter);
+              toggleCommentBox(true);
             }
           }
 
@@ -198,7 +206,22 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
           @Override
           public void onTabReselected(TabLayout.Tab tab) {}
         });
+
+    // allows user to enter a comment
+    commentBox.setOnClickListener(this::onAddCommentInput);
+    // allows user to click send and store comment in the database
+    commentBox.setOnTouchListener(this::onSendComment);
   }
+
+  /**
+   * Toggles whether or not the comment box should be shown or not.
+   *
+   * <p>Behaves like a 'hook', where the comment box is only available to AddQRCodeFragment and
+   * DeleteQRCodeFragment (essentially whenever the player has/had scanned the code themselved)
+   *
+   * @param isShown Whether or not the comment box should be shown.
+   */
+  protected void toggleCommentBox(boolean isShown) {}
 
   /** Fetch all players who scanned this QR and add it to the adapter. */
   private void setupPlayerScans() {
@@ -306,6 +329,104 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     comments.clear();
     comments.addAll(qrCode.getComments());
     commentsAdapter.notifyDataSetChanged();
+  }
+
+  /**
+   * Removes hint text when clicked*
+   *
+   * @param view view
+   */
+  private void onAddCommentInput(View view) {
+    commentBox.setHint("");
+  }
+
+  /**
+   * Handles sending a comment when the send icon is clicked. Changes the color of the send icon
+   * depending on the state.
+   *
+   * @param view View
+   * @param event The motion event
+   * @return True if the event is handled. otherwise, false.
+   */
+  private boolean onSendComment(View view, MotionEvent event) {
+    final int DRAWABLE_RIGHT = 2;
+
+    // changes color of send icon depending on the state
+    int default_color = ContextCompat.getColor(requireContext(), R.color.purple_500);
+    int on_send_color = ContextCompat.getColor(requireContext(), R.color.purple_200);
+
+    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+      if (event.getRawX()
+          >= (commentBox.getRight()
+              - commentBox.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+        commentBox.getCompoundDrawables()[DRAWABLE_RIGHT].setTint(
+            on_send_color); // Change color to red when hovered on
+        return true;
+      }
+    } else if (event.getAction() == MotionEvent.ACTION_UP) {
+      if (event.getRawX()
+          >= (commentBox.getRight()
+              - commentBox.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+        commentBox.getCompoundDrawables()[DRAWABLE_RIGHT].setTint(default_color);
+        ;
+
+        // stores comment message in a variable and calls the addComment method
+        String commentText = commentBox.getText().toString().trim();
+        if (!commentText.isEmpty()) {
+          addComment(commentText);
+          commentBox.setText("");
+          commentBox.setHint(R.string.comment_box_hint_text);
+        } else {
+          // Comment text is empty, show an error message
+          Toast.makeText(getContext(), "Comment text is empty", Toast.LENGTH_SHORT).show();
+        }
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Adds a comment to the comments list updates the comments adapter saves the comment to the
+   * database.
+   *
+   * @param commentText The comment text to be added to database
+   */
+  private void addComment(String commentText) {
+    Comment comment =
+        new Comment(activePlayer.getDocumentId(), activePlayer.getUsername(), commentText);
+    comments.add(comment);
+    commentsAdapter.notifyDataSetChanged();
+    listElement.setSelection(commentsAdapter.getCount() - 1);
+
+    QRCodeDatabase.getInstance()
+        .getQRCodeByHash(
+            qrCode.getHash(),
+            qrCodeQueryResults -> {
+              if (qrCodeQueryResults.isSuccessful()) {
+                // Update the QRCode with the new comment
+                QRCode qrCodeToUpdate = qrCodeQueryResults.getData();
+                qrCodeToUpdate.addComment(comment);
+                QRCodeDatabase.getInstance()
+                    .updateQRCode(
+                        qrCodeToUpdate,
+                        updateResults -> {
+                          if (updateResults.isSuccessful()) {
+                            Log.d(
+                                TAG,
+                                "Comment added to QRCode with hash: " + qrCodeToUpdate.getHash());
+                          } else {
+                            Log.w(
+                                TAG,
+                                "Error updating QRCode with new comment",
+                                updateResults.getException());
+                          }
+                        });
+              } else {
+                Log.w(TAG, "Error getting QRCode from database", qrCodeQueryResults.getException());
+              }
+            });
+    Log.d("AddQRCodeFragment", "Comment saved to database");
   }
 
   /**
