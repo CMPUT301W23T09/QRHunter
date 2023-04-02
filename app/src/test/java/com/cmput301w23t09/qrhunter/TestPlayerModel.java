@@ -31,6 +31,7 @@ public class TestPlayerModel {
             "7801234567",
             "doe@ualberta.ca",
             new ArrayList<>(),
+            new ArrayList<>(),
             new ArrayList<>());
   }
 
