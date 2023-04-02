@@ -3,6 +3,7 @@ package com.cmput301w23t09.qrhunter.profile;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 
 /** This is the controller for the profile fragment of the app */
@@ -61,11 +63,12 @@ public abstract class ProfileController implements DatabaseChangeListener {
   }
 
   /**
-   * This sets up the username view of the fragment
+   * This sets up the username view and profile pic view of the fragment
    *
    * @param usernameView This is the TextView that shows the username
+   * @param profilePic This is the ImageView that shows their profile picture
    */
-  public void setUpUsername(TextView usernameView) {
+  public void setUpUsernameAndPicture(TextView usernameView, ImageView profilePic) {
     PlayerDatabase.getInstance()
         .getPlayerByDeviceId(
             deviceUUID,
@@ -74,8 +77,13 @@ public abstract class ProfileController implements DatabaseChangeListener {
               if (!results.isSuccessful()) {
                 showMsg("An error occurred while loading in your player data.");
               }
-              // otherwise get username
+              // otherwise get username and profile picture
               usernameView.setText(results.getData().getUsername());
+              try {
+                profilePic.setImageBitmap(results.getData().getProfilePic());
+              } catch (ExecutionException | InterruptedException e) {
+                showMsg("An error occurred while loading in your profile picture.");
+              }
             });
   }
 

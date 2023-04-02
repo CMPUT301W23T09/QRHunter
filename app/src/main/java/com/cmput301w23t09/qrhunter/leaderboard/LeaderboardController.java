@@ -1,6 +1,7 @@
 package com.cmput301w23t09.qrhunter.leaderboard;
 
 import com.cmput301w23t09.qrhunter.GameController;
+import com.cmput301w23t09.qrhunter.map.QRLocation;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.profile.MyProfileFragment;
@@ -11,8 +12,11 @@ import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
@@ -131,6 +135,65 @@ public class LeaderboardController {
             });
   }
 
+  /**
+   * Retrieve the top QRCode points value leaderboard by region in descending order.
+   *
+   * @param callback callback to call with the leaderboards mapped by their city.
+   */
+  public void getTopQRCodesByRegionLeaderboard(
+      BiConsumer<Exception, List<Leaderboard<QRCodeLeaderboardEntry>>> callback) {
+    QRCodeDatabase.getInstance()
+        .getAllQRCodes(
+            task -> {
+              if (!task.isSuccessful()) {
+                callback.accept(task.getException(), null);
+                return;
+              }
+
+              // Store the leaderboard entries by location and keep track of what hashes were added
+              // to what locations
+              Map<String, List<QRCodeLeaderboardEntry>> leaderboardEntriesByRegion =
+                  new HashMap<>();
+              Map<String, Set<String>> leaderboardHashesAddedByRegion = new HashMap<>();
+
+              for (QRCode qrCode : task.getData()) {
+                // For each QR, add it to each of the locations the QR was found in
+                for (QRLocation qrLocation : qrCode.getLocations()) {
+                  if (qrLocation != null) {
+                    leaderboardEntriesByRegion.putIfAbsent(
+                        qrLocation.getRegion(), new ArrayList<>());
+                    leaderboardHashesAddedByRegion.putIfAbsent(
+                        qrLocation.getRegion(), new HashSet<>());
+
+                    // Check that we haven't added this QR to this location already (if we haven't,
+                    // add it!)
+                    boolean tryAddingQRToLocation =
+                        leaderboardHashesAddedByRegion
+                            .get(qrLocation.getRegion())
+                            .add(qrCode.getHash());
+                    if (tryAddingQRToLocation) {
+                      leaderboardEntriesByRegion
+                          .get(qrLocation.getRegion())
+                          .add(new QRCodeLeaderboardEntry(qrCode, qrCode.getScore(), "points"));
+                    }
+                  }
+                }
+              }
+
+              // Sort all of the leaderboards
+              List<Leaderboard<QRCodeLeaderboardEntry>> leaderboards = new ArrayList<>();
+              for (String city : leaderboardEntriesByRegion.keySet()) {
+                List<QRCodeLeaderboardEntry> entries = leaderboardEntriesByRegion.get(city);
+                Collections.sort(entries);
+
+                leaderboards.add(new Leaderboard<>(city, entries));
+              }
+
+              // Return leaderboards
+              callback.accept(null, leaderboards);
+            });
+  }
+
   public void handleEntryClick(PlayerLeaderboardEntry entry) {
     Player player = entry.getPlayer();
     if (player.getDeviceId().equals(gameController.getActivePlayer().getDeviceId())) {
@@ -162,10 +225,5 @@ public class LeaderboardController {
                 gameController.setPopup(fragment);
               }
             });
-  }
-
-  public void getTopQRCodesByRegionLeaderboard(
-      BiConsumer<Exception, Map<String, Leaderboard<QRCodeLeaderboardEntry>>> callback) {
-    // TODO: Implement after location recording is completed and fetch the region of the photo.
   }
 }
