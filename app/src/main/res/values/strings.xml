@@ -49,7 +49,7 @@
     <string name="rankings">Rankings</string>
     <string name="rankings_top_text">Top</string>
     <string name="total_points">Total Points</string>
-    <string name="percentage">%d%</string>
+    <string name="percentage">%.2f%%</string>
     <string name="top_code">Top Code</string>
     <string name="codes_scanned">Codes Scanned</string>
     <string-array name="sort_options">

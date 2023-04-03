@@ -324,6 +324,9 @@ public abstract class ProfileController implements DatabaseChangeListener {
       return;
     }
 
+    ProfilePercentileFragment percentileFragment = new ProfilePercentileFragment();
+    gameController.setPopup(percentileFragment);
+
     List<QRCode> qrCodesSortedByScore = new ArrayList<>(qrCodes);
     qrCodesSortedByScore.sort(new ScoreComparator().reversed());
     QRCode topQR = qrCodesSortedByScore.get(0);

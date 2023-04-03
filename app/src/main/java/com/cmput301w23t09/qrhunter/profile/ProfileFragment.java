@@ -181,13 +181,14 @@ public abstract class ProfileFragment extends BaseFragment {
                     return;
                   }
 
-                  String formattedMessage = getString(R.string.ranking_message, percentile);
-                  new AlertDialog.Builder(getContext())
-                      .setTitle("Rankings")
-                      .setMessage(formattedMessage)
-                      .setPositiveButton("OK", null)
-                      .create()
-                      .show();
+                  //                  String formattedMessage = getString(R.string.ranking_message,
+                  // percentile);
+                  //                  new AlertDialog.Builder(getContext())
+                  //                      .setTitle("Rankings")
+                  //                      .setMessage(formattedMessage)
+                  //                      .setPositiveButton("OK", null)
+                  //                      .create()
+                  //                      .show();
                 });
           }
         });

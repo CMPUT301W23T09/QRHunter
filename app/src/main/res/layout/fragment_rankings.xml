@@ -11,12 +11,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/rankings"
-        android:textSize="40sp"
+        android:textSize="30sp"
         android:textAlignment="center"
+        android:textColor="@color/black"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
@@ -41,7 +42,7 @@
                 android:layout_height="match_parent"
                 android:text="@string/rankings_top_text"
                 android:textAlignment="center"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/rankings_total_points_percentage"
@@ -57,7 +58,7 @@
                 android:layout_height="match_parent"
                 android:text="@string/total_points"
                 android:textAlignment="center"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
 
         </LinearLayout>
 
@@ -75,7 +76,7 @@
                 android:layout_height="match_parent"
                 android:text="@string/rankings_top_text"
                 android:textAlignment="center"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/rankings_codes_scanned_percentage"
@@ -91,7 +92,7 @@
                 android:layout_height="match_parent"
                 android:text="@string/codes_scanned"
                 android:textAlignment="center"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
 
         </LinearLayout>
 
@@ -109,7 +110,7 @@
                 android:layout_height="match_parent"
                 android:text="@string/rankings_top_text"
                 android:textAlignment="center"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/rankings_top_code_percentage"
@@ -125,7 +126,7 @@
                 android:layout_height="match_parent"
                 android:text="@string/top_code"
                 android:textAlignment="center"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
 
         </LinearLayout>
 
