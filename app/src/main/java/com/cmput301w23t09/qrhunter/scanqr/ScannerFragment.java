@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.GameController;
-import com.cmput301w23t09.qrhunter.databinding.FragmentScanqrBinding;
+import com.cmput301w23t09.qrhunter.R;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraController;
 import com.cmput301w23t09.qrhunter.scanqr.camera.CameraScannerController;
 
@@ -23,7 +23,6 @@ public class ScannerFragment extends BaseFragment {
 
   private ScannerController scannerController;
   private CameraScannerController cameraController;
-  private FragmentScanqrBinding binding;
 
   /**
    * Creates the ScannerFragment where users can scan and add new QR Codes to their profile
@@ -51,11 +50,12 @@ public class ScannerFragment extends BaseFragment {
       @NonNull LayoutInflater inflater,
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    binding = FragmentScanqrBinding.inflate(inflater, container, false);
+    View view = inflater.inflate(R.layout.fragment_scanqr, container, false);
     scannerController = new ScannerController(this, getActivePlayer());
     cameraController =
-        new CameraScannerController(this, binding.scanQrCameraPreview, scannerController);
-    return binding.getRoot();
+        new CameraScannerController(
+            this, view.findViewById(R.id.scan_qr_camera_preview), scannerController);
+    return view;
   }
 
   /**

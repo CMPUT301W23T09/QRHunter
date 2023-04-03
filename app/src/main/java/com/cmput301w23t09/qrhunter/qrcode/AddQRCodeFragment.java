@@ -84,6 +84,12 @@ public class AddQRCodeFragment extends QRCodeFragment {
     updateLocationPhoto();
   }
 
+  @Override
+  protected void toggleCommentBox(boolean isShown) {
+    if (isShown) commentBox.setVisibility(View.VISIBLE);
+    else commentBox.setVisibility(View.GONE);
+  }
+
   /**
    * Called when the add QR button is clicked
    *

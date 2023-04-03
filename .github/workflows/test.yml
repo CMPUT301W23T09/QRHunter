@@ -88,4 +88,7 @@ jobs:
         with:
           name: Failed Test Results
           path: app/build/reports/androidTests/connected/
-
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Intent Test Code Coverage
+          path: app/build/reports/coverage/androidTest/debug/connected/

@@ -10,25 +10,42 @@ import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.locationphoto.LocationPhoto;
 import com.cmput301w23t09.qrhunter.map.QRLocation;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
+import com.cmput301w23t09.qrhunter.qrcode.ScoreComparator;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
+/** This tests the methods of the QRCode class */
 public class TestQRModel {
   // create a mock hash
+  /** This is a mock hash */
   private final String mockHash =
       "8926bb85b4e02cf2c877070dd8dc920acbf6c7e0153b735a3d9381ec5c2ac11d";
 
+  /**
+   * This creates a mock QRLocation objects
+   *
+   * @return Return the created object
+   */
   private QRLocation mockLoc() {
     return new QRLocation("0;0;City");
   }
 
-  // create a mock qr code
+  /**
+   * This creates a mock QRCode object
+   *
+   * @return Return the created object
+   */
   private QRCode mockCode() {
     return new QRCode(mockHash);
   }
 
-  // create a mock list of player IDs
+  /**
+   * This creates a mock list of player IDs
+   *
+   * @return Return the created mock list
+   */
   private ArrayList<String> mockPlayers() {
     ArrayList<String> players = new ArrayList<>();
     String playerID = String.valueOf(UUID.randomUUID());
@@ -36,7 +53,11 @@ public class TestQRModel {
     return players;
   }
 
-  // create a mock list of comments
+  /**
+   * This creates a mock list of Comment objects
+   *
+   * @return Return the created mock list
+   */
   private ArrayList<Comment> mockComments() {
     ArrayList<Comment> comments = new ArrayList<>();
     Comment comment = new Comment("UserId", "Username", "MockComment");
@@ -44,7 +65,11 @@ public class TestQRModel {
     return comments;
   }
 
-  // create a mock list of photos
+  /**
+   * This creates a mock list of LocationPhoto objects
+   *
+   * @return Return the created mock list
+   */
   private ArrayList<LocationPhoto> mockPhotos() {
     ArrayList<LocationPhoto> photos = new ArrayList<>();
     LocationPhoto photo = new LocationPhoto((Bitmap) null, null);
@@ -52,21 +77,25 @@ public class TestQRModel {
     return photos;
   }
 
+  /** This tests the getter for the QRCode's hash */
   @Test
   public void testGetHash() {
     assertEquals(mockCode().getHash(), mockHash);
   }
 
+  /** This tests the getter for the QRCode's name */
   @Test
   public void testGetName() {
     assertEquals(mockCode().getName(), "Robbel Spicy Tiger");
   }
 
+  /** This tests the getter for the QRCode's score */
   @Test
   public void testGetScore() {
     assertEquals((int) mockCode().getScore(), 32);
   }
 
+  /** This tests the getter for the QRCode's location */
   @Test
   public void testGetLoc() {
     QRCode qr = new QRCode(mockHash, "Robbel Spicy Tiger", 32, mockLoc(), null, null, null, null);
@@ -76,6 +105,7 @@ public class TestQRModel {
     assertEquals(loc.getLongitude(), mockLoc().getLongitude());
   }
 
+  /** This tests the setter for the QRCode's location */
   @Test
   public void testSetLoc() {
     QRCode qr = mockCode();
@@ -86,6 +116,7 @@ public class TestQRModel {
     assertEquals(loc.getLongitude(), mockLoc().getLongitude());
   }
 
+  /** This tests the getter for the QRCode's players */
   @Test
   public void testGetPlayers() {
     ArrayList<String> players = mockPlayers();
@@ -93,6 +124,7 @@ public class TestQRModel {
     assertEquals(qr.getPlayers(), players);
   }
 
+  /** This tests the setter for the QRCode's players */
   @Test
   public void testSetPlayers() {
     ArrayList<String> players = mockPlayers();
@@ -101,6 +133,7 @@ public class TestQRModel {
     assertEquals(qr.getPlayers(), players);
   }
 
+  /** Checks the adding of a player to a QRCode */
   @Test
   public void testAddPlayer() {
     QRCode qr = mockCode();
@@ -111,6 +144,7 @@ public class TestQRModel {
     assertEquals(qr.getPlayers().get(0), playerID);
   }
 
+  /** Checks the deletion of a player from a QRCode */
   @Test
   public void testDeletePlayer() {
     ArrayList<String> players = mockPlayers();
@@ -121,6 +155,7 @@ public class TestQRModel {
     assertEquals(0, qr.getPlayers().size());
   }
 
+  /** This tests the getter for the QRCode's comments */
   @Test
   public void testGetComments() {
     ArrayList<Comment> comments = mockComments();
@@ -128,6 +163,7 @@ public class TestQRModel {
     assertEquals(qr.getComments(), comments);
   }
 
+  /** This tests the setter for the QRCode's comments */
   @Test
   public void testSetComments() {
     ArrayList<Comment> comments = mockComments();
@@ -136,6 +172,7 @@ public class TestQRModel {
     assertEquals(qr.getComments(), comments);
   }
 
+  /** Checks the addition of a comment to a QRCode */
   @Test
   public void testAddComment() {
     QRCode qr = mockCode();
@@ -146,6 +183,7 @@ public class TestQRModel {
     assertEquals(qr.getComments().get(0), comment);
   }
 
+  /** Checks the deletion of a comment from a QRCode */
   @Test
   public void testDeleteComment() {
     QRCode qr = mockCode();
@@ -156,6 +194,7 @@ public class TestQRModel {
     assertEquals(0, qr.getComments().size());
   }
 
+  /** This tests the getter for the QRCode's photos */
   @Test
   public void testGetPhotos() {
     ArrayList<LocationPhoto> photos = mockPhotos();
@@ -163,6 +202,7 @@ public class TestQRModel {
     assertEquals(qr.getPhotos(), photos);
   }
 
+  /** This tests the setter for the QRCode's photos */
   @Test
   public void testSetPhotos() {
     ArrayList<LocationPhoto> photos = mockPhotos();
@@ -171,6 +211,7 @@ public class TestQRModel {
     assertEquals(qr.getPhotos(), photos);
   }
 
+  /** Checks the addition of a photo to a QRCode */
   @Test
   public void testAddPhoto() {
     QRCode qr = mockCode();
@@ -181,6 +222,7 @@ public class TestQRModel {
     assertEquals(qr.getPhotos().get(0), photo);
   }
 
+  /** Checks the deletion of a photo from a QRCode */
   @Test
   public void testDeletePhoto() {
     QRCode qr = mockCode();
@@ -191,6 +233,7 @@ public class TestQRModel {
     assertEquals(0, qr.getPhotos().size());
   }
 
+  /** Checks the addition of a location to a QRCode */
   @Test
   public void testAddLocation() {
     QRLocation csc = new QRLocation("Edmonton", 53.52678, -113.52708); // CSC
@@ -199,6 +242,7 @@ public class TestQRModel {
     assertTrue(mockQR.getLocations().contains(csc));
   }
 
+  /** Checks the addition of a location near an existing location of a QRCode */
   @Test
   public void testAddLocationTooClose() {
     QRLocation csc = new QRLocation("Edmonton", 53.52678, -113.52708); // CSC
@@ -211,6 +255,7 @@ public class TestQRModel {
     assertFalse(mockQR.getLocations().contains(athabasca));
   }
 
+  /** This tests the setter and removal for the location of a QRCode */
   @Test
   public void testSetAndRemoveLocation() {
     QRLocation csc = new QRLocation("Edmonton", 53.52678, -113.52708); // CSC
@@ -221,5 +266,23 @@ public class TestQRModel {
     assertTrue(mockQR.getLocations().contains(csc));
     mockQR.removeLocation(csc);
     assertFalse(mockQR.getLocations().contains(csc));
+  }
+
+  /** Test the sorting of a list of QRCodes */
+  @Test
+  public void testQRCodeSort() {
+    // add qr codes to an array
+    ArrayList<QRCode> qrCodes = new ArrayList<>();
+    qrCodes.add(mockCode()); // adds a QRCode with a score of 32
+    String otherHash = "91d6263f14b535452bb0556e1c0fecbac5c2b043344fc224fdbbab78148f7e6f";
+    qrCodes.add(new QRCode(otherHash)); // adds a QRCode with a score of 36
+    // create a sort comparator
+    Comparator<QRCode> comparator = new ScoreComparator();
+    // check sorting in ascending order
+    qrCodes.sort(comparator);
+    assertEquals(qrCodes.get(0).getScore(), 32);
+    // check sorting in descending order
+    qrCodes.sort(comparator.reversed());
+    assertEquals(qrCodes.get(0).getScore(), 36);
   }
 }
