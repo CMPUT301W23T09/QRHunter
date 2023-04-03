@@ -19,10 +19,20 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
 public class QRSearchResultFragment extends DialogFragment {
+  /** The fragment the QRSearchResultFragment should open up from */
   private Fragment fragment;
+  /** The list of qr codes to display */
   private ArrayList<QRCode> qrCodes;
+  /** The adapter for displaying the codes */
   private QRCodeAdapter codeAdapter;
 
+  /**
+   * This initializes a dialog fragment with a list of codes to display, and the fragment to open it
+   * up from
+   *
+   * @param nearbyCodes The list of codes to display
+   * @param fragment The fragment to open the dialog from
+   */
   public QRSearchResultFragment(ArrayList<QRCode> nearbyCodes, Fragment fragment) {
     this.fragment = fragment;
     qrCodes = nearbyCodes;

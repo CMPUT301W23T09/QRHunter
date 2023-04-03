@@ -6,8 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.cmput301w23t09.qrhunter.map.QRLocation;
 import org.junit.jupiter.api.Test;
 
+/** This tests the methods of the QRLocation class */
 public class TestQRLocationModel {
-  // Test if we can construct QRLocation from a locationString stored in Firebase
+  /** Tests if we can construct QRLocation from a locationString stored in Firebase */
   @Test
   public void testStringConstructor() {
     String locationString = "53.52678;-113.52708;Edmonton"; // CSC
@@ -17,7 +18,7 @@ public class TestQRLocationModel {
     assertEquals("Edmonton", location.getRegion());
   }
 
-  // Test if we can construct QRLocation from a pair of latitude and longitude coordinates
+  /** Tests if we can construct QRLocation from a pair of latitude and longitude coordinates */
   @Test
   public void testLatLonConstructor() {
     QRLocation location = new QRLocation("Edmonton", 53.52678, -113.52708); // CSC
@@ -25,7 +26,7 @@ public class TestQRLocationModel {
     assertEquals(-113.52708, location.getLongitude());
   }
 
-  // Test if we can calculate the distance between two close points
+  /** Tests if we can calculate the distance between two close points */
   @Test
   public void testShortDistanceCalculation() {
     QRLocation csc = new QRLocation("Edmonton", 53.52678, -113.52708); // CSC
@@ -35,7 +36,7 @@ public class TestQRLocationModel {
     assertEquals(csc.distanceTo(athabasca), athabasca.distanceTo(csc)); // Order shouldn't matter
   }
 
-  // Test if we can calculate the distance between two far-away points
+  /** Tests if we can calculate the distance between two far-away points */
   @Test
   public void testLongDistanceCalculation() {
     QRLocation csc = new QRLocation("Edmonton", 53.52678, -113.52708); // CSC
