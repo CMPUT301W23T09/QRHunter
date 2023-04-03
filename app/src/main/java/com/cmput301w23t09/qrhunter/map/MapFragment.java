@@ -47,7 +47,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
   private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
   private static final String API_KEY = "AIzaSyDniTKVk4HDVsQVG-uDxQ-eFV4nCWeM-gU";
   private static final String TAG = "MapFragment";
-  private static final int DEFAULT_ZOOM = 14;
+  private static final int DEFAULT_ZOOM = 20;
   private static final int MARKER_WIDTH_PIXELS = 70;
   private static final int MARKER_HEIGHT_PIXELS = 70;
 
@@ -190,7 +190,12 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     }
 
     // Update camera location
-    map.animateCamera(CameraUpdateFactory.newLatLngZoom(newPosition, map.getCameraPosition().zoom));
+    float zoom = isFirstMovement ? DEFAULT_ZOOM : map.getCameraPosition().zoom;
+    if (isFirstMovement) {
+      map.moveCamera(CameraUpdateFactory.newLatLngZoom(newPosition, zoom));
+    } else {
+      map.animateCamera(CameraUpdateFactory.newLatLngZoom(newPosition, zoom));
+    }
 
     // Fetch avatar
     Bitmap playerAvatar;
