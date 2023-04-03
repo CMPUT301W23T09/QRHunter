@@ -2,21 +2,28 @@ package com.cmput301w23t09.qrhunter;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.pressKey;
+import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.awaitility.Awaitility.await;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.view.KeyEvent;
 import android.widget.ImageView;
+import android.widget.ListView;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
+import com.cmput301w23t09.qrhunter.comment.Comment;
 import com.cmput301w23t09.qrhunter.locationphoto.LocationPhotoStorage;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
@@ -236,6 +243,52 @@ public class TestAddQRCodeFragment extends BaseTest {
                   .getQRCodeByHash(
                       qrCode.getHash(), fetchedQR -> updatedQR.set(fetchedQR.getData()));
               return false; // Try again.
+            });
+  }
+
+  /** Test to see that player can comment on a QR code and have it stored on Firestore */
+  @Test
+  public void testAddComment() {
+    String commentString = "This QR code is pretty awesome!";
+    onView(withText(R.string.comments_tab_title)).perform(click());
+    solo.waitForView(R.id.comment_box);
+    onView(withId(R.id.comment_box))
+        .perform(
+            click(),
+            replaceText(commentString),
+            pressKey(KeyEvent.KEYCODE_ENTER),
+            closeSoftKeyboard());
+    // First check that only 1 comment is showing (the only comment)
+    ListView qrList = (ListView) solo.getView(R.id.qr_nav_items);
+    assertEquals(1, qrList.getChildCount());
+
+    // Then, check if the comment user and comment text is accurate
+    onView(withId(R.id.comment_player_name))
+        .inRoot(isDialog())
+        .check(matches(withText(player.getUsername())));
+    onView(withId(R.id.player_comment_input))
+        .inRoot(isDialog())
+        .check(matches(withText(commentString)));
+
+    // Check if database has comment
+    AtomicReference<QRCode> updatedQR = new AtomicReference<>();
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              QRCode databaseQR = updatedQR.get();
+              if (databaseQR != null && databaseQR.getComments().size() == 1) {
+                Comment comment = databaseQR.getComments().get(0);
+                if (comment.getComment().equals(commentString)
+                    && comment.getUsername().equals(player.getUsername())
+                    && comment.getPlayerId().equals(player.getDocumentId())) return true;
+                return false;
+              }
+
+              QRCodeDatabase.getInstance()
+                  .getQRCodeByHash(
+                      qrCode.getHash(), fetchedQR -> updatedQR.set(fetchedQR.getData()));
+              return false;
             });
   }
 }

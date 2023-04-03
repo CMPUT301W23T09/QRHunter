@@ -58,7 +58,7 @@ public class QRCodeAdapter extends ArrayAdapter<QRCode> {
 
     // set score field of view
     TextView score = view.findViewById(R.id.score);
-    score.setText(String.valueOf(qrCode.getScore()));
+    score.setText(String.valueOf(qrCode.getScore()) + " PTS");
 
     return view;
   }

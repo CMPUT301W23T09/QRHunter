@@ -76,6 +76,7 @@
         android:id="@+id/location_request_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:text="@string/location_request"
         app:layout_constraintBottom_toTopOf="@+id/take_location_photo_btn"
         app:layout_constraintStart_toStartOf="parent" />
@@ -88,7 +89,9 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:clickable="true"
-        app:backgroundTint="#673AB7"
+        app:backgroundTint="#FFFFFF"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
         app:fabSize="mini"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -102,7 +105,9 @@
         android:layout_marginEnd="8dp"
         android:clickable="false"
         android:visibility="gone"
-        app:backgroundTint="#46287C"
+        app:backgroundTint="#FFFFFF"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
         app:fabSize="mini"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -116,11 +121,13 @@
         android:layout_marginEnd="8dp"
         android:clickable="true"
         android:visibility="gone"
-        app:backgroundTint="#673AB7"
+        app:backgroundTint="#FFFFFF"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
         app:fabSize="mini"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_delete" />
+        app:srcCompat="@drawable/trash_icon" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/qr_nav"
@@ -135,6 +142,7 @@
         android:id="@+id/comment_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:background="@drawable/comment_box_border"
         android:drawableEnd="@android:drawable/ic_menu_send"
         android:drawableTint="@color/purple_500"
@@ -144,10 +152,12 @@
         android:inputType="textLongMessage"
         android:maxLines="3"
         android:minHeight="48dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@+id/location_request_box"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/qr_nav_items" />
 

@@ -208,7 +208,7 @@ public abstract class TestProfileFragment extends BaseTest {
     codeList
         .atPosition(0)
         .onChildView(withId(R.id.score))
-        .check(matches(withText(String.valueOf(highestScore))));
+        .check(matches(withText(String.valueOf(highestScore) + " PTS")));
     // change the sort order
     onView(withId(R.id.order_spinner)).perform(click());
     onData(allOf(is(instanceOf(String.class)), is("Ascending"))).perform(click());
@@ -216,7 +216,7 @@ public abstract class TestProfileFragment extends BaseTest {
     codeList
         .atPosition(0)
         .onChildView(withId(R.id.score))
-        .check(matches(withText(String.valueOf(lowestScore))));
+        .check(matches(withText(String.valueOf(lowestScore) + " PTS")));
   }
 
   /** Checks if the total points of codes scanned is displayed correctly */
