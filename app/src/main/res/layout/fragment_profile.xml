@@ -47,18 +47,98 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <TextView
-        android:id="@+id/username"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/username_followers_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/username_txt"
-        android:textAlignment="center"
-        android:textSize="34sp"
-        android:textStyle="bold"
+        android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_pic" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_pic">
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/username_txt"
+            android:textAlignment="center"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/follow_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            app:backgroundTint="@color/white"
+            app:elevation="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/username"
+            app:layout_constraintStart_toEndOf="@+id/username"
+            app:layout_constraintTop_toTopOf="@+id/username"
+            app:srcCompat="@drawable/person_add" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/follow_loading_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            app:backgroundTint="@color/white"
+            app:elevation="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/username"
+            app:layout_constraintStart_toEndOf="@+id/username"
+            app:layout_constraintTop_toTopOf="@+id/username"
+            app:srcCompat="@drawable/loading" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/unfollow_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            app:backgroundTint="@color/white"
+            app:elevation="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/username"
+            app:layout_constraintStart_toEndOf="@+id/username"
+            app:layout_constraintTop_toTopOf="@+id/username"
+            app:srcCompat="@drawable/person_remove" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/followers_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/username_followers_wrapper">
+
+        <TextView
+            android:id="@+id/followers_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="@string/profile_followers"
+            app:layout_constraintStart_toStartOf="@+id/following_follower_guideline"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/following_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:text="@string/profile_following"
+            app:layout_constraintEnd_toEndOf="@+id/following_follower_guideline"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/following_follower_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/profile_rankings"
@@ -67,7 +147,7 @@
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username">
+        app:layout_constraintTop_toBottomOf="@+id/followers_wrapper">
 
         <TextView
             android:id="@+id/total_points"

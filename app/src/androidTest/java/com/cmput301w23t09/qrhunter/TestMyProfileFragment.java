@@ -1,6 +1,5 @@
 package com.cmput301w23t09.qrhunter;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -11,7 +10,6 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.awaitility.Awaitility.await;
-import static org.hamcrest.CoreMatchers.anything;
 
 import android.widget.TextView;
 import com.cmput301w23t09.qrhunter.player.Player;
@@ -31,7 +29,7 @@ public class TestMyProfileFragment extends TestProfileFragment {
 
   @Override
   protected Player getProfilePlayer() {
-    return ourPlayer;
+    return ((GameActivity) solo.getCurrentActivity()).getController().getActivePlayer();
   }
 
   @Override
@@ -49,6 +47,7 @@ public class TestMyProfileFragment extends TestProfileFragment {
     // navigate to profile fragment
     onView(withId(R.id.navigation_my_profile)).perform(click());
     await()
+        .atMost(30, TimeUnit.SECONDS)
         .until(
             () ->
                 ((GameActivity) solo.getCurrentActivity()).getController().getBody()
@@ -69,8 +68,10 @@ public class TestMyProfileFragment extends TestProfileFragment {
   /** Check that selecting a QR should open up the deletion QR fragment. */
   @Test
   public void testShouldShowDeleteButtonOnQRCodes() {
+    waitForProfileQRsToAppear();
+
     // Click the first QR
-    onData(anything()).inAdapterView(withId(R.id.code_list)).atPosition(0).perform(click());
+    solo.clickInList(0);
 
     // DeleteQRCodeFragment should be shown.
     await()
@@ -117,9 +118,9 @@ public class TestMyProfileFragment extends TestProfileFragment {
     onView(withId(R.id.contact_info_button)).perform(click());
     // search for the player's phone and email
     onView(withId(R.id.settings_screen_phoneTextField))
-        .check(matches(withText(ourPlayer.getPhoneNo())));
+        .check(matches(withText(localPlayer.getPhoneNo())));
     onView(withId(R.id.settings_screen_emailTextField))
-        .check(matches(withText(ourPlayer.getEmail())));
+        .check(matches(withText(localPlayer.getEmail())));
   }
 
   /** Checks the change of the user's phone number */
@@ -155,7 +156,7 @@ public class TestMyProfileFragment extends TestProfileFragment {
               // fetch the latest database saved entry.
               PlayerDatabase.getInstance()
                   .getPlayerByUsername(
-                      ourPlayer.getUsername(),
+                      localPlayer.getUsername(),
                       fetchedPlayer -> updatedPlayer.set(fetchedPlayer.getData()));
               return false; // Try again.
             });
@@ -194,7 +195,7 @@ public class TestMyProfileFragment extends TestProfileFragment {
               // fetch the latest database saved entry.
               PlayerDatabase.getInstance()
                   .getPlayerByUsername(
-                      ourPlayer.getUsername(),
+                      localPlayer.getUsername(),
                       fetchedPlayer -> updatedPlayer.set(fetchedPlayer.getData()));
               return false; // Try again.
             });

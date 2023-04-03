@@ -1,6 +1,8 @@
 package com.cmput301w23t09.qrhunter.profile;
 
 import com.cmput301w23t09.qrhunter.GameController;
+import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.util.DeviceUtils;
 
 public class MyProfileController extends ProfileController {
@@ -13,6 +15,27 @@ public class MyProfileController extends ProfileController {
    */
   public MyProfileController(ProfileFragment fragment, GameController gameController) {
     super(fragment, gameController, DeviceUtils.getDeviceUUID(gameController.getActivity()));
+  }
+
+  @Override
+  protected void updateFollowDetails() {
+    PlayerDatabase.getInstance()
+        .getPlayerByDeviceId(
+            deviceUUID,
+            results -> {
+              if (!results.isSuccessful()) {
+                showMsg("An error occurred while loading in your player data.");
+                return;
+              }
+
+              // Update count
+              followingText.setText(
+                  fragment.getString(
+                      R.string.profile_following, results.getData().getFollowing().size()));
+              followersText.setText(
+                  fragment.getString(
+                      R.string.profile_followers, results.getData().getFollowers().size()));
+            });
   }
 
   @Override

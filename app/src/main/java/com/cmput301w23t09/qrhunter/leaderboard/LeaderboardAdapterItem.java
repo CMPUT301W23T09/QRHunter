@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-public interface LeaderboardAdapterItem<T extends LeaderboardAdapterItem<T>> {
-
+public interface LeaderboardAdapterItem<T> {
   View getView(Context context, View convertView, ViewGroup parent, T item);
 }
