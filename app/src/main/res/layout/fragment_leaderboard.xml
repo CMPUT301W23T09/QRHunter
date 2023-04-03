@@ -7,8 +7,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/leaderboard_linear_layout"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    android:orientation="vertical" >
 
 
     <androidx.appcompat.widget.SearchView
