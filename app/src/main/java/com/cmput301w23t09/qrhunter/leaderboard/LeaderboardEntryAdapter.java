@@ -1,18 +1,15 @@
 package com.cmput301w23t09.qrhunter.leaderboard;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.bumptech.glide.Glide;
 import com.cmput301w23t09.qrhunter.R;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 /** ArrayAdapter for leaderboard entries */
 public class LeaderboardEntryAdapter extends ArrayAdapter<LeaderboardAdapterItem<?>> {
@@ -43,22 +40,16 @@ public class LeaderboardEntryAdapter extends ArrayAdapter<LeaderboardAdapterItem
 
       // Apply photo
       ImageView picture = view.findViewById(R.id.leaderboard_entry_pic);
-      try {
-        if (entry instanceof QRCodeLeaderboardEntry) {
-          picture.setImageBitmap(
-              ((QRCodeLeaderboardEntry) entry).getQRCode().getVisualRepresentation());
-        } else if (entry instanceof PlayerLeaderboardEntry) {
-          Glide.with(view)
-              .load(((PlayerLeaderboardEntry) entry).getPlayer().getProfilePicUrl())
-              .into(picture);
-        } else {
-          throw new IllegalArgumentException("Invalid Leaderboard entry type!");
-        }
-
-      } catch (ExecutionException | InterruptedException e) {
-        Log.e("LeaderboardEntryAdapter", "An exception occurred while fetching image", e);
-        Toast.makeText(context, "An exception occurred while fetching image...", Toast.LENGTH_LONG)
-            .show();
+      if (entry instanceof QRCodeLeaderboardEntry) {
+        Glide.with(view)
+            .load(((QRCodeLeaderboardEntry) entry).getQRCode().getVisualRepresentationUrl())
+            .into(picture);
+      } else if (entry instanceof PlayerLeaderboardEntry) {
+        Glide.with(view)
+            .load(((PlayerLeaderboardEntry) entry).getPlayer().getProfilePicUrl())
+            .into(picture);
+      } else {
+        throw new IllegalArgumentException("Invalid Leaderboard entry type!");
       }
       return view;
     } else {
