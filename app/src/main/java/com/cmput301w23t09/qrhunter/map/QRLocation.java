@@ -1,9 +1,10 @@
 package com.cmput301w23t09.qrhunter.map;
 
 import android.location.Location;
+import java.io.Serializable;
 
 /** Holds a QR code's location, created from a location string stored in the database */
-public class QRLocation {
+public class QRLocation implements Serializable {
   private String locationString = "";
   private double latitude;
   private double longitude;

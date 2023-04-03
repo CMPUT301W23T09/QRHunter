@@ -82,7 +82,15 @@ public class LandingController {
    */
   private void onSuccessfulRegistrationDetails(String username, String phoneNo, String email) {
     UUID deviceUUID = DeviceUtils.getDeviceUUID(activity);
-    Player player = new Player(deviceUUID, username, phoneNo, email, new ArrayList<>());
+    Player player =
+        new Player(
+            deviceUUID,
+            username,
+            phoneNo,
+            email,
+            new ArrayList<>(),
+            new ArrayList<>(),
+            new ArrayList<>());
 
     PlayerDatabase.getInstance()
         .add(

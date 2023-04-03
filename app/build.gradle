@@ -40,10 +40,6 @@ android {
         unitTests.returnDefaultValues = true
     }
 
-    buildFeatures {
-        viewBinding true
-    }
-
     lint {
         abortOnError false
     }

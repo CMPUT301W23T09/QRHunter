@@ -26,7 +26,11 @@ public class OtherProfileFragment extends ProfileFragment {
   }
 
   @Override
-  protected void setupContactButton() {
+  protected void setupSocialMethods() {
     contactButton.setImageResource(R.drawable.info_button);
+    followButton.setOnClickListener(
+        ignored -> ((OtherProfileController) controller).handleFollowButtonClick());
+    unfollowButton.setOnClickListener(
+        ignored -> ((OtherProfileController) controller).handleFollowButtonClick());
   }
 }

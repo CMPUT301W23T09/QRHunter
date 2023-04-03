@@ -24,6 +24,7 @@ import androidx.test.espresso.DataInteraction;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
+import com.cmput301w23t09.qrhunter.map.QRLocation;
 import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.profile.MyProfileFragment;
@@ -34,6 +35,7 @@ import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.google.android.material.tabs.TabLayout;
 import com.robotium.solo.Solo;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -49,13 +51,20 @@ public class TestLeaderboardFragment extends BaseTest {
   {
     ourPlayer =
         new Player(
-            getDeviceUUID(), "Our Player", "1234567890", "example@example.com", new ArrayList<>());
+            getDeviceUUID(),
+            "Our Player",
+            "1234567890",
+            "example@example.com",
+            new ArrayList<>(),
+            new ArrayList<>(),
+            new ArrayList<>());
     intent = new Intent(ApplicationProvider.getApplicationContext(), GameActivity.class);
     intent.putExtra("activePlayer", ourPlayer);
   }
 
   private Solo solo;
   private QRCode qr;
+  private QRCode otherQR;
 
   @Rule
   public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
@@ -76,6 +85,14 @@ public class TestLeaderboardFragment extends BaseTest {
             });
 
     // Create our users.
+    setupPlayers();
+    setupQRs();
+
+    // Navigate to leaderboard screen
+    onView(withId(R.id.navigation_social)).perform(click());
+  }
+
+  private void setupPlayers() throws InterruptedException {
     CountDownLatch playerDatabaseSetup = new CountDownLatch(2);
     PlayerDatabase.getInstance().add(ourPlayer, ignored -> playerDatabaseSetup.countDown());
     Player otherPlayer =
@@ -84,6 +101,8 @@ public class TestLeaderboardFragment extends BaseTest {
             "Other Player",
             "1234567890",
             "example@example.com",
+            new ArrayList<>(),
+            new ArrayList<>(),
             new ArrayList<>());
     PlayerDatabase.getInstance().add(otherPlayer, ignored -> playerDatabaseSetup.countDown());
     Player otherPlayer2 =
@@ -92,6 +111,8 @@ public class TestLeaderboardFragment extends BaseTest {
             "Other Player123",
             "1234567890",
             "example@example.com",
+            new ArrayList<>(),
+            new ArrayList<>(),
             new ArrayList<>());
     PlayerDatabase.getInstance().add(otherPlayer2, ignored -> playerDatabaseSetup.countDown());
     Player otherPlayer3 =
@@ -100,6 +121,8 @@ public class TestLeaderboardFragment extends BaseTest {
             "123Other Player",
             "1234567890",
             "example@example.com",
+            new ArrayList<>(),
+            new ArrayList<>(),
             new ArrayList<>());
     PlayerDatabase.getInstance().add(otherPlayer3, ignored -> playerDatabaseSetup.countDown());
     Player otherPlayer4 =
@@ -108,10 +131,14 @@ public class TestLeaderboardFragment extends BaseTest {
             "123Other Player123",
             "1234567890",
             "example@example.com",
+            new ArrayList<>(),
+            new ArrayList<>(),
             new ArrayList<>());
     PlayerDatabase.getInstance().add(otherPlayer4, ignored -> playerDatabaseSetup.countDown());
     playerDatabaseSetup.await();
+  }
 
+  private void setupQRs() throws InterruptedException {
     // Create our QRs
     CountDownLatch qrDatabaseSetup = new CountDownLatch(2);
     qr = new QRCode("b5a384ee0ec5a8b625de9b24a96627c9ea5d246b70eb34a3a4f9ee781e581731");
@@ -123,12 +150,24 @@ public class TestLeaderboardFragment extends BaseTest {
               QRCodeDatabase.getInstance()
                   .addPlayerToQR(ourPlayer, qr, ignored2 -> qrDatabaseSetup.countDown());
             });
-    QRCode otherQR = new QRCode("0424974c68530290458c8d58674e2637f65abc127057957d7b3acbd24c208f93");
+    otherQR = new QRCode("0424974c68530290458c8d58674e2637f65abc127057957d7b3acbd24c208f93");
     QRCodeDatabase.getInstance().addQRCode(otherQR, ignored -> qrDatabaseSetup.countDown());
     qrDatabaseSetup.await();
 
-    // Navigate to leaderboard screen
-    onView(withId(R.id.navigation_social)).perform(click());
+    // Add the location to each QR
+    CountDownLatch qrsLocationSetup = new CountDownLatch(2);
+
+    QRLocation location = new QRLocation("0;0;Edmonton");
+    qr.setLoc(location);
+    qr.setLocations(new ArrayList<>(Collections.singletonList(location)));
+
+    QRLocation location2 = new QRLocation("0;0;Calgary");
+    otherQR.setLoc(location2);
+    otherQR.setLocations(new ArrayList<>(Collections.singletonList(location2)));
+
+    QRCodeDatabase.getInstance().updateQRCode(qr, ignored -> qrsLocationSetup.countDown());
+    QRCodeDatabase.getInstance().updateQRCode(otherQR, ignored -> qrsLocationSetup.countDown());
+    qrsLocationSetup.await();
   }
 
   /** Tests the proper order of the top player scores tab */
@@ -174,6 +213,33 @@ public class TestLeaderboardFragment extends BaseTest {
 
     item.onChildView(withId(R.id.leaderboard_entry_score))
         .check(matches(withText(qr.getScore() + " points")));
+  }
+
+  @Test
+  public void testTopQRByRegion() {
+    selectTab(3);
+    waitUntilListHasData();
+
+    onData(anything())
+        .inAdapterView(withId(R.id.leaderboard_list))
+        .atPosition(0)
+        .onChildView(withId(R.id.leaderboard_title))
+        .check(matches(withText("Calgary")));
+    onData(anything())
+        .inAdapterView(withId(R.id.leaderboard_list))
+        .atPosition(1)
+        .onChildView(withId(R.id.leaderboard_entry_text))
+        .check(matches(withText(otherQR.getName())));
+    onData(anything())
+        .inAdapterView(withId(R.id.leaderboard_list))
+        .atPosition(2)
+        .onChildView(withId(R.id.leaderboard_title))
+        .check(matches(withText("Edmonton")));
+    onData(anything())
+        .inAdapterView(withId(R.id.leaderboard_list))
+        .atPosition(3)
+        .onChildView(withId(R.id.leaderboard_entry_text))
+        .check(matches(withText(qr.getName())));
   }
 
   /** Clicking on another player's profile should direct you to their profile. */
