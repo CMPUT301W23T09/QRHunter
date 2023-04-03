@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
@@ -23,16 +24,20 @@ import java.util.Map;
 public class LeaderboardFragment extends BaseFragment {
 
   private final LeaderboardController controller;
+  private final PlayerSearchController searchController;
+  private LeaderboardEntryAdapter leaderboardAdapter;
+  private List<LeaderboardAdapterItem<?>> leaderboardAdapterItems;
 
   private String currentActiveTab;
+
   private Map<String, List<Leaderboard<?>>> cachedLeaderboardsByTab;
-  private List<LeaderboardAdapterItem<?>> leaderboardAdapterItems;
-  private LeaderboardEntryAdapter leaderboardAdapter;
+  private SearchView playerSearchView;
 
   public LeaderboardFragment(GameController gameController) {
     super(gameController);
 
     controller = new LeaderboardController(this, gameController);
+    searchController = new PlayerSearchController(getGameController());
   }
 
   @Override
@@ -45,14 +50,15 @@ public class LeaderboardFragment extends BaseFragment {
     cachedLeaderboardsByTab = new HashMap<>();
     leaderboardAdapterItems = new ArrayList<>();
     leaderboardAdapter = new LeaderboardEntryAdapter(getContext(), leaderboardAdapterItems);
-
     ListView leaderboardListView = view.findViewById(R.id.leaderboard_list);
     leaderboardListView.setAdapter(leaderboardAdapter);
+    playerSearchView = view.findViewById(R.id.player_search);
 
     view.findViewById(R.id.leaderboard_filter_button)
         .setOnClickListener(l -> controller.onFilterButtonClick());
 
     setupTabList(view);
+    setUpPlayerSearch();
     setupListView(view);
     return view;
   }
@@ -216,5 +222,23 @@ public class LeaderboardFragment extends BaseFragment {
       leaderboardAdapterItems.addAll(leaderboard.getEntries());
       leaderboardAdapter.notifyDataSetChanged();
     }
+  }
+
+  /** Sets up the search view to respond to user input */
+  private void setUpPlayerSearch() {
+    playerSearchView.setOnQueryTextListener(
+        new SearchView.OnQueryTextListener() {
+          @Override
+          public boolean onQueryTextSubmit(String query) {
+            Toast.makeText(getContext(), query, Toast.LENGTH_SHORT).show();
+            searchController.handleSearchQuery(query);
+            return true;
+          }
+
+          @Override
+          public boolean onQueryTextChange(String newText) {
+            return false;
+          }
+        });
   }
 }

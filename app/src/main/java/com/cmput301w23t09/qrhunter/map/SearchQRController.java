@@ -131,7 +131,7 @@ public class SearchQRController {
     }
 
     // check if a location address was given
-    else if (locationInput.matches(".*\\w.*")) {
+    if (locationInput.matches(".*\\w.*")) {
       Geocoder geocoder = new Geocoder(fragment.getContext());
       List<Address> addresses;
       // parse location name

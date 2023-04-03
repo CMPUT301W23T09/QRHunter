@@ -13,8 +13,16 @@ import java.net.URL;
  * (https://www.figma.com/community/file/1198754108850888330) - Identicon Both by: Florian Körner
  * (contact@florian-koerner.com) License: CC BY
  *
- * <p>API Call Code was adapted from
- * https://www.java67.com/2019/03/7-examples-of-httpurlconnection-in-java.html By: Soma Sharma
+ * <p>API Call Code was adapted from: Source:
+ * https://stackoverflow.com/questions/24399294/android-asynctask-to-make-an-http-get-request By:
+ * Rishabh Dixit (https://stackoverflow.com/users/6940935/rishabh-dixit) (03/09/17) License: cc-wiki
+ *
+ * <p>Source: https://www.digitalocean.com/community/tutorials/android-asynctask-example-tutorial
+ * By: Anupam Chugh (09/03/22) License: CC BY-NC-SA 4.0
+ *
+ * <p>Source:
+ * https://stackoverflow.com/questions/62585357/how-to-print-read-image-from-rest-api-call-using-java
+ * By: abk (https://stackoverflow.com/users/3500996/abk) (03/24/21) Licsense: cc-wiki
  *
  * <p>Again, all the code was by andy-mtng (Andy Nguyen's) but git blamed on jmmabanta who
  * integrated his feature.
@@ -25,13 +33,9 @@ public class VisualFetcher extends AsyncTask<String, Void, Bitmap> {
   @Override
   protected Bitmap doInBackground(String... urls) {
     try {
-      // Open a connection to the image API endpoint
       URL url = new URL(urls[0]);
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("GET");
-
-      // Set any required headers or parameters
-      //            conn.setRequestProperty("Authorization", "Bearer my-auth-token");
 
       responseCode = conn.getResponseCode();
       InputStream inputStream;
@@ -41,13 +45,23 @@ public class VisualFetcher extends AsyncTask<String, Void, Bitmap> {
         inputStream = conn.getErrorStream();
       }
 
-      // Convert the InputStream to a Bitmap
-      return BitmapFactory.decodeStream(inputStream);
+      Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+      return bitmap;
+
     } catch (Exception e) {
       e.printStackTrace();
       return null;
     }
   }
+
+  //  @Override
+  //  protected void onPostExecute(Bitmap result) {
+  //    if (result != null) {
+  //      qrCode.setVisualRepresentation(result);
+  //    } else {
+  //      Log.d("imageApiCall", "API call for DiceBear failed.");
+  //    }
+  //  }
 
   public int getResponseCode() {
     return responseCode;

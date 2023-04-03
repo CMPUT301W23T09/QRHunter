@@ -14,12 +14,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+/** This tests the methods of the LocationPhoto class */
 @RunWith(MockitoJUnitRunner.class)
 public class TestLocationPhotoModel {
-  // create a mock bitmap
+  /** This is a mock bitmap */
   @Mock private Bitmap mockBitmap = mock(Bitmap.class);
 
-  // test getting the bitmap image of a photo
+  /** This tests getting the bitmap image from a LocationPhoto */
   @Test
   public void testGetBitmapImage() {
     Bitmap photoImage = new LocationPhoto(mockBitmap, null).getPhoto();
@@ -27,7 +28,7 @@ public class TestLocationPhotoModel {
     assertEquals(System.identityHashCode(photoImage), System.identityHashCode(mockBitmap));
   }
 
-  // test getting the player of a photo
+  /** This tests getting the player from a LocationPhoto */
   @Test
   public void testGetPlayer() {
     UUID mockUUID = UUID.randomUUID();
@@ -44,7 +45,7 @@ public class TestLocationPhotoModel {
     assertEquals(photo.getPlayer(), player);
   }
 
-  // test setting the photo of a photo to a different bitmap
+  /** This tests setting the bitmap image from a LocationPhoto */
   @Test
   public void testSetBitmapImage() {
     LocationPhoto photo = new LocationPhoto((Bitmap) null, null);

@@ -3,14 +3,21 @@ package com.cmput301w23t09.qrhunter;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.pressKey;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.CoreMatchers.anything;
+import static org.hamcrest.CoreMatchers.containsString;
 
 import android.Manifest;
 import android.content.Intent;
+import android.view.KeyEvent;
+import android.widget.EditText;
 import android.widget.ListView;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.DataInteraction;
@@ -98,6 +105,30 @@ public class TestLeaderboardFragment extends BaseTest {
             new ArrayList<>(),
             new ArrayList<>());
     PlayerDatabase.getInstance().add(otherPlayer, ignored -> playerDatabaseSetup.countDown());
+    Player otherPlayer2 =
+        new Player(
+            UUID.randomUUID(),
+            "Other Player123",
+            "1234567890",
+            "example@example.com",
+            new ArrayList<>());
+    PlayerDatabase.getInstance().add(otherPlayer2, ignored -> playerDatabaseSetup.countDown());
+    Player otherPlayer3 =
+        new Player(
+            UUID.randomUUID(),
+            "123Other Player",
+            "1234567890",
+            "example@example.com",
+            new ArrayList<>());
+    PlayerDatabase.getInstance().add(otherPlayer3, ignored -> playerDatabaseSetup.countDown());
+    Player otherPlayer4 =
+        new Player(
+            UUID.randomUUID(),
+            "123Other Player123",
+            "1234567890",
+            "example@example.com",
+            new ArrayList<>());
+    PlayerDatabase.getInstance().add(otherPlayer4, ignored -> playerDatabaseSetup.countDown());
     playerDatabaseSetup.await();
   }
 
@@ -274,6 +305,98 @@ public class TestLeaderboardFragment extends BaseTest {
   }
 
   /**
+   * Using the search bar to search for a player should transition to the player search fragment
+   *
+   * <p>How to test if a fragment matches another fragment Source:
+   * https://stackoverflow.com/questions/69324021/how-do-i-test-if-a-fragment-has-been-replaced-by-another-fragment
+   * By: Shweta Chauhan (https://stackoverflow.com/users/6021469/shweta-chauhan) (09/26/21) License:
+   * cc-wiki
+   *
+   * <p>How to perform a click on the search view and search something Source:
+   * https://stackoverflow.com/questions/56134911/how-to-press-on-searchview-the-action-button-in-espresso
+   * By: Ahmed Garhy (https://stackoverflow.com/users/2714637/ahmed-garhy) (01/11/20) License:
+   * cc-wiki
+   */
+  @Test
+  public void testSearchTransitionsToPlayerSearchFragment() {
+    onView(withId(R.id.player_search)).perform(click());
+    onView(isAssignableFrom(EditText.class))
+        .perform(typeText("Joe"), pressKey(KeyEvent.KEYCODE_ENTER));
+
+    onView(withId(R.id.search_linear_layout)).check(matches(isDisplayed()));
+  }
+
+  /**
+   * Searching for a player that does not exist should display a text view (Player Not Found)
+   *
+   * <p>How to delay code Source:
+   * https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java By: Boris the Spider
+   * (https://stackoverflow.com/users/2071828/boris-the-spider) (06/08/14) License: cc-wiki
+   */
+  @Test
+  public void testSearchDisplaysNoPlayers() {
+    onView(withId(R.id.player_search)).perform(click());
+    onView(isAssignableFrom(EditText.class))
+        .perform(typeText("Joe"), pressKey(KeyEvent.KEYCODE_ENTER));
+    onView(withId(R.id.search_linear_layout)).check(matches(isDisplayed()));
+
+    try {
+      Thread.sleep(3000);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+
+    onView(withText("Player Not Found.")).check(matches(isDisplayed()));
+  }
+
+  /** Pressing the back button in the player search fragment should return to the leaderboards */
+  @Test
+  public void testPlayerSearchBackButton() {
+    onView(withId(R.id.player_search)).perform(click());
+    onView(isAssignableFrom(EditText.class))
+        .perform(typeText("Joe"), pressKey(KeyEvent.KEYCODE_ENTER));
+    onView(withId(R.id.search_linear_layout)).check(matches(isDisplayed()));
+
+    onView(withId(R.id.back_button)).perform(click());
+    onView(withId(R.id.leaderboard_linear_layout)).check(matches(isDisplayed()));
+  }
+
+  /**
+   * Searching for a player should display related player names with the exact match first and names
+   * with the exact match prefix in descending order based on closeness to the front
+   *
+   * <p>How to test information in a listview Source:
+   * https://stackoverflow.com/questions/40822472/check-content-of-an-element-inside-a-listview-with-espresso
+   * By: lmiguelvargasf (https://stackoverflow.com/users/3705840/lmiguelvargasf) (11/26/16) License:
+   * cc-wiki
+   */
+  @Test
+  public void testRelatedUsernameSearch() {
+    onView(withId(R.id.player_search)).perform(click());
+    onView(withId(androidx.appcompat.R.id.search_src_text))
+        .perform(typeText("Other Player"), pressKey(KeyEvent.KEYCODE_ENTER));
+    onView(withId(R.id.search_linear_layout)).check(matches(isDisplayed()));
+
+    waitUntilSearchListHasData();
+
+    onData(anything())
+        .inAdapterView(withId(R.id.search_query_list))
+        .atPosition(0)
+        .onChildView(withId(R.id.search_query_entry_text))
+        .check(matches(withText("Other Player")));
+    onData(anything())
+        .inAdapterView(withId(R.id.search_query_list))
+        .atPosition(1)
+        .onChildView(withId(R.id.search_query_entry_text))
+        .check(matches(withText("Other Player123")));
+    onData(anything())
+        .inAdapterView(withId(R.id.search_query_list))
+        .atPosition(2)
+        .onChildView(withId(R.id.search_query_entry_text))
+        .check(matches(withText(containsString("123Other Player"))));
+  }
+
+  /**
    * Utility method to select a tab once on the leaderboard screen.
    *
    * @param position tab position
@@ -292,6 +415,17 @@ public class TestLeaderboardFragment extends BaseTest {
         .until(
             () -> {
               ListView listView = (ListView) solo.getView(R.id.leaderboard_list);
+              return listView.getChildCount() > 0;
+            });
+  }
+
+  /** Wait until the search query list has entries. */
+  private void waitUntilSearchListHasData() {
+    await()
+        .atMost(10, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              ListView listView = (ListView) solo.getView(R.id.search_query_list);
               return listView.getChildCount() > 0;
             });
   }

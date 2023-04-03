@@ -242,7 +242,7 @@ public class TestQRSearch extends BaseTest {
     onView(withId(R.id.qr_searchbar)).perform(click());
     onView(withId(androidx.appcompat.R.id.search_src_text))
         .perform(typeText(distantCity), pressKey(KeyEvent.KEYCODE_ENTER));
-    solo.waitForView(R.id.search_qr_result, 1, 6000);
+    solo.waitForView(R.id.search_qr_result);
     // check first qr code of result
     onData(anything()).inAdapterView(withId(R.id.search_qr_result)).atPosition(0).perform(click());
     onView(withId(R.id.qr_name)).check(matches(withText(qrCodes.get(0).getName())));
