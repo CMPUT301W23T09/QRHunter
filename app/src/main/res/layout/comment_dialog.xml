@@ -8,9 +8,10 @@
         android:id="@+id/comment_dialog_player_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="16dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/black"
-        android:padding="16dp" />
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/comment_dialog_comment_text"
