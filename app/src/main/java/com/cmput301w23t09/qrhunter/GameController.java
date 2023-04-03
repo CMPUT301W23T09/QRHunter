@@ -13,7 +13,7 @@ public class GameController {
   private final GameActivity activity;
   private Fragment body;
   private DialogFragment popup;
-  private Player activePlayer;
+  private final Player activePlayer;
 
   public GameController(GameActivity activity, Player activePlayer) {
     this.activity = activity;

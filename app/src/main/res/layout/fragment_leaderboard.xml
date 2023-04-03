@@ -8,20 +8,45 @@
     android:orientation="vertical" >
 
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/player_search"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/player_search_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        app:iconifiedByDefault="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:queryHint="@string/search_for_player" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/player_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:iconifiedByDefault="false"
+            app:layout_constraintEnd_toStartOf="@+id/leaderboard_filter_button"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:queryHint="@string/search_for_player" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/leaderboard_filter_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:clickable="true"
+            android:contentDescription="@string/settings_btn_desc"
+            android:focusable="true"
+            app:backgroundTint="@android:color/white"
+            app:borderWidth="0dp"
+            app:elevation="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/player_search"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/player_search"
+            app:srcCompat="@drawable/filter" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/leaderboard_navigation"
@@ -31,7 +56,7 @@
         android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/player_search"
+        app:layout_constraintTop_toBottomOf="@+id/player_search_wrapper"
         app:tabIndicatorColor="@color/teal_700"
         app:tabInlineLabel="true"
         app:tabSelectedTextColor="@color/teal_700"

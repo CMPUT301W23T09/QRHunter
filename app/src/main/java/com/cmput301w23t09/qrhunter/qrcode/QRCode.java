@@ -17,7 +17,7 @@ public class QRCode implements Serializable {
   /** This is the name of the QR code */
   private String name;
   /** This is the visual representation of the QR code */
-  private Bitmap visualRepresentation;
+  private transient Bitmap visualRepresentation;
   /** This is the score of the QR code */
   private Integer score;
   /** This is the location of the QR code */
@@ -122,7 +122,7 @@ public class QRCode implements Serializable {
     if (visualRepresentation == null) {
       visualRepresentation =
           new VisualFetcher()
-              .execute("https://api.dicebear.com/6.x/pixel-art-neutral/jpg?seed=" + hash)
+              .execute("https://api.dicebear.com/6.x/bottts-neutral/jpg?seed=" + hash)
               .get();
     }
     return visualRepresentation;
