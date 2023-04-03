@@ -14,11 +14,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
+/** This tests the methods of the Player class */
 public class TestPlayerModel {
-
+  /** This is a mock player */
   private Player mockPlayer;
+  /** This is a mock device ID */
   private UUID mockPlayerUUID;
 
+  /** Set up for tests by creating a mock player and ID */
   @BeforeEach
   public void setUp() {
     // Initial values don't matter as we'll be testing each getter/setter separately.
@@ -28,6 +31,7 @@ public class TestPlayerModel {
             "001", mockPlayerUUID, "johndoe42", "7801234567", "doe@ualberta.ca", new ArrayList<>());
   }
 
+  /** Test the getters of the Player class */
   @Test
   public void testGetters() {
     assertEquals("001", mockPlayer.getDocumentId());
@@ -38,6 +42,7 @@ public class TestPlayerModel {
     assertEquals(new ArrayList<>(), mockPlayer.getQRCodeHashes());
   }
 
+  /** Test the getter for the qr code hashes after hashes have been added */
   @Test
   public void testGetQRCodeHashes() {
     List<String> scannedQRHashes = new ArrayList<>();
@@ -47,13 +52,14 @@ public class TestPlayerModel {
     assertEquals(scannedQRHashes, mockPlayer.getQRCodeHashes());
   }
 
-  /* SETTER TESTS*/
+  /** Test the setter for the document ID of a Player */
   @Test
   public void testSetDocumentId() {
     mockPlayer.setDocumentId("002");
     assertEquals("002", mockPlayer.getDocumentId());
   }
 
+  /** Test the setter for the device ID of a Player */
   @Test
   public void testSetDeviceId() {
     UUID newUUID = UUID.randomUUID();
@@ -62,12 +68,14 @@ public class TestPlayerModel {
     assertEquals(newUUID, mockPlayer.getDeviceId());
   }
 
+  /** Test setting a valid username for a Player */
   @Test
   public void testSetValidUsername() {
     mockPlayer.setUsername("janedoe115");
     assertEquals("janedoe115", mockPlayer.getUsername());
   }
 
+  /** Test setting a username that is too long for a Player */
   @Test
   public void testSetTooLongUsername() {
     assertThrows(
@@ -78,6 +86,7 @@ public class TestPlayerModel {
         });
   }
 
+  /** Test setting a blank username for a Player */
   @Test
   public void testSetBlankUsername() {
     assertThrows(
@@ -91,6 +100,7 @@ public class TestPlayerModel {
   // For the following phone number tests, assume that
   // android.telephonyPhoneNumberUtils.isGlobalPhoneNumber
   // returns the proper value.
+  /** Test setting a valid phone number for a Player */
   @Test
   public void testSetValidPhoneNumber() {
     try (MockedStatic mocked = mockStatic(PhoneNumberUtils.class)) {
@@ -100,6 +110,7 @@ public class TestPlayerModel {
     }
   }
 
+  /** Test setting an invalid phone number for a Player */
   @Test
   public void testSetInvalidPhoneNumber() {
     try (MockedStatic mocked = mockStatic(PhoneNumberUtils.class)) {
@@ -112,6 +123,7 @@ public class TestPlayerModel {
     }
   }
 
+  /** Test setting a blank phone number for a Player */
   @Test
   public void testSetBlankPhoneNumber() {
     try (MockedStatic mocked = mockStatic(PhoneNumberUtils.class)) {
@@ -124,6 +136,7 @@ public class TestPlayerModel {
     }
   }
 
+  /** Test setting a valid email for a Player */
   @Test
   public void testSetValidEmail() {
     mockPlayer.setEmail("smith@ualberta.ca");
@@ -136,12 +149,14 @@ public class TestPlayerModel {
     assertEquals("smith.123@ualberta.ca", mockPlayer.getEmail());
   }
 
+  /** Test setting a valid email that has addressing for a Player */
   @Test
   public void testSetValidEmailPlusAddressing() {
     mockPlayer.setEmail("smith+spambox@ualberta.ca");
     assertEquals("smith+spambox@ualberta.ca", mockPlayer.getEmail());
   }
 
+  /** Test setting a valid email that has hyphens for a Player */
   @Test
   public void testSetValidEmailHyphenated() {
     mockPlayer.setEmail("Smith123@yah-oo.com");
@@ -150,6 +165,7 @@ public class TestPlayerModel {
     assertEquals("smith-123@gmail.com", mockPlayer.getEmail());
   }
 
+  /** Test setting an invalid email that has hyphens after the @ for a Player */
   @Test
   public void testSetInvalidEmailHyphenated1() {
     assertThrows(
@@ -159,6 +175,7 @@ public class TestPlayerModel {
         });
   }
 
+  /** Test setting an invalid email that has hyphens before the domain for a Player */
   @Test
   public void testSetInvalidEmailHyphenated2() {
     assertThrows(
@@ -168,6 +185,7 @@ public class TestPlayerModel {
         });
   }
 
+  /** Test setting an invalid email that has a domain for a Player */
   @Test
   public void testSetInvalidEmailNoDomain() {
     assertThrows(
@@ -177,6 +195,7 @@ public class TestPlayerModel {
         });
   }
 
+  /** Test setting an invalid email that has an incomplete domain for a Player */
   @Test
   public void testSetInvalidEmailIncompleteDomain() {
     assertThrows(
@@ -186,6 +205,7 @@ public class TestPlayerModel {
         });
   }
 
+  /** Test setting an invalid email that has no name for a Player */
   @Test
   public void testSetInvalidEmailNoName() {
     assertThrows(
@@ -195,6 +215,7 @@ public class TestPlayerModel {
         });
   }
 
+  /** Test setting an blank email for a Player */
   @Test
   public void testSetBlankEmail() {
     assertThrows(
@@ -204,6 +225,7 @@ public class TestPlayerModel {
         });
   }
 
+  /** Tests the setter for qr code hashes */
   @Test
   public void testSetQRCodeHashes() {
     List<String> scannedQRHashes = new ArrayList<>();
