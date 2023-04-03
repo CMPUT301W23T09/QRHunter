@@ -111,6 +111,8 @@ public class TestLeaderboardFragment extends BaseTest {
             "Other Player123",
             "1234567890",
             "example@example.com",
+            new ArrayList<>(),
+            new ArrayList<>(),
             new ArrayList<>());
     PlayerDatabase.getInstance().add(otherPlayer2, ignored -> playerDatabaseSetup.countDown());
     Player otherPlayer3 =
@@ -119,6 +121,8 @@ public class TestLeaderboardFragment extends BaseTest {
             "123Other Player",
             "1234567890",
             "example@example.com",
+            new ArrayList<>(),
+            new ArrayList<>(),
             new ArrayList<>());
     PlayerDatabase.getInstance().add(otherPlayer3, ignored -> playerDatabaseSetup.countDown());
     Player otherPlayer4 =
@@ -127,6 +131,8 @@ public class TestLeaderboardFragment extends BaseTest {
             "123Other Player123",
             "1234567890",
             "example@example.com",
+            new ArrayList<>(),
+            new ArrayList<>(),
             new ArrayList<>());
     PlayerDatabase.getInstance().add(otherPlayer4, ignored -> playerDatabaseSetup.countDown());
     playerDatabaseSetup.await();
