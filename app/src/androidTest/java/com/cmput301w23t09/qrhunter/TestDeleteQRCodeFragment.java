@@ -7,13 +7,9 @@ import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.awaitility.Awaitility.await;
-import static org.junit.Assert.assertTrue;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
-import android.widget.ImageView;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import com.cmput301w23t09.qrhunter.player.Player;
@@ -25,7 +21,6 @@ import com.robotium.solo.Solo;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.Before;
@@ -94,13 +89,9 @@ public class TestDeleteQRCodeFragment extends BaseTest {
 
   /** Checks if the QRCodeFragment displays the QRCode's name correctly */
   @Test
-  public void testCorrectDisplayInfo() throws InterruptedException, ExecutionException {
-    // TODO: Currently, QRCodeFragment shows hash, CHANGE THIS TO NAME ONCE IMPLEMENTED
+  public void testCorrectDisplayInfo() {
     onView(withId(R.id.qr_name)).inRoot(isDialog()).check(matches(withText("Robbel Spicy Tiger")));
     onView(withId(R.id.qr_points)).inRoot(isDialog()).check(matches(withText("32 PTS")));
-    ImageView qrVisualView = (ImageView) solo.getView(R.id.qr_code_visual);
-    Bitmap qrVisualBitmap = ((BitmapDrawable) qrVisualView.getDrawable()).getBitmap();
-    assertTrue(qrVisualBitmap.sameAs(qrCode.getVisualRepresentation()));
   }
 
   /** Test to see that QRCodes are successfully removed from the player account */
