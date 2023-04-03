@@ -41,7 +41,6 @@ public class DeleteQRCodeFragment extends QRCodeFragment {
     loadingButton.setVisibility(View.GONE);
     updateDeleteButton();
     deleteButton.setOnClickListener(this::onRemoveQRClicked);
-    updateLocationPhoto();
   }
 
   @Override

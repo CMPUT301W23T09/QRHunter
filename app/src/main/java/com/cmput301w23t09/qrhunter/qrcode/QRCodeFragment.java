@@ -146,6 +146,9 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
 
     // set up tab menu
     setupTab(view);
+
+    // set up location photos
+    updateLocationPhoto();
   }
 
   /**
