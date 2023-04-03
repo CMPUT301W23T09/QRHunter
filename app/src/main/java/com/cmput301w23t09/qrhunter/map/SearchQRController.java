@@ -5,7 +5,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 import androidx.appcompat.widget.SearchView;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
@@ -20,11 +19,9 @@ import java.util.List;
 public class SearchQRController {
   private MapFragment fragment;
   private SearchView searchView;
-  private Button searchBtn;
 
-  public SearchQRController(SearchView searchView, Button searchBtn, MapFragment fragment) {
+  public SearchQRController(SearchView searchView, MapFragment fragment) {
     this.searchView = searchView;
-    this.searchBtn = searchBtn;
     this.fragment = fragment;
   }
 
@@ -209,8 +206,9 @@ public class SearchQRController {
                 .show();
           } else {
             nearbyCodes.sort(new ScoreComparator().reversed());
-            new QRSearchResultFragment(nearbyCodes, fragment)
-                .show(fragment.getChildFragmentManager(), "Show QR code search information");
+            fragment
+                .getGameController()
+                .setPopup(new QRSearchResultFragment(nearbyCodes, fragment));
           }
         });
   }

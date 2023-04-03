@@ -368,7 +368,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     // create search view
     SearchView qrSearchbar = view.findViewById(R.id.qr_searchbar);
     Button qrSearchButton = view.findViewById(R.id.qr_searcher);
-    searchController = new SearchQRController(qrSearchbar, qrSearchButton, this);
+    searchController = new SearchQRController(qrSearchbar, this);
     qrSearchbar.setOnQueryTextListener(searchController.searchNearbyCodes());
     qrSearchButton.setOnClickListener(searchController.getNearbyCodes());
 
