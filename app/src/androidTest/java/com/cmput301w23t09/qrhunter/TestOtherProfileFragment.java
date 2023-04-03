@@ -1,13 +1,11 @@
 package com.cmput301w23t09.qrhunter;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.awaitility.Awaitility.await;
-import static org.hamcrest.CoreMatchers.anything;
 
 import android.view.View;
 import android.widget.TextView;
@@ -96,7 +94,7 @@ public class TestOtherProfileFragment extends TestProfileFragment {
     waitForProfileQRsToAppear();
 
     // Click the first QR
-    onData(anything()).inAdapterView(withId(R.id.code_list)).atPosition(0).perform(click());
+    solo.clickInList(0);
 
     // DeleteQRCodeFragment should NOT be shown.
     await()
@@ -119,7 +117,7 @@ public class TestOtherProfileFragment extends TestProfileFragment {
     addQRToPlayerDBTask.await();
 
     // Click the first QR
-    onData(anything()).inAdapterView(withId(R.id.code_list)).atPosition(0).perform(click());
+    solo.clickInList(0);
 
     // DeleteQRCodeFragment should be shown.
     await()

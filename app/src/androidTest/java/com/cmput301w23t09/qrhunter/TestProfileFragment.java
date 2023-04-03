@@ -249,12 +249,11 @@ public abstract class TestProfileFragment extends BaseTest {
     // get the list of qr codes sorted in descending order (default order of profile's qr code list)
     List<QRCode> sortedCodes = getProfileQRCodesToAdd();
     sortedCodes.sort(new ScoreComparator().reversed());
-    // get the qr code list
-    DataInteraction codeList = onData(anything()).inAdapterView(withId(R.id.code_list));
     // click on an item in the code list
-    codeList.atPosition(0).perform(click());
+    solo.clickInList(0);
+
     // check that the correct QRCodeFragment is displayed
-    onView(withId(R.id.qr_name)).check(matches(withText(sortedCodes.get(0).getName())));
+    solo.waitForText(sortedCodes.get(0).getName());
   }
 
   protected void waitForProfileQRsToAppear() {
