@@ -352,13 +352,11 @@ public abstract class ProfileController implements DatabaseChangeListener {
     getTotalPointsPercentile(
         percentile -> {
           totalPointsPercentile.set(percentile);
-          System.out.println("abc");
           if (tasksLeft.decrementAndGet() == 0) onFinishedCalculations.accept(null);
         });
     getCodesScannedPercentile(
         percentile -> {
           codesScannedPercentile.set(percentile);
-          System.out.println("abcabc");
           if (tasksLeft.decrementAndGet() == 0) onFinishedCalculations.accept(null);
         });
     getTopCodePercentile(
