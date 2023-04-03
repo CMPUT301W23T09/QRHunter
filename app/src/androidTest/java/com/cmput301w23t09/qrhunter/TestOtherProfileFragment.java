@@ -1,26 +1,28 @@
 package com.cmput301w23t09.qrhunter;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.awaitility.Awaitility.await;
-import static org.hamcrest.CoreMatchers.anything;
 
+import android.view.View;
 import android.widget.TextView;
 import com.cmput301w23t09.qrhunter.player.Player;
+import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.profile.OtherProfileFragment;
 import com.cmput301w23t09.qrhunter.profile.ProfileFragment;
 import com.cmput301w23t09.qrhunter.qrcode.DeleteQRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import org.junit.Test;
 
 public class TestOtherProfileFragment extends TestProfileFragment {
@@ -39,7 +41,13 @@ public class TestOtherProfileFragment extends TestProfileFragment {
   @Override
   protected Player getProfilePlayer() {
     return new Player(
-        UUID.randomUUID(), "DaPerson", "123-456-7890", "example@example.com", new ArrayList<>());
+        UUID.randomUUID(),
+        "DaPerson",
+        "123-456-7890",
+        "example@example.com",
+        new ArrayList<>(),
+        new ArrayList<>(),
+        new ArrayList<>());
   }
 
   @Override
@@ -59,7 +67,9 @@ public class TestOtherProfileFragment extends TestProfileFragment {
         new OtherProfileFragment(gameActivity.getController(), profilePlayer.getDeviceId());
     gameActivity.getController().setBody(otherProfileFragment);
 
-    await().until(() -> gameActivity.getController().getBody() instanceof ProfileFragment);
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(() -> gameActivity.getController().getBody() instanceof ProfileFragment);
 
     // Wait for the default profile to no longer exist.
     await()
@@ -68,15 +78,23 @@ public class TestOtherProfileFragment extends TestProfileFragment {
             () -> {
               TextView usernameView = (TextView) solo.getView(R.id.username);
               TextView totalPoints = (TextView) solo.getView(R.id.total_points);
+              FloatingActionButton followButton =
+                  (FloatingActionButton) solo.getView(R.id.follow_button);
+              FloatingActionButton unfollowButton =
+                  (FloatingActionButton) solo.getView(R.id.unfollow_button);
               return !usernameView.getText().toString().equals("")
-                  && !totalPoints.getText().toString().equals("");
+                  && !totalPoints.getText().toString().equals("")
+                  && (followButton.getVisibility() == View.VISIBLE
+                      || unfollowButton.getVisibility() == View.VISIBLE);
             });
   }
 
   @Test
   public void testShouldNotShowDeleteButtonOnQRCodeIfNotOwned() {
+    waitForProfileQRsToAppear();
+
     // Click the first QR
-    onData(anything()).inAdapterView(withId(R.id.code_list)).atPosition(0).perform(click());
+    solo.clickInList(0);
 
     // DeleteQRCodeFragment should NOT be shown.
     await()
@@ -90,14 +108,16 @@ public class TestOtherProfileFragment extends TestProfileFragment {
 
   @Test
   public void testShouldShowDeleteButtonOnQRCodeIfOwned() throws InterruptedException {
+    waitForProfileQRsToAppear();
+
     // Assign the first QR as owned.
     CountDownLatch addQRToPlayerDBTask = new CountDownLatch(1);
     QRCodeDatabase.getInstance()
-        .addPlayerToQR(ourPlayer, higherScoreQR, task -> addQRToPlayerDBTask.countDown());
+        .addPlayerToQR(localPlayer, higherScoreQR, task -> addQRToPlayerDBTask.countDown());
     addQRToPlayerDBTask.await();
 
     // Click the first QR
-    onData(anything()).inAdapterView(withId(R.id.code_list)).atPosition(0).perform(click());
+    solo.clickInList(0);
 
     // DeleteQRCodeFragment should be shown.
     await()
@@ -121,5 +141,174 @@ public class TestOtherProfileFragment extends TestProfileFragment {
     onView(withId(R.id.contact_phoneNo))
         .check(
             matches(withText(String.format("Phone Number: %s", getProfilePlayer().getPhoneNo()))));
+  }
+
+  /** Tests that a player is followed when clicking the follow button. */
+  @Test
+  public void testShouldFollowPlayer() {
+    onView(withId(R.id.follow_button)).perform(click());
+
+    // Wait for unfollow text to appear
+    await()
+        .atMost(10, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              FloatingActionButton unfollowButton =
+                  (FloatingActionButton) solo.getView(R.id.unfollow_button);
+              return unfollowButton.getVisibility() == View.VISIBLE;
+            });
+
+    // Check database entries to ensure everything is correct.
+
+    // First check that our player says that we are following this player.
+    AtomicReference<Player> updatedPlayer = new AtomicReference<>();
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              // If we have already fetched the player, check that the QRCode is not within the
+              // Player.
+              Player databasePlayer = updatedPlayer.get();
+              if (databasePlayer != null
+                  && databasePlayer.getFollowing().contains(profilePlayer.getDeviceId())) {
+                return true; // Player was correctly updated!
+              }
+
+              // then fetch the latest database saved entry.
+              PlayerDatabase.getInstance()
+                  .getPlayerByDeviceId(
+                      getDeviceUUID(), fetchedPlayer -> updatedPlayer.set(fetchedPlayer.getData()));
+              return false; // Try again.
+            });
+
+    // Now check that the target profile is storing that we are following them.
+    updatedPlayer.set(null);
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              // If we have already fetched the player, check that the QRCode is not within the
+              // Player.
+              Player databasePlayer = updatedPlayer.get();
+              if (databasePlayer != null
+                  && databasePlayer.getFollowers().contains(localPlayer.getDeviceId())) {
+                return true; // Player was correctly updated!
+              }
+
+              // then fetch the latest database saved entry.
+              PlayerDatabase.getInstance()
+                  .getPlayerByDeviceId(
+                      profilePlayer.getDeviceId(),
+                      fetchedPlayer -> updatedPlayer.set(fetchedPlayer.getData()));
+              return false; // Try again.
+            });
+
+    String expectedFollowersString = "1 Followers";
+    onView(withId(R.id.followers_count)).check(matches(withText(expectedFollowersString)));
+  }
+
+  /** Tests that a player is followed when clicking the follow button. */
+  @Test
+  public void testShouldUnfollowPlayer() {
+    onView(withId(R.id.follow_button)).perform(click());
+
+    // Wait for unfollow text to appear
+    await()
+        .atMost(10, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              FloatingActionButton unfollowButton =
+                  (FloatingActionButton) solo.getView(R.id.unfollow_button);
+              return unfollowButton.getVisibility() == View.VISIBLE;
+            });
+
+    // Unfollow user
+    onView(withId(R.id.unfollow_button)).perform(click());
+
+    // Wait for unfollow text to appear
+    await()
+        .atMost(10, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              FloatingActionButton followButton =
+                  (FloatingActionButton) solo.getView(R.id.follow_button);
+              return followButton.getVisibility() == View.VISIBLE;
+            });
+
+    // Check database entries to ensure everything is correct.
+
+    // First check that our player says that we are NOT following this player.
+    AtomicReference<Player> updatedPlayer = new AtomicReference<>();
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              // If we have already fetched the player, check that the QRCode is not within the
+              // Player.
+              Player databasePlayer = updatedPlayer.get();
+              if (databasePlayer != null
+                  && !databasePlayer.getFollowing().contains(profilePlayer.getDeviceId())) {
+                return true; // Player was correctly updated!
+              }
+
+              // then fetch the latest database saved entry.
+              PlayerDatabase.getInstance()
+                  .getPlayerByDeviceId(
+                      getDeviceUUID(), fetchedPlayer -> updatedPlayer.set(fetchedPlayer.getData()));
+              return false; // Try again.
+            });
+
+    // Now check that the target profile is storing that we are NOT following them.
+    updatedPlayer.set(null);
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              // If we have already fetched the player, check that the QRCode is not within the
+              // Player.
+              Player databasePlayer = updatedPlayer.get();
+              if (databasePlayer != null
+                  && !databasePlayer.getFollowers().contains(localPlayer.getDeviceId())) {
+                return true; // Player was correctly updated!
+              }
+
+              // then fetch the latest database saved entry.
+              PlayerDatabase.getInstance()
+                  .getPlayerByDeviceId(
+                      profilePlayer.getDeviceId(),
+                      fetchedPlayer -> updatedPlayer.set(fetchedPlayer.getData()));
+              return false; // Try again.
+            });
+
+    String expectedFollowersString = "0 Followers";
+    onView(withId(R.id.followers_count)).check(matches(withText(expectedFollowersString)));
+  }
+
+  /** Tests that after following a user, that the "Following" text on your profile changes. */
+  @Test
+  public void testShouldUpdateMyProfileFollowedOnFollow() {
+    onView(withId(R.id.follow_button)).perform(click());
+
+    // Wait for unfollow text to appear
+    await()
+        .atMost(10, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              FloatingActionButton unfollowButton =
+                  (FloatingActionButton) solo.getView(R.id.unfollow_button);
+              return unfollowButton.getVisibility() == View.VISIBLE;
+            });
+
+    // Navigate to our profile.
+    onView(withId(R.id.navigation_my_profile)).perform(click());
+
+    // Check for the following count to be updated.
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              TextView textView = (TextView) solo.getView(R.id.following_count);
+              return textView.getText().toString().equals("1 Following");
+            });
   }
 }

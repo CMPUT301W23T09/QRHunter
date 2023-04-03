@@ -20,7 +20,7 @@ public class MyProfileFragment extends ProfileFragment {
   }
 
   @Override
-  protected void setupContactButton() {
+  protected void setupSocialMethods() {
     contactButton.setImageResource(R.drawable.baseline_settings_24);
   }
 }

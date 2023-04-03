@@ -17,7 +17,7 @@ public class QRCode implements Serializable {
   /** This is the name of the QR code */
   private String name;
   /** This is the visual representation of the QR code */
-  private Bitmap visualRepresentation;
+  private transient Bitmap visualRepresentation;
   /** This is the score of the QR code */
   private Integer score;
   /** This is the location of the QR code */
@@ -302,14 +302,21 @@ public class QRCode implements Serializable {
     // Though the git blame is on jmmabanta (John Mabanta), this is all andy-mtng (Andy Nguyen's)
     // code
     String binary = getFirstSixBits(hash);
-    String nameBitOne = (binary.charAt(0) == '0') ? "So" : "Ro";
-    String nameBitTwo = (binary.charAt(1) == '0') ? "ba" : "da";
-    String nameBitThree = (binary.charAt(2) == '0') ? "yin" : "qin";
-    String nameBitFour = (binary.charAt(3) == '0') ? "ect" : "ly";
-    String nameBitFive = (binary.charAt(4) == '0') ? "Panda" : "Tiger";
-    String nameBitSix = (binary.charAt(5) == '0') ? "★" : "✿";
+    String nameBitOne = (binary.charAt(0) == '0') ? "S" : "R";
+    String nameBitTwo = (binary.charAt(1) == '0') ? "o" : "a";
+    String nameBitThree = (binary.charAt(2) == '0') ? "dd" : "bb";
+    String nameBitFour = (binary.charAt(3) == '0') ? "el" : "al";
+    String nameBitFive = (binary.charAt(4) == '0') ? "Tiny" : "Spicy";
+    String nameBitSix = (binary.charAt(5) == '0') ? "Panda" : "Tiger";
 
-    return nameBitOne + nameBitTwo + nameBitThree + nameBitFour + nameBitFive + nameBitSix;
+    return nameBitOne
+        + nameBitTwo
+        + nameBitThree
+        + nameBitFour
+        + " "
+        + nameBitFive
+        + " "
+        + nameBitSix;
   }
 
   /**

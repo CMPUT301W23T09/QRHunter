@@ -7,6 +7,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -15,6 +16,7 @@ import static org.junit.Assert.assertTrue;
 
 import android.Manifest;
 import android.content.Intent;
+import android.widget.GridView;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.DataInteraction;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -30,6 +32,7 @@ import com.robotium.solo.Solo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,18 +40,26 @@ import org.junit.Test;
 /** Test classes for profile activity */
 public abstract class TestProfileFragment extends BaseTest {
 
-  private static Intent intent;
-  protected static Player ourPlayer;
+  private static final Intent intent;
+  private static final Player ourPlayer;
 
-  {
+  static {
     ourPlayer =
-        new Player(getDeviceUUID(), "Irene", "5873571506", "isun@ualberta.ca", new ArrayList<>());
+        new Player(
+            getDeviceUUID(),
+            "Irene",
+            "5873571506",
+            "isun@ualberta.ca",
+            new ArrayList<>(),
+            new ArrayList<>(),
+            new ArrayList<>());
     intent = new Intent(ApplicationProvider.getApplicationContext(), GameActivity.class);
     intent.putExtra("activePlayer", ourPlayer);
   }
 
   protected Solo solo;
   protected Player profilePlayer;
+  protected Player localPlayer;
 
   @Rule
   public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
@@ -80,7 +91,17 @@ public abstract class TestProfileFragment extends BaseTest {
     PlayerDatabase.getInstance()
         .add(
             ourPlayer,
-            ignored -> {
+            task -> {
+              // Update GameController activePlayer document id to match the record of the player
+              // being added
+
+              // Update the GameActivity activePlayer
+              Player storedActivePlayer =
+                  ((GameActivity) solo.getCurrentActivity()).getController().getActivePlayer();
+              storedActivePlayer.setDocumentId(task.getData().getDocumentId());
+              localPlayer = storedActivePlayer;
+              ourPlayer.setDocumentId(null); // reset the document id assigned to our template
+
               // Now that we added the main player, do we need to add the profile player too?
               if (profilePlayer.getDeviceId().equals(ourPlayer.getDeviceId())) {
                 // No we don't.
@@ -164,6 +185,8 @@ public abstract class TestProfileFragment extends BaseTest {
   /** Checks if qr codes are properly sorted and displayed */
   @Test
   public void testQRListView() {
+    waitForProfileQRsToAppear();
+
     // get the highest and lowest score
     Integer highestScore =
         getProfileQRCodesToAdd().stream().mapToInt(QRCode::getScore).reduce(0, Integer::max);
@@ -177,7 +200,7 @@ public abstract class TestProfileFragment extends BaseTest {
     codeList
         .atPosition(0)
         .onChildView(withId(R.id.score))
-        .check(matches(withText(String.valueOf(highestScore))));
+        .check(matches(withText(String.valueOf(highestScore) + " PTS")));
     // change the sort order
     onView(withId(R.id.order_spinner)).perform(click());
     onData(allOf(is(instanceOf(String.class)), is("Ascending"))).perform(click());
@@ -185,7 +208,7 @@ public abstract class TestProfileFragment extends BaseTest {
     codeList
         .atPosition(0)
         .onChildView(withId(R.id.score))
-        .check(matches(withText(String.valueOf(lowestScore))));
+        .check(matches(withText(String.valueOf(lowestScore) + " PTS")));
   }
 
   /** Checks if the total points of codes scanned is displayed correctly */
@@ -221,14 +244,25 @@ public abstract class TestProfileFragment extends BaseTest {
   /** Checks if the correct QRCodeFragment pops up when a qr code is selected */
   @Test
   public void testQRClick() {
+    waitForProfileQRsToAppear();
+
     // get the list of qr codes sorted in descending order (default order of profile's qr code list)
     List<QRCode> sortedCodes = getProfileQRCodesToAdd();
     sortedCodes.sort(new ScoreComparator().reversed());
-    // get the qr code list
-    DataInteraction codeList = onData(anything()).inAdapterView(withId(R.id.code_list));
     // click on an item in the code list
-    codeList.atPosition(0).perform(click());
+    solo.clickInList(0);
+
     // check that the correct QRCodeFragment is displayed
-    onView(withId(R.id.qr_name)).check(matches(withText(sortedCodes.get(0).getName())));
+    solo.waitForText(sortedCodes.get(0).getName());
+  }
+
+  protected void waitForProfileQRsToAppear() {
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              GridView qrs = (GridView) solo.getView(R.id.code_list);
+              return qrs.getChildCount() > 0;
+            });
   }
 }

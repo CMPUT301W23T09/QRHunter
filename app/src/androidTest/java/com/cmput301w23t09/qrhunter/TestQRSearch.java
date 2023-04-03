@@ -67,14 +67,6 @@ public class TestQRSearch extends BaseTest {
               solo = new Solo(InstrumentationRegistry.getInstrumentation(), activity);
             });
 
-    // Open the map fragment
-    onView(withId(R.id.navigation_qr_finder)).perform(click());
-    await()
-        .until(
-            () ->
-                ((GameActivity) solo.getCurrentActivity()).getController().getBody()
-                    instanceof MapFragment);
-
     // generate qr codes
     getUserLocation();
     getDistantLocation();
@@ -82,6 +74,14 @@ public class TestQRSearch extends BaseTest {
 
     // add generated codes to database
     addCodesToDB();
+
+    // Open the map fragment
+    onView(withId(R.id.navigation_qr_finder)).perform(click());
+    await()
+        .until(
+            () ->
+                ((GameActivity) solo.getCurrentActivity()).getController().getBody()
+                    instanceof MapFragment);
   }
 
   /** Get and store location of the user */
@@ -204,7 +204,7 @@ public class TestQRSearch extends BaseTest {
     // click on search button
     onView(withId(R.id.qr_searcher)).perform(click());
     // check first qr code of result
-    solo.waitForView(R.id.search_qr_result);
+    solo.waitForView(R.id.search_qr_result, 1, 5000);
     onData(anything()).inAdapterView(withId(R.id.search_qr_result)).atPosition(0).perform(click());
     onView(withId(R.id.qr_name)).check(matches(withText(qrCodes.get(1).getName())));
     onView(withId(android.R.id.button1)).perform(click());
@@ -217,14 +217,14 @@ public class TestQRSearch extends BaseTest {
   @Test
   public void testSearchCodesByCoordinateQueryResult() {
     // enter geolocation coordinates into search query
-    solo.waitForView(R.id.qr_searchbar);
+    solo.waitForView(R.id.qr_searchbar, 1, 5000);
     onView(withId(R.id.qr_searchbar)).perform(click());
     onView(withId(androidx.appcompat.R.id.search_src_text))
         .perform(
             typeText(
                 String.format("%f, %f", userLocation.getLatitude(), userLocation.getLongitude())),
             pressKey(KeyEvent.KEYCODE_ENTER));
-    solo.waitForView(R.id.search_qr_result);
+    solo.waitForView(R.id.search_qr_result, 1, 5000);
     // check first qr code of result
     onData(anything()).inAdapterView(withId(R.id.search_qr_result)).atPosition(0).perform(click());
     onView(withId(R.id.qr_name)).check(matches(withText(qrCodes.get(1).getName())));
@@ -238,11 +238,11 @@ public class TestQRSearch extends BaseTest {
   @Test
   public void testSearchCodesByAddressQueryResult() {
     // enter geolocation coordinates into search query
-    solo.waitForView(R.id.qr_searchbar);
+    solo.waitForView(R.id.qr_searchbar, 1, 5000);
     onView(withId(R.id.qr_searchbar)).perform(click());
     onView(withId(androidx.appcompat.R.id.search_src_text))
         .perform(typeText(distantCity), pressKey(KeyEvent.KEYCODE_ENTER));
-    solo.waitForView(R.id.search_qr_result, 1, 6000);
+    solo.waitForView(R.id.search_qr_result);
     // check first qr code of result
     onData(anything()).inAdapterView(withId(R.id.search_qr_result)).atPosition(0).perform(click());
     onView(withId(R.id.qr_name)).check(matches(withText(qrCodes.get(0).getName())));

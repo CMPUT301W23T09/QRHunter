@@ -10,9 +10,11 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /** Manages all Player database operations. */
 public class PlayerDatabase {
@@ -236,6 +238,32 @@ public class PlayerDatabase {
             });
   }
 
+  //  public void getPlayersWithRelatedUsernames(String username, DatabaseConsumer<Set<Player>>
+  // callback) {
+  //      collection
+  //          .whereGreaterThanOrEqualTo("username_lower", username.toLowerCase())
+  //          .whereLessThan("username_lower", username.toLowerCase() + "\uf8ff")
+  //          .get()
+  //          .addOnCompleteListener(
+  //                  task -> {
+  //                      if (!task.isSuccessful()) {
+  //                          callback.accept(new DatabaseQueryResults<>(null,
+  // task.getException()));
+  //                          Log.d(LOGGER_TAG, "Failed to execute getPlayersWithRelatedUsernames",
+  // task.getException());
+  //                          return;
+  //                      }
+  //
+  //                      // Convert all snapshots to Players
+  //                      Set<Player> players = new HashSet<>();
+  //                      for (QueryDocumentSnapshot snapshot : task.getResult()) {
+  //                          players.add(snapshotToPlayer(snapshot));
+  //                      }
+  //
+  //                      callback.accept(new DatabaseQueryResults<>(players));
+  //                  });
+  //  }
+
   /**
    * Retrieve all players from the database
    *
@@ -262,6 +290,100 @@ public class PlayerDatabase {
   }
 
   /**
+   * Unfollow the playerToUnfollow as the player
+   *
+   * @param player the player issuing the unfollow
+   * @param playerToUnfollow the player losing a follower
+   * @param callback callback
+   */
+  public void unfollow(Player player, Player playerToUnfollow, DatabaseConsumer<Void> callback) {
+    if (player.getDocumentId() == null) {
+      throw new IllegalArgumentException("Player does not have a document reference.");
+    }
+    if (playerToUnfollow.getDocumentId() == null) {
+      throw new IllegalArgumentException("Player to unfollow does not have a document reference.");
+    }
+
+    // Remove the playerToFollow as following to the player
+    List<UUID> playerFollowing = player.getFollowing();
+    playerFollowing.remove(playerToUnfollow.getDeviceId());
+    player.setFollowing(playerFollowing);
+
+    // Remove the player as a follower to playerToFollow
+    List<UUID> playerFollowers = playerToUnfollow.getFollowers();
+    playerFollowers.remove(player.getDeviceId());
+    playerToUnfollow.setFollowers(playerFollowers);
+
+    // Update both player entries
+    update(
+        player,
+        task -> {
+          if (!task.isSuccessful()) {
+            callback.accept(new DatabaseQueryResults<>(null, task.getException()));
+            return;
+          }
+
+          update(
+              playerToUnfollow,
+              subTask -> {
+                if (!subTask.isSuccessful()) {
+                  callback.accept(new DatabaseQueryResults<>(null, task.getException()));
+                  return;
+                }
+
+                callback.accept(new DatabaseQueryResults<>(null));
+              });
+        });
+  }
+
+  /**
+   * Follow the playerToFollow as the player
+   *
+   * @param player player issuing the follow request
+   * @param playerToFollow player to follow
+   * @param callback callback
+   */
+  public void follow(Player player, Player playerToFollow, DatabaseConsumer<Void> callback) {
+    if (player.getDocumentId() == null) {
+      throw new IllegalArgumentException("Player does not have a document reference.");
+    }
+    if (playerToFollow.getDocumentId() == null) {
+      throw new IllegalArgumentException("Player to follow does not have a document reference.");
+    }
+
+    // Add the playerToFollow as following to the player
+    List<UUID> playerFollowing = player.getFollowing();
+    playerFollowing.add(playerToFollow.getDeviceId());
+    player.setFollowing(playerFollowing);
+
+    // Add the player as a follower to playerToFollow
+    List<UUID> playerFollowers = playerToFollow.getFollowers();
+    playerFollowers.add(player.getDeviceId());
+    playerToFollow.setFollowers(playerFollowers);
+
+    // Update both player entries
+    update(
+        player,
+        task -> {
+          if (!task.isSuccessful()) {
+            callback.accept(new DatabaseQueryResults<>(null, task.getException()));
+            return;
+          }
+
+          update(
+              playerToFollow,
+              subTask -> {
+                if (!subTask.isSuccessful()) {
+                  callback.accept(new DatabaseQueryResults<>(null, task.getException()));
+                  return;
+                }
+
+                callback.accept(new DatabaseQueryResults<>(null));
+              });
+        });
+  }
+
+  /**
    * Converts a database snapshot to its Player object equivalent.
    *
    * @param snapshot database snapshot
@@ -274,9 +396,22 @@ public class PlayerDatabase {
     String phoneNo = snapshot.getString("phoneNo");
     String email = snapshot.getString("email");
     ArrayList<String> qrCodeHashes = (ArrayList<String>) snapshot.get("qrCodeHashes");
+    ArrayList<String> following = new ArrayList<>();
+    ArrayList<String> followers = new ArrayList<>();
+    if (snapshot.contains("following") && snapshot.contains("followers")) {
+      following = (ArrayList<String>) snapshot.get("following");
+      followers = (ArrayList<String>) snapshot.get("followers");
+    }
 
     return new Player(
-        documentId, deviceUUID, username, phoneNo, email, new ArrayList<>(qrCodeHashes));
+        documentId,
+        deviceUUID,
+        username,
+        phoneNo,
+        email,
+        new ArrayList<>(qrCodeHashes),
+        new ArrayList<>(following.stream().map(UUID::fromString).collect(Collectors.toList())),
+        new ArrayList<>(followers.stream().map(UUID::fromString).collect(Collectors.toList())));
   }
 
   /**
@@ -293,6 +428,12 @@ public class PlayerDatabase {
     values.put("phoneNo", player.getPhoneNo());
     values.put("email", player.getEmail());
     values.put("qrCodeHashes", player.getQRCodeHashes());
+    values.put(
+        "following",
+        player.getFollowing().stream().map(UUID::toString).collect(Collectors.toList()));
+    values.put(
+        "followers",
+        player.getFollowers().stream().map(UUID::toString).collect(Collectors.toList()));
 
     return values;
   }
