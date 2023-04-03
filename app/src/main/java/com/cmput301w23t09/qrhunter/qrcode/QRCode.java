@@ -122,7 +122,7 @@ public class QRCode implements Serializable {
     if (visualRepresentation == null) {
       visualRepresentation =
           new VisualFetcher()
-              .execute("https://api.dicebear.com/6.x/pixel-art-neutral/jpg?seed=" + hash)
+              .execute("https://api.dicebear.com/6.x/bottts-neutral/jpg?seed=" + hash)
               .get();
     }
     return visualRepresentation;
