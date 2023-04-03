@@ -17,12 +17,16 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.rules.TestName;
 
 /** Base class that implements destruction of the database after each test is completed. */
 public abstract class BaseTest {
@@ -31,6 +35,8 @@ public abstract class BaseTest {
   private static boolean initialized = false;
   private static final Set<String> collectionsToReset = new HashSet<>();
   private static final Set<StorageReference> foldersToDelete = new HashSet<>();
+
+  @Rule public TestName testNameRule = new TestName();
 
   @BeforeClass
   public static void setupDatabase() throws Exception {
@@ -104,6 +110,13 @@ public abstract class BaseTest {
   @After
   public void afterEachTest() throws Exception {
     deleteAllCollections();
+  }
+
+  @Before
+  public void logCurrentlyActiveTest() {
+    CollectionReference collectionReference =
+        DatabaseConnection.getInstance().getCollection("debug");
+    collectionReference.document(testNameRule.getMethodName()).set(new HashMap<>());
   }
 
   /**
