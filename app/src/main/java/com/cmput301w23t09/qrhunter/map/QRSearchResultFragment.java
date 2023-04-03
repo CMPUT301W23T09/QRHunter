@@ -18,6 +18,7 @@ import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
+/** This dialog shows the results of a qr search */
 public class QRSearchResultFragment extends DialogFragment {
   /** The fragment the QRSearchResultFragment should open up from */
   private Fragment fragment;

@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/** This handles the qr searching functionalities */
 public class SearchQRController {
   private MapFragment fragment;
   private SearchView searchView;

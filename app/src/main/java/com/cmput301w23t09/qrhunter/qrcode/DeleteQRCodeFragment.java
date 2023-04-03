@@ -145,6 +145,7 @@ public class DeleteQRCodeFragment extends QRCodeFragment {
    *
    * @param view View
    * @param event The motion event
+   * @param keyEvent The key event
    * @return True if the event is handled. otherwise, false.
    */
   private boolean onSendComment(View view, MotionEvent event, KeyEvent keyEvent) {
