@@ -4,7 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/leaderboard_linear_layout"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/player_search"
