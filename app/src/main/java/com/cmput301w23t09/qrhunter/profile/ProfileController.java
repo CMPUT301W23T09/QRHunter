@@ -17,6 +17,7 @@ import com.cmput301w23t09.qrhunter.qrcode.QRCodeAdapter;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.ScoreComparator;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -32,21 +33,30 @@ public abstract class ProfileController implements DatabaseChangeListener {
   /** This is the profile fragment the controller handles */
   protected final ProfileFragment fragment;
   /** This is the array of QRCode objects that the fragment displays */
-  private ArrayList<QRCode> qrCodes;
+  protected ArrayList<QRCode> qrCodes;
   /** This is the adapter for displaying the QRCode objects */
-  private QRCodeAdapter qrCodeAdapter;
+  protected QRCodeAdapter qrCodeAdapter;
   /** Device UUID of the profile */
   protected final UUID deviceUUID;
   /** This is the gridview showing the qr codes of the player */
-  private GridView qrCodeList;
+  protected GridView qrCodeList;
   /** This is the view that shows the qr codes of the player */
-  private TextView totalPoints;
+  protected TextView totalPoints;
   /** This is the view showing the total number of codes the player has */
-  private TextView totalCodes;
+  protected TextView totalCodes;
   /** This is the view showing the top score of the player's qr codes */
-  private TextView topScore;
+  protected TextView topScore;
   /** This is the spinner that determines the qr code display order */
-  private Spinner orderSpinner;
+  protected Spinner orderSpinner;
+  /** This is the text that displays how many followers the user has */
+  protected TextView followersText;
+  /** This is the text that displays how many users the player is following */
+  protected TextView followingText;
+  /** This is the follow button */
+  protected FloatingActionButton followButton;
+
+  protected FloatingActionButton unfollowButton;
+  protected FloatingActionButton followLoadingButton;
 
   /**
    * This initializes the controller with its corresponding fragment
@@ -63,6 +73,31 @@ public abstract class ProfileController implements DatabaseChangeListener {
   }
 
   /**
+   * Sets up the initial follow related fields.
+   *
+   * @param followingText
+   * @param followersText
+   * @param followButton
+   */
+  public void setupFollowDetails(
+      TextView followingText,
+      TextView followersText,
+      FloatingActionButton followButton,
+      FloatingActionButton unfollowButton,
+      FloatingActionButton followLoadingButton) {
+    this.followButton = followButton;
+    this.unfollowButton = unfollowButton;
+    this.followLoadingButton = followLoadingButton;
+    this.followingText = followingText;
+    this.followersText = followersText;
+
+    updateFollowDetails();
+  }
+
+  /** Updates the text and following/followers count of the follow related content in the view. */
+  protected abstract void updateFollowDetails();
+
+  /**
    * This sets up the username view and profile pic view of the fragment
    *
    * @param usernameView This is the TextView that shows the username
@@ -76,6 +111,7 @@ public abstract class ProfileController implements DatabaseChangeListener {
               // check if database query was successful
               if (!results.isSuccessful()) {
                 showMsg("An error occurred while loading in your player data.");
+                return;
               }
               // otherwise get username and profile picture
               usernameView.setText(results.getData().getUsername());

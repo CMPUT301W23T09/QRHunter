@@ -28,7 +28,14 @@ public class TestPlayerModel {
     mockPlayerUUID = UUID.randomUUID();
     mockPlayer =
         new Player(
-            "001", mockPlayerUUID, "johndoe42", "7801234567", "doe@ualberta.ca", new ArrayList<>());
+            "001",
+            mockPlayerUUID,
+            "johndoe42",
+            "7801234567",
+            "doe@ualberta.ca",
+            new ArrayList<>(),
+            new ArrayList<>(),
+            new ArrayList<>());
   }
 
   /** Test the getters of the Player class */

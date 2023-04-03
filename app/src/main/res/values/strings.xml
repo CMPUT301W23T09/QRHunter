@@ -45,6 +45,8 @@
     <string name="search_hint">Enter Location Here</string>
     <string name="comment_box_hint_text">Enter your comment here</string>
     <string name="ranking_message">The top highest scoring unique QR code is in the top %.2f%% in terms of points.</string>
+    <string name="profile_followers">%d Followers</string>
+    <string name="profile_following">%d Following</string>
     <string name="nearby_qr_codes_txt">Nearby QR Codes</string>
     <string name="rankings">Rankings</string>
     <string name="rankings_top_text">Top</string>
@@ -52,6 +54,9 @@
     <string name="percentage">%.2f%%</string>
     <string name="top_code">Top Code</string>
     <string name="codes_scanned">Codes Scanned</string>
+    <string name="followed_players_only">Followed Players Only</string>
+    <string name="leaderboard_filter_options_title">Leaderboard Filter Options</string>
+>>>>>>> 702e20d070b19ce2441bd384b2e9a17eedacccb9
     <string-array name="sort_options">
         <item>Points</item>
         <item>Date Taken</item>

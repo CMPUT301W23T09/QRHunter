@@ -22,7 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 /** This is the fragment displaying the user's profile */
 public abstract class ProfileFragment extends BaseFragment {
   /** This is the controller that manages the fragment */
-  private ProfileController controller;
+  protected ProfileController controller;
   /** This is the view displaying the user's username */
   private TextView username;
   /** This is the view displaying the sum of points of the user's qr codes */
@@ -41,6 +41,12 @@ public abstract class ProfileFragment extends BaseFragment {
   protected FloatingActionButton contactButton;
   /** This is the button that allows the user to view their rankings */
   protected FloatingActionButton rankingsButton;
+
+  protected TextView followingText;
+  protected TextView followersText;
+  protected FloatingActionButton followButton;
+  protected FloatingActionButton unfollowButton;
+  protected FloatingActionButton loadingFollowButton;
 
   /**
    * Initializes the fragment with the app controller
@@ -80,6 +86,11 @@ public abstract class ProfileFragment extends BaseFragment {
     sortOrderSpinner = view.findViewById(R.id.order_spinner);
     contactButton = view.findViewById(R.id.contact_info_button);
     rankingsButton = view.findViewById(R.id.rankings_button);
+    followersText = view.findViewById(R.id.followers_count);
+    followingText = view.findViewById(R.id.following_count);
+    followButton = view.findViewById(R.id.follow_button);
+    unfollowButton = view.findViewById(R.id.unfollow_button);
+    loadingFollowButton = view.findViewById(R.id.follow_loading_button);
     profilePic = view.findViewById(R.id.profile_pic);
 
     // create a default empty profile (shown while waiting for database queries)
@@ -87,6 +98,8 @@ public abstract class ProfileFragment extends BaseFragment {
 
     // setup profile elements
     controller.setUpUsernameAndPicture(username, profilePic);
+    controller.setupFollowDetails(
+        followingText, followersText, followButton, unfollowButton, loadingFollowButton);
     controller.setUpQRList(qrCodeList, totalPoints, totalCodes, topCodeScore, sortOrderSpinner);
     qrCodeList.setOnItemClickListener(controller.handleQRSelect());
 
@@ -101,15 +114,20 @@ public abstract class ProfileFragment extends BaseFragment {
     totalPoints.setText("");
     totalCodes.setText("");
     topCodeScore.setText("");
+    followingText.setText("");
+    followersText.setText("");
+    followButton.setVisibility(View.GONE);
+    unfollowButton.setVisibility(View.GONE);
+    loadingFollowButton.setVisibility(View.GONE);
     profilePic.setImageBitmap(null);
     createSpinner(sortOrderSpinner, R.array.order_options);
 
-    setupContactButton();
+    setupSocialMethods();
     contactButton.setOnClickListener(v -> controller.handleContactButtonClick());
   }
 
-  /** Sets the image of the profile settings button and handler. */
-  protected abstract void setupContactButton();
+  /** Sets the social related buttons. */
+  protected abstract void setupSocialMethods();
 
   /**
    * Display a prompt showcasing the contact information for this profile.
