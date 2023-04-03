@@ -384,11 +384,11 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
     // create search view
-        qrSearchbar = view.findViewById(R.id.qr_searchbar);
-        qrSearchButton = view.findViewById(R.id.qr_searcher);
-        searchController = new SearchQRController(qrSearchbar, qrSearchButton, this);
-        qrSearchbar.setOnQueryTextListener(searchController.searchNearbyCodes());
-        qrSearchButton.setOnClickListener(searchController.getNearbyCodes());
+    qrSearchbar = view.findViewById(R.id.qr_searchbar);
+    qrSearchButton = view.findViewById(R.id.qr_searcher);
+    searchController = new SearchQRController(qrSearchbar, qrSearchButton, this);
+    qrSearchbar.setOnQueryTextListener(searchController.searchNearbyCodes());
+    qrSearchButton.setOnClickListener(searchController.getNearbyCodes());
 
     return view;
   }
@@ -412,26 +412,6 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
   public boolean getLocationPermissionGranted() {
     return locationPermissionGranted;
   }
-
-  //  public void genQR()  {
-  //    int qrsToGenerate = 32;
-  //    String CHARS = "abcdef1234567890";
-  //    for (int i = 0; i < qrsToGenerate; i++) {
-  //      String currentHash = "";
-  //      for (int j = 0; j < 64; j++) {
-  //        currentHash += CHARS.charAt((int) Math.floor(Math.random() * CHARS.length()));
-  //      }
-  //      QRCode code = new QRCode(currentHash);
-  //      double latitude = Math.random() * 180 - 90;
-  //      double longitude = Math.random() * 360 - 180;
-  //      QRLocation location = new QRLocation(latitude + ";" + longitude + ";No Region");
-  //      code.setLoc(location);
-  //      code.setLocations(new ArrayList<>(Collections.singletonList(location)));
-  //
-  //      QRCodeDatabase.getInstance().addQRCode(code, task ->
-  // QRCodeDatabase.getInstance().updateQRCode(code, ignored -> {}));
-  //    }
-  //  }
 
   public FusedLocationProviderClient getFusedLocationProviderClient() {
     return fusedLocationProviderClient;
