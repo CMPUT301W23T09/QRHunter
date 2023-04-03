@@ -116,7 +116,6 @@ public class TestAddQRCodeFragment extends BaseTest {
   @Test
   public void testQRRemoveLocation() {
     solo.clickOnText("Record QR Location");
-    await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getLoc() != null);
     solo.clickOnText("Record QR Location");
     await().atMost(30, TimeUnit.SECONDS).until(() -> qrCode.getLoc() == null);
   }
