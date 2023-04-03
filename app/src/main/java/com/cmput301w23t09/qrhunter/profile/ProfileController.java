@@ -8,6 +8,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.cmput301w23t09.qrhunter.DatabaseChangeListener;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
@@ -121,7 +122,10 @@ public abstract class ProfileController implements DatabaseChangeListener {
               }
               // otherwise get username and profile picture
               usernameView.setText(results.getData().getUsername());
-              Glide.with(fragment).load(results.getData().getProfilePicUrl()).into(profilePic);
+              Glide.with(fragment)
+                  .load(results.getData().getProfilePicUrl())
+                  .transition(DrawableTransitionOptions.withCrossFade(500))
+                  .into(profilePic);
             });
   }
 

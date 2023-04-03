@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.cmput301w23t09.qrhunter.R;
 import java.util.ArrayList;
 
@@ -46,7 +47,10 @@ public class QRCodeAdapter extends ArrayAdapter<QRCode> {
 
     // set visual representation of qr code
     ImageView visual = view.findViewById(R.id.visual_representation);
-    Glide.with(view).load(qrCode.getVisualRepresentationUrl()).into(visual);
+    Glide.with(view)
+        .load(qrCode.getVisualRepresentationUrl())
+        .transition(DrawableTransitionOptions.withCrossFade(500))
+        .into(visual);
 
     // set score field of view
     TextView score = view.findViewById(R.id.score);

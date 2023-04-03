@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.cmput301w23t09.qrhunter.R;
 import java.util.List;
 
@@ -49,16 +50,22 @@ public class SearchQueryEntryAdapter extends ArrayAdapter<SearchQueryEntry> {
   public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
     View view = convertView;
     if (view == null) {
-      view = LayoutInflater.from(context).inflate(R.layout.search_query_entry_view, parent, false);
+      view = LayoutInflater.from(context).inflate(R.layout.leaderboard_entry_view, parent, false);
     }
 
     SearchQueryEntry entry = entries.get(position);
+    TextView placingText = view.findViewById(R.id.leaderboard_placing_text);
+    placingText.setText(" "); // Hide placing, but set to empty space to keep padding
+    view.findViewById(R.id.leaderboard_entry_score).setVisibility(View.GONE);
 
     // set fields of view
-    TextView name = view.findViewById(R.id.search_query_entry_text);
+    TextView name = view.findViewById(R.id.leaderboard_entry_text);
     name.setText(entry.getName());
-    ImageView picture = view.findViewById(R.id.search_query_image);
-    Glide.with(view).load(entry.getPlayer().getProfilePicUrl()).into(picture);
+    ImageView picture = view.findViewById(R.id.leaderboard_entry_pic);
+    Glide.with(view)
+        .load(entry.getPlayer().getProfilePicUrl())
+        .transition(DrawableTransitionOptions.withCrossFade(500))
+        .into(picture);
 
     return view;
   }

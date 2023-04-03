@@ -26,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.cmput301w23t09.qrhunter.GameActivity;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
@@ -140,7 +141,10 @@ public class QRCodeFragment extends DialogFragment implements Serializable {
     // fill views with qr code information
     qrName.setText(qrCode.getName());
     qrScore.setText(qrCode.getScore().toString() + " PTS");
-    Glide.with(this).load(qrCode.getVisualRepresentationUrl()).into(qrCodeVisual);
+    Glide.with(this)
+        .load(qrCode.getVisualRepresentationUrl())
+        .transition(DrawableTransitionOptions.withCrossFade(500))
+        .into(qrCodeVisual);
 
     // set up buttons
     setUpButtons(view);

@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.cmput301w23t09.qrhunter.R;
 import java.util.List;
 
@@ -43,10 +44,12 @@ public class LeaderboardEntryAdapter extends ArrayAdapter<LeaderboardAdapterItem
       if (entry instanceof QRCodeLeaderboardEntry) {
         Glide.with(view)
             .load(((QRCodeLeaderboardEntry) entry).getQRCode().getVisualRepresentationUrl())
+            .transition(DrawableTransitionOptions.withCrossFade(500))
             .into(picture);
       } else if (entry instanceof PlayerLeaderboardEntry) {
         Glide.with(view)
             .load(((PlayerLeaderboardEntry) entry).getPlayer().getProfilePicUrl())
+            .transition(DrawableTransitionOptions.withCrossFade(500))
             .into(picture);
       } else {
         throw new IllegalArgumentException("Invalid Leaderboard entry type!");
