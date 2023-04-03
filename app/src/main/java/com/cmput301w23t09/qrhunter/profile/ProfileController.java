@@ -330,10 +330,7 @@ public abstract class ProfileController implements DatabaseChangeListener {
     Toast.makeText(gameController.getActivity(), msg, Toast.LENGTH_SHORT).show();
   }
 
-  /**
-   * Calculates and returns the percentile rank of the user's top QR code by score relative to all
-   * QR codes to the callback
-   */
+  /** Calculates and renders a fragment on screen to display the percentiles of the player */
   public void onRankingButtonClick() {
     ProfilePercentileFragment percentileFragment = new ProfilePercentileFragment();
     gameController.setPopup(percentileFragment);
@@ -369,6 +366,11 @@ public abstract class ProfileController implements DatabaseChangeListener {
         });
   }
 
+  /**
+   * Calculates this player's points percentile
+   *
+   * @param callback called when the percentile is calculated
+   */
   private void getTotalPointsPercentile(Consumer<Float> callback) {
     if (qrCodes.size() <= 0) {
       callback.accept(100f);
@@ -422,6 +424,11 @@ public abstract class ProfileController implements DatabaseChangeListener {
             });
   }
 
+  /**
+   * Calculates the profile's code scanned percentile
+   *
+   * @param callback called when the percentile is calculated
+   */
   private void getCodesScannedPercentile(Consumer<Float> callback) {
     if (qrCodes.size() <= 0) {
       callback.accept(100f);
@@ -454,6 +461,11 @@ public abstract class ProfileController implements DatabaseChangeListener {
             });
   }
 
+  /**
+   * Calculates the profile's top code percentile
+   *
+   * @param callback called when the percentile is calculated
+   */
   private void getTopCodePercentile(Consumer<Float> callback) {
     if (qrCodes.size() <= 0) {
       callback.accept(100f);
@@ -491,6 +503,13 @@ public abstract class ProfileController implements DatabaseChangeListener {
             });
   }
 
+  /**
+   * Calculates the percentile given your position and the total positions available
+   *
+   * @param topPosition top position
+   * @param totalPositions total count of positions
+   * @return percentile
+   */
   private float getPercentileFromPositionAndTotal(int topPosition, int totalPositions) {
     return 100 - ((topPosition - 1) / (float) totalPositions) * 100;
   }
