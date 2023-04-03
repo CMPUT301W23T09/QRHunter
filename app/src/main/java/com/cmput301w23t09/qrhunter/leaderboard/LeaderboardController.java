@@ -226,6 +226,11 @@ public class LeaderboardController {
             });
   }
 
+  /**
+   * Called when a player leaderboard entry is clicked
+   *
+   * @param entry player entry
+   */
   public void handleEntryClick(PlayerLeaderboardEntry entry) {
     Player player = entry.getPlayer();
     if (player.getDeviceId().equals(gameController.getActivePlayer().getDeviceId())) {
@@ -235,6 +240,11 @@ public class LeaderboardController {
     }
   }
 
+  /**
+   * Called when a qr leaderboard entry is clicked
+   *
+   * @param entry qr entry
+   */
   public void handleEntryClick(QRCodeLeaderboardEntry entry) {
     QRCode qrCode = entry.getQRCode();
     QRCodeDatabase.getInstance()
@@ -259,11 +269,17 @@ public class LeaderboardController {
             });
   }
 
+  /** Called when the filter button is clicked */
   public void onFilterButtonClick() {
     LeaderboardSettingsFragment settingsFragment = new LeaderboardSettingsFragment(this);
     getGameController().setPopup(settingsFragment);
   }
 
+  /**
+   * Modify whether or not the leaderboards requested should only filter to followed players
+   *
+   * @param filteredByFollowedPlayers whether or not to apply the filter
+   */
   public void setIsFilteredByFollowedPlayers(boolean filteredByFollowedPlayers) {
     if (filteredByFollowedPlayers != this.filteredByFollowedPlayers) {
       this.filteredByFollowedPlayers = filteredByFollowedPlayers;
@@ -272,14 +288,29 @@ public class LeaderboardController {
     }
   }
 
+  /**
+   * Check if the leaderboard is currently filtering to followed players
+   *
+   * @return if the filter is active
+   */
   public boolean isFilteredByFollowedPlayers() {
     return filteredByFollowedPlayers;
   }
 
+  /**
+   * Retrieve the game controller
+   *
+   * @return game controller
+   */
   public GameController getGameController() {
     return gameController;
   }
 
+  /**
+   * Retrieve the leaderboard fragment
+   *
+   * @return fragment
+   */
   public LeaderboardFragment getFragment() {
     return fragment;
   }

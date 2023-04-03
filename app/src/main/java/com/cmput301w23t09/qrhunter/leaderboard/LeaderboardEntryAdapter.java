@@ -30,13 +30,17 @@ public class LeaderboardEntryAdapter extends ArrayAdapter<LeaderboardAdapterItem
     // get leaderboard data
     LeaderboardAdapterItem<?> entry = items.get(position);
 
+    // What kind of entry do we need to render?
     if (entry instanceof LeaderboardEntryTitle) {
+      // Title entry
       return ((LeaderboardEntryTitle) entry)
           .getView(context, convertView, parent, (LeaderboardEntryTitle) entry);
     } else if (entry instanceof LeaderboardEntry) {
+      // Render the leaderboard entry and then apply the score, text, and photo
       View view =
           ((LeaderboardEntry) entry)
               .getView(context, convertView, parent, (LeaderboardEntry) entry);
+
       // set fields of view
       TextView name = view.findViewById(R.id.leaderboard_entry_text);
       name.setText(((LeaderboardEntry) entry).getName());
@@ -47,6 +51,7 @@ public class LeaderboardEntryAdapter extends ArrayAdapter<LeaderboardAdapterItem
               + " "
               + ((LeaderboardEntry) entry).getScoreSuffix());
 
+      // Apply photo
       ImageView picture = view.findViewById(R.id.leaderboard_entry_pic);
       try {
         if (entry instanceof QRCodeLeaderboardEntry) {
@@ -57,6 +62,7 @@ public class LeaderboardEntryAdapter extends ArrayAdapter<LeaderboardAdapterItem
         } else {
           throw new IllegalArgumentException("Invalid Leaderboard entry type!");
         }
+
       } catch (ExecutionException | InterruptedException e) {
         Log.e("LeaderboardEntryAdapter", "An exception occurred while fetching image", e);
         Toast.makeText(context, "An exception occurred while fetching image...", Toast.LENGTH_LONG)

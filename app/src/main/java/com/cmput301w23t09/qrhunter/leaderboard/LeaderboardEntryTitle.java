@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.cmput301w23t09.qrhunter.R;
 
+/** Leaderboard entry describing a title view */
 public class LeaderboardEntryTitle implements LeaderboardAdapterItem<LeaderboardEntryTitle> {
 
   private final String title;
