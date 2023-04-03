@@ -54,6 +54,7 @@ public class TestMyProfileFragment extends TestProfileFragment {
             () ->
                 ((GameActivity) solo.getCurrentActivity()).getController().getBody()
                     instanceof ProfileFragment);
+    setTestDebugFlag("navigatedToProfile");
 
     // Wait for the default profile to no longer exist.
     await()
@@ -65,15 +66,20 @@ public class TestMyProfileFragment extends TestProfileFragment {
               return !usernameView.getText().toString().equals("")
                   && !totalPoints.getText().toString().equals("");
             });
+    setTestDebugFlag("dataLoaded");
   }
 
   /** Check that selecting a QR should open up the deletion QR fragment. */
   @Test
   public void testShouldShowDeleteButtonOnQRCodes() {
+    setTestDebugFlag("activeTest");
     waitForProfileQRsToAppear();
+    setTestDebugFlag("waitedComplete");
 
     // Click the first QR
     onData(anything()).inAdapterView(withId(R.id.code_list)).atPosition(0).perform(click());
+
+    setTestDebugFlag("clicked");
 
     // DeleteQRCodeFragment should be shown.
     await()

@@ -118,9 +118,13 @@ public abstract class BaseTest {
    */
   @Before
   public void logCurrentlyActiveTest() {
+    setTestDebugFlag(testNameRule.getMethodName());
+  }
+
+  protected void setTestDebugFlag(String flag) {
     CollectionReference collectionReference =
         DatabaseConnection.getInstance().getCollection("debug");
-    collectionReference.document(testNameRule.getMethodName()).set(new HashMap<>());
+    collectionReference.document(flag).set(new HashMap<>());
   }
 
   /**
