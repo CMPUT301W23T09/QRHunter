@@ -77,11 +77,13 @@ public abstract class ProfileController implements DatabaseChangeListener {
   }
 
   /**
-   * Sets up the initial follow related fields.
+   * Sets up the follow buttons and t ext
    *
-   * @param followingText
-   * @param followersText
-   * @param followButton
+   * @param followingText following textview
+   * @param followersText followers textview
+   * @param followButton follow button
+   * @param unfollowButton unfollow button
+   * @param followLoadingButton loading button
    */
   public void setupFollowDetails(
       TextView followingText,

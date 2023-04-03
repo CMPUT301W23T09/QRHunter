@@ -37,6 +37,8 @@ public class Player implements Serializable {
    * @param phoneNo phone no
    * @param email email
    * @param qrCodeHashes QRCodes the player has scanned
+   * @param following list of player device ids the player is following
+   * @param followers list of player devicc ids the player is being followed by
    */
   public Player(
       UUID deviceId,
@@ -66,6 +68,8 @@ public class Player implements Serializable {
    * @param phoneNo phone number of the player
    * @param email email of the player
    * @param qrCodeHashes QRCodes the player has scanned
+   * @param following device ids the player is following
+   * @param followers device ids the player is being followed by
    */
   public Player(
       String documentId,
@@ -210,7 +214,7 @@ public class Player implements Serializable {
   }
 
   /**
-   * <<<<<<< HEAD Retrieve the device ids of the players this player is following
+   * Retrieve the device ids of the players this player is following
    *
    * @return player ids
    */
