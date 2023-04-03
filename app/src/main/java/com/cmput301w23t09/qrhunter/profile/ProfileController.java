@@ -510,7 +510,7 @@ public abstract class ProfileController implements DatabaseChangeListener {
    * @param totalPositions total count of positions
    * @return percentile
    */
-  private float getPercentileFromPositionAndTotal(int topPosition, int totalPositions) {
-    return 100 - ((topPosition - 1) / (float) totalPositions) * 100;
+  private int getPercentileFromPositionAndTotal(int topPosition, int totalPositions) {
+    return 5 * Math.round((100 - ((topPosition - 1) / (float) totalPositions) * 100) / 5);
   }
 }
