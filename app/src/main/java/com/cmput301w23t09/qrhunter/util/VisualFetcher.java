@@ -9,9 +9,15 @@ import java.net.URL;
 
 /**
  * Fetches QRCode's visual representation and profile pictures from DiceBear
- * (https://www.dicebear.com) License: MIT Art Styles Used: - Pixel Art Neutral
- * (https://www.figma.com/community/file/1198754108850888330) - Identicon Both by: Florian Körner
- * (contact@florian-koerner.com) License: CC BY
+ * (https://www.dicebear.com) License: MIT
+ *
+ * <p>Art Styles Used:
+ *
+ * <ul>
+ *   <li>Botts Neutral by Pablo Stanley (https://twitter.com/pablostanley) (License: Free for
+ *       personal/commercial use)
+ *   <li>Identicon by Florian Körner (contact@florian-koerner.com) (License: CC BY)
+ * </ul>
  *
  * <p>API Call Code was adapted from: Source:
  * https://stackoverflow.com/questions/24399294/android-asynctask-to-make-an-http-get-request By:
