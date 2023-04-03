@@ -148,6 +148,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre>public class <span class="typeNameLabel">MapFragment</span>
 extends <a href="../BaseFragment.html" title="class in com.cmput301w23t09.qrhunter">BaseFragment</a>
 implements com.google.android.gms.maps.OnMapReadyCallback</pre>
+<div class="block">Displays the map that allows QRs to be seen/searched</div>
 </li>
 </ul>
 </div>
@@ -226,12 +227,16 @@ implements com.google.android.gms.maps.OnMapReadyCallback</pre>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>com.google.android.gms.location.FusedLocationProviderClient</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getFusedLocationProviderClient()">getFusedLocationProviderClient</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Retrieve the location provider client</div>
+</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLocationPermissionGranted()">getLocationPermissionGranted</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Check if location permissions were granted.</div>
+</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>android.view.View</code></td>
@@ -379,6 +384,11 @@ implements com.google.android.gms.maps.OnMapReadyCallback</pre>
 <li class="blockList">
 <h4>getLocationPermissionGranted</h4>
 <pre class="methodSignature">public&nbsp;boolean&nbsp;getLocationPermissionGranted()</pre>
+<div class="block">Check if location permissions were granted.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>if permission was granted.</dd>
+</dl>
 </li>
 </ul>
 <a id="getFusedLocationProviderClient()">
@@ -388,6 +398,11 @@ implements com.google.android.gms.maps.OnMapReadyCallback</pre>
 <li class="blockList">
 <h4>getFusedLocationProviderClient</h4>
 <pre class="methodSignature">public&nbsp;com.google.android.gms.location.FusedLocationProviderClient&nbsp;getFusedLocationProviderClient()</pre>
+<div class="block">Retrieve the location provider client</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>client</dd>
+</dl>
 </li>
 </ul>
 </li>
