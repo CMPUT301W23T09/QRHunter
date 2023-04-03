@@ -3,18 +3,22 @@
     <!-- TODO: Add images for each item -->
     <item
         android:id="@+id/navigation_scan_qr"
+        android:icon="@drawable/scanqr_icon"
         android:title="@string/navigation_item_scan_qr" />
 
     <item
         android:id="@+id/navigation_my_profile"
+        android:icon="@drawable/profile_icon"
         android:title="@string/navigation_item_my_profile" />
 
     <item
         android:id="@+id/navigation_qr_finder"
+        android:icon="@drawable/map_icon"
         android:title="@string/navigation_item_qr_finder" />
 
     <item
         android:id="@+id/navigation_social"
+        android:icon="@drawable/social_icon"
         android:title="@string/navigation_item_social" />
 
 </menu>
