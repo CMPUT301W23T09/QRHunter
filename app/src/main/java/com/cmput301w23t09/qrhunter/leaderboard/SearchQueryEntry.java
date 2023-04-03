@@ -22,6 +22,7 @@ public class SearchQueryEntry {
    *
    * @param name Name of the player in the search query
    * @param deviceUUID Device ID of the player in the search query
+   * @param player Player of the search query
    */
   public SearchQueryEntry(String name, UUID deviceUUID, Player player) {
     this.name = name;
@@ -47,6 +48,11 @@ public class SearchQueryEntry {
     return deviceUUID;
   }
 
+  /**
+   * Retireve the player of the search query
+   *
+   * @return Player of the search query
+   */
   public Player getPlayer() {
     return player;
   }

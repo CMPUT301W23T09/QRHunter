@@ -9,9 +9,10 @@ import android.widget.TextView;
 import com.cmput301w23t09.qrhunter.R;
 
 /** Represents a leaderboard entry */
-public abstract class LeaderboardEntry
-    implements Comparable<LeaderboardEntry>, LeaderboardAdapterItem<LeaderboardEntry> {
+public abstract class LeaderboardEntry implements LeaderboardAdapterItem<LeaderboardEntry> {
 
+  /** Position of the leaderboard entry */
+  private final int position;
   /** Name to display for this leaderboard entry */
   private final String name;
   /** Score to associate with this entry */
@@ -22,11 +23,13 @@ public abstract class LeaderboardEntry
   /**
    * Constructor for a leaderboard entry
    *
+   * @param position position of the leaderboard entry
    * @param name name of the leaderboard entry
    * @param score score of the leaderboard entry
    * @param scoreSuffix suffix to use for the leaderboard entry
    */
-  public LeaderboardEntry(String name, long score, String scoreSuffix) {
+  public LeaderboardEntry(int position, String name, long score, String scoreSuffix) {
+    this.position = position;
     this.name = name;
     this.score = score;
     this.scoreSuffix = scoreSuffix;
@@ -59,16 +62,13 @@ public abstract class LeaderboardEntry
     return scoreSuffix;
   }
 
-  @Override
-  public int compareTo(LeaderboardEntry otherEntry) {
-    int entryComparisonScore = Long.compare(otherEntry.getScore(), getScore());
-
-    // Compare name if score is equal.
-    if (entryComparisonScore == 0) {
-      return otherEntry.getName().compareTo(getName());
-    }
-
-    return entryComparisonScore;
+  /**
+   * Retrieve the position of the leaderboard entry
+   *
+   * @return position
+   */
+  public int getPosition() {
+    return position;
   }
 
   @SuppressLint("ResourceType")
@@ -81,6 +81,9 @@ public abstract class LeaderboardEntry
     }
 
     // set fields of view
+    TextView placing = view.findViewById(R.id.leaderboard_placing_text);
+    placing.setText(item.getPosition() < 10 ? "0" + item.getPosition() : (item.getPosition() + ""));
+
     TextView name = view.findViewById(R.id.leaderboard_entry_text);
     name.setText(item.getName());
 

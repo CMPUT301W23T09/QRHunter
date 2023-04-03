@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.cmput301w23t09.qrhunter.DatabaseChangeListener;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.DeleteQRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
@@ -17,14 +18,17 @@ import com.cmput301w23t09.qrhunter.qrcode.QRCodeAdapter;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.ScoreComparator;
+import com.cmput301w23t09.qrhunter.util.Tuple;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.common.util.concurrent.AtomicDouble;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
-import java.util.function.BiConsumer;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 /** This is the controller for the profile fragment of the app */
 public abstract class ProfileController implements DatabaseChangeListener {
@@ -73,11 +77,13 @@ public abstract class ProfileController implements DatabaseChangeListener {
   }
 
   /**
-   * Sets up the initial follow related fields.
+   * Sets up the follow buttons and t ext
    *
-   * @param followingText
-   * @param followersText
-   * @param followButton
+   * @param followingText following textview
+   * @param followersText followers textview
+   * @param followButton follow button
+   * @param unfollowButton unfollow button
+   * @param followLoadingButton loading button
    */
   public void setupFollowDetails(
       TextView followingText,
@@ -326,37 +332,143 @@ public abstract class ProfileController implements DatabaseChangeListener {
     Toast.makeText(gameController.getActivity(), msg, Toast.LENGTH_SHORT).show();
   }
 
-  /**
-   * Finds the position of the user's top QR code relative to all QR codes
-   *
-   * @param allQRCodes List of all QR codes
-   * @param topQR The user's highest scoring QR code
-   * @return -1 if the user's top QR code was not found in the collection
-   * @return The user's top QR position relative to all the other QR code positions
-   */
-  private int getTopQRPosition(List<QRCode> allQRCodes, QRCode topQR) {
-    int position = 1;
+  /** Calculates and renders a fragment on screen to display the percentiles of the player */
+  public void onRankingButtonClick() {
+    ProfilePercentileFragment percentileFragment = new ProfilePercentileFragment();
+    gameController.setPopup(percentileFragment);
 
-    for (QRCode code : allQRCodes) {
-      String qrHash = code.getHash();
+    // Calculate the percentiles
+    AtomicInteger tasksLeft = new AtomicInteger(3);
+    AtomicDouble totalPointsPercentile = new AtomicDouble(0);
+    AtomicDouble codesScannedPercentile = new AtomicDouble(0);
+    AtomicDouble topCodePercentile = new AtomicDouble(0);
+    Consumer<Void> onFinishedCalculations =
+        ignored ->
+            percentileFragment.displayPercentiles(
+                totalPointsPercentile.get(), codesScannedPercentile.get(), topCodePercentile.get());
 
-      if (topQR != null && qrHash.equals(topQR.getHash())) {
-        return position;
-      }
-
-      position++;
-    }
-
-    return -1;
+    // Retrieve all 3 percentiles simultaneously and render when the last of the three has been
+    // called.
+    getTotalPointsPercentile(
+        percentile -> {
+          totalPointsPercentile.set(percentile);
+          if (tasksLeft.decrementAndGet() == 0) onFinishedCalculations.accept(null);
+        });
+    getCodesScannedPercentile(
+        percentile -> {
+          codesScannedPercentile.set(percentile);
+          if (tasksLeft.decrementAndGet() == 0) onFinishedCalculations.accept(null);
+        });
+    getTopCodePercentile(
+        percentile -> {
+          topCodePercentile.set(percentile);
+          if (tasksLeft.decrementAndGet() == 0) onFinishedCalculations.accept(null);
+        });
   }
 
   /**
-   * Calculates and returns the percentile rank of the user's top QR code by score relative to all
-   * QR codes to the callback
+   * Calculates this player's points percentile
+   *
+   * @param callback called when the percentile is calculated
    */
-  public void retrievePercentile(BiConsumer<Exception, Float> callback) {
+  private void getTotalPointsPercentile(Consumer<Float> callback) {
     if (qrCodes.size() <= 0) {
-      callback.accept(null, 0f);
+      callback.accept(100f);
+      return;
+    }
+
+    PlayerDatabase.getInstance()
+        .getAllPlayers(
+            task -> {
+              if (!task.isSuccessful()) {
+                return;
+              }
+
+              AtomicInteger playerQRsLeftToQuery = new AtomicInteger(task.getData().size());
+              List<Tuple<Player, Integer>> entries = new ArrayList<>();
+              for (Player player : task.getData()) {
+                QRCodeDatabase.getInstance()
+                    .getQRCodeHashes(
+                        player.getQRCodeHashes(),
+                        qrsTask -> {
+                          // Check that the database query was successful, otherwise skip the player
+                          if (qrsTask.isSuccessful()) {
+                            // Add the player's data into the list
+                            int score = qrsTask.getData().stream().mapToInt(QRCode::getScore).sum();
+                            entries.add(new Tuple<>(player, score));
+                          }
+
+                          if (playerQRsLeftToQuery.decrementAndGet() == 0) {
+                            entries.sort(Comparator.comparingInt(Tuple::getRight));
+
+                            // Find our placing in the players
+                            int position = 1;
+                            for (Tuple<Player, Integer> entry : entries) {
+                              if (entry
+                                  .getLeft()
+                                  .getDeviceId()
+                                  .equals(gameController.getActivePlayer().getDeviceId())) {
+                                // We found our placing
+                                break;
+                              }
+                              position++;
+                            }
+
+                            int totalNumPlayers = entries.size();
+                            float percentile =
+                                getPercentileFromPositionAndTotal(position, totalNumPlayers);
+                            callback.accept(percentile);
+                          }
+                        });
+              }
+            });
+  }
+
+  /**
+   * Calculates the profile's code scanned percentile
+   *
+   * @param callback called when the percentile is calculated
+   */
+  private void getCodesScannedPercentile(Consumer<Float> callback) {
+    if (qrCodes.size() <= 0) {
+      callback.accept(100f);
+      return;
+    }
+
+    PlayerDatabase.getInstance()
+        .getAllPlayers(
+            task -> {
+              if (!task.isSuccessful()) {
+                return;
+              }
+
+              List<Player> players = new ArrayList<>(task.getData());
+              players.sort(Comparator.comparingInt(a -> a.getQRCodeHashes().size()));
+
+              // Find our placing in the players
+              int position = 1;
+              for (Player player : players) {
+                if (player.getDeviceId().equals(gameController.getActivePlayer().getDeviceId())) {
+                  // We found our placing
+                  break;
+                }
+                position++;
+              }
+
+              int totalNumPlayers = players.size();
+              float percentile = getPercentileFromPositionAndTotal(position, totalNumPlayers);
+              callback.accept(percentile);
+            });
+  }
+
+  /**
+   * Calculates the profile's top code percentile
+   *
+   * @param callback called when the percentile is calculated
+   */
+  private void getTopCodePercentile(Consumer<Float> callback) {
+    if (qrCodes.size() <= 0) {
+      callback.accept(100f);
       return;
     }
 
@@ -368,15 +480,37 @@ public abstract class ProfileController implements DatabaseChangeListener {
         .getAllQRCodes(
             allQRCodes -> {
               if (!allQRCodes.isSuccessful()) {
-                callback.accept(allQRCodes.getException(), null);
                 return;
               }
 
               // Sort all the QR codes in ascending order
               allQRCodes.getData().sort(new ScoreComparator());
-              int topQRPosition = getTopQRPosition(allQRCodes.getData(), topQR);
+
+              // Find our placing in the QRs
+              int position = 1;
+              for (QRCode code : allQRCodes.getData()) {
+                String qrHash = code.getHash();
+                if (qrHash.equals(topQR.getHash())) {
+                  // We found our placing
+                  break;
+                }
+                position++;
+              }
+
               int totalNumQRCodes = allQRCodes.getData().size();
-              callback.accept(null, 100 - ((topQRPosition - 1) / (float) totalNumQRCodes) * 100);
+              float percentile = getPercentileFromPositionAndTotal(position, totalNumQRCodes);
+              callback.accept(percentile);
             });
+  }
+
+  /**
+   * Calculates the percentile given your position and the total positions available
+   *
+   * @param topPosition top position
+   * @param totalPositions total count of positions
+   * @return percentile
+   */
+  private int getPercentileFromPositionAndTotal(int topPosition, int totalPositions) {
+    return 5 * Math.round((100 - ((topPosition - 1) / (float) totalPositions) * 100) / 5);
   }
 }

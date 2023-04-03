@@ -29,6 +29,7 @@ public class QRLocation implements Serializable {
   /**
    * Creates a QRLocation object based on an existing location object
    *
+   * @param region Name of the region
    * @param location Location object
    */
   public QRLocation(String region, Location location) {

@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/** This fragment renders the leaderboard page */
 public class LeaderboardFragment extends BaseFragment {
 
   private final LeaderboardController controller;

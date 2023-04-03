@@ -12,7 +12,9 @@ public class Comment {
   /**
    * This initializes a Comment with a comment and the player who made it
    *
-   * @param comment This is the comment made by the player
+   * @param playerId Player id of the player who made this comment
+   * @param username Username of the player who made this comment
+   * @param comment Comment content
    */
   public Comment(String playerId, String username, String comment) {
     this.comment = comment;
