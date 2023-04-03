@@ -17,11 +17,14 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.view.KeyEvent;
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 import com.cmput301w23t09.qrhunter.map.MapFragment;
 import com.cmput301w23t09.qrhunter.map.QRLocation;
+import com.cmput301w23t09.qrhunter.player.Player;
+import com.cmput301w23t09.qrhunter.player.PlayerDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.ScoreComparator;
@@ -35,12 +38,31 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 public class TestQRSearch extends BaseTest {
+
+  private static final Intent intent;
+  private static final Player templateActivePlayer;
+
+  static {
+    templateActivePlayer =
+        new Player(
+            getDeviceUUID(),
+            "Player",
+            "1234567890",
+            "admin@ualberta.ca",
+            new ArrayList<>(),
+            new ArrayList<>(),
+            new ArrayList<>());
+    intent = new Intent(ApplicationProvider.getApplicationContext(), GameActivity.class);
+    intent.putExtra("activePlayer", templateActivePlayer);
+  }
+
   private Solo solo;
   private Location userLocation;
   private String distantCity;
@@ -53,7 +75,7 @@ public class TestQRSearch extends BaseTest {
 
   @Rule
   public ActivityScenarioRule<GameActivity> activityScenarioRule =
-      new ActivityScenarioRule<>(GameActivity.class);
+      new ActivityScenarioRule<>(intent);
 
   /** Runs before all tests and creates solo instance */
   @Before
@@ -66,6 +88,9 @@ public class TestQRSearch extends BaseTest {
               activity.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
               solo = new Solo(InstrumentationRegistry.getInstrumentation(), activity);
             });
+
+    // Setup player
+    setupPlayer();
 
     // generate qr codes
     getUserLocation();
@@ -82,6 +107,29 @@ public class TestQRSearch extends BaseTest {
             () ->
                 ((GameActivity) solo.getCurrentActivity()).getController().getBody()
                     instanceof MapFragment);
+  }
+
+  /**
+   * Sets up the active player in the GameController
+   *
+   * @throws InterruptedException if an exception occurred
+   */
+  private void setupPlayer() throws InterruptedException {
+    CountDownLatch playerSetup = new CountDownLatch(1);
+    PlayerDatabase.getInstance()
+        .add(
+            templateActivePlayer,
+            task -> { // add the template player
+              // update the stored player with their document id
+              Player activePlayer =
+                  ((GameActivity) solo.getCurrentActivity()).getController().getActivePlayer();
+              activePlayer.setDocumentId(templateActivePlayer.getDocumentId());
+
+              // reset the document id of the template player
+              templateActivePlayer.setDocumentId(null);
+              playerSetup.countDown();
+            });
+    playerSetup.await();
   }
 
   /** Get and store location of the user */
@@ -206,10 +254,12 @@ public class TestQRSearch extends BaseTest {
     // check first qr code of result
     solo.waitForView(R.id.search_qr_result, 1, 5000);
     onData(anything()).inAdapterView(withId(R.id.search_qr_result)).atPosition(0).perform(click());
+    waitForQRFragment();
     onView(withId(R.id.qr_name)).check(matches(withText(qrCodes.get(1).getName())));
     onView(withId(android.R.id.button1)).perform(click());
     // check second qr code of result
     onData(anything()).inAdapterView(withId(R.id.search_qr_result)).atPosition(1).perform(click());
+    waitForQRFragment();
     onView(withId(R.id.qr_name)).check(matches(withText(qrCodes.get(2).getName())));
   }
 
@@ -225,12 +275,16 @@ public class TestQRSearch extends BaseTest {
                 String.format("%f, %f", userLocation.getLatitude(), userLocation.getLongitude())),
             pressKey(KeyEvent.KEYCODE_ENTER));
     solo.waitForView(R.id.search_qr_result, 1, 5000);
+
     // check first qr code of result
     onData(anything()).inAdapterView(withId(R.id.search_qr_result)).atPosition(0).perform(click());
+    waitForQRFragment();
     onView(withId(R.id.qr_name)).check(matches(withText(qrCodes.get(1).getName())));
     onView(withId(android.R.id.button1)).perform(click());
+
     // check second qr code of result
     onData(anything()).inAdapterView(withId(R.id.search_qr_result)).atPosition(1).perform(click());
+    waitForQRFragment();
     onView(withId(R.id.qr_name)).check(matches(withText(qrCodes.get(2).getName())));
   }
 
@@ -245,6 +299,19 @@ public class TestQRSearch extends BaseTest {
     solo.waitForView(R.id.search_qr_result);
     // check first qr code of result
     onData(anything()).inAdapterView(withId(R.id.search_qr_result)).atPosition(0).perform(click());
+    waitForQRFragment();
     onView(withId(R.id.qr_name)).check(matches(withText(qrCodes.get(0).getName())));
+  }
+
+  private void waitForQRFragment() {
+    // Wait for fragment to appear
+    await()
+        .atMost(10, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              GameController gameController =
+                  ((GameActivity) solo.getCurrentActivity()).getController();
+              return gameController.getPopup() != null;
+            });
   }
 }

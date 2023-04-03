@@ -10,17 +10,20 @@ import android.widget.GridView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
+import com.cmput301w23t09.qrhunter.GameActivity;
 import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.player.Player;
+import com.cmput301w23t09.qrhunter.qrcode.DeleteQRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeAdapter;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
 public class QRSearchResultFragment extends DialogFragment {
   /** The fragment the QRSearchResultFragment should open up from */
-  private Fragment fragment;
+  private MapFragment fragment;
   /** The list of qr codes to display */
   private ArrayList<QRCode> qrCodes;
   /** The adapter for displaying the codes */
@@ -33,7 +36,7 @@ public class QRSearchResultFragment extends DialogFragment {
    * @param nearbyCodes The list of codes to display
    * @param fragment The fragment to open the dialog from
    */
-  public QRSearchResultFragment(ArrayList<QRCode> nearbyCodes, Fragment fragment) {
+  public QRSearchResultFragment(ArrayList<QRCode> nearbyCodes, MapFragment fragment) {
     this.fragment = fragment;
     qrCodes = nearbyCodes;
     codeAdapter = new QRCodeAdapter(fragment.getContext(), qrCodes);
@@ -50,8 +53,28 @@ public class QRSearchResultFragment extends DialogFragment {
           @Override
           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             QRCode qrCode = qrCodes.get(position);
-            QRCodeFragment.newInstance(qrCode, null)
-                .show(fragment.getParentFragmentManager(), "Show QR code information");
+            Player activePlayer =
+                ((GameActivity) fragment.getActivity()).getController().getActivePlayer();
+
+            QRCodeDatabase.getInstance()
+                .playerHasQRCode(
+                    activePlayer,
+                    qrCode,
+                    task -> {
+                      if (task.isSuccessful()) {
+                        boolean playerHasQR = task.getData();
+
+                        if (playerHasQR) {
+                          fragment
+                              .getGameController()
+                              .setPopup(DeleteQRCodeFragment.newInstance(qrCode, activePlayer));
+                        } else {
+                          fragment
+                              .getGameController()
+                              .setPopup(QRCodeFragment.newInstance(qrCode, activePlayer));
+                        }
+                      }
+                    });
           }
         });
     FloatingActionButton closeBtn = view.findViewById(R.id.qr_search_close_btn);

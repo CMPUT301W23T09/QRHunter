@@ -36,7 +36,7 @@ public class DatabaseQueryResults<T> {
    */
   public T getData() {
     if (!isSuccessful()) {
-      throw new IllegalStateException("Database query was not successful.");
+      throw new IllegalStateException("Database query was not successful.", getException());
     }
 
     return data;
