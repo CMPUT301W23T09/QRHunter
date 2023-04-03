@@ -112,6 +112,10 @@ public abstract class BaseTest {
     deleteAllCollections();
   }
 
+  /**
+   * For debugging purposes for hanging tests, this creates a debug collection that stores the
+   * current active test.
+   */
   @Before
   public void logCurrentlyActiveTest() {
     CollectionReference collectionReference =

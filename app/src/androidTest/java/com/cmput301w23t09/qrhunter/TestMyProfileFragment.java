@@ -49,6 +49,7 @@ public class TestMyProfileFragment extends TestProfileFragment {
     // navigate to profile fragment
     onView(withId(R.id.navigation_my_profile)).perform(click());
     await()
+        .atMost(30, TimeUnit.SECONDS)
         .until(
             () ->
                 ((GameActivity) solo.getCurrentActivity()).getController().getBody()
@@ -69,6 +70,8 @@ public class TestMyProfileFragment extends TestProfileFragment {
   /** Check that selecting a QR should open up the deletion QR fragment. */
   @Test
   public void testShouldShowDeleteButtonOnQRCodes() {
+    waitForProfileQRsToAppear();
+
     // Click the first QR
     onData(anything()).inAdapterView(withId(R.id.code_list)).atPosition(0).perform(click());
 

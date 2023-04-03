@@ -69,7 +69,9 @@ public class TestOtherProfileFragment extends TestProfileFragment {
         new OtherProfileFragment(gameActivity.getController(), profilePlayer.getDeviceId());
     gameActivity.getController().setBody(otherProfileFragment);
 
-    await().until(() -> gameActivity.getController().getBody() instanceof ProfileFragment);
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(() -> gameActivity.getController().getBody() instanceof ProfileFragment);
 
     // Wait for the default profile to no longer exist.
     await()
@@ -91,6 +93,8 @@ public class TestOtherProfileFragment extends TestProfileFragment {
 
   @Test
   public void testShouldNotShowDeleteButtonOnQRCodeIfNotOwned() {
+    waitForProfileQRsToAppear();
+
     // Click the first QR
     onData(anything()).inAdapterView(withId(R.id.code_list)).atPosition(0).perform(click());
 
@@ -106,6 +110,8 @@ public class TestOtherProfileFragment extends TestProfileFragment {
 
   @Test
   public void testShouldShowDeleteButtonOnQRCodeIfOwned() throws InterruptedException {
+    waitForProfileQRsToAppear();
+
     // Assign the first QR as owned.
     CountDownLatch addQRToPlayerDBTask = new CountDownLatch(1);
     QRCodeDatabase.getInstance()

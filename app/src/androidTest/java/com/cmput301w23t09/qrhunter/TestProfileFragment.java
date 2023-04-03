@@ -7,6 +7,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -15,6 +16,7 @@ import static org.junit.Assert.assertTrue;
 
 import android.Manifest;
 import android.content.Intent;
+import android.widget.GridView;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.DataInteraction;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -30,6 +32,7 @@ import com.robotium.solo.Solo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -182,6 +185,8 @@ public abstract class TestProfileFragment extends BaseTest {
   /** Checks if qr codes are properly sorted and displayed */
   @Test
   public void testQRListView() {
+    waitForProfileQRsToAppear();
+
     // get the highest and lowest score
     Integer highestScore =
         getProfileQRCodesToAdd().stream().mapToInt(QRCode::getScore).reduce(0, Integer::max);
@@ -239,6 +244,8 @@ public abstract class TestProfileFragment extends BaseTest {
   /** Checks if the correct QRCodeFragment pops up when a qr code is selected */
   @Test
   public void testQRClick() {
+    waitForProfileQRsToAppear();
+
     // get the list of qr codes sorted in descending order (default order of profile's qr code list)
     List<QRCode> sortedCodes = getProfileQRCodesToAdd();
     sortedCodes.sort(new ScoreComparator().reversed());
@@ -248,5 +255,15 @@ public abstract class TestProfileFragment extends BaseTest {
     codeList.atPosition(0).perform(click());
     // check that the correct QRCodeFragment is displayed
     onView(withId(R.id.qr_name)).check(matches(withText(sortedCodes.get(0).getName())));
+  }
+
+  protected void waitForProfileQRsToAppear() {
+    await()
+        .atMost(30, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              GridView qrs = (GridView) solo.getView(R.id.code_list);
+              return qrs.getChildCount() > 0;
+            });
   }
 }
