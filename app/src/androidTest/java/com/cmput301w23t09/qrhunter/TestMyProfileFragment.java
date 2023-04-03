@@ -1,18 +1,15 @@
 package com.cmput301w23t09.qrhunter;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
-import static androidx.test.espresso.action.ViewActions.swipeUp;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.awaitility.Awaitility.await;
-import static org.hamcrest.CoreMatchers.anything;
 
 import android.widget.TextView;
 import com.cmput301w23t09.qrhunter.player.Player;
@@ -78,9 +75,7 @@ public class TestMyProfileFragment extends TestProfileFragment {
     setTestDebugFlag("waitedComplete");
 
     // Click the first QR
-    onView(withId(R.id.code_list)).perform(swipeUp());
-    setTestDebugFlag("swiped up");
-    onData(anything()).inAdapterView(withId(R.id.code_list)).atPosition(0).perform(click());
+    solo.clickInList(0);
 
     setTestDebugFlag("clicked");
 
