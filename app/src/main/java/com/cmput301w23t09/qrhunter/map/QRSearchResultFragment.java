@@ -11,9 +11,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import com.cmput301w23t09.qrhunter.GameActivity;
 import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.player.Player;
+import com.cmput301w23t09.qrhunter.qrcode.DeleteQRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeAdapter;
+import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
@@ -50,8 +54,28 @@ public class QRSearchResultFragment extends DialogFragment {
           @Override
           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             QRCode qrCode = qrCodes.get(position);
-            QRCodeFragment.newInstance(qrCode, null)
-                .show(fragment.getParentFragmentManager(), "Show QR code information");
+            Player activePlayer =
+                ((GameActivity) fragment.getActivity()).getController().getActivePlayer();
+
+            QRCodeDatabase.getInstance()
+                .playerHasQRCode(
+                    activePlayer,
+                    qrCode,
+                    task -> {
+                      if (task.isSuccessful()) {
+                        boolean playerHasQR = task.getData();
+
+                        if (playerHasQR) {
+                          DeleteQRCodeFragment.newInstance(qrCode, activePlayer)
+                              .show(
+                                  fragment.getParentFragmentManager(), "Show QR code information");
+                        } else {
+                          QRCodeFragment.newInstance(qrCode, activePlayer)
+                              .show(
+                                  fragment.getParentFragmentManager(), "Show QR code information");
+                        }
+                      }
+                    });
           }
         });
     FloatingActionButton closeBtn = view.findViewById(R.id.qr_search_close_btn);
