@@ -198,6 +198,8 @@ public class AddQRCodeFragment extends QRCodeFragment {
   }
 
   /**
+   * Retrieve the location photo fragment
+   *
    * @return The location photo fragment
    */
   public LocationPhotoFragment getLocationPhotoFragment() {
@@ -205,6 +207,8 @@ public class AddQRCodeFragment extends QRCodeFragment {
   }
 
   /**
+   * Retrieve the location photo controller
+   *
    * @return The location photo controller
    */
   public LocationPhotoController getLocationPhotoController() {
@@ -212,6 +216,8 @@ public class AddQRCodeFragment extends QRCodeFragment {
   }
 
   /**
+   * Retrieve the location photo adapter
+   *
    * @return The location photo adapter
    */
   public LocationPhotoAdapter getLocationPhotoAdapter() {

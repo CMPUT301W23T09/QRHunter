@@ -187,6 +187,12 @@ public class PlayerDatabase {
             });
   }
 
+  /**
+   * Retrieve players by their document id
+   *
+   * @param documentId document id of the player
+   * @param callback callback to call with the player
+   */
   public void getPlayerByDocumentId(String documentId, DatabaseConsumer<Player> callback) {
     collection
         .document(documentId)
@@ -237,32 +243,6 @@ public class PlayerDatabase {
               callback.accept(new DatabaseQueryResults<>(null));
             });
   }
-
-  //  public void getPlayersWithRelatedUsernames(String username, DatabaseConsumer<Set<Player>>
-  // callback) {
-  //      collection
-  //          .whereGreaterThanOrEqualTo("username_lower", username.toLowerCase())
-  //          .whereLessThan("username_lower", username.toLowerCase() + "\uf8ff")
-  //          .get()
-  //          .addOnCompleteListener(
-  //                  task -> {
-  //                      if (!task.isSuccessful()) {
-  //                          callback.accept(new DatabaseQueryResults<>(null,
-  // task.getException()));
-  //                          Log.d(LOGGER_TAG, "Failed to execute getPlayersWithRelatedUsernames",
-  // task.getException());
-  //                          return;
-  //                      }
-  //
-  //                      // Convert all snapshots to Players
-  //                      Set<Player> players = new HashSet<>();
-  //                      for (QueryDocumentSnapshot snapshot : task.getResult()) {
-  //                          players.add(snapshotToPlayer(snapshot));
-  //                      }
-  //
-  //                      callback.accept(new DatabaseQueryResults<>(players));
-  //                  });
-  //  }
 
   /**
    * Retrieve all players from the database

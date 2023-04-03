@@ -126,6 +126,8 @@ public class QRCode implements Serializable {
   }
 
   /**
+   * Retrieve the URL of the QRCode of the visual representation
+   *
    * @return The URL of the QRCode's visual representation
    */
   public String getVisualRepresentationUrl() {

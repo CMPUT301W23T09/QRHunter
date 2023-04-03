@@ -60,15 +60,11 @@ public class VisualFetcher extends AsyncTask<String, Void, Bitmap> {
     }
   }
 
-  //  @Override
-  //  protected void onPostExecute(Bitmap result) {
-  //    if (result != null) {
-  //      qrCode.setVisualRepresentation(result);
-  //    } else {
-  //      Log.d("imageApiCall", "API call for DiceBear failed.");
-  //    }
-  //  }
-
+  /**
+   * Retrieve the response code of the HTTP request
+   *
+   * @return response code
+   */
   public int getResponseCode() {
     return responseCode;
   }

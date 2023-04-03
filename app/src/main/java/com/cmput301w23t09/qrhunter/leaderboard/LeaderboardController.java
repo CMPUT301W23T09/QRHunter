@@ -22,6 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 
+/** Controller that handles retrieving and updating leaderboards. */
 public class LeaderboardController {
   private final GameController gameController;
   private final LeaderboardFragment fragment;

@@ -11,6 +11,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
+/** Singleton class to retrieve location photos stored. */
 public class LocationPhotoStorage {
   private static final String DEBUG_TAG = "LocationPhotoStorage";
 
@@ -32,6 +33,11 @@ public class LocationPhotoStorage {
     return INSTANCE;
   }
 
+  /**
+   * Update the instance of the LocationPhotoStorage
+   *
+   * @param mockInstance new instance
+   */
   public static void mockInstance(LocationPhotoStorage mockInstance) {
     INSTANCE = mockInstance;
   }

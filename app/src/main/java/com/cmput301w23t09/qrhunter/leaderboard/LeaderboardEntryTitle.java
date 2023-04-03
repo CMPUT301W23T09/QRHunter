@@ -17,6 +17,11 @@ public class LeaderboardEntryTitle implements LeaderboardAdapterItem<Leaderboard
     this.title = title;
   }
 
+  /**
+   * Retrieve the title this entry represents
+   *
+   * @return the title
+   */
   public String getTitle() {
     return title;
   }

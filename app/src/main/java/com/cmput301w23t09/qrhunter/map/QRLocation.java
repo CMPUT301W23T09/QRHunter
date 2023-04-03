@@ -62,6 +62,8 @@ public class QRLocation implements Serializable {
   }
 
   /**
+   * Retrieve the latitude
+   *
    * @return Returns QRLocation's latitude
    */
   public double getLatitude() {
@@ -69,12 +71,19 @@ public class QRLocation implements Serializable {
   }
 
   /**
+   * Retrieve the longitude
+   *
    * @return Returns QRLocation's longitude
    */
   public double getLongitude() {
     return longitude;
   }
 
+  /**
+   * Retrieve the region
+   *
+   * @return region
+   */
   public String getRegion() {
     return region;
   }

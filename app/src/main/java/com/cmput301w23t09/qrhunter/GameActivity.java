@@ -16,6 +16,11 @@ public class GameActivity extends AppCompatActivity {
   private GameController controller;
   private Player activePlayer;
 
+  /**
+   * Retrieve the game controller
+   *
+   * @return game controller
+   */
   public GameController getController() {
     return controller;
   }

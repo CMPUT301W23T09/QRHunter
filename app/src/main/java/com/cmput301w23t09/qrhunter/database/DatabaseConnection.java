@@ -3,6 +3,7 @@ package com.cmput301w23t09.qrhunter.database;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/** Wrapper class to wrap around retrieving Firebase data */
 public class DatabaseConnection {
   private static final String COLLECTION_PREFIX = "production_";
   private static DatabaseConnection INSTANCE;

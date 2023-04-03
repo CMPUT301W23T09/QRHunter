@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Controller that handles searching QRs by address/coordinates */
 public class SearchQRController {
   private MapFragment fragment;
   private SearchView searchView;

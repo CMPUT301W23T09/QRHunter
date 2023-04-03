@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+/** Displays the map that allows QRs to be seen/searched */
 public class MapFragment extends BaseFragment implements OnMapReadyCallback {
   private static final int SEARCH_RADIUS_IN_M = 100;
   private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -138,6 +139,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     }
   }
 
+  /** Start requesting location updates on a timer */
   private void startLocationUpdates() {
     // Set the location request parameters
     LocationRequest locationRequest = LocationRequest.create();
@@ -235,8 +237,12 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     updateLocationUI();
   }
 
-  // Function to retrieve QR codes within a certain radius from the user's current location and
-  // display them on the map
+  /**
+   * Retrieves and displays QRs within the SEARCH_RADIUS to currentLocation
+   *
+   * @param mMap the google map
+   * @param currentLocation the location
+   */
   private void displayQRCodeMarkersWithinRadiusOnMap(GoogleMap mMap, LatLng currentLocation) {
     if (currentLocation == null) {
       return;
@@ -314,6 +320,12 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     }
   }
 
+  /**
+   * Callback to call on marker click
+   *
+   * @param marker the marker that was clicked
+   * @return if the click event was handled
+   */
   private boolean onMarkerClick(Marker marker) {
     Object tag = marker.getTag();
     if (tag instanceof QRCode) {
@@ -398,10 +410,20 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     googleMap.setOnMarkerClickListener(this::onMarkerClick);
   }
 
+  /**
+   * Check if location permissions were granted.
+   *
+   * @return if permission was granted.
+   */
   public boolean getLocationPermissionGranted() {
     return locationPermissionGranted;
   }
 
+  /**
+   * Retrieve the location provider client
+   *
+   * @return client
+   */
   public FusedLocationProviderClient getFusedLocationProviderClient() {
     return fusedLocationProviderClient;
   }

@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.cmput301w23t09.qrhunter.R;
 
+/** Adapter that handles displaying QRCode player scans */
 public class QRCodePlayerScansAdapter extends ArrayAdapter<QRPlayerScanEntry> {
 
   private final Context context;

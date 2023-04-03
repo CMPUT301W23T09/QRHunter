@@ -21,8 +21,8 @@ import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
+/** The fragment the QRSearchResultFragment should open up from */
 public class QRSearchResultFragment extends DialogFragment {
-  /** The fragment the QRSearchResultFragment should open up from */
   private MapFragment fragment;
   /** The list of qr codes to display */
   private ArrayList<QRCode> qrCodes;
