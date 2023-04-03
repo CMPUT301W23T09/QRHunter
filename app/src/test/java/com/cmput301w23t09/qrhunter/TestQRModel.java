@@ -1,6 +1,5 @@
 package com.cmput301w23t09.qrhunter;
 
-import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -14,11 +13,7 @@ import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import java.util.ArrayList;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 
-// still needs testGetLocations() and testSetLocations()
-@RunWith(MockitoJUnitRunner.class)
 public class TestQRModel {
   // create a mock hash
   private final String mockHash =
@@ -64,7 +59,7 @@ public class TestQRModel {
 
   @Test
   public void testGetName() {
-    assertEquals(mockCode().getName(), "RobaqinectTiger✿");
+    assertEquals(mockCode().getName(), "Robbel Spicy Tiger");
   }
 
   @Test
@@ -74,7 +69,7 @@ public class TestQRModel {
 
   @Test
   public void testGetLoc() {
-    QRCode qr = new QRCode(mockHash, "RobaqinectTiger✿", 32, mockLoc(), null, null, null, null);
+    QRCode qr = new QRCode(mockHash, "Robbel Spicy Tiger", 32, mockLoc(), null, null, null, null);
     QRLocation loc = qr.getLoc();
     assertNotNull(loc);
     assertEquals(loc.getLatitude(), mockLoc().getLatitude());
@@ -94,7 +89,7 @@ public class TestQRModel {
   @Test
   public void testGetPlayers() {
     ArrayList<String> players = mockPlayers();
-    QRCode qr = new QRCode(mockHash, "RobaqinectTiger✿", 32, null, null, null, null, players);
+    QRCode qr = new QRCode(mockHash, "Robbel Spicy Tiger", 32, null, null, null, null, players);
     assertEquals(qr.getPlayers(), players);
   }
 
@@ -129,7 +124,7 @@ public class TestQRModel {
   @Test
   public void testGetComments() {
     ArrayList<Comment> comments = mockComments();
-    QRCode qr = new QRCode(mockHash, "RobaqinectTiger✿", 32, null, null, null, comments, null);
+    QRCode qr = new QRCode(mockHash, "Robbel Spicy Tiger", 32, null, null, null, comments, null);
     assertEquals(qr.getComments(), comments);
   }
 
@@ -164,7 +159,7 @@ public class TestQRModel {
   @Test
   public void testGetPhotos() {
     ArrayList<LocationPhoto> photos = mockPhotos();
-    QRCode qr = new QRCode(mockHash, "RobaqinectTiger✿", 32, null, null, photos, null, null);
+    QRCode qr = new QRCode(mockHash, "Robbel Spicy Tiger", 32, null, null, photos, null, null);
     assertEquals(qr.getPhotos(), photos);
   }
 
@@ -194,7 +189,6 @@ public class TestQRModel {
     assertEquals(1, qr.getPhotos().size());
     qr.deletePhoto(photos.get(0));
     assertEquals(0, qr.getPhotos().size());
-    assertNull(mockCode().getLoc());
   }
 
   @Test

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
@@ -52,8 +53,9 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
   private static final int DEFAULT_ZOOM = 14;
   private LatLng defaultLocation = new LatLng(53.523565919249364, -113.52815038503842);
   private LatLng currentLocation;
-  private List<LatLng> latLngsList;
-  private SearchView qrSearcher;
+  private SearchView qrSearchbar;
+  private Button qrSearchButton;
+
   private SearchQRController searchController;
   private long LOCATION_UPDATE_INTERVAL = 30000;
   private final double radius = 10; // In km
@@ -305,7 +307,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     View view = inflater.inflate(R.layout.fragment_map, container, false);
 
     SupportMapFragment mapFragment =
-        (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+            (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
     // Checks if support map fragment is found, if so pass current fragment as callback
     if (mapFragment != null) {
       // Gets a googleMap object
@@ -315,13 +317,15 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
     // create search view
-    qrSearcher = view.findViewById(R.id.qr_searcher);
-    searchController = new SearchQRController(qrSearcher, this);
-    qrSearcher.setOnQueryTextListener(searchController.handleSearch());
-//    genQR();
+    qrSearchbar = view.findViewById(R.id.qr_searchbar);
+    qrSearchButton = view.findViewById(R.id.qr_searcher);
+    searchController = new SearchQRController(qrSearchbar, qrSearchButton, this);
+    qrSearchbar.setOnQueryTextListener(searchController.searchNearbyCodes());
+    qrSearchButton.setOnClickListener(searchController.getNearbyCodes());
 
     return view;
   }
+
 
   //  /**
   //   * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.

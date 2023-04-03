@@ -20,7 +20,6 @@ public class QRLocation {
     Double lat = Double.parseDouble(parts[0]);
     Double lon = Double.parseDouble(parts[1]);
     String region = parts[2];
-
     latitude = lat;
     longitude = lon;
     this.region = region;

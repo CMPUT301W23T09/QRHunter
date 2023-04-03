@@ -2,6 +2,7 @@ package com.cmput301w23t09.qrhunter.comment;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,8 +85,9 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
     View dialogView = inflater.inflate(R.layout.comment_dialog, null);
 
     TextView playerNameTextView = dialogView.findViewById(R.id.comment_dialog_player_name);
-    String playerNameHeading = playerName + "'s Comments";
+    String playerNameHeading = playerName + "'s Comment";
     playerNameTextView.setText(playerNameHeading);
+    playerNameTextView.setTypeface(null, Typeface.BOLD);
 
     TextView commentTextView = dialogView.findViewById(R.id.comment_dialog_comment_text);
     commentTextView.setText(commentText);
