@@ -7,6 +7,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.cmput301w23t09.qrhunter.DatabaseChangeListener;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
@@ -26,7 +28,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -121,11 +122,10 @@ public abstract class ProfileController implements DatabaseChangeListener {
               }
               // otherwise get username and profile picture
               usernameView.setText(results.getData().getUsername());
-              try {
-                profilePic.setImageBitmap(results.getData().getProfilePic());
-              } catch (ExecutionException | InterruptedException e) {
-                showMsg("An error occurred while loading in your profile picture.");
-              }
+              Glide.with(fragment)
+                  .load(results.getData().getProfilePicUrl())
+                  .transition(DrawableTransitionOptions.withCrossFade(500))
+                  .into(profilePic);
             });
   }
 

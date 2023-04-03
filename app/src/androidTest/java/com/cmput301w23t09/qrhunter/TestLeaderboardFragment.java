@@ -388,17 +388,17 @@ public class TestLeaderboardFragment extends BaseTest {
     onData(anything())
         .inAdapterView(withId(R.id.search_query_list))
         .atPosition(0)
-        .onChildView(withId(R.id.search_query_entry_text))
+        .onChildView(withId(R.id.leaderboard_entry_text))
         .check(matches(withText("Other Player")));
     onData(anything())
         .inAdapterView(withId(R.id.search_query_list))
         .atPosition(1)
-        .onChildView(withId(R.id.search_query_entry_text))
+        .onChildView(withId(R.id.leaderboard_entry_text))
         .check(matches(withText("Other Player123")));
     onData(anything())
         .inAdapterView(withId(R.id.search_query_list))
         .atPosition(2)
-        .onChildView(withId(R.id.search_query_entry_text))
+        .onChildView(withId(R.id.leaderboard_entry_text))
         .check(matches(withText(containsString("123Other Player"))));
   }
 

@@ -258,11 +258,15 @@ public class Player implements Serializable {
    */
   public Bitmap getProfilePic() throws InterruptedException, ExecutionException {
     if (profilePic == null) {
-      profilePic =
-          new VisualFetcher()
-              .execute("https://api.dicebear.com/6.x/identicon/jpg?seed=" + deviceId.toString())
-              .get();
+      profilePic = new VisualFetcher().execute(getProfilePicUrl()).get();
     }
     return profilePic;
+  }
+
+  /**
+   * @return The profile picture URL of the player
+   */
+  public String getProfilePicUrl() {
+    return "https://api.dicebear.com/6.x/identicon/jpg?seed=" + deviceId.toString();
   }
 }

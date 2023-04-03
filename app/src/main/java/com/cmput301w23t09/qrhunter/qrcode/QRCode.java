@@ -120,12 +120,16 @@ public class QRCode implements Serializable {
    */
   public Bitmap getVisualRepresentation() throws InterruptedException, ExecutionException {
     if (visualRepresentation == null) {
-      visualRepresentation =
-          new VisualFetcher()
-              .execute("https://api.dicebear.com/6.x/bottts-neutral/jpg?seed=" + hash)
-              .get();
+      visualRepresentation = new VisualFetcher().execute(getVisualRepresentationUrl()).get();
     }
     return visualRepresentation;
+  }
+
+  /**
+   * @return The URL of the QRCode's visual representation
+   */
+  public String getVisualRepresentationUrl() {
+    return "https://api.dicebear.com/6.x/bottts-neutral/jpg?seed=" + hash;
   }
 
   /**
