@@ -92,7 +92,6 @@ public abstract class TestProfileFragment extends BaseTest {
         .add(
             ourPlayer,
             task -> {
-              setTestDebugFlag("dbPlayerFailure=" + (task.getException() != null));
               // Update GameController activePlayer document id to match the record of the player
               // being added
 
@@ -103,11 +102,7 @@ public abstract class TestProfileFragment extends BaseTest {
               localPlayer = storedActivePlayer;
               ourPlayer.setDocumentId(null); // reset the document id assigned to our template
 
-              setTestDebugFlag("updatedLocalPlayer");
-
               // Now that we added the main player, do we need to add the profile player too?
-              setTestDebugFlag(
-                  "ifStatement=" + profilePlayer.getDeviceId().equals(ourPlayer.getDeviceId()));
               if (profilePlayer.getDeviceId().equals(ourPlayer.getDeviceId())) {
                 // No we don't.
                 playerDatabaseSetup.countDown();
@@ -120,7 +115,6 @@ public abstract class TestProfileFragment extends BaseTest {
 
     // Wait for the JUnit thread to be told that the players were added to the database.
     playerDatabaseSetup.await();
-    setTestDebugFlag("passPlayerSetup");
 
     // Add the QRs to the profile.
     List<QRCode> qrsToAdd = getProfileQRCodesToAdd();
@@ -136,11 +130,9 @@ public abstract class TestProfileFragment extends BaseTest {
               });
     }
     qrDBTasks.await();
-    setTestDebugFlag("passQRSetup");
 
     // Open the profile.
     openProfile();
-    setTestDebugFlag("passOpenProfile");
   }
 
   /**

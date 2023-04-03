@@ -121,6 +121,12 @@ public abstract class BaseTest {
     setTestDebugFlag(testNameRule.getMethodName());
   }
 
+  /**
+   * For debugging purposes for hanging tests, this creates a property in the debug collection that
+   * can be used as a flag or checkpoint marker.
+   *
+   * @param flag flag to store
+   */
   protected void setTestDebugFlag(String flag) {
     CollectionReference collectionReference =
         DatabaseConnection.getInstance().getCollection("debug");
