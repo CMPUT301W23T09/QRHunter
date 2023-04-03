@@ -6,6 +6,7 @@ import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.action.ViewActions.swipeUp;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -77,6 +78,8 @@ public class TestMyProfileFragment extends TestProfileFragment {
     setTestDebugFlag("waitedComplete");
 
     // Click the first QR
+    onView(withId(R.id.code_list)).perform(swipeUp());
+    setTestDebugFlag("swiped up");
     onData(anything()).inAdapterView(withId(R.id.code_list)).atPosition(0).perform(click());
 
     setTestDebugFlag("clicked");
