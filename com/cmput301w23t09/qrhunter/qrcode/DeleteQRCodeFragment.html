@@ -259,17 +259,17 @@ extends <a href="QRCodeFragment.html" title="class in com.cmput301w23t09.qrhunte
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onAddCommentInput(android.view.View)">onAddCommentInput</a></span>&#8203;(android.view.View&nbsp;view)</code></th>
-<td class="colLast">
-<div class="block">Removes hint text when clicked*</div>
-</td>
-</tr>
-<tr id="i2" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setUpButtons(android.view.View)">setUpButtons</a></span>&#8203;(android.view.View&nbsp;view)</code></th>
 <td class="colLast">
 <div class="block">Enable and disable buttons of QRCodeFragment</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>protected void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toggleCommentBox(boolean)">toggleCommentBox</a></span>&#8203;(boolean&nbsp;isShown)</code></th>
+<td class="colLast">
+<div class="block">Toggles whether or not the comment box should be shown or not.</div>
 </td>
 </tr>
 </table>
@@ -371,17 +371,23 @@ extends <a href="QRCodeFragment.html" title="class in com.cmput301w23t09.qrhunte
 </dl>
 </li>
 </ul>
-<a id="onAddCommentInput(android.view.View)">
+<a id="toggleCommentBox(boolean)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>onAddCommentInput</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;onAddCommentInput&#8203;(android.view.View&nbsp;view)</pre>
-<div class="block">Removes hint text when clicked*</div>
+<h4>toggleCommentBox</h4>
+<pre class="methodSignature">protected&nbsp;void&nbsp;toggleCommentBox&#8203;(boolean&nbsp;isShown)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="QRCodeFragment.html#toggleCommentBox(boolean)">QRCodeFragment</a></code></span></div>
+<div class="block">Toggles whether or not the comment box should be shown or not.
+
+ <p>Behaves like a 'hook', where the comment box is only available to AddQRCodeFragment and
+ DeleteQRCodeFragment (essentially whenever the player has/had scanned the code themselved)</div>
 <dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="QRCodeFragment.html#toggleCommentBox(boolean)">toggleCommentBox</a></code>&nbsp;in class&nbsp;<code><a href="QRCodeFragment.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeFragment</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>view</code> - view</dd>
+<dd><code>isShown</code> - Whether or not the comment box should be shown.</dd>
 </dl>
 </li>
 </ul>
