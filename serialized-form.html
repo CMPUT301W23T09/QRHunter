@@ -150,6 +150,41 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </li>
 <li class="blockList">
 <section>
+<h2 title="Package">Package&nbsp;com.cmput301w23t09.qrhunter.map</h2>
+<ul class="blockList">
+<li class="blockList"><a id="com.cmput301w23t09.qrhunter.map.QRLocation">
+<!--   -->
+</a>
+<h3>Class <a href="com/cmput301w23t09/qrhunter/map/QRLocation.html" title="class in com.cmput301w23t09.qrhunter.map">com.cmput301w23t09.qrhunter.map.QRLocation</a> extends java.lang.Object implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>latitude</h4>
+<pre>double latitude</pre>
+</li>
+<li class="blockList">
+<h4>locationString</h4>
+<pre>java.lang.String locationString</pre>
+</li>
+<li class="blockList">
+<h4>longitude</h4>
+<pre>double longitude</pre>
+</li>
+<li class="blockListLast">
+<h4>region</h4>
+<pre>java.lang.String region</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+</li>
+<li class="blockList">
+<section>
 <h2 title="Package">Package&nbsp;com.cmput301w23t09.qrhunter.player</h2>
 <ul class="blockList">
 <li class="blockList"><a id="com.cmput301w23t09.qrhunter.player.Player">
@@ -174,6 +209,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h4>email</h4>
 <pre>java.lang.String email</pre>
 <div class="block">Email of the player</div>
+</li>
+<li class="blockList">
+<h4>followers</h4>
+<pre>java.util.List&lt;java.util.UUID&gt; followers</pre>
+<div class="block">The device UUIDs of the players this player is being followed by</div>
+</li>
+<li class="blockList">
+<h4>following</h4>
+<pre>java.util.List&lt;java.util.UUID&gt; following</pre>
+<div class="block">The document ids of the players this player is following</div>
 </li>
 <li class="blockList">
 <h4>phoneNo</h4>
@@ -274,15 +319,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre>java.util.ArrayList&lt;java.lang.String&gt; players</pre>
 <div class="block">This is a list of players (UUID) who have scanned this QR code</div>
 </li>
-<li class="blockList">
+<li class="blockListLast">
 <h4>score</h4>
 <pre>java.lang.Integer score</pre>
 <div class="block">This is the score of the QR code</div>
-</li>
-<li class="blockListLast">
-<h4>visualRepresentation</h4>
-<pre>android.graphics.Bitmap visualRepresentation</pre>
-<div class="block">This is the visual representation of the QR code</div>
 </li>
 </ul>
 </li>

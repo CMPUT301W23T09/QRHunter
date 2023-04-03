@@ -116,18 +116,23 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <main role="main">
 <div class="header">
 <div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">com.cmput301w23t09.qrhunter.leaderboard</a></div>
-<h2 title="Interface LeaderboardAdapterItem" class="title">Interface LeaderboardAdapterItem&lt;T extends LeaderboardAdapterItem&lt;T&gt;&gt;</h2>
+<h2 title="Interface LeaderboardAdapterItem" class="title">Interface LeaderboardAdapterItem&lt;T&gt;</h2>
 </div>
 <div class="contentContainer">
 <div class="description">
 <ul class="blockList">
 <li class="blockList">
 <dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - type of the item</dd>
+</dl>
+<dl>
 <dt>All Known Implementing Classes:</dt>
 <dd><code><a href="LeaderboardEntry.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">LeaderboardEntry</a></code>, <code><a href="LeaderboardEntryTitle.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">LeaderboardEntryTitle</a></code>, <code><a href="PlayerLeaderboardEntry.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">PlayerLeaderboardEntry</a></code>, <code><a href="QRCodeLeaderboardEntry.html" title="class in com.cmput301w23t09.qrhunter.leaderboard">QRCodeLeaderboardEntry</a></code></dd>
 </dl>
 <hr>
-<pre>public interface <span class="typeNameLabel">LeaderboardAdapterItem&lt;T extends LeaderboardAdapterItem&lt;T&gt;&gt;</span></pre>
+<pre>public interface <span class="typeNameLabel">LeaderboardAdapterItem&lt;T&gt;</span></pre>
+<div class="block">Represents an item that can be rendered in the LeaderboardAdapter</div>
 </li>
 </ul>
 </div>
@@ -154,7 +159,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
        android.view.View&nbsp;convertView,
        android.view.ViewGroup&nbsp;parent,
        <a href="LeaderboardAdapterItem.html" title="type parameter in LeaderboardAdapterItem">T</a>&nbsp;item)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Retrieves the view to render in the leaderboard</div>
+</td>
 </tr>
 </table>
 </li>
@@ -173,7 +180,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="getView(android.content.Context,android.view.View,android.view.ViewGroup,com.cmput301w23t09.qrhunter.leaderboard.LeaderboardAdapterItem)">
+<a id="getView(android.content.Context,android.view.View,android.view.ViewGroup,java.lang.Object)">
 <!--   -->
 </a><a id="getView(android.content.Context,android.view.View,android.view.ViewGroup,T)">
 <!--   -->
@@ -185,6 +192,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
                           android.view.View&nbsp;convertView,
                           android.view.ViewGroup&nbsp;parent,
                           <a href="LeaderboardAdapterItem.html" title="type parameter in LeaderboardAdapterItem">T</a>&nbsp;item)</pre>
+<div class="block">Retrieves the view to render in the leaderboard</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>context</code> - application context</dd>
+<dd><code>convertView</code> - view</dd>
+<dd><code>parent</code> - parent</dd>
+<dd><code>item</code> - leaderboard item</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>view to display</dd>
+</dl>
 </li>
 </ul>
 </li>

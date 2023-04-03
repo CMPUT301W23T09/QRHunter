@@ -197,11 +197,43 @@ extends <a href="../BaseFragment.html" title="class in com.cmput301w23t09.qrhunt
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>protected <a href="ProfileController.html" title="class in com.cmput301w23t09.qrhunter.profile">ProfileController</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#controller">controller</a></span></code></th>
+<td class="colLast">
+<div class="block">This is the controller that manages the fragment</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected com.google.android.material.floatingactionbutton.FloatingActionButton</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#followButton">followButton</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected android.widget.TextView</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#followersText">followersText</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected android.widget.TextView</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#followingText">followingText</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected com.google.android.material.floatingactionbutton.FloatingActionButton</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#loadingFollowButton">loadingFollowButton</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>protected com.google.android.material.floatingactionbutton.FloatingActionButton</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#rankingsButton">rankingsButton</a></span></code></th>
 <td class="colLast">
 <div class="block">This is the button that allows the user to view their rankings</div>
 </td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected com.google.android.material.floatingactionbutton.FloatingActionButton</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unfollowButton">unfollowButton</a></span></code></th>
+<td class="colLast">&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -280,9 +312,9 @@ extends <a href="../BaseFragment.html" title="class in com.cmput301w23t09.qrhunt
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>protected abstract void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setupContactButton()">setupContactButton</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setupSocialMethods()">setupSocialMethods</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Sets the image of the profile settings button and handler.</div>
+<div class="block">Sets the social related buttons.</div>
 </td>
 </tr>
 </table>
@@ -323,6 +355,16 @@ extends <a href="../BaseFragment.html" title="class in com.cmput301w23t09.qrhunt
 <!--   -->
 </a>
 <h3>Field Detail</h3>
+<a id="controller">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>controller</h4>
+<pre>protected&nbsp;<a href="ProfileController.html" title="class in com.cmput301w23t09.qrhunter.profile">ProfileController</a> controller</pre>
+<div class="block">This is the controller that manages the fragment</div>
+</li>
+</ul>
 <a id="contactButton">
 <!--   -->
 </a>
@@ -336,11 +378,56 @@ extends <a href="../BaseFragment.html" title="class in com.cmput301w23t09.qrhunt
 <a id="rankingsButton">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>rankingsButton</h4>
 <pre>protected&nbsp;com.google.android.material.floatingactionbutton.FloatingActionButton rankingsButton</pre>
 <div class="block">This is the button that allows the user to view their rankings</div>
+</li>
+</ul>
+<a id="followingText">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>followingText</h4>
+<pre>protected&nbsp;android.widget.TextView followingText</pre>
+</li>
+</ul>
+<a id="followersText">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>followersText</h4>
+<pre>protected&nbsp;android.widget.TextView followersText</pre>
+</li>
+</ul>
+<a id="followButton">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>followButton</h4>
+<pre>protected&nbsp;com.google.android.material.floatingactionbutton.FloatingActionButton followButton</pre>
+</li>
+</ul>
+<a id="unfollowButton">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>unfollowButton</h4>
+<pre>protected&nbsp;com.google.android.material.floatingactionbutton.FloatingActionButton unfollowButton</pre>
+</li>
+</ul>
+<a id="loadingFollowButton">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>loadingFollowButton</h4>
+<pre>protected&nbsp;com.google.android.material.floatingactionbutton.FloatingActionButton loadingFollowButton</pre>
 </li>
 </ul>
 </li>
@@ -404,14 +491,14 @@ extends <a href="../BaseFragment.html" title="class in com.cmput301w23t09.qrhunt
 </dl>
 </li>
 </ul>
-<a id="setupContactButton()">
+<a id="setupSocialMethods()">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>setupContactButton</h4>
-<pre class="methodSignature">protected abstract&nbsp;void&nbsp;setupContactButton()</pre>
-<div class="block">Sets the image of the profile settings button and handler.</div>
+<h4>setupSocialMethods</h4>
+<pre class="methodSignature">protected abstract&nbsp;void&nbsp;setupSocialMethods()</pre>
+<div class="block">Sets the social related buttons.</div>
 </li>
 </ul>
 <a id="displayContactInfo(java.lang.String,java.lang.String)">

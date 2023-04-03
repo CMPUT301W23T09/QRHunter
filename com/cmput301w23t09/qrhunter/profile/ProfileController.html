@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":6,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":6,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -171,6 +171,32 @@ implements <a href="../DatabaseChangeListener.html" title="interface in com.cmpu
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>protected com.google.android.material.floatingactionbutton.FloatingActionButton</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#followButton">followButton</a></span></code></th>
+<td class="colLast">
+<div class="block">This is the follow button</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected android.widget.TextView</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#followersText">followersText</a></span></code></th>
+<td class="colLast">
+<div class="block">This is the text that displays how many followers the user has</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected android.widget.TextView</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#followingText">followingText</a></span></code></th>
+<td class="colLast">
+<div class="block">This is the text that displays how many users the player is following</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected com.google.android.material.floatingactionbutton.FloatingActionButton</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#followLoadingButton">followLoadingButton</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>protected <a href="ProfileFragment.html" title="class in com.cmput301w23t09.qrhunter.profile">ProfileFragment</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fragment">fragment</a></span></code></th>
 <td class="colLast">
@@ -183,6 +209,60 @@ implements <a href="../DatabaseChangeListener.html" title="interface in com.cmpu
 <td class="colLast">
 <div class="block">This is the game controller that controls the content on screen.</div>
 </td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected android.widget.Spinner</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#orderSpinner">orderSpinner</a></span></code></th>
+<td class="colLast">
+<div class="block">This is the spinner that determines the qr code display order</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected <a href="../qrcode/QRCodeAdapter.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeAdapter</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#qrCodeAdapter">qrCodeAdapter</a></span></code></th>
+<td class="colLast">
+<div class="block">This is the adapter for displaying the QRCode objects</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected android.widget.GridView</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#qrCodeList">qrCodeList</a></span></code></th>
+<td class="colLast">
+<div class="block">This is the gridview showing the qr codes of the player</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected java.util.ArrayList&lt;<a href="../qrcode/QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#qrCodes">qrCodes</a></span></code></th>
+<td class="colLast">
+<div class="block">This is the array of QRCode objects that the fragment displays</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected android.widget.TextView</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#topScore">topScore</a></span></code></th>
+<td class="colLast">
+<div class="block">This is the view showing the top score of the player's qr codes</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected android.widget.TextView</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#totalCodes">totalCodes</a></span></code></th>
+<td class="colLast">
+<div class="block">This is the view showing the total number of codes the player has</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected android.widget.TextView</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#totalPoints">totalPoints</a></span></code></th>
+<td class="colLast">
+<div class="block">This is the view that shows the qr codes of the player</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected com.google.android.material.floatingactionbutton.FloatingActionButton</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unfollowButton">unfollowButton</a></span></code></th>
+<td class="colLast">&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -278,13 +358,23 @@ implements <a href="../DatabaseChangeListener.html" title="interface in com.cmpu
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#retrievePercentile(java.util.function.BiConsumer)">retrievePercentile</a></span>&#8203;(java.util.function.BiConsumer&lt;java.lang.Exception,&#8203;java.lang.Float&gt;&nbsp;callback)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onRankingButtonClick()">onRankingButtonClick</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Calculates and returns the percentile rank of the user's top QR code by score relative to all
- QR codes to the callback</div>
+<div class="block">Calculates and renders a fragment on screen to display the percentiles of the player</div>
 </td>
 </tr>
 <tr id="i8" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setupFollowDetails(android.widget.TextView,android.widget.TextView,com.google.android.material.floatingactionbutton.FloatingActionButton,com.google.android.material.floatingactionbutton.FloatingActionButton,com.google.android.material.floatingactionbutton.FloatingActionButton)">setupFollowDetails</a></span>&#8203;(android.widget.TextView&nbsp;followingText,
+                  android.widget.TextView&nbsp;followersText,
+                  com.google.android.material.floatingactionbutton.FloatingActionButton&nbsp;followButton,
+                  com.google.android.material.floatingactionbutton.FloatingActionButton&nbsp;unfollowButton,
+                  com.google.android.material.floatingactionbutton.FloatingActionButton&nbsp;followLoadingButton)</code></th>
+<td class="colLast">
+<div class="block">Sets up the follow buttons and t ext</div>
+</td>
+</tr>
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setUpQRList(android.widget.GridView,android.widget.TextView,android.widget.TextView,android.widget.TextView,android.widget.Spinner)">setUpQRList</a></span>&#8203;(android.widget.GridView&nbsp;qrCodeList,
            android.widget.TextView&nbsp;totalPoints,
@@ -295,7 +385,7 @@ implements <a href="../DatabaseChangeListener.html" title="interface in com.cmpu
 <div class="block">Sets up the list view of qr codes</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setUpUsernameAndPicture(android.widget.TextView,android.widget.ImageView)">setUpUsernameAndPicture</a></span>&#8203;(android.widget.TextView&nbsp;usernameView,
                        android.widget.ImageView&nbsp;profilePic)</code></th>
@@ -303,11 +393,18 @@ implements <a href="../DatabaseChangeListener.html" title="interface in com.cmpu
 <div class="block">This sets up the username view and profile pic view of the fragment</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#showMsg(java.lang.String)">showMsg</a></span>&#8203;(java.lang.String&nbsp;msg)</code></th>
 <td class="colLast">
 <div class="block">This displays a Toast message</div>
+</td>
+</tr>
+<tr id="i12" class="altColor">
+<td class="colFirst"><code>protected abstract void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateFollowDetails()">updateFollowDetails</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Updates the text and following/followers count of the follow related content in the view.</div>
 </td>
 </tr>
 </table>
@@ -354,14 +451,132 @@ implements <a href="../DatabaseChangeListener.html" title="interface in com.cmpu
 <div class="block">This is the profile fragment the controller handles</div>
 </li>
 </ul>
+<a id="qrCodes">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>qrCodes</h4>
+<pre>protected&nbsp;java.util.ArrayList&lt;<a href="../qrcode/QRCode.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCode</a>&gt; qrCodes</pre>
+<div class="block">This is the array of QRCode objects that the fragment displays</div>
+</li>
+</ul>
+<a id="qrCodeAdapter">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>qrCodeAdapter</h4>
+<pre>protected&nbsp;<a href="../qrcode/QRCodeAdapter.html" title="class in com.cmput301w23t09.qrhunter.qrcode">QRCodeAdapter</a> qrCodeAdapter</pre>
+<div class="block">This is the adapter for displaying the QRCode objects</div>
+</li>
+</ul>
 <a id="deviceUUID">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>deviceUUID</h4>
 <pre>protected final&nbsp;java.util.UUID deviceUUID</pre>
 <div class="block">Device UUID of the profile</div>
+</li>
+</ul>
+<a id="qrCodeList">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>qrCodeList</h4>
+<pre>protected&nbsp;android.widget.GridView qrCodeList</pre>
+<div class="block">This is the gridview showing the qr codes of the player</div>
+</li>
+</ul>
+<a id="totalPoints">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>totalPoints</h4>
+<pre>protected&nbsp;android.widget.TextView totalPoints</pre>
+<div class="block">This is the view that shows the qr codes of the player</div>
+</li>
+</ul>
+<a id="totalCodes">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>totalCodes</h4>
+<pre>protected&nbsp;android.widget.TextView totalCodes</pre>
+<div class="block">This is the view showing the total number of codes the player has</div>
+</li>
+</ul>
+<a id="topScore">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>topScore</h4>
+<pre>protected&nbsp;android.widget.TextView topScore</pre>
+<div class="block">This is the view showing the top score of the player's qr codes</div>
+</li>
+</ul>
+<a id="orderSpinner">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>orderSpinner</h4>
+<pre>protected&nbsp;android.widget.Spinner orderSpinner</pre>
+<div class="block">This is the spinner that determines the qr code display order</div>
+</li>
+</ul>
+<a id="followersText">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>followersText</h4>
+<pre>protected&nbsp;android.widget.TextView followersText</pre>
+<div class="block">This is the text that displays how many followers the user has</div>
+</li>
+</ul>
+<a id="followingText">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>followingText</h4>
+<pre>protected&nbsp;android.widget.TextView followingText</pre>
+<div class="block">This is the text that displays how many users the player is following</div>
+</li>
+</ul>
+<a id="followButton">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>followButton</h4>
+<pre>protected&nbsp;com.google.android.material.floatingactionbutton.FloatingActionButton followButton</pre>
+<div class="block">This is the follow button</div>
+</li>
+</ul>
+<a id="unfollowButton">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>unfollowButton</h4>
+<pre>protected&nbsp;com.google.android.material.floatingactionbutton.FloatingActionButton unfollowButton</pre>
+</li>
+</ul>
+<a id="followLoadingButton">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>followLoadingButton</h4>
+<pre>protected&nbsp;com.google.android.material.floatingactionbutton.FloatingActionButton followLoadingButton</pre>
 </li>
 </ul>
 </li>
@@ -402,6 +617,38 @@ implements <a href="../DatabaseChangeListener.html" title="interface in com.cmpu
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a id="setupFollowDetails(android.widget.TextView,android.widget.TextView,com.google.android.material.floatingactionbutton.FloatingActionButton,com.google.android.material.floatingactionbutton.FloatingActionButton,com.google.android.material.floatingactionbutton.FloatingActionButton)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setupFollowDetails</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;setupFollowDetails&#8203;(android.widget.TextView&nbsp;followingText,
+                               android.widget.TextView&nbsp;followersText,
+                               com.google.android.material.floatingactionbutton.FloatingActionButton&nbsp;followButton,
+                               com.google.android.material.floatingactionbutton.FloatingActionButton&nbsp;unfollowButton,
+                               com.google.android.material.floatingactionbutton.FloatingActionButton&nbsp;followLoadingButton)</pre>
+<div class="block">Sets up the follow buttons and t ext</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>followingText</code> - following textview</dd>
+<dd><code>followersText</code> - followers textview</dd>
+<dd><code>followButton</code> - follow button</dd>
+<dd><code>unfollowButton</code> - unfollow button</dd>
+<dd><code>followLoadingButton</code> - loading button</dd>
+</dl>
+</li>
+</ul>
+<a id="updateFollowDetails()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>updateFollowDetails</h4>
+<pre class="methodSignature">protected abstract&nbsp;void&nbsp;updateFollowDetails()</pre>
+<div class="block">Updates the text and following/followers count of the follow related content in the view.</div>
+</li>
+</ul>
 <a id="setUpUsernameAndPicture(android.widget.TextView,android.widget.ImageView)">
 <!--   -->
 </a>
@@ -547,15 +794,14 @@ implements <a href="../DatabaseChangeListener.html" title="interface in com.cmpu
 </dl>
 </li>
 </ul>
-<a id="retrievePercentile(java.util.function.BiConsumer)">
+<a id="onRankingButtonClick()">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>retrievePercentile</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;retrievePercentile&#8203;(java.util.function.BiConsumer&lt;java.lang.Exception,&#8203;java.lang.Float&gt;&nbsp;callback)</pre>
-<div class="block">Calculates and returns the percentile rank of the user's top QR code by score relative to all
- QR codes to the callback</div>
+<h4>onRankingButtonClick</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;onRankingButtonClick()</pre>
+<div class="block">Calculates and renders a fragment on screen to display the percentiles of the player</div>
 </li>
 </ul>
 </li>

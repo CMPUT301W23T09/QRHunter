@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10};
+var data = {"i0":10,"i1":10,"i2":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -160,7 +160,7 @@ extends <a href="ProfileController.html" title="class in com.cmput301w23t09.qrhu
 <!--   -->
 </a>
 <h3>Fields inherited from class&nbsp;com.cmput301w23t09.qrhunter.profile.<a href="ProfileController.html" title="class in com.cmput301w23t09.qrhunter.profile">ProfileController</a></h3>
-<code><a href="ProfileController.html#deviceUUID">deviceUUID</a>, <a href="ProfileController.html#fragment">fragment</a>, <a href="ProfileController.html#gameController">gameController</a></code></li>
+<code><a href="ProfileController.html#deviceUUID">deviceUUID</a>, <a href="ProfileController.html#followButton">followButton</a>, <a href="ProfileController.html#followersText">followersText</a>, <a href="ProfileController.html#followingText">followingText</a>, <a href="ProfileController.html#followLoadingButton">followLoadingButton</a>, <a href="ProfileController.html#fragment">fragment</a>, <a href="ProfileController.html#gameController">gameController</a>, <a href="ProfileController.html#orderSpinner">orderSpinner</a>, <a href="ProfileController.html#qrCodeAdapter">qrCodeAdapter</a>, <a href="ProfileController.html#qrCodeList">qrCodeList</a>, <a href="ProfileController.html#qrCodes">qrCodes</a>, <a href="ProfileController.html#topScore">topScore</a>, <a href="ProfileController.html#totalCodes">totalCodes</a>, <a href="ProfileController.html#totalPoints">totalPoints</a>, <a href="ProfileController.html#unfollowButton">unfollowButton</a></code></li>
 </ul>
 </li>
 </ul>
@@ -211,13 +211,25 @@ extends <a href="ProfileController.html" title="class in com.cmput301w23t09.qrhu
 <div class="block">This handles the action to take when the contact info button is clicked.</div>
 </td>
 </tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#handleFollowButtonClick()">handleFollowButtonClick</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>protected void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateFollowDetails()">updateFollowDetails</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Updates the text and following/followers count of the follow related content in the view.</div>
+</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.com.cmput301w23t09.qrhunter.profile.ProfileController">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.cmput301w23t09.qrhunter.profile.<a href="ProfileController.html" title="class in com.cmput301w23t09.qrhunter.profile">ProfileController</a></h3>
-<code><a href="ProfileController.html#addUpdater()">addUpdater</a>, <a href="ProfileController.html#getTopScore()">getTopScore</a>, <a href="ProfileController.html#getTotalScore()">getTotalScore</a>, <a href="ProfileController.html#handleQRSelect()">handleQRSelect</a>, <a href="ProfileController.html#handleSpinnerSelect(android.widget.Spinner)">handleSpinnerSelect</a>, <a href="ProfileController.html#onChange()">onChange</a>, <a href="ProfileController.html#retrievePercentile(java.util.function.BiConsumer)">retrievePercentile</a>, <a href="ProfileController.html#setUpQRList(android.widget.GridView,android.widget.TextView,android.widget.TextView,android.widget.TextView,android.widget.Spinner)">setUpQRList</a>, <a href="ProfileController.html#setUpUsernameAndPicture(android.widget.TextView,android.widget.ImageView)">setUpUsernameAndPicture</a>, <a href="ProfileController.html#showMsg(java.lang.String)">showMsg</a></code></li>
+<code><a href="ProfileController.html#addUpdater()">addUpdater</a>, <a href="ProfileController.html#getTopScore()">getTopScore</a>, <a href="ProfileController.html#getTotalScore()">getTotalScore</a>, <a href="ProfileController.html#handleQRSelect()">handleQRSelect</a>, <a href="ProfileController.html#handleSpinnerSelect(android.widget.Spinner)">handleSpinnerSelect</a>, <a href="ProfileController.html#onChange()">onChange</a>, <a href="ProfileController.html#onRankingButtonClick()">onRankingButtonClick</a>, <a href="ProfileController.html#setupFollowDetails(android.widget.TextView,android.widget.TextView,com.google.android.material.floatingactionbutton.FloatingActionButton,com.google.android.material.floatingactionbutton.FloatingActionButton,com.google.android.material.floatingactionbutton.FloatingActionButton)">setupFollowDetails</a>, <a href="ProfileController.html#setUpQRList(android.widget.GridView,android.widget.TextView,android.widget.TextView,android.widget.TextView,android.widget.Spinner)">setUpQRList</a>, <a href="ProfileController.html#setUpUsernameAndPicture(android.widget.TextView,android.widget.ImageView)">setUpUsernameAndPicture</a>, <a href="ProfileController.html#showMsg(java.lang.String)">showMsg</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
@@ -270,10 +282,25 @@ extends <a href="ProfileController.html" title="class in com.cmput301w23t09.qrhu
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a id="updateFollowDetails()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>updateFollowDetails</h4>
+<pre class="methodSignature">protected&nbsp;void&nbsp;updateFollowDetails()</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="ProfileController.html#updateFollowDetails()">ProfileController</a></code></span></div>
+<div class="block">Updates the text and following/followers count of the follow related content in the view.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="ProfileController.html#updateFollowDetails()">updateFollowDetails</a></code>&nbsp;in class&nbsp;<code><a href="ProfileController.html" title="class in com.cmput301w23t09.qrhunter.profile">ProfileController</a></code></dd>
+</dl>
+</li>
+</ul>
 <a id="handleContactButtonClick()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>handleContactButtonClick</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;handleContactButtonClick()</pre>
@@ -284,6 +311,15 @@ extends <a href="ProfileController.html" title="class in com.cmput301w23t09.qrhu
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="ProfileController.html#handleContactButtonClick()">handleContactButtonClick</a></code>&nbsp;in class&nbsp;<code><a href="ProfileController.html" title="class in com.cmput301w23t09.qrhunter.profile">ProfileController</a></code></dd>
 </dl>
+</li>
+</ul>
+<a id="handleFollowButtonClick()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>handleFollowButtonClick</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;handleFollowButtonClick()</pre>
 </li>
 </ul>
 </li>
