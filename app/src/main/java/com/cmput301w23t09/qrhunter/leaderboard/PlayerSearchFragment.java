@@ -13,7 +13,12 @@ import com.cmput301w23t09.qrhunter.R;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Represents fragment displaying the user's search query results */
+/**
+ * Represents fragment displaying the user's search query results
+ *
+ * @author Andy Nguyen
+ * @version 1.0
+ */
 public class PlayerSearchFragment extends BaseFragment {
   /** The user's search query */
   private String searchQuery;

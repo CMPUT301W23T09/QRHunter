@@ -4,7 +4,7 @@ import com.cmput301w23t09.qrhunter.player.Player;
 import java.util.UUID;
 
 /**
- * Represents a leaderboard entry
+ * Represents a search query entry
  *
  * @author Andy Nguyen
  * @version 1.0
@@ -14,7 +14,7 @@ public class SearchQueryEntry {
   private String name;
   /** Device ID of a player's device */
   private UUID deviceUUID;
-
+  /** Player associated with a search query */
   private Player player;
 
   /**
