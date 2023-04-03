@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat;
 import com.cmput301w23t09.qrhunter.BaseFragment;
 import com.cmput301w23t09.qrhunter.GameController;
 import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.qrcode.DeleteQRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
@@ -37,27 +38,29 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class MapFragment extends BaseFragment implements OnMapReadyCallback {
-  private boolean locationPermissionGranted;
+  private static final int SEARCH_RADIUS_IN_M = 100;
   private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-  private GoogleMap map;
-  private Location lastKnownLocation;
-  private FusedLocationProviderClient fusedLocationProviderClient;
+  private static final String API_KEY = "AIzaSyDniTKVk4HDVsQVG-uDxQ-eFV4nCWeM-gU";
   private static final String TAG = "MapFragment";
   private static final int DEFAULT_ZOOM = 14;
-  private LatLng defaultLocation = new LatLng(53.523565919249364, -113.52815038503842);
-  private LatLng currentLocation;
+  private static final int MARKER_WIDTH_PIXELS = 70;
+  private static final int MARKER_HEIGHT_PIXELS = 70;
+
+  private boolean locationPermissionGranted;
+  private GoogleMap map;
+  private FusedLocationProviderClient fusedLocationProviderClient;
   private SearchView qrSearchbar;
   private Button qrSearchButton;
 
+  private Marker ourPlayer = null;
+  private List<Marker> currentQRMarkers = new ArrayList<>();
+
   private SearchQRController searchController;
-  private long LOCATION_UPDATE_INTERVAL = 30000;
-  private final double radius = 10; // In km
-  private final int markerWidth = 70; // In pixels
-  private final int markerHeight = 70; // In pixels
 
   public MapFragment(GameController gameController) {
     super(gameController);
@@ -98,7 +101,6 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
                     if (map != null) {
                       map.animateCamera(
                           CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM));
-                      Bitmap qrBitmap = null;
                       Bitmap playerProfile;
                       try {
                         playerProfile = getActivePlayer().getProfilePic();
@@ -109,23 +111,23 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
                       }
                       Bitmap scaledBitmap =
                           Bitmap.createScaledBitmap(
-                              playerProfile, markerWidth + 20, markerHeight + 20, false);
-                      map.addMarker(
-                          new MarkerOptions()
-                              .position(currentLocation)
-                              .title("YOU")
-                              .icon(BitmapDescriptorFactory.fromBitmap(scaledBitmap)));
+                              playerProfile,
+                              MARKER_WIDTH_PIXELS + 20,
+                              MARKER_HEIGHT_PIXELS + 20,
+                              false);
+                      ourPlayer =
+                          map.addMarker(
+                              new MarkerOptions()
+                                  .position(currentLocation)
+                                  .title("YOU")
+                                  .icon(BitmapDescriptorFactory.fromBitmap(scaledBitmap)));
                     }
                   } else {
                     Log.d(TAG, "Last known location is null. Using default location.");
-                    map.animateCamera(
-                        CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
                     map.getUiSettings().setMyLocationButtonEnabled(false);
                   }
                 } else {
                   Log.d(TAG, "Error getting last known location.");
-                  map.animateCamera(
-                      CameraUpdateFactory.newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
                   map.getUiSettings().setMyLocationButtonEnabled(false);
                 }
               }
@@ -149,7 +151,6 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
         // Don't get the location and instead ask for location permissions
         map.setMyLocationEnabled(false);
         map.getUiSettings().setMyLocationButtonEnabled(false);
-        lastKnownLocation = null;
         getLocationPermission();
       }
     } catch (SecurityException e) {
@@ -186,7 +187,6 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
           for (Location location : locationResult.getLocations()) {
             if (location != null) {
               // Update the last known location and move the camera
-              lastKnownLocation = location;
               LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
               if (map != null) {
                 Bitmap playerProfile;
@@ -199,19 +199,47 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
                 }
                 Bitmap scaledBitmap =
                     Bitmap.createScaledBitmap(
-                        playerProfile, markerWidth + 20, markerHeight + 20, false);
-                map.addMarker(
-                    new MarkerOptions()
-                        .position(currentLocation)
-                        .title("YOU")
-                        .icon(BitmapDescriptorFactory.fromBitmap(scaledBitmap)));
-                //            map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,
-                // DEFAULT_ZOOM))
+                        playerProfile, MARKER_WIDTH_PIXELS + 20, MARKER_HEIGHT_PIXELS + 20, false);
+
+                if (ourPlayer != null) {
+                  ourPlayer.remove();
+                }
+                ourPlayer =
+                    map.addMarker(
+                        new MarkerOptions()
+                            .position(currentLocation)
+                            .title("YOU")
+                            .icon(BitmapDescriptorFactory.fromBitmap(scaledBitmap)));
+                displayQRCodeMarkersWithinRadiusOnMap(map, currentLocation);
               }
             }
           }
         }
       };
+
+  private void movePlayer(LatLng newPosition) {
+    if (ourPlayer != null) {
+      ourPlayer.remove();
+    }
+
+    Bitmap playerAvatar;
+    try {
+      playerAvatar = getActivePlayer().getProfilePic();
+    } catch (InterruptedException | ExecutionException exception) {
+      Log.w(TAG, "Failed to retrieve player avatar");
+      return;
+    }
+
+    Bitmap scaledBitmap =
+        Bitmap.createScaledBitmap(
+            playerAvatar, MARKER_WIDTH_PIXELS + 20, MARKER_HEIGHT_PIXELS + 20, false);
+    ourPlayer =
+        map.addMarker(
+            new MarkerOptions()
+                .position(newPosition)
+                .title("YOU")
+                .icon(BitmapDescriptorFactory.fromBitmap(scaledBitmap)));
+  }
 
   /** Handles the users response to permission dialogue box popup */
   @Override
@@ -230,60 +258,13 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     updateLocationUI();
   }
 
-  private void displayQRCodeMarkersOnMap(
-      GoogleMap mMap) { // Use this to check all QR codes registered on the DB
-    QRCodeDatabase.getInstance()
-        .getAllQRCodes(
-            qrCodes -> {
-              if (qrCodes.isSuccessful()) {
-                List<QRCode> qrCodeList = qrCodes.getData();
-                Log.d(TAG, "Query successful. Result count: " + qrCodes.getData().size());
-
-                for (QRCode qrCode : qrCodeList) {
-                  QRLocation loc = qrCode.getLoc();
-                  if (loc != null) {
-                    LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
-                    Marker marker = null;
-                    try {
-                      Bitmap qrBitmap = qrCode.getVisualRepresentation();
-                      Bitmap scaledBitmap =
-                          Bitmap.createScaledBitmap(qrBitmap, markerWidth, markerHeight, false);
-                      marker =
-                          mMap.addMarker(
-                              new MarkerOptions()
-                                  .position(latLng)
-                                  .title(qrCode.getName())
-                                  .icon(BitmapDescriptorFactory.fromBitmap(scaledBitmap)));
-                    } catch (InterruptedException e) {
-                      throw new RuntimeException(e);
-                    } catch (ExecutionException e) {
-                      throw new RuntimeException(e);
-                    }
-                    marker.setTag(qrCode); // Set the tag directly in the marker options
-
-                    Log.d(
-                        TAG,
-                        "Marker added for QR code: "
-                            + qrCode.getName()
-                            + " at "
-                            + latLng.toString());
-                  }
-                }
-
-                // Set the click listener for the markers
-                mMap.setOnMarkerClickListener(this::onMarkerClick);
-              }
-            });
-  }
-
   // Function to retrieve QR codes within a certain radius from the user's current location and
   // display them on the map
-  public void displayQRCodeMarkersWithinRadiusOnMap(
-      GoogleMap mMap, LatLng currentLocation, double radius) {
+  public void displayQRCodeMarkersWithinRadiusOnMap(GoogleMap mMap, LatLng currentLocation) {
     if (currentLocation == null) {
-      Log.e(TAG, "Current location is null");
       return;
     }
+
     QRCodeDatabase.getInstance()
         .getAllQRCodes(
             qrCodes -> {
@@ -291,47 +272,45 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
                 List<QRCode> qrCodeList = qrCodes.getData();
                 Log.d(TAG, "Query successful. Result count: " + qrCodes.getData().size());
 
+                List<Marker> newMarkers = new ArrayList<>();
                 for (QRCode qrCode : qrCodeList) {
-                  QRLocation loc = qrCode.getLoc();
-                  if (loc != null) {
+                  for (QRLocation location : qrCode.getLocations()) {
                     float[] results = new float[1];
                     Location.distanceBetween(
                         currentLocation.latitude,
                         currentLocation.longitude,
-                        loc.getLatitude(),
-                        loc.getLongitude(),
+                        location.getLatitude(),
+                        location.getLongitude(),
                         results);
                     float distanceInMeters = results[0];
-                    if (distanceInMeters <= radius * 1000) {
-                      LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
-                      Marker marker = null;
+                    if (distanceInMeters <= SEARCH_RADIUS_IN_M) {
+                      LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                       try {
                         Bitmap qrBitmap = qrCode.getVisualRepresentation();
                         Bitmap scaledBitmap =
-                            Bitmap.createScaledBitmap(qrBitmap, markerWidth, markerHeight, false);
-                        marker =
+                            Bitmap.createScaledBitmap(
+                                qrBitmap, MARKER_WIDTH_PIXELS, MARKER_HEIGHT_PIXELS, false);
+                        Marker addedQR =
                             mMap.addMarker(
                                 new MarkerOptions()
                                     .position(latLng)
                                     .title(qrCode.getName())
                                     .icon(BitmapDescriptorFactory.fromBitmap(scaledBitmap)));
+                        addedQR.setTag(qrCode);
+                        newMarkers.add(addedQR);
                       } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                       } catch (ExecutionException e) {
                         throw new RuntimeException(e);
                       }
-                      if (marker != null) {
-                        marker.setTag(qrCode);
-                        Log.d(
-                            TAG,
-                            "Marker added for QR code: "
-                                + qrCode.getName()
-                                + " at "
-                                + latLng.toString());
-                      }
                     }
                   }
                 }
+
+                for (Marker currentMarker : currentQRMarkers) {
+                  currentMarker.remove();
+                }
+                currentQRMarkers.addAll(newMarkers);
               }
             });
   }
@@ -340,9 +319,27 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     Object tag = marker.getTag();
     if (tag instanceof QRCode) {
       QRCode qrCode = (QRCode) tag;
+
       // Create and show the QRCodeFragment
-      QRCodeFragment qrCodeFragment = QRCodeFragment.newInstance(qrCode, getActivePlayer());
-      getGameController().setPopup(qrCodeFragment);
+      QRCodeDatabase.getInstance()
+          .getQRCodeByHash(
+              qrCode.getHash(),
+              qrTask -> {
+                QRCode latestQR = qrTask.getData();
+
+                // Which QRFragment do we display?
+                boolean playerHasQR =
+                    qrTask.getData().getPlayers().contains(getActivePlayer().getDocumentId());
+                QRCodeFragment qrCodeFragment;
+                if (playerHasQR) {
+                  // Show delete QRFragment
+                  qrCodeFragment = DeleteQRCodeFragment.newInstance(latestQR, getActivePlayer());
+                } else {
+                  // Show regular QRFragment
+                  qrCodeFragment = QRCodeFragment.newInstance(latestQR, getActivePlayer());
+                }
+                getGameController().setPopup(qrCodeFragment);
+              });
       return true; // Return true to indicate that the click event has been consumed
     }
     return false; // Return false to indicate that the click event has not been consumed
@@ -361,9 +358,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
   @Override
   public View onCreateView(
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    Places.initialize(
-        getContext().getApplicationContext(), "AIzaSyDniTKVk4HDVsQVG-uDxQ-eFV4nCWeM-gU");
-
+    Places.initialize(getContext().getApplicationContext(), API_KEY);
     View view = inflater.inflate(R.layout.fragment_map, container, false);
 
     SupportMapFragment mapFragment =
@@ -387,6 +382,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
   }
 
   /**
+   * Called when the map has been initialized
+   *
    * @param googleMap the Google maps
    */
   @Override
@@ -398,8 +395,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     // Get the current location of the device and set the position of the map.
     getDeviceLocation();
     startLocationUpdates();
-    //    displayQRCodeMarkersOnMap(map);
-    displayQRCodeMarkersWithinRadiusOnMap(map, currentLocation, radius);
+    displayQRCodeMarkersWithinRadiusOnMap(map, null);
+    googleMap.setOnMarkerClickListener(this::onMarkerClick);
   }
 
   public boolean getLocationPermissionGranted() {
