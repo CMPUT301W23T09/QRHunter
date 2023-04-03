@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,16 +39,6 @@ public class LeaderboardEntryAdapter extends ArrayAdapter<LeaderboardAdapterItem
       View view =
           ((LeaderboardEntry) entry)
               .getView(context, convertView, parent, (LeaderboardEntry) entry);
-
-      // set fields of view
-      TextView name = view.findViewById(R.id.leaderboard_entry_text);
-      name.setText(((LeaderboardEntry) entry).getName());
-
-      TextView score = view.findViewById(R.id.leaderboard_entry_score);
-      score.setText(
-          ((LeaderboardEntry) entry).getScore()
-              + " "
-              + ((LeaderboardEntry) entry).getScoreSuffix());
 
       // Apply photo
       ImageView picture = view.findViewById(R.id.leaderboard_entry_pic);

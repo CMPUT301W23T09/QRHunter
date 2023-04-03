@@ -10,8 +10,8 @@ import com.cmput301w23t09.qrhunter.qrcode.DeleteQRCodeFragment;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeDatabase;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
+import com.cmput301w23t09.qrhunter.util.Tuple;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -49,7 +49,7 @@ public class LeaderboardController {
               }
 
               // Map each player to their total qr code hash scores.
-              List<PlayerLeaderboardEntry> entries = new ArrayList<>();
+              List<Tuple<Player, Long>> rawEntries = new ArrayList<>();
               AtomicInteger entriesLeft = new AtomicInteger(task.getData().size());
               AtomicReference<Exception> exception = new AtomicReference<>();
 
@@ -80,7 +80,7 @@ public class LeaderboardController {
                                     .reduce(0, Long::sum);
 
                             // Add new player leaderboard entry
-                            entries.add(new PlayerLeaderboardEntry(player, score, "points"));
+                            rawEntries.add(new Tuple<>(player, score));
                           } else {
                             exception.set(qrCodeHashesTask.getException());
                           }
@@ -94,7 +94,28 @@ public class LeaderboardController {
                             }
 
                             // entries now contains all players and their scores.
-                            Collections.sort(entries);
+                            // Sort in descending order by score and then by username
+                            rawEntries.sort(
+                                (a, b) -> {
+                                  int scoreCompare = (int) (b.getRight() - a.getRight());
+                                  if (scoreCompare == 0) {
+                                    return b.getLeft()
+                                        .getUsername()
+                                        .compareTo(a.getLeft().getUsername());
+                                  }
+
+                                  return scoreCompare;
+                                });
+
+                            List<PlayerLeaderboardEntry> entries = new ArrayList<>();
+                            for (int i = 0; i < rawEntries.size(); i++) {
+                              entries.add(
+                                  new PlayerLeaderboardEntry(
+                                      i + 1,
+                                      rawEntries.get(i).getLeft(),
+                                      rawEntries.get(i).getRight(),
+                                      "points"));
+                            }
                             callback.accept(null, new Leaderboard<>(entries));
                           }
                         });
@@ -117,7 +138,7 @@ public class LeaderboardController {
                 return;
               }
 
-              List<PlayerLeaderboardEntry> entries = new ArrayList<>();
+              List<Tuple<Player, Long>> rawEntries = new ArrayList<>();
               for (Player player : task.getData()) {
                 // Do we need to filter by followed players?
                 if (isFilteredByFollowedPlayers()
@@ -133,10 +154,26 @@ public class LeaderboardController {
                 }
 
                 long scans = player.getQRCodeHashes().size();
-                entries.add(new PlayerLeaderboardEntry(player, scans, "codes"));
+                rawEntries.add(new Tuple<>(player, scans));
               }
 
-              Collections.sort(entries);
+              // Sort in descending order by score and then by username
+              rawEntries.sort(
+                  (a, b) -> {
+                    int scoreCompare = (int) (b.getRight() - a.getRight());
+                    if (scoreCompare == 0) {
+                      return b.getLeft().getUsername().compareTo(a.getLeft().getUsername());
+                    }
+
+                    return scoreCompare;
+                  });
+
+              List<PlayerLeaderboardEntry> entries = new ArrayList<>();
+              for (int i = 0; i < rawEntries.size(); i++) {
+                entries.add(
+                    new PlayerLeaderboardEntry(
+                        i + 1, rawEntries.get(i).getLeft(), rawEntries.get(i).getRight(), "codes"));
+              }
               callback.accept(null, new Leaderboard<>(entries));
             });
   }
@@ -156,12 +193,23 @@ public class LeaderboardController {
                 return;
               }
 
+              // Sort in descending order by score and then hash
+              task.getData()
+                  .sort(
+                      (a, b) -> {
+                        int scoreCompare = (int) (b.getScore() - a.getScore());
+                        if (scoreCompare == 0) {
+                          return b.getHash().compareTo(a.getHash());
+                        }
+                        return scoreCompare;
+                      });
+
               List<QRCodeLeaderboardEntry> entries = new ArrayList<>();
-              for (QRCode qrCode : task.getData()) {
-                entries.add(new QRCodeLeaderboardEntry(qrCode, qrCode.getScore(), "points"));
+              for (int i = 0; i < task.getData().size(); i++) {
+                QRCode qrCode = task.getData().get(i);
+                entries.add(new QRCodeLeaderboardEntry(i + 1, qrCode, qrCode.getScore(), "points"));
               }
 
-              Collections.sort(entries);
               callback.accept(null, new Leaderboard<>(entries));
             });
   }
@@ -183,16 +231,14 @@ public class LeaderboardController {
 
               // Store the leaderboard entries by location and keep track of what hashes were added
               // to what locations
-              Map<String, List<QRCodeLeaderboardEntry>> leaderboardEntriesByRegion =
-                  new HashMap<>();
+              Map<String, List<Tuple<QRCode, Integer>>> rawEntriesByRegion = new HashMap<>();
               Map<String, Set<String>> leaderboardHashesAddedByRegion = new HashMap<>();
 
               for (QRCode qrCode : task.getData()) {
                 // For each QR, add it to each of the locations the QR was found in
                 for (QRLocation qrLocation : qrCode.getLocations()) {
                   if (qrLocation != null) {
-                    leaderboardEntriesByRegion.putIfAbsent(
-                        qrLocation.getRegion(), new ArrayList<>());
+                    rawEntriesByRegion.putIfAbsent(qrLocation.getRegion(), new ArrayList<>());
                     leaderboardHashesAddedByRegion.putIfAbsent(
                         qrLocation.getRegion(), new HashSet<>());
 
@@ -203,9 +249,9 @@ public class LeaderboardController {
                             .get(qrLocation.getRegion())
                             .add(qrCode.getHash());
                     if (tryAddingQRToLocation) {
-                      leaderboardEntriesByRegion
+                      rawEntriesByRegion
                           .get(qrLocation.getRegion())
-                          .add(new QRCodeLeaderboardEntry(qrCode, qrCode.getScore(), "points"));
+                          .add(new Tuple<>(qrCode, qrCode.getScore()));
                     }
                   }
                 }
@@ -213,10 +259,25 @@ public class LeaderboardController {
 
               // Sort all of the leaderboards
               List<Leaderboard<QRCodeLeaderboardEntry>> leaderboards = new ArrayList<>();
-              for (String city : leaderboardEntriesByRegion.keySet()) {
-                List<QRCodeLeaderboardEntry> entries = leaderboardEntriesByRegion.get(city);
-                Collections.sort(entries);
+              for (String city : rawEntriesByRegion.keySet()) {
+                List<Tuple<QRCode, Integer>> rawEntries = rawEntriesByRegion.get(city);
+                // Sort in descending order by score and then hash
+                rawEntries.sort(
+                    (a, b) -> {
+                      int scoreCompare = (int) (b.getRight() - a.getRight());
+                      if (scoreCompare == 0) {
+                        return b.getLeft().getHash().compareTo(a.getLeft().getHash());
+                      }
 
+                      return scoreCompare;
+                    });
+
+                List<QRCodeLeaderboardEntry> entries = new ArrayList<>();
+                for (int i = 0; i < rawEntries.size(); i++) {
+                  QRCode qrCode = rawEntries.get(i).getLeft();
+                  entries.add(
+                      new QRCodeLeaderboardEntry(i + 1, qrCode, qrCode.getScore(), "points"));
+                }
                 leaderboards.add(new Leaderboard<>(city, entries));
               }
               leaderboards.sort(Comparator.comparing(Leaderboard::getName));

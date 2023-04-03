@@ -14,8 +14,8 @@ public class QRCodeLeaderboardEntry extends LeaderboardEntry {
    * @param score score of the leaderboard entry
    * @param scoreSuffix suffix to use for the leaderboard entry
    */
-  public QRCodeLeaderboardEntry(QRCode qrCode, long score, String scoreSuffix) {
-    super(qrCode.getName(), score, scoreSuffix);
+  public QRCodeLeaderboardEntry(int position, QRCode qrCode, long score, String scoreSuffix) {
+    super(position, qrCode.getName(), score, scoreSuffix);
     this.qrCode = qrCode;
   }
 

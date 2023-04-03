@@ -14,8 +14,8 @@ public class PlayerLeaderboardEntry extends LeaderboardEntry {
    * @param score score of the leaderboard entry
    * @param scoreSuffix suffix to use for the leaderboard entry
    */
-  public PlayerLeaderboardEntry(Player player, long score, String scoreSuffix) {
-    super(player.getUsername(), score, scoreSuffix);
+  public PlayerLeaderboardEntry(int position, Player player, long score, String scoreSuffix) {
+    super(position, player.getUsername(), score, scoreSuffix);
     this.player = player;
   }
 
