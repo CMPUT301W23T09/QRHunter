@@ -11,7 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import com.cmput301w23t09.qrhunter.GameActivity;
 import com.cmput301w23t09.qrhunter.R;
+import com.cmput301w23t09.qrhunter.player.Player;
 import com.cmput301w23t09.qrhunter.qrcode.QRCode;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeAdapter;
 import com.cmput301w23t09.qrhunter.qrcode.QRCodeFragment;
@@ -51,7 +53,9 @@ public class QRSearchResultFragment extends DialogFragment {
           @Override
           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             QRCode qrCode = qrCodes.get(position);
-            QRCodeFragment.newInstance(qrCode, null)
+            Player activePlayer =
+                ((GameActivity) fragment.getActivity()).getController().getActivePlayer();
+            QRCodeFragment.newInstance(qrCode, activePlayer)
                 .show(fragment.getParentFragmentManager(), "Show QR code information");
           }
         });
