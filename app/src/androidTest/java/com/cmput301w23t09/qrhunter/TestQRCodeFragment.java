@@ -248,13 +248,27 @@ public class TestQRCodeFragment extends BaseTest {
             "thelegend27",
             "7802447788",
             "thelegend27@hotmail.com",
+            new ArrayList<>(),
+            new ArrayList<>(),
             new ArrayList<>());
     commentingPlayer2 =
         new Player(
-            UUID.randomUUID(), "GabeN", "4258899642", "gaben@valvesoftware.com", new ArrayList<>());
+            UUID.randomUUID(),
+            "GabeN",
+            "4258899642",
+            "gaben@valvesoftware.com",
+            new ArrayList<>(),
+            new ArrayList<>(),
+            new ArrayList<>());
     commentingPlayer3 =
         new Player(
-            UUID.randomUUID(), "jmmabanta", "7806862481", "mabanta@ualberta.ca", new ArrayList<>());
+            UUID.randomUUID(),
+            "jmmabanta",
+            "7806862481",
+            "mabanta@ualberta.ca",
+            new ArrayList<>(),
+            new ArrayList<>(),
+            new ArrayList<>());
     CountDownLatch addPlayersTasks = new CountDownLatch(3);
     PlayerDatabase.getInstance().add(commentingPlayer1, ignored -> addPlayersTasks.countDown());
     PlayerDatabase.getInstance().add(commentingPlayer2, ignored -> addPlayersTasks.countDown());
