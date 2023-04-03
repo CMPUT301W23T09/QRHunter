@@ -10,7 +10,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.ArrayRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -175,41 +174,7 @@ public abstract class ProfileFragment extends BaseFragment {
    * @param view The view of the fragment's layout
    */
   private void handleProfileHeaderEstimates(View view) {
-    rankingsButton.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            AlertDialog loadingDialog =
-                new AlertDialog.Builder(getContext())
-                    .setTitle("Rankings")
-                    .setMessage("Calculating rankings...")
-                    .setPositiveButton("OK", null)
-                    .create();
-            loadingDialog.show();
-
-            controller.retrievePercentile(
-                (exception, percentile) -> {
-                  loadingDialog.dismiss();
-                  if (exception != null) {
-                    Toast.makeText(
-                            getContext(),
-                            "An exception occurred while fetching the ranking..",
-                            Toast.LENGTH_SHORT)
-                        .show();
-                    return;
-                  }
-
-                  //                  String formattedMessage = getString(R.string.ranking_message,
-                  // percentile);
-                  //                  new AlertDialog.Builder(getContext())
-                  //                      .setTitle("Rankings")
-                  //                      .setMessage(formattedMessage)
-                  //                      .setPositiveButton("OK", null)
-                  //                      .create()
-                  //                      .show();
-                });
-          }
-        });
+    rankingsButton.setOnClickListener(v -> controller.onRankingButtonClick());
   }
 
   /**

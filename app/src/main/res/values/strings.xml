@@ -56,7 +56,7 @@
     <string name="codes_scanned">Codes Scanned</string>
     <string name="followed_players_only">Followed Players Only</string>
     <string name="leaderboard_filter_options_title">Leaderboard Filter Options</string>
->>>>>>> 702e20d070b19ce2441bd384b2e9a17eedacccb9
+    <string name="ellipses">…</string>
     <string-array name="sort_options">
         <item>Points</item>
         <item>Date Taken</item>

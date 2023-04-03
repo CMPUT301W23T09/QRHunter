@@ -26,6 +26,10 @@ public class ProfilePercentileFragment extends DialogFragment {
     codesScannedElement = view.findViewById(R.id.rankings_codes_scanned_percentage);
     topCodeElement = view.findViewById(R.id.rankings_top_code_percentage);
 
+    totalPointsElement.setText(R.string.ellipses);
+    codesScannedElement.setText(R.string.ellipses);
+    topCodeElement.setText(R.string.ellipses);
+
     AlertDialog.Builder builder = new AlertDialog.Builder(getLayoutInflater().getContext());
     Dialog dialog =
         builder
