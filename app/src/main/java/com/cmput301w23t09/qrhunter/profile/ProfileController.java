@@ -343,9 +343,10 @@ public abstract class ProfileController implements DatabaseChangeListener {
     AtomicDouble codesScannedPercentile = new AtomicDouble(0);
     AtomicDouble topCodePercentile = new AtomicDouble(0);
     Consumer<Void> onFinishedCalculations =
-        ignored ->
-            percentileFragment.displayPercentiles(
-                totalPointsPercentile.get(), codesScannedPercentile.get(), topCodePercentile.get());
+        ignored -> {
+          percentileFragment.displayPercentiles(
+              totalPointsPercentile.get(), codesScannedPercentile.get(), topCodePercentile.get());
+        };
 
     // Retrieve all 3 percentiles simultaneously and render when the last of the three has been
     // called.
@@ -404,10 +405,7 @@ public abstract class ProfileController implements DatabaseChangeListener {
                             // Find our placing in the players
                             int position = 1;
                             for (Tuple<Player, Integer> entry : entries) {
-                              if (entry
-                                  .getLeft()
-                                  .getDeviceId()
-                                  .equals(gameController.getActivePlayer().getDeviceId())) {
+                              if (entry.getLeft().getDeviceId().equals(deviceUUID)) {
                                 // We found our placing
                                 break;
                               }
@@ -448,7 +446,7 @@ public abstract class ProfileController implements DatabaseChangeListener {
               // Find our placing in the players
               int position = 1;
               for (Player player : players) {
-                if (player.getDeviceId().equals(gameController.getActivePlayer().getDeviceId())) {
+                if (player.getDeviceId().equals(deviceUUID)) {
                   // We found our placing
                   break;
                 }
