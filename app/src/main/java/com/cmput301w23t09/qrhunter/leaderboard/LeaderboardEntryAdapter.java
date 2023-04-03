@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.bumptech.glide.Glide;
 import com.cmput301w23t09.qrhunter.R;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -47,7 +48,9 @@ public class LeaderboardEntryAdapter extends ArrayAdapter<LeaderboardAdapterItem
           picture.setImageBitmap(
               ((QRCodeLeaderboardEntry) entry).getQRCode().getVisualRepresentation());
         } else if (entry instanceof PlayerLeaderboardEntry) {
-          picture.setImageBitmap(((PlayerLeaderboardEntry) entry).getPlayer().getProfilePic());
+          Glide.with(view)
+              .load(((PlayerLeaderboardEntry) entry).getPlayer().getProfilePicUrl())
+              .into(picture);
         } else {
           throw new IllegalArgumentException("Invalid Leaderboard entry type!");
         }

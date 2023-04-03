@@ -9,9 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.bumptech.glide.Glide;
 import com.cmput301w23t09.qrhunter.R;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 /**
  * ArrayAdapter for search query entries
@@ -58,13 +58,7 @@ public class SearchQueryEntryAdapter extends ArrayAdapter<SearchQueryEntry> {
     TextView name = view.findViewById(R.id.search_query_entry_text);
     name.setText(entry.getName());
     ImageView picture = view.findViewById(R.id.search_query_image);
-    try {
-      picture.setImageBitmap(entry.getPlayer().getProfilePic());
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    } catch (ExecutionException e) {
-      throw new RuntimeException(e);
-    }
+    Glide.with(view).load(entry.getPlayer().getProfilePicUrl()).into(picture);
 
     return view;
   }
