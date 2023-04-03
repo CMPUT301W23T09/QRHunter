@@ -81,7 +81,6 @@ public class AddQRCodeFragment extends QRCodeFragment {
 
     updateAddButton();
     addButton.setOnClickListener(this::onAddQRClicked);
-    updateLocationPhoto();
   }
 
   @Override
