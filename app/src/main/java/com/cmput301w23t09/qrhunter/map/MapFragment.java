@@ -11,8 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.SearchView;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import com.cmput301w23t09.qrhunter.BaseFragment;
@@ -384,12 +384,11 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
     // create search view
-    //    qrSearchbar = view.findViewById(R.id.qr_searchbar);
-    //    qrSearchButton = view.findViewById(R.id.qr_searcher);
-    // Todo error underneath
-    //    searchController = new SearchQRController(qrSearchbar, qrSearchButton, this);
-    //    qrSearchbar.setOnQueryTextListener(searchController.searchNearbyCodes());
-    //    qrSearchButton.setOnClickListener(searchController.getNearbyCodes());
+        qrSearchbar = view.findViewById(R.id.qr_searchbar);
+        qrSearchButton = view.findViewById(R.id.qr_searcher);
+        searchController = new SearchQRController(qrSearchbar, qrSearchButton, this);
+        qrSearchbar.setOnQueryTextListener(searchController.searchNearbyCodes());
+        qrSearchButton.setOnClickListener(searchController.getNearbyCodes());
 
     return view;
   }
